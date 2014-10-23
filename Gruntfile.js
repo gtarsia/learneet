@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
     "use strict";
-
+ 
     grunt.initConfig({
         distdir: 'public/public/scripts/',
         srcdir: 'public/scripts/browser',
