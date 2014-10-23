@@ -2,8 +2,8 @@ module.exports = function (grunt) {
     "use strict";
 
     grunt.initConfig({
-        distdir: 'app/public/scripts/',
-        srcdir: 'app/scripts/browser',
+        distdir: 'public/public/scripts/',
+        srcdir: 'public/scripts/browser',
         ts: {
             // use to override the default options, See: http://gruntjs.com/configuring-tasks#options
             // these are the default options to the typescript compiler for grunt-ts:
@@ -23,20 +23,20 @@ module.exports = function (grunt) {
             },
             // a particular target
             dev: {
-                src: ["app/**/*.ts"],          // The source typescript files, http://gruntjs.com/configuring-tasks#files
-                html: ['app/**/**.tpl.html'],  // The source html files, https://github.com/basarat/grunt-ts#html-2-typescript-support
-                reference: 'app/reference.ts', // If specified, generate this file that you can use for your reference management
-                out: 'app/out.js',             // If specified, generate an out.js file which is the merged js file
+                src: ["public/**/*.ts"],          // The source typescript files, http://gruntjs.com/configuring-tasks#files
+                html: ['public/**/**.tpl.html'],  // The source html files, https://github.com/basarat/grunt-ts#html-2-typescript-support
+                reference: 'public/reference.ts', // If specified, generate this file that you can use for your reference management
+                out: 'public/out.js',             // If specified, generate an out.js file which is the merged js file
                 // use to override the grunt-ts project options above for this target
                 options: {
                     module: 'commonjs',
                 },
             },
             decs: {
-                src: ["app/public/scripts/browser/client-ajax.js"],
-                html: ['app/**/**.tpl.html'],
-                reference: 'app/reference.ts',
-                out: 'app/out.js',
+                src: ["public/public/scripts/browser/client-ajax.js"],
+                html: ['public/**/**.tpl.html'],
+                reference: 'public/reference.ts',
+                out: 'public/out.js',
                 options: {
                     module: 'commonjs',
                     declaration: true
@@ -53,7 +53,7 @@ module.exports = function (grunt) {
                 }
             },
             bro: {
-                files: ['app/scripts/browser/*.js'],
+                files: ['public/scripts/browser/*.js'],
                 tasks: ['browserify'],
                 options: {
                     interrupt: true,
@@ -63,8 +63,8 @@ module.exports = function (grunt) {
         },
         browserify: {
             app: {
-                src: ['app/scripts/browser/*.js'],
-                dest: 'app/public/scripts/app.js'
+                src: ['public/scripts/browser/*.js'],
+                dest: 'public/public/scripts/app.js'
             }   
         }
     });

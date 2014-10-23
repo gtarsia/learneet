@@ -46,6 +46,7 @@ ajaxList.forEach(function (ajax) {
 app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
+return;
 
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
