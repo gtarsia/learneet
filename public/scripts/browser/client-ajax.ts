@@ -1,7 +1,7 @@
 ﻿import utils = require('./Utils');
 import CommonAjax = require('./../common/common-ajax');
 import AjaxType = CommonAjax.AjaxType;
-
+ 
 export class ClientAjax<ArgsType, ReturnType> {
     type: string;
     url: string;

@@ -15,35 +15,6 @@ var m = exports.m;
 //# sourceMappingURL=Utils.js.map
 
 },{}],2:[function(require,module,exports){
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var ClientAjax = require("./client-ajax");
-
-var Gui = (function () {
-    function Gui() {
-        var href = $(location).attr("href");
-        var id = href.substr(href.lastIndexOf('/') + 1);
-        new ClientAjax.Article.Get().ajax({ id: parseInt(id) }).done(function () {
-            console.log('Success');
-        });
-    }
-    Gui.prototype.getContent = function () {
-        return $("#content").val();
-    };
-    Gui.prototype.getTitle = function () {
-        throw new Error('Not implemented yet');
-    };
-    return Gui;
-})();
-
-$(document).ready(function () {
-    var gui = new Gui();
-    console.log("ready!");
-});
-//# sourceMappingURL=embed-article.js.map
-
-},{"./client-ajax":"/client-ajax.js"}]},{},[1]);
-
-},{"./client-ajax":3}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -86,7 +57,7 @@ exports.ClientAjax = ClientAjax;
 var Article = exports.Article;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":11}],4:[function(require,module,exports){
+},{"./../common/common-ajax":11}],3:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 
 var EmbedArticleGui = (function () {
@@ -125,10 +96,10 @@ if (guiName == 'EmbedArticle') {
 }
 //# sourceMappingURL=embed-article.js.map
 
-},{"./client-ajax":3}],5:[function(require,module,exports){
-//# sourceMappingURL=embed-browse.js.map
-
-},{}],6:[function(require,module,exports){
+},{"./client-ajax":2}],4:[function(require,module,exports){
+ //# sourceMappingURL=embed-browse.js.map
+     
+},{}],5:[function(require,module,exports){
 var Gui = (function () {
     function Gui() {
         $("#create").click(function () {
@@ -149,14 +120,20 @@ $(document).ready(function () {
 });
 //# sourceMappingURL=embed-create_article.js.map
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+var parser = require('./parser');
+
+parser.bind('#input', '#output');
+
+if (guiName == 'EmbedEditArticle') {
+}
 //# sourceMappingURL=embed-edit_article.js.map
 
-},{}],8:[function(require,module,exports){
+},{"./parser":9}],7:[function(require,module,exports){
 var UserJs = require("./../common/User");
 var utils = require("./Utils");
-
-var gui = {
+ 
+var gui = { 
     getUsername: function () {
         return $("#username").val();
     },
@@ -193,8 +170,14 @@ $(document).ready(function () {
 });
 //# sourceMappingURL=embed-login.js.map
 
-},{"./../common/User":10,"./Utils":1}],9:[function(require,module,exports){
+},{"./../common/User":10,"./Utils":1}],8:[function(require,module,exports){
 //# sourceMappingURL=embed-register.js.map
+
+},{}],9:[function(require,module,exports){
+function bind(inputId, outputId) {
+}
+exports.bind = bind;
+//# sourceMappingURL=parser.js.map
 
 },{}],10:[function(require,module,exports){
 (function (UserJs) {
@@ -252,4 +235,4 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11]);

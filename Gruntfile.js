@@ -45,7 +45,7 @@ module.exports = function (grunt) {
         },
         watch: {
             scripts: {
-                files: ['**/*.ts'],
+                files: ['public/**/*.ts'],
                 tasks: ['ts:dev'],
                 options: {
                     interrupt: true,
@@ -63,7 +63,8 @@ module.exports = function (grunt) {
         },
         browserify: {
             app: {
-                src: ['public/scripts/browser/*.js'],
+                src: ['public/scripts/browser/*.js',
+                'public/scripts/common/*.js'],
                 dest: 'public/public/scripts/app.js'
             }   
         }
