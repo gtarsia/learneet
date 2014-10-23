@@ -1,0 +1,14 @@
+﻿extends layout
+
+prepend scripts
+  script.
+    guiName = 'EmbedArticle'
+
+append styles
+  link(rel='stylesheet', href='/stylesheets/article.css')
+
+block content
+  div#title
+  div#content
+  div
+    input#edit(type="button", value="Edit")

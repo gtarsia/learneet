@@ -1,0 +1,10 @@
+﻿extends layout
+
+append styles
+  link(rel='stylesheet', href='/stylesheets/edit_article.css')
+
+block content
+  textarea#content
+  div
+    input#accept(type="button", value="Accept")
+    input#cancel(type="button", value="Cancel")

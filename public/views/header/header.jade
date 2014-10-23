@@ -1,0 +1,8 @@
+﻿- var authenticated = true;
+
+#header
+  include header_common
+  if authenticated
+    include header_logged
+  else
+    include header_not_logged

@@ -1,0 +1,10 @@
+﻿import express = require('express');
+export declare var index: (req: express.Request, res: express.Response) => void;
+export declare var browse: (req: express.Request, res: express.Response) => void;
+export declare var create_article: (req: express.Request, res: express.Response) => void;
+export declare var edit_article: (req: express.Request, res: express.Response) => void;
+export declare var article: (req: express.Request, res: express.Response) => void;
+export declare var register: (req: express.Request, res: express.Response) => void;
+export declare var register_finished: (req: express.Request, res: express.Response) => void;
+export declare var login: (req: express.Request, res: express.Response) => void;
+export declare var test: (req: express.Request, res: express.Response) => void;

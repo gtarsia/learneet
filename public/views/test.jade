@@ -1,0 +1,17 @@
+﻿html
+  head
+    meta(charset='utf-8')
+    title Mocha Tests
+    link(rel='stylesheet', href='stylesheets/mocha.css')
+  body
+    #mocha
+    script(src='scripts/lib/jquery-2.1.1.js')
+    script(src='scripts/lib/expect.js')
+    script(src='scripts/lib/mocha.js')
+    script.
+      mocha.setup('bdd')
+    script(src='tests/UnitTest1.js')
+    script.
+      mocha.checkLeaks();
+      mocha.globals(['jQuery']);
+      mocha.run();

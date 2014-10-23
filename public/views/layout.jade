@@ -1,0 +1,13 @@
+﻿doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/header.css')
+    script(type='text/javascript', src='/scripts/lib/jquery-2.1.1.js')
+    script(type='text/javascript', src='/scripts/embed-layout.js')
+    block styles
+    block scripts
+    script(type='text/javascript', src='/scripts/app.js')
+  body
+    include header/header
+    block content
