@@ -7,7 +7,8 @@ import article = require('./article');
 export function getServerAjaxList(): ServerAjax<any, any>[] {
     return [
         new Article.Create(),
-        new Article.Get()
+        new Article.Get(),
+        new Article.GetAll()
     ];
 }
 
@@ -72,6 +73,17 @@ export module Article {
                 res.send(result);
             });
         }    
+    }
+
+    import CommonGetAll = CommonAjax.Article.GetAll;
+    export class GetAll
+        extends ServerAjax<CommonGetAll.ParamsType, CommonGetAll.ReturnType> {
+        constructor() {
+            super(CommonGetAll.url(), CommonGetAll.type());
+        }
+        handler(req: express.Request, res: express.Response, next: Function) {
+            
+        }
     }
     /*
     export function Create(params: any, cb: any) {

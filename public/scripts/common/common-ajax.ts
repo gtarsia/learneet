@@ -31,6 +31,13 @@ export module Article {
         }
         export interface ReturnType extends JsonReturn<Fields> { }
     }
+
+    export module GetAll {
+        export function url(): string { return '/api/getall' }
+        export function type(): string { return AjaxType.GET}
+        export interface ParamsType {} 
+        export interface ReturnType extends JsonReturn<Fields[]> {}
+    }
 }
 
 /*

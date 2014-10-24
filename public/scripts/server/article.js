@@ -42,4 +42,9 @@ function get(args) {
     });
 }
 exports.get = get;
+
+function getAll() {
+    return db.command('asd');
+}
+exports.getAll = getAll;
 //# sourceMappingURL=article.js.map

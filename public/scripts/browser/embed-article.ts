@@ -11,6 +11,7 @@ export class EmbedArticleGui {
     }
     article: RenderedArticle;
     constructor() {
+        
         var _self = this;
         $(document).ready(function() {
             _self.article = new RenderedArticle();

@@ -3,8 +3,8 @@ var redis = require("redis");
 
 var fakeredis = require("fakeredis");
 
-var client = redis.createClient(15855, 'pub-redis-15855.us-east-1-2.1.ec2.garantiadata.com');
-client.auth('compadrito25', function (err) {
+exports.client = redis.createClient(15855, 'pub-redis-15855.us-east-1-2.1.ec2.garantiadata.com');
+exports.client.auth('compadrito25', function (err) {
     if (err)
         throw err;
 });
@@ -40,7 +40,7 @@ function genericPromise(redisCommand, args) {
 function hmset(key, object) {
     return new Promise(function (resolve, reject) {
         var array = objectToRedisArray(object);
-        client.hmset([key].concat(array), function (err, reply) {
+        exports.client.hmset([key].concat(array), function (err, reply) {
             if (!isOk(err, reject))
                 return;
             resolve(reply);
@@ -51,7 +51,7 @@ exports.hmset = hmset;
 
 function incr(key) {
     return new Promise(function (resolve, reject) {
-        client.incr([key], function (err, result) {
+        exports.client.incr([key], function (err, result) {
             if (!isOk(err, reject))
                 return;
             resolve(result);
@@ -63,7 +63,7 @@ exports.incr = incr;
 function hgetall(key) {
     return new Promise(function (resolve, reject) {
         console.log(key);
-        client.hgetall([key], function (err, result) {
+        exports.client.hgetall([key], function (err, result) {
             if (!isOk(err, reject))
                 result;
             resolve(result);
@@ -71,4 +71,15 @@ function hgetall(key) {
     });
 }
 exports.hgetall = hgetall;
+
+function command(command) {
+    return new Promise(function (resolve, reject) {
+        exports.client.send_command(command, function (err, result) {
+            if (!isOk(err, reject))
+                return;
+            resolve(result);
+        });
+    });
+}
+exports.command = command;
 //# sourceMappingURL=db.js.map

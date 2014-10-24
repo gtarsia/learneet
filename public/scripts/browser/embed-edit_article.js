@@ -51,8 +51,4 @@ var EmbedEditArticleGui = (function () {
     return EmbedEditArticleGui;
 })();
 exports.EmbedEditArticleGui = EmbedEditArticleGui;
-
-if (guiName == 'EmbedEditArticle') {
-    gui = new EmbedEditArticleGui();
-}
 //# sourceMappingURL=embed-edit_article.js.map

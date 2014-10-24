@@ -12,7 +12,8 @@ var article = require('./article');
 function getServerAjaxList() {
     return [
         new Article.Create(),
-        new Article.Get()
+        new Article.Get(),
+        new Article.GetAll()
     ];
 }
 exports.getServerAjaxList = getServerAjaxList;
@@ -76,6 +77,18 @@ exports.ServerAjax = ServerAjax;
         return Get;
     })(ServerAjax);
     Article.Get = Get;
+
+    var CommonGetAll = CommonAjax.Article.GetAll;
+    var GetAll = (function (_super) {
+        __extends(GetAll, _super);
+        function GetAll() {
+            _super.call(this, CommonGetAll.url(), CommonGetAll.type());
+        }
+        GetAll.prototype.handler = function (req, res, next) {
+        };
+        return GetAll;
+    })(ServerAjax);
+    Article.GetAll = GetAll;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 //# sourceMappingURL=server-ajax.js.map

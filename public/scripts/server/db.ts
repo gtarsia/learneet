@@ -4,7 +4,7 @@ import redis = require("redis");
 var fakeredis : any = require("fakeredis");
 
 //var client = fakeredis.createClient();
-var client = redis.createClient(15855, 
+export var client = redis.createClient(15855, 
 	'pub-redis-15855.us-east-1-2.1.ec2.garantiadata.com');
 client.auth('compadrito25', err => {
 	if (err) throw err;
@@ -83,3 +83,15 @@ export function hgetall(key: string) : Promise<any> {
 		});
 	});
 }
+
+export function command(command: string) : Promise<any> {
+	return new Promise<any>(
+	function(resolve: (result: string) => any,
+			 reject: (error: any) => void) {
+		client.send_command(command, function(err, result) {
+			if (!isOk(err, reject)) return;
+			resolve(result);
+		});
+	});
+}
+

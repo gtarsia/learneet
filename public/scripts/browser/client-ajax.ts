@@ -34,7 +34,14 @@ export module Article {
         constructor() {
             super(Art.Create.url(), Art.Create.type());
         }
-   }
+    }
+    export class GetAll
+        extends ClientAjax<Art.GetAll.ParamsType,
+                           Art.GetAll.ReturnType> {
+        constructor() {
+            super(Art.GetAll.url(), Art.GetAll.type());
+        }
+    }
 }
 
 export module GoTo {

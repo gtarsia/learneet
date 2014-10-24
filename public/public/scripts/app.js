@@ -61,6 +61,14 @@ exports.ClientAjax = ClientAjax;
         return Create;
     })(ClientAjax);
     Article.Create = Create;
+    var GetAll = (function (_super) {
+        __extends(GetAll, _super);
+        function GetAll() {
+            _super.call(this, Art.GetAll.url(), Art.GetAll.type());
+        }
+        return GetAll;
+    })(ClientAjax);
+    Article.GetAll = GetAll;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 
@@ -78,7 +86,7 @@ var Article = exports.Article;
 var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":14}],3:[function(require,module,exports){
+},{"./../common/common-ajax":15}],3:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 
 var GoTo = ClientAjax.GoTo;
@@ -118,7 +126,7 @@ if (guiName == 'EmbedArticle') {
 }
 //# sourceMappingURL=embed-article.js.map
 
-},{"./client-ajax":2,"./rendered-article":12}],4:[function(require,module,exports){
+},{"./client-ajax":2,"./rendered-article":13}],4:[function(require,module,exports){
 //# sourceMappingURL=embed-browse.js.map
 
 },{}],5:[function(require,module,exports){
@@ -148,7 +156,7 @@ if (guiName == 'EmbedCreateArticle') {
 }
 //# sourceMappingURL=embed-create_article.js.map
 
-},{"./client-ajax":2,"./previewable-article":11}],6:[function(require,module,exports){
+},{"./client-ajax":2,"./previewable-article":12}],6:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 var GoTo = ClientAjax.GoTo;
 var PreviewableArticle = require("./previewable-article");
@@ -202,13 +210,32 @@ var EmbedEditArticleGui = (function () {
     return EmbedEditArticleGui;
 })();
 exports.EmbedEditArticleGui = EmbedEditArticleGui;
-
-if (guiName == 'EmbedEditArticle') {
-    gui = new EmbedEditArticleGui();
-}
 //# sourceMappingURL=embed-edit_article.js.map
 
-},{"./client-ajax":2,"./previewable-article":11}],7:[function(require,module,exports){
+},{"./client-ajax":2,"./previewable-article":12}],7:[function(require,module,exports){
+var ClientAjax = require("./client-ajax");
+
+var EmbedIndexGui = (function () {
+    function EmbedIndexGui() {
+        $(document).ready(function () {
+            new ClientAjax.Article.GetAll().ajax({}).done(function (res) {
+                if (!res.ok) {
+                    console.log(res.why);
+                    return;
+                }
+                var result = res.result;
+            });
+        });
+    }
+    return EmbedIndexGui;
+})();
+
+if (guiName == 'EmbedIndexGui') {
+    gui = new EmbedIndexGui();
+}
+//# sourceMappingURL=embed-index.js.map
+
+},{"./client-ajax":2}],8:[function(require,module,exports){
 var UserJs = require("./../common/User");
 var utils = require("./Utils");
 
@@ -249,10 +276,10 @@ $(document).ready(function () {
 });
 //# sourceMappingURL=embed-login.js.map
 
-},{"./../common/User":13,"./Utils":1}],8:[function(require,module,exports){
+},{"./../common/User":14,"./Utils":1}],9:[function(require,module,exports){
 //# sourceMappingURL=embed-register.js.map
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -296,7 +323,7 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":10}],10:[function(require,module,exports){
+},{"./parser":11}],11:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -325,7 +352,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 
 var PreviewableArticle = (function () {
@@ -401,7 +428,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{"./rendered-article":12}],12:[function(require,module,exports){
+},{"./rendered-article":13}],13:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
     }
@@ -423,7 +450,7 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (UserJs) {
     var User = (function () {
         function User() {
@@ -442,7 +469,7 @@ module.exports = RenderedArticle;
 var UserJs = exports.UserJs;
 //# sourceMappingURL=User.js.map
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -472,6 +499,18 @@ exports.AjaxType = {
         Get.type = type;
     })(Article.Get || (Article.Get = {}));
     var Get = Article.Get;
+
+    (function (GetAll) {
+        function url() {
+            return '/api/getall';
+        }
+        GetAll.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        GetAll.type = type;
+    })(Article.GetAll || (Article.GetAll = {}));
+    var GetAll = Article.GetAll;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 
@@ -479,4 +518,4 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);

@@ -53,11 +53,3 @@ export class EmbedEditArticleGui {
         });
     }
 }
-
-
-declare var guiName;
-declare var gui;
-
-if (guiName == 'EmbedEditArticle') {
-    gui = new EmbedEditArticleGui();
-}

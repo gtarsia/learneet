@@ -27,6 +27,18 @@
         Get.type = type;
     })(Article.Get || (Article.Get = {}));
     var Get = Article.Get;
+
+    (function (GetAll) {
+        function url() {
+            return '/api/getall';
+        }
+        GetAll.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        GetAll.type = type;
+    })(Article.GetAll || (Article.GetAll = {}));
+    var GetAll = Article.GetAll;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 

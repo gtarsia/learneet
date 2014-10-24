@@ -11,6 +11,7 @@
 /// <reference path="scripts/browser/embed-browse.ts" />
 /// <reference path="scripts/browser/embed-create_article.ts" />
 /// <reference path="scripts/browser/embed-edit_article.ts" />
+/// <reference path="scripts/browser/embed-index.ts" />
 /// <reference path="scripts/browser/embed-login.ts" />
 /// <reference path="scripts/browser/embed-register.ts" />
 /// <reference path="scripts/browser/live-parser.ts" />

@@ -44,6 +44,14 @@ exports.ClientAjax = ClientAjax;
         return Create;
     })(ClientAjax);
     Article.Create = Create;
+    var GetAll = (function (_super) {
+        __extends(GetAll, _super);
+        function GetAll() {
+            _super.call(this, Art.GetAll.url(), Art.GetAll.type());
+        }
+        return GetAll;
+    })(ClientAjax);
+    Article.GetAll = GetAll;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 

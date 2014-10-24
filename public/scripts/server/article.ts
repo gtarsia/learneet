@@ -3,6 +3,7 @@ import Promise = require('bluebird');
 import Article = commonAjax.Article;
 import Create = Article.Create;
 import Get = Article.Get;
+import GetAll = Article.GetAll;
 import db = require('./db');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
@@ -48,4 +49,8 @@ export function get(args: Get.ParamsType) : Promise<Get.ReturnType> {
 		}
 		return r;
 	})
+}
+
+export function getAll() : Promise<GetAll.ReturnType> {
+	return db.command('asd');
 }
