@@ -22,7 +22,6 @@ describe('Article', function () {
         };
         article.create(art).then(function (res) {
             console.log('Create returned: ' + res);
-            debugger;
             return article.get({ id: res.result.id });
         }).then(function (result) {
             console.log('Get returned: ' + result);

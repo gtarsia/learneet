@@ -66,7 +66,7 @@ exports.ServerAjax = ServerAjax;
             _super.call(this, CommonAjax.Article.Get.url(), CommonAjax.Article.Get.type());
         }
         Get.prototype.handler = function (req, res, next) {
-            article.get(req.query.id).then(function (result) {
+            article.get(req.query).then(function (result) {
                 debugger;
                 console.log('Se pidio los articulos');
                 res.send(result);

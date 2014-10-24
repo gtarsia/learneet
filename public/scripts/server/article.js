@@ -29,9 +29,11 @@ exports.create = create;
 function get(args) {
     return db.hgetall("article:" + args.id.toString()).then(function (result) {
         debugger;
+        var ok = result != null;
+        var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
         var r = {
-            ok: true,
-            why: '',
+            ok: ok,
+            why: why,
             result: result
         };
         return r;

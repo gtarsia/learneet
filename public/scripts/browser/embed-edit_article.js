@@ -10,6 +10,7 @@ var EmbedEditArticleGui = (function () {
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
+                debugger;
                 if (!res.ok) {
                     console.log(res.why);
                     return;

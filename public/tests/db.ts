@@ -25,7 +25,6 @@ describe('Article', () => {
         article.create(art)
         .then((res : Article.Create.ReturnType) => {
             console.log('Create returned: ' + res);
-            debugger;
             return article.get({ id: res.result.id});
         })
         .then((result : Article.Get.ReturnType) => {

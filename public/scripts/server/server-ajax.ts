@@ -63,7 +63,7 @@ export module Article {
                   CommonAjax.Article.Get.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
-            article.get(req.query.id)
+            article.get(req.query)
             .then((result: CommonGet.ReturnType) => {
                 debugger;
                 console.log('Se pidio los articulos');

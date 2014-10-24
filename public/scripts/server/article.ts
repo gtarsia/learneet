@@ -36,10 +36,12 @@ export function create(args: Create.ParamsType) : Promise<Create.ReturnType> {
 export function get(args: Get.ParamsType) : Promise<Get.ReturnType> {
 	return db.hgetall("article:" + args.id.toString())
 	.then<Get.ReturnType>((result: any) => {
-		debugger;
+        debugger;
+		var ok = result != null;
+		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
 		var r : Get.ReturnType = {
-			ok: true,
-			why: '',
+			ok: ok,
+			why: why,
 			result: result
 		}
 		return r;
