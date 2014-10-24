@@ -4,6 +4,7 @@ var GoTo = ClientAjax.GoTo;
 var EmbedEditArticleGui = (function () {
     function EmbedEditArticleGui() {
         this.id = "-1";
+        this.ignoreScroll = false;
         var _self = this;
         $(document).ready(function () {
             _self.bindTitlePreview();
@@ -49,21 +50,29 @@ var EmbedEditArticleGui = (function () {
             $("div.article-content").html(marked(content));
         });
     };
+
     EmbedEditArticleGui.prototype.bindScrolls = function () {
         var i = this.getInputContent();
         var o = this.getOutputContent();
+        var _self = this;
         function getPercent(el) {
             return 100 * el.scrollTop() / (el[0].scrollHeight - el.height());
         }
         function setPercent(el, percent) {
             el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
         }
-        i.scroll(function () {
-            setPercent(o, getPercent(i));
-        });
-        o.scroll(function () {
-            setPercent(i, getPercent(o));
-        });
+        function bindScroll(src, dest) {
+            src.scroll(function () {
+                if (_self.ignoreScroll) {
+                    _self.ignoreScroll = false;
+                    return;
+                }
+                _self.ignoreScroll = true;
+                setPercent(dest, getPercent(src));
+            });
+        }
+        bindScroll(i, o);
+        bindScroll(o, i);
     };
     EmbedEditArticleGui.prototype.getInputContent = function () {
         return $("textarea.article-content");
