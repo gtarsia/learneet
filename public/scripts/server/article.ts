@@ -33,9 +33,8 @@ export function create(args: Create.ParamsType) : Promise<Create.ReturnType> {
 	})
 }
 
-export function get(key: Number) : Promise<Get.ReturnType> {
-	console.log('key ' + key);
-	return db.hgetall("article:" + key.toString())
+export function get(args: Get.ParamsType) : Promise<Get.ReturnType> {
+	return db.hgetall("article:" + args.id.toString())
 	.then<Get.ReturnType>((result: any) => {
 		debugger;
 		var r : Get.ReturnType = {

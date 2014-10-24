@@ -6,7 +6,6 @@
 /// <reference path="routes/user.ts" />
 /// <reference path="scripts/browser/Utils.d.ts" />
 /// <reference path="scripts/browser/Utils.ts" />
-/// <reference path="scripts/browser/client-ajax.d.ts" />
 /// <reference path="scripts/browser/client-ajax.ts" />
 /// <reference path="scripts/browser/embed-article.d.ts" />
 /// <reference path="scripts/browser/embed-article.ts" />

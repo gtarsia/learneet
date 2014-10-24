@@ -23,10 +23,10 @@ describe('Article', () => {
             content: 'Este es el contenido'
         };
         article.create(art)
-        .then((jsonResult : Article.Create.ReturnType) => {
-            console.log('Create returned: ' + jsonResult);
+        .then((res : Article.Create.ReturnType) => {
+            console.log('Create returned: ' + res);
             debugger;
-            return article.get(jsonResult.result.id);
+            return article.get({ id: res.result.id});
         })
         .then((result : Article.Get.ReturnType) => {
             console.log('Get returned: ' + result);

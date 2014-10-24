@@ -20,10 +20,10 @@ describe('Article', function () {
             title: 'Como hacer ecuaciones',
             content: 'Este es el contenido'
         };
-        article.create(art).then(function (jsonResult) {
-            console.log('Create returned: ' + jsonResult);
+        article.create(art).then(function (res) {
+            console.log('Create returned: ' + res);
             debugger;
-            return article.get(jsonResult.result.id);
+            return article.get({ id: res.result.id });
         }).then(function (result) {
             console.log('Get returned: ' + result);
             should(result).equal(art);

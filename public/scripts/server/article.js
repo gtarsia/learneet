@@ -26,9 +26,8 @@ function create(args) {
 }
 exports.create = create;
 
-function get(key) {
-    console.log('key ' + key);
-    return db.hgetall("article:" + key.toString()).then(function (result) {
+function get(args) {
+    return db.hgetall("article:" + args.id.toString()).then(function (result) {
         debugger;
         var r = {
             ok: true,
