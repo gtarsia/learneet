@@ -1,13 +1,20 @@
 ﻿doctype html
 html
   head
+    meta(charset='utf-16')
     title= title
     link(rel='stylesheet', href='/stylesheets/header.css')
+    link(rel="stylesheet", href="/scripts/katex.min.css")
+    link(rel="stylesheet", href="/stylesheets/layout.css")
     script(type='text/javascript', src='/scripts/lib/jquery-2.1.1.js')
     script(type='text/javascript', src='/scripts/embed-layout.js')
+    script(src="/scripts/katex.min.js")
+
     block styles
     block scripts
     script(type='text/javascript', src='/scripts/app.js')
   body
     include header/header
-    block content
+    #main.parentContainer
+      .childContainer
+        block main

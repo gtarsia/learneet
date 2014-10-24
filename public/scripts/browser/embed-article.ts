@@ -1,11 +1,18 @@
 ﻿import ClientAjax = require("./client-ajax");
+import parser = require('./parser');
+import GoTo = ClientAjax.GoTo;
+
 
 export class EmbedArticleGui {
+    id: string = "-1";
+    getContentId() {
+        return "content";
+    }
     setContent(content) {
-        $("#content").html(content);
+        $('#' + this.getContentId()).html(content);
     }
     getContent(): string {
-        return $("#content").val();
+        return $('#' + this.getContentId()).val();
     }
     setTitle(title) {
         $("#title").html(title);
@@ -13,39 +20,34 @@ export class EmbedArticleGui {
     getTitle(): string {
         throw new Error('Not implemented yet');
     }
-    constructor() {
-        var href = $(location).attr("href");
-        var id: string = href.substr(href.lastIndexOf('/') + 1);
-        var _self = this;
-        new ClientAjax.Article.Get().ajax({ id: parseInt(id) })
-        .done(function(res) {
-            if (!res.ok) {
-                console.log(res.why);
-                return;
-            }
-            var result = res.result
-            _self.setTitle(result.title);
-            _self.setContent(result.content)
-        });
-        /*
-        .then((s) => {
-
-        });
-*/
-        /*;
-        $("#edit").click(() => {
-            console.log('Creando artículo');
-            ClientAjax.m.Article.Create(
-                { content: this.getContent(), title: this.getTitle() }, 1)
-                .then(function (value) {
-                    
-                }, function (reason) {
-
-                });
-        });
-        */
+    getEditBtn() {
+        return $("#editBtn");
     }
-}
+    constructor() {
+        var _self = this;
+        $(document).ready(function() {
+            var href = $(location).attr("href");
+            _self.id = href.substr(href.lastIndexOf('/') + 1);
+            new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) })
+            .done(function(res) {
+                if (!res.ok) {
+                    console.log(res.why);
+                    return;
+                }
+                var result = res.result
+                _self.setTitle(result.title);
+                var arr = result.content.split("\n");
+                var length = arr.length;
+                for (var i = 0; i < length; i++) {
+                    parser.parseToDiv(arr[i], i, _self.getContentId());
+                }
+            });
+            _self.getEditBtn().click(() => {
+                GoTo.editArticle(_self.id);
+            });
+        });
+    }
+} 
 
 declare var guiName;
 

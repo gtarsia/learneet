@@ -1,31 +1,31 @@
 ﻿import utils = require("./Utils");
 import ClientAjax = require("./client-ajax");
 
-class Gui {
+class EmbedCreateArticleGui {
     getContent(): string {
         return $("#content").val();
     }
     getTitle(): string {
-        throw new Error('Not implemented yet');
+        return $("#title").val();
     }
     constructor() {
-        $("#create").click(() => {
-            console.log('Creando artículo');
-            /*
-            ClientAjax.Article.Create(
-                { content: this.getContent(), title: this.getTitle() }, 1)
-                .then(function (value) {
-                    
-                }, function (reason) {
-
+        var _this = this;
+        $(document).ready(function () {
+            console.log("ready!");
+            $("#create").click(() => {
+                debugger;
+                console.log('Creando artículo');
+                new ClientAjax.Article.Create().ajax(
+                { content: _this.getContent(), title: _this.getTitle() })
+                .done(function(res) {
+                    console.log(res);
                 });
-            */
-        });
+            });
+        })
+
     }
 }
-
-$(document).ready(function () {
-    console.log("ready!");
-    
-})
-
+declare var guiName;
+if (guiName == 'EmbedCreateArticle') {
+    new EmbedCreateArticleGui();
+}

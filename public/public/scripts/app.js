@@ -53,39 +53,78 @@ exports.ClientAjax = ClientAjax;
         return Get;
     })(ClientAjax);
     Article.Get = Get;
+    var Create = (function (_super) {
+        __extends(Create, _super);
+        function Create() {
+            _super.call(this, Art.Create.url(), Art.Create.type());
+        }
+        return Create;
+    })(ClientAjax);
+    Article.Create = Create;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
+
+(function (GoTo) {
+    function article(id) {
+        location.href = '/article/' + id;
+    }
+    GoTo.article = article;
+
+    function editArticle(id) {
+        location.href = '/edit_article/' + id;
+    }
+    GoTo.editArticle = editArticle;
+})(exports.GoTo || (exports.GoTo = {}));
+var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":11}],3:[function(require,module,exports){
+},{"./../common/common-ajax":12}],3:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
+var parser = require('./parser');
+var GoTo = ClientAjax.GoTo;
 
 var EmbedArticleGui = (function () {
     function EmbedArticleGui() {
-        var href = $(location).attr("href");
-        var id = href.substr(href.lastIndexOf('/') + 1);
+        this.id = "-1";
         var _self = this;
-        new ClientAjax.Article.Get().ajax({ id: parseInt(id) }).done(function (res) {
-            if (!res.ok) {
-                console.log(res.why);
-                return;
-            }
-            var result = res.result;
-            _self.setTitle(result.title);
-            _self.setContent(result.content);
+        $(document).ready(function () {
+            var href = $(location).attr("href");
+            _self.id = href.substr(href.lastIndexOf('/') + 1);
+            new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
+                if (!res.ok) {
+                    console.log(res.why);
+                    return;
+                }
+                var result = res.result;
+                _self.setTitle(result.title);
+                var arr = result.content.split("\n");
+                var length = arr.length;
+                for (var i = 0; i < length; i++) {
+                    parser.parseToDiv(arr[i], i, _self.getContentId());
+                }
+            });
+            _self.getEditBtn().click(function () {
+                GoTo.editArticle(_self.id);
+            });
         });
     }
+    EmbedArticleGui.prototype.getContentId = function () {
+        return "content";
+    };
     EmbedArticleGui.prototype.setContent = function (content) {
-        $("#content").html(content);
+        $('#' + this.getContentId()).html(content);
     };
     EmbedArticleGui.prototype.getContent = function () {
-        return $("#content").val();
+        return $('#' + this.getContentId()).val();
     };
     EmbedArticleGui.prototype.setTitle = function (title) {
         $("#title").html(title);
     };
     EmbedArticleGui.prototype.getTitle = function () {
         throw new Error('Not implemented yet');
+    };
+    EmbedArticleGui.prototype.getEditBtn = function () {
+        return $("#editBtn");
     };
     return EmbedArticleGui;
 })();
@@ -96,44 +135,91 @@ if (guiName == 'EmbedArticle') {
 }
 //# sourceMappingURL=embed-article.js.map
 
-},{"./client-ajax":2}],4:[function(require,module,exports){
- //# sourceMappingURL=embed-browse.js.map
-     
+},{"./client-ajax":2,"./parser":10}],4:[function(require,module,exports){
+//# sourceMappingURL=embed-browse.js.map
+
 },{}],5:[function(require,module,exports){
-var Gui = (function () {
-    function Gui() {
-        $("#create").click(function () {
-            console.log('Creando artículo');
+var ClientAjax = require("./client-ajax");
+
+var EmbedCreateArticleGui = (function () {
+    function EmbedCreateArticleGui() {
+        var _this = this;
+        $(document).ready(function () {
+            console.log("ready!");
+            $("#create").click(function () {
+                debugger;
+                console.log('Creando artículo');
+                new ClientAjax.Article.Create().ajax({ content: _this.getContent(), title: _this.getTitle() }).done(function (res) {
+                    console.log(res);
+                });
+            });
         });
     }
-    Gui.prototype.getContent = function () {
+    EmbedCreateArticleGui.prototype.getContent = function () {
         return $("#content").val();
     };
-    Gui.prototype.getTitle = function () {
-        throw new Error('Not implemented yet');
+    EmbedCreateArticleGui.prototype.getTitle = function () {
+        return $("#title").val();
     };
-    return Gui;
+    return EmbedCreateArticleGui;
 })();
 
-$(document).ready(function () {
-    console.log("ready!");
-});
+if (guiName == 'EmbedCreateArticle') {
+    new EmbedCreateArticleGui();
+}
 //# sourceMappingURL=embed-create_article.js.map
 
-},{}],6:[function(require,module,exports){
-var parser = require('./parser');
+},{"./client-ajax":2}],6:[function(require,module,exports){
+var ClientAjax = require("./client-ajax");
+var GoTo = ClientAjax.GoTo;
 
-parser.bind('#input', '#output');
+var EmbedEditArticleGui = (function () {
+    function EmbedEditArticleGui() {
+        this.id = "-1";
+        var _self = this;
+        $(document).ready(function () {
+            var href = $(location).attr("href");
+            _self.id = href.substr(href.lastIndexOf('/') + 1);
+            new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
+                if (!res.ok) {
+                    console.log(res.why);
+                    return;
+                }
+                var result = res.result;
+                _self.setTitle(result.title);
+                _self.setContent(result.content);
+            });
+            _self.getSaveBtn().click(function () {
+                GoTo.editArticle(_self.id);
+            });
+        });
+    }
+    EmbedEditArticleGui.prototype.getContentId = function () {
+        return "content";
+    };
+    EmbedEditArticleGui.prototype.setTitle = function (title) {
+        $("#title").html(title);
+    };
+    EmbedEditArticleGui.prototype.setContent = function (content) {
+        $('#' + this.getContentId()).html(content);
+    };
+    EmbedEditArticleGui.prototype.getSaveBtn = function () {
+        return $("#saveBtn");
+    };
+    return EmbedEditArticleGui;
+})();
+exports.EmbedEditArticleGui = EmbedEditArticleGui;
 
 if (guiName == 'EmbedEditArticle') {
+    new EmbedEditArticleGui();
 }
 //# sourceMappingURL=embed-edit_article.js.map
 
-},{"./parser":9}],7:[function(require,module,exports){
+},{"./client-ajax":2}],7:[function(require,module,exports){
 var UserJs = require("./../common/User");
 var utils = require("./Utils");
- 
-var gui = { 
+
+var gui = {
     getUsername: function () {
         return $("#username").val();
     },
@@ -170,16 +256,83 @@ $(document).ready(function () {
 });
 //# sourceMappingURL=embed-login.js.map
 
-},{"./../common/User":10,"./Utils":1}],8:[function(require,module,exports){
+},{"./../common/User":11,"./Utils":1}],8:[function(require,module,exports){
 //# sourceMappingURL=embed-register.js.map
 
 },{}],9:[function(require,module,exports){
-function bind(inputId, outputId) {
+var parser = require("./parser");
+
+exports.previousNumberOfLines = 0;
+
+function getSourceDom(id) {
+    return $("#" + id)[0];
+}
+
+function reparse(sourceId, targetId) {
+    var source = $("#" + source)[0];
+    var lines = source.value.split("\n");
+    var length = lines.length;
+    for (var i = 0; i < length; i++) {
+        parser.parseToDiv(lines[i], i, targetId);
+    }
+    return length;
+}
+
+function parseLine(currentLine, lineNumber, targetId) {
+    parser.parseToDiv(currentLine, lineNumber, targetId);
+}
+
+function bind(sourceId, targetId) {
+    reparse(sourceId, targetId);
+    $('#source').bind('input propertychange', function () {
+        var source = $("#" + sourceId);
+        var lines = source.value.split("\n");
+        var length = lines.length;
+        if (length - exports.previousNumberOfLines != 0) {
+            console.log('Number of lines changed');
+            console.log('Length ' + length + 'vs previous ' + exports.previousNumberOfLines);
+            reparse(sourceId, targetId);
+            return;
+        }
+        var sourceTilCursor = source.value.substr(0, source.selectionStart);
+        var lineNumber = sourceTilCursor.split("\n").length - 1;
+        var currentLine = lines[lineNumber];
+        parseLine(currentLine, lineNumber, targetId);
+    });
 }
 exports.bind = bind;
+//# sourceMappingURL=live-parser.js.map
+
+},{"./parser":10}],10:[function(require,module,exports){
+function writeLineDiv(html, number, targetId) {
+    var div = $('#line' + number);
+    if (!(div.length)) {
+        $("#" + targetId).append("<div id='line" + number + "'></div>");
+    }
+    $("#line" + number).html(html);
+}
+exports.writeLineDiv = writeLineDiv;
+
+function translateLine(line) {
+    var html = "";
+    if (line.substr(0, 7) == '@katex ') {
+        line = line.substr(7);
+        html = katex.renderToString("\\displaystyle " + line);
+    } else {
+        html = line;
+    }
+    return html;
+}
+exports.translateLine = translateLine;
+
+function parseToDiv(line, lineNumber, targetId) {
+    var html = exports.translateLine(line);
+    exports.writeLineDiv(html, lineNumber, targetId);
+}
+exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (UserJs) {
     var User = (function () {
         function User() {
@@ -198,7 +351,7 @@ exports.bind = bind;
 var UserJs = exports.UserJs;
 //# sourceMappingURL=User.js.map
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -235,4 +388,4 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12]);

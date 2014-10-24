@@ -3,7 +3,12 @@
 append styles
   link(rel='stylesheet', href='/stylesheets/create_article.css')
 
+prepend scripts
+  script.
+    guiName = 'EmbedCreateArticle'
+
 block content
+  input#title(type="text")
   textarea#content
   div
     input#create(type="button", value="Create")

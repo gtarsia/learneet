@@ -36,6 +36,27 @@ exports.ClientAjax = ClientAjax;
         return Get;
     })(ClientAjax);
     Article.Get = Get;
+    var Create = (function (_super) {
+        __extends(Create, _super);
+        function Create() {
+            _super.call(this, Art.Create.url(), Art.Create.type());
+        }
+        return Create;
+    })(ClientAjax);
+    Article.Create = Create;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
+
+(function (GoTo) {
+    function article(id) {
+        location.href = '/article/' + id;
+    }
+    GoTo.article = article;
+
+    function editArticle(id) {
+        location.href = '/edit_article/' + id;
+    }
+    GoTo.editArticle = editArticle;
+})(exports.GoTo || (exports.GoTo = {}));
+var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map

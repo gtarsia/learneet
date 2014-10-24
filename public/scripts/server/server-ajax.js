@@ -1,4 +1,4 @@
-﻿var __extends = this.__extends || function (d, b) {
+var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -53,6 +53,7 @@ exports.ServerAjax = ServerAjax;
             _super.call(this, CommonAjax.Article.Create.url(), CommonAjax.Article.Create.type());
         }
         Create.prototype.handler = function (req, res, next) {
+            debugger;
             throw new Error('I should implement this');
         };
         return Create;

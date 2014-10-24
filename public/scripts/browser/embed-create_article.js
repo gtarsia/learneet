@@ -1,19 +1,29 @@
-﻿var Gui = (function () {
-    function Gui() {
-        $("#create").click(function () {
-            console.log('Creando artículo');
+﻿var ClientAjax = require("./client-ajax");
+
+var EmbedCreateArticleGui = (function () {
+    function EmbedCreateArticleGui() {
+        var _this = this;
+        $(document).ready(function () {
+            console.log("ready!");
+            $("#create").click(function () {
+                debugger;
+                console.log('Creando artículo');
+                new ClientAjax.Article.Create().ajax({ content: _this.getContent(), title: _this.getTitle() }).done(function (res) {
+                    console.log(res);
+                });
+            });
         });
     }
-    Gui.prototype.getContent = function () {
+    EmbedCreateArticleGui.prototype.getContent = function () {
         return $("#content").val();
     };
-    Gui.prototype.getTitle = function () {
-        throw new Error('Not implemented yet');
+    EmbedCreateArticleGui.prototype.getTitle = function () {
+        return $("#title").val();
     };
-    return Gui;
+    return EmbedCreateArticleGui;
 })();
 
-$(document).ready(function () {
-    console.log("ready!");
-});
+if (guiName == 'EmbedCreateArticle') {
+    new EmbedCreateArticleGui();
+}
 //# sourceMappingURL=embed-create_article.js.map

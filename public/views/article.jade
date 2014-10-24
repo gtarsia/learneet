@@ -7,8 +7,10 @@ prepend scripts
 append styles
   link(rel='stylesheet', href='/stylesheets/article.css')
 
-block content
-  div#title
-  div#content
-  div
-    input#edit(type="button", value="Edit")
+block main
+  #article
+    h1#title  
+    i#author by
+    #articleSeparator.marginBottom
+    div#content
+    button#editBtn Edit

@@ -30,9 +30,9 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/browse', routes.browse);
-app.get('/articles/:id', routes.article);
+app.get('/article/:id', routes.article);
 app.get('/create_article', routes.create_article);
-app.get('/edit_article', routes.edit_article);
+app.get('/edit_article/:id', routes.edit_article);
 app.get('/login', routes.login);
 app.get('/register', routes.register);
 app.get('/register_finished', routes.register_finished);
@@ -46,7 +46,6 @@ ajaxList.forEach(function (ajax) {
 app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
-return;
 
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);

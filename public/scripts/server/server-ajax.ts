@@ -1,4 +1,4 @@
-﻿import CommonAjax = require('./../common/common-ajax');
+import CommonAjax = require('./../common/common-ajax');
 import express = require('express');
 import AjaxType = CommonAjax.AjaxType;
 import article = require('./article');
@@ -40,29 +40,31 @@ export class ServerAjax<ArgsType, ReturnType> {
 }
 
 export module Article {
-    import Get = CommonAjax.Article.Get;
+    import CommonCreate = CommonAjax.Article.Create;
     export class Create
-        extends ServerAjax<CommonAjax.Article.Create.ParamsType,
-                            CommonAjax.Article.Create.ReturnType> {
+        extends ServerAjax<CommonCreate.ParamsType,
+                            CommonCreate.ReturnType> {
         constructor() {
             super(CommonAjax.Article.Create.url(),
                   CommonAjax.Article.Create.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
+            debugger;
             throw new Error('I should implement this');
         }
     }
 
+    import CommonGet = CommonAjax.Article.Get;
     export class Get
-        extends ServerAjax<CommonAjax.Article.Get.ParamsType,
-                           CommonAjax.Article.Get.ReturnType> {
+        extends ServerAjax<CommonGet.ParamsType,
+                           CommonGet.ReturnType> {
         constructor() {
             super(CommonAjax.Article.Get.url(),
                   CommonAjax.Article.Get.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
             article.get(req.query.id)
-            .then((result: Get.ReturnType) => {
+            .then((result: CommonGet.ReturnType) => {
                 debugger;
                 console.log('Se pidio los articulos');
                 res.send(result);

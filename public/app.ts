@@ -6,7 +6,7 @@ import server_ajax = require('./scripts/server/server-ajax');
 import net = require('net');
 var morgan : any = require('morgan');
 var bodyParser : any = require('body-parser');
-var app : any = express();
+var app : any = express(); 
 import stylus = require('stylus');
 var errorhandler : any = require('errorhandler');
 var expressWinston : any = require('express-winston');
@@ -32,9 +32,9 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/browse', routes.browse);
-app.get('/articles/:id', routes.article);
+app.get('/article/:id', routes.article);
 app.get('/create_article', routes.create_article);
-app.get('/edit_article', routes.edit_article);
+app.get('/edit_article/:id', routes.edit_article);
 app.get('/login', routes.login);
 app.get('/register', routes.register);
 app.get('/register_finished', routes.register_finished);
@@ -54,7 +54,6 @@ app.post('/api/create_article', function (req, res, next) {
 app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
-return;
 //db.setConnectionConfig({});
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);

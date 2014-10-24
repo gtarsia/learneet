@@ -1,7 +1,7 @@
 ﻿var UserJs = require("./../common/User");
 var utils = require("./Utils");
- 
-var gui = { 
+
+var gui = {
     getUsername: function () {
         return $("#username").val();
     },

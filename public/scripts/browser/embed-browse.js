@@ -1,2 +1,1 @@
-﻿ //# sourceMappingURL=embed-browse.js.map
-     
+﻿//# sourceMappingURL=embed-browse.js.map
