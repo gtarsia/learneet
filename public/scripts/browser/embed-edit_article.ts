@@ -4,6 +4,12 @@ import GoTo = ClientAjax.GoTo;
 
 export class EmbedEditArticleGui {
     id: string = "-1";
+    bindTitlePreview() {
+        $("input.article-title").keyup(function(e) {
+            var title = $("input.article-title").val();
+            $("h1.article-title").html(title);
+        });
+    }
     getContentId() {
         return "content";
     }
@@ -19,6 +25,7 @@ export class EmbedEditArticleGui {
     constructor() {
         var _self = this;
         $(document).ready(function() {
+            _self.bindTitlePreview();
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) })

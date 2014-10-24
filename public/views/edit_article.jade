@@ -5,17 +5,22 @@ prepend scripts
     guiName = 'EmbedEditArticle'
 
 append styles
-  link(rel='stylesheet', href='/stylesheets/article.css')
   link(rel='stylesheet', href='/stylesheets/edit_article.css')
 
 block main
-  #article
-    h1#title  
-    i#author by
-    #articleSeparator.marginBottom
-    textarea#content
-  #preview
+  #input.article-frame
+    .article-header
+      input.article-title(type='text') 
+      i#author by
+    .article-separator.marginBottom
+    textarea.article-content
+  #output.article-frame
+    .article-header
+      h1.article-title  
+      i#author by
+    .article-separator.marginBottom
+    .article-content
 
-  div
+  #buttons
     button#saveBtn Save
     button#cancelBtn Cancel

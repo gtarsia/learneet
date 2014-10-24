@@ -6,6 +6,7 @@ var EmbedEditArticleGui = (function () {
         this.id = "-1";
         var _self = this;
         $(document).ready(function () {
+            _self.bindTitlePreview();
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
@@ -22,6 +23,12 @@ var EmbedEditArticleGui = (function () {
             });
         });
     }
+    EmbedEditArticleGui.prototype.bindTitlePreview = function () {
+        $("input.article-title").keyup(function (e) {
+            var title = $("input.article-title").val();
+            $("h1.article-title").html(title);
+        });
+    };
     EmbedEditArticleGui.prototype.getContentId = function () {
         return "content";
     };
