@@ -10,6 +10,7 @@ var EmbedEditArticleGui = (function () {
             _self.bindContentPreview();
             _self.titlePreviewExample();
             _self.contentPreviewExample();
+            _self.bindScrolls();
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
@@ -48,6 +49,28 @@ var EmbedEditArticleGui = (function () {
             $("div.article-content").html(marked(content));
         });
     };
+    EmbedEditArticleGui.prototype.bindScrolls = function () {
+        var i = this.getInputContent();
+        var o = this.getOutputContent();
+        function getPercent(el) {
+            return 100 * el.scrollTop() / (el[0].scrollHeight - el.height());
+        }
+        function setPercent(el, percent) {
+            el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
+        }
+        i.scroll(function () {
+            setPercent(o, getPercent(i));
+        });
+        o.scroll(function () {
+            setPercent(i, getPercent(o));
+        });
+    };
+    EmbedEditArticleGui.prototype.getInputContent = function () {
+        return $("textarea.article-content");
+    };
+    EmbedEditArticleGui.prototype.getOutputContent = function () {
+        return $("div.article-content");
+    };
     EmbedEditArticleGui.prototype.getContentId = function () {
         return "content";
     };
@@ -65,6 +88,6 @@ var EmbedEditArticleGui = (function () {
 exports.EmbedEditArticleGui = EmbedEditArticleGui;
 
 if (guiName == 'EmbedEditArticle') {
-    new EmbedEditArticleGui();
+    gui = new EmbedEditArticleGui();
 }
 //# sourceMappingURL=embed-edit_article.js.map

@@ -1,3 +1,5 @@
+var gui;
+
 /*
 var exports = {};
 var customExports = {};
@@ -16,7 +18,7 @@ function getScriptName() {
 
 function startGui(gui) {
 	$(document).ready(function () {
-    	new gui();
+    	gui = new gui();
 	});
 }
 
