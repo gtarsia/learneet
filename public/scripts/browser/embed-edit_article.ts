@@ -1,5 +1,6 @@
 ﻿import ClientAjax = require("./client-ajax");
 import GoTo = ClientAjax.GoTo;
+import PreviewableArticle = require("./previewable-article");
 
 declare function marked(c: string);
 
@@ -14,38 +15,6 @@ export class EmbedEditArticleGui {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
-    }
-    bindTitlePreview() {
-        $("input.article-title").keyup(function(e) {
-            var title = $("input.article-title").val();
-            $("h1.article-title").html(title);
-        });
-    }
-    bindContentPreview() {
-        $("textarea.article-content").keyup(function(e) {
-            var content = $("textarea.article-content").val();
-            $("div.article-content").html(marked(content));
-        });
-    }
-    ignoreScroll: boolean;
-    bindScrolls() {
-        var i = this.getInputContent();
-        var o = this.getOutputContent();
-        var _self = this;
-        function getPercent(el) { return 100 * el.scrollTop() / (el[0].scrollHeight - el.height()); }
-        function setPercent(el, percent) { el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100); }
-        function bindScroll(src, dest) {
-            src.scroll(function () {
-                if (_self.ignoreScroll) {
-                    _self.ignoreScroll = false;
-                    return;
-                }
-                _self.ignoreScroll = true;
-                setPercent(dest, getPercent(src));
-            });
-        }
-        bindScroll(i, o);
-        bindScroll(o, i);
     }
     getInputContent() {
         return $("textarea.article-content");
@@ -65,15 +34,15 @@ export class EmbedEditArticleGui {
     getSaveBtn() {
         return $("#saveBtn");
     }
+    previewArticle: PreviewableArticle;
     constructor() {
-        this.ignoreScroll = false;
         var _self = this;
         $(document).ready(function() {
-            _self.bindTitlePreview();
-            _self.bindContentPreview();
+            var i = _self.getInputContent();
+            var o = _self.getOutputContent();
+            this.previewArticle = new PreviewableArticle(i, o);
             _self.titlePreviewExample();
             _self.contentPreviewExample();
-            _self.bindScrolls();
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) })

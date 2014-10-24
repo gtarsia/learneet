@@ -78,7 +78,7 @@ var Article = exports.Article;
 var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":12}],3:[function(require,module,exports){
+},{"./../common/common-ajax":13}],3:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 var parser = require('./parser');
 var GoTo = ClientAjax.GoTo;
@@ -172,18 +172,18 @@ if (guiName == 'EmbedCreateArticle') {
 },{"./client-ajax":2}],6:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 var GoTo = ClientAjax.GoTo;
+var PreviewableArticle = require("./previewable-article");
 
 var EmbedEditArticleGui = (function () {
     function EmbedEditArticleGui() {
         this.id = "-1";
-        this.ignoreScroll = false;
         var _self = this;
         $(document).ready(function () {
-            _self.bindTitlePreview();
-            _self.bindContentPreview();
+            var i = _self.getInputContent();
+            var o = _self.getOutputContent();
+            this.previewArticle = new PreviewableArticle(i, o);
             _self.titlePreviewExample();
             _self.contentPreviewExample();
-            _self.bindScrolls();
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
@@ -209,42 +209,6 @@ var EmbedEditArticleGui = (function () {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
-    };
-    EmbedEditArticleGui.prototype.bindTitlePreview = function () {
-        $("input.article-title").keyup(function (e) {
-            var title = $("input.article-title").val();
-            $("h1.article-title").html(title);
-        });
-    };
-    EmbedEditArticleGui.prototype.bindContentPreview = function () {
-        $("textarea.article-content").keyup(function (e) {
-            var content = $("textarea.article-content").val();
-            $("div.article-content").html(marked(content));
-        });
-    };
-
-    EmbedEditArticleGui.prototype.bindScrolls = function () {
-        var i = this.getInputContent();
-        var o = this.getOutputContent();
-        var _self = this;
-        function getPercent(el) {
-            return 100 * el.scrollTop() / (el[0].scrollHeight - el.height());
-        }
-        function setPercent(el, percent) {
-            el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
-        }
-        function bindScroll(src, dest) {
-            src.scroll(function () {
-                if (_self.ignoreScroll) {
-                    _self.ignoreScroll = false;
-                    return;
-                }
-                _self.ignoreScroll = true;
-                setPercent(dest, getPercent(src));
-            });
-        }
-        bindScroll(i, o);
-        bindScroll(o, i);
     };
     EmbedEditArticleGui.prototype.getInputContent = function () {
         return $("textarea.article-content");
@@ -273,7 +237,7 @@ if (guiName == 'EmbedEditArticle') {
 }
 //# sourceMappingURL=embed-edit_article.js.map
 
-},{"./client-ajax":2}],7:[function(require,module,exports){
+},{"./client-ajax":2,"./previewable-article":11}],7:[function(require,module,exports){
 var UserJs = require("./../common/User");
 var utils = require("./Utils");
 
@@ -314,7 +278,7 @@ $(document).ready(function () {
 });
 //# sourceMappingURL=embed-login.js.map
 
-},{"./../common/User":11,"./Utils":1}],8:[function(require,module,exports){
+},{"./../common/User":12,"./Utils":1}],8:[function(require,module,exports){
 //# sourceMappingURL=embed-register.js.map
 
 },{}],9:[function(require,module,exports){
@@ -391,6 +355,56 @@ exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
 },{}],11:[function(require,module,exports){
+var PreviewableArticle = (function () {
+    function PreviewableArticle(src, dest) {
+        this.ignoreScroll = false;
+        this.src = src;
+        this.dest = dest;
+        this.bindTitlePreview();
+        this.bindContentPreview();
+        this.bindScrolls();
+    }
+    PreviewableArticle.prototype.bindScrolls = function () {
+        var _self = this;
+        function getPercent(el) {
+            return 100 * el.scrollTop() / (el[0].scrollHeight - el.height());
+        }
+        function setPercent(el, percent) {
+            el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
+        }
+        function bindScroll(src, dest) {
+            src.scroll(function () {
+                if (_self.ignoreScroll) {
+                    _self.ignoreScroll = false;
+                    return;
+                }
+                _self.ignoreScroll = true;
+                setPercent(dest, getPercent(src));
+            });
+        }
+        bindScroll(this.src, this.dest);
+        bindScroll(this.dest, this.src);
+    };
+
+    PreviewableArticle.prototype.bindTitlePreview = function () {
+        this.src.keyup(function (e) {
+            var title = $("input.article-title").val();
+            $("h1.article-title").html(title);
+        });
+    };
+    PreviewableArticle.prototype.bindContentPreview = function () {
+        $("textarea.article-content").keyup(function (e) {
+            var content = $("textarea.article-content").val();
+            $("div.article-content").html(marked(content));
+        });
+    };
+    return PreviewableArticle;
+})();
+
+module.exports = PreviewableArticle;
+//# sourceMappingURL=previewable-article.js.map
+
+},{}],12:[function(require,module,exports){
 (function (UserJs) {
     var User = (function () {
         function User() {
@@ -409,7 +423,7 @@ exports.parseToDiv = parseToDiv;
 var UserJs = exports.UserJs;
 //# sourceMappingURL=User.js.map
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -446,4 +460,4 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13]);

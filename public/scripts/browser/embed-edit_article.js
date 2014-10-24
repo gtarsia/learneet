@@ -1,17 +1,17 @@
 ﻿var ClientAjax = require("./client-ajax");
 var GoTo = ClientAjax.GoTo;
+var PreviewableArticle = require("./previewable-article");
 
 var EmbedEditArticleGui = (function () {
     function EmbedEditArticleGui() {
         this.id = "-1";
-        this.ignoreScroll = false;
         var _self = this;
         $(document).ready(function () {
-            _self.bindTitlePreview();
-            _self.bindContentPreview();
+            var i = _self.getInputContent();
+            var o = _self.getOutputContent();
+            this.previewArticle = new PreviewableArticle(i, o);
             _self.titlePreviewExample();
             _self.contentPreviewExample();
-            _self.bindScrolls();
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
@@ -37,42 +37,6 @@ var EmbedEditArticleGui = (function () {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
-    };
-    EmbedEditArticleGui.prototype.bindTitlePreview = function () {
-        $("input.article-title").keyup(function (e) {
-            var title = $("input.article-title").val();
-            $("h1.article-title").html(title);
-        });
-    };
-    EmbedEditArticleGui.prototype.bindContentPreview = function () {
-        $("textarea.article-content").keyup(function (e) {
-            var content = $("textarea.article-content").val();
-            $("div.article-content").html(marked(content));
-        });
-    };
-
-    EmbedEditArticleGui.prototype.bindScrolls = function () {
-        var i = this.getInputContent();
-        var o = this.getOutputContent();
-        var _self = this;
-        function getPercent(el) {
-            return 100 * el.scrollTop() / (el[0].scrollHeight - el.height());
-        }
-        function setPercent(el, percent) {
-            el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
-        }
-        function bindScroll(src, dest) {
-            src.scroll(function () {
-                if (_self.ignoreScroll) {
-                    _self.ignoreScroll = false;
-                    return;
-                }
-                _self.ignoreScroll = true;
-                setPercent(dest, getPercent(src));
-            });
-        }
-        bindScroll(i, o);
-        bindScroll(o, i);
     };
     EmbedEditArticleGui.prototype.getInputContent = function () {
         return $("textarea.article-content");

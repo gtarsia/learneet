@@ -16,6 +16,7 @@
 /// <reference path="scripts/browser/embed-register.ts" />
 /// <reference path="scripts/browser/live-parser.ts" />
 /// <reference path="scripts/browser/parser.ts" />
+/// <reference path="scripts/browser/previewable-article.ts" />
 /// <reference path="scripts/common/User.ts" />
 /// <reference path="scripts/common/common-ajax.ts" />
 /// <reference path="scripts/server/article.ts" />

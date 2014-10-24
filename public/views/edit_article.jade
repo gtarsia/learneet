@@ -11,18 +11,7 @@ append styles
   link(rel='stylesheet', href='/stylesheets/edit_article.css')
 
 block main
-  #input.article-frame
-    .article-header
-      input.article-title(type='text') 
-      i#author by
-    .article-separator.marginBottom
-    textarea.article-content
-  #output.article-frame
-    .article-header
-      h1.article-title  
-      i#author by
-    .article-separator.marginBottom
-    .article-content
+  include previewable-article-frame
 
   #buttons
     button#saveBtn Save
