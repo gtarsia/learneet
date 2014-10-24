@@ -53,8 +53,9 @@ exports.ServerAjax = ServerAjax;
             _super.call(this, CommonAjax.Article.Create.url(), CommonAjax.Article.Create.type());
         }
         Create.prototype.handler = function (req, res, next) {
-            debugger;
-            throw new Error('I should implement this');
+            article.create(req.body).then(function (result) {
+                res.send(result);
+            });
         };
         return Create;
     })(ServerAjax);

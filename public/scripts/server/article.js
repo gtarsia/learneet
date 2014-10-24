@@ -11,9 +11,11 @@ function isOk(err, reject) {
 function create(args) {
     var idOuter;
     return db.incr("articleId").then(function (id) {
+        debugger;
         idOuter = id;
         return db.hmset("article:" + id, args);
     }).then(function (result) {
+        debugger;
         var r = {
             ok: true,
             why: '',

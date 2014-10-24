@@ -11,10 +11,12 @@ export function create(args: Create.ParamsType) : Promise<Create.ReturnType> {
 	var idOuter;
 	return db.incr("articleId")
 	.then((id: string) => {
+		debugger;
 		idOuter = id;
 		return db.hmset("article:" + id, args);
 	})
 	.then<Create.ReturnType>((result: string) => {
+		debugger;
 		var r : Create.ReturnType = {
 			ok: true,
 			why: '',

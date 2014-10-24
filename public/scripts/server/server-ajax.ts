@@ -49,8 +49,10 @@ export module Article {
                   CommonAjax.Article.Create.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
-            debugger;
-            throw new Error('I should implement this');
+            article.create(req.body)
+            .then((result: CommonCreate.ReturnType) => {
+                res.send(result);
+            });
         }
     }
 

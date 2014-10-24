@@ -151,8 +151,7 @@ var EmbedCreateArticleGui = (function () {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.getArticle();
                 console.log(article);
-                return;
-                console.log('Creando artículo');
+                debugger;
                 new ClientAjax.Article.Create().ajax(article).done(function (res) {
                     console.log(res);
                 });
