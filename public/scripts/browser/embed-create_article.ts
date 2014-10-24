@@ -12,7 +12,6 @@ class EmbedCreateArticleGui {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.getArticle();
                 console.log(article);
-                debugger;
                 new ClientAjax.Article.Create().ajax(article)
                 .done(function(res) {
                     console.log(res);

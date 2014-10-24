@@ -1,5 +1,7 @@
 declare function marked(s: string);
 
+import RenderedArticle = require('./rendered-article');
+
 class PreviewableArticle {
     getArticle() {
         return {
@@ -16,6 +18,7 @@ class PreviewableArticle {
     getInputTitle() {
         return $("input.article-title");
     }
+    output: RenderedArticle;
     getOutputTitle() {
         return $("h1.article-title");
     }
@@ -54,6 +57,7 @@ class PreviewableArticle {
         });
     }
     constructor() {
+        this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();

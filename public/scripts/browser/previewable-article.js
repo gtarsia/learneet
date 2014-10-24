@@ -1,5 +1,8 @@
+var RenderedArticle = require('./rendered-article');
+
 var PreviewableArticle = (function () {
     function PreviewableArticle() {
+        this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
@@ -20,6 +23,7 @@ var PreviewableArticle = (function () {
     PreviewableArticle.prototype.getInputTitle = function () {
         return $("input.article-title");
     };
+
     PreviewableArticle.prototype.getOutputTitle = function () {
         return $("h1.article-title");
     };

@@ -8,9 +8,4 @@ append styles
   link(rel='stylesheet', href='/stylesheets/article.css')
 
 block main
-  .article-frame
-    h1#title  
-    i#author by
-    #articleSeparator.marginBottom
-    div#content
-    button#editBtn Edit
+  include rendered_article

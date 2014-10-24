@@ -78,16 +78,18 @@ var Article = exports.Article;
 var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":13}],3:[function(require,module,exports){
+},{"./../common/common-ajax":14}],3:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
-var parser = require('./parser');
+
 var GoTo = ClientAjax.GoTo;
+var RenderedArticle = require('./rendered-article');
 
 var EmbedArticleGui = (function () {
     function EmbedArticleGui() {
         this.id = "-1";
         var _self = this;
         $(document).ready(function () {
+            _self.article = new RenderedArticle();
             var href = $(location).attr("href");
             _self.id = href.substr(href.lastIndexOf('/') + 1);
             new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
@@ -96,33 +98,14 @@ var EmbedArticleGui = (function () {
                     return;
                 }
                 var result = res.result;
-                _self.setTitle(result.title);
-                var arr = result.content.split("\n");
-                var length = arr.length;
-                for (var i = 0; i < length; i++) {
-                    parser.parseToDiv(arr[i], i, _self.getContentId());
-                }
+                _self.article.setTitle(result.title);
+                _self.article.setContent(marked(result.content));
             });
             _self.getEditBtn().click(function () {
                 GoTo.editArticle(_self.id);
             });
         });
     }
-    EmbedArticleGui.prototype.getContentId = function () {
-        return "content";
-    };
-    EmbedArticleGui.prototype.setContent = function (content) {
-        $('#' + this.getContentId()).html(content);
-    };
-    EmbedArticleGui.prototype.getContent = function () {
-        return $('#' + this.getContentId()).val();
-    };
-    EmbedArticleGui.prototype.setTitle = function (title) {
-        $("#title").html(title);
-    };
-    EmbedArticleGui.prototype.getTitle = function () {
-        throw new Error('Not implemented yet');
-    };
     EmbedArticleGui.prototype.getEditBtn = function () {
         return $("#editBtn");
     };
@@ -135,7 +118,7 @@ if (guiName == 'EmbedArticle') {
 }
 //# sourceMappingURL=embed-article.js.map
 
-},{"./client-ajax":2,"./parser":10}],4:[function(require,module,exports){
+},{"./client-ajax":2,"./rendered-article":12}],4:[function(require,module,exports){
 //# sourceMappingURL=embed-browse.js.map
 
 },{}],5:[function(require,module,exports){
@@ -151,7 +134,6 @@ var EmbedCreateArticleGui = (function () {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.getArticle();
                 console.log(article);
-                debugger;
                 new ClientAjax.Article.Create().ajax(article).done(function (res) {
                     console.log(res);
                 });
@@ -267,7 +249,7 @@ $(document).ready(function () {
 });
 //# sourceMappingURL=embed-login.js.map
 
-},{"./../common/User":12,"./Utils":1}],8:[function(require,module,exports){
+},{"./../common/User":13,"./Utils":1}],8:[function(require,module,exports){
 //# sourceMappingURL=embed-register.js.map
 
 },{}],9:[function(require,module,exports){
@@ -344,8 +326,11 @@ exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
 },{}],11:[function(require,module,exports){
+var RenderedArticle = require('./rendered-article');
+
 var PreviewableArticle = (function () {
     function PreviewableArticle() {
+        this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
@@ -366,6 +351,7 @@ var PreviewableArticle = (function () {
     PreviewableArticle.prototype.getInputTitle = function () {
         return $("input.article-title");
     };
+
     PreviewableArticle.prototype.getOutputTitle = function () {
         return $("h1.article-title");
     };
@@ -415,7 +401,29 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{}],12:[function(require,module,exports){
+},{"./rendered-article":12}],12:[function(require,module,exports){
+var RenderedArticle = (function () {
+    function RenderedArticle() {
+    }
+    RenderedArticle.prototype.getTitle = function () {
+        return $("h1.article-title");
+    };
+    RenderedArticle.prototype.getContent = function () {
+        return $("div.article-content");
+    };
+    RenderedArticle.prototype.setTitle = function (s) {
+        return $("h1.article-title").html(s);
+    };
+    RenderedArticle.prototype.setContent = function (s) {
+        return $("div.article-content").html(s);
+    };
+    return RenderedArticle;
+})();
+
+module.exports = RenderedArticle;
+//# sourceMappingURL=rendered-article.js.map
+
+},{}],13:[function(require,module,exports){
 (function (UserJs) {
     var User = (function () {
         function User() {
@@ -434,7 +442,7 @@ module.exports = PreviewableArticle;
 var UserJs = exports.UserJs;
 //# sourceMappingURL=User.js.map
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -471,4 +479,4 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14]);
