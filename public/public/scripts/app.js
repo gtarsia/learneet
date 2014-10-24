@@ -140,27 +140,25 @@ if (guiName == 'EmbedArticle') {
 
 },{}],5:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
+var PreviewableArticle = require("./previewable-article");
 
 var EmbedCreateArticleGui = (function () {
     function EmbedCreateArticleGui() {
-        var _this = this;
+        var _self = this;
         $(document).ready(function () {
-            console.log("ready!");
+            _self.previewArticle = new PreviewableArticle();
             $("#create").click(function () {
-                debugger;
+                console.log('Trying to create: ');
+                var article = _self.previewArticle.getArticle();
+                console.log(article);
+                return;
                 console.log('Creando artículo');
-                new ClientAjax.Article.Create().ajax({ content: _this.getContent(), title: _this.getTitle() }).done(function (res) {
+                new ClientAjax.Article.Create().ajax(article).done(function (res) {
                     console.log(res);
                 });
             });
         });
     }
-    EmbedCreateArticleGui.prototype.getContent = function () {
-        return $("#content").val();
-    };
-    EmbedCreateArticleGui.prototype.getTitle = function () {
-        return $("#title").val();
-    };
     return EmbedCreateArticleGui;
 })();
 
@@ -169,7 +167,7 @@ if (guiName == 'EmbedCreateArticle') {
 }
 //# sourceMappingURL=embed-create_article.js.map
 
-},{"./client-ajax":2}],6:[function(require,module,exports){
+},{"./client-ajax":2,"./previewable-article":11}],6:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 var GoTo = ClientAjax.GoTo;
 var PreviewableArticle = require("./previewable-article");
@@ -179,9 +177,7 @@ var EmbedEditArticleGui = (function () {
         this.id = "-1";
         var _self = this;
         $(document).ready(function () {
-            var i = _self.getInputContent();
-            var o = _self.getOutputContent();
-            this.previewArticle = new PreviewableArticle(i, o);
+            this.previewArticle = new PreviewableArticle();
             _self.titlePreviewExample();
             _self.contentPreviewExample();
             var href = $(location).attr("href");
@@ -209,12 +205,6 @@ var EmbedEditArticleGui = (function () {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
-    };
-    EmbedEditArticleGui.prototype.getInputContent = function () {
-        return $("textarea.article-content");
-    };
-    EmbedEditArticleGui.prototype.getOutputContent = function () {
-        return $("div.article-content");
     };
     EmbedEditArticleGui.prototype.getContentId = function () {
         return "content";
@@ -356,14 +346,30 @@ exports.parseToDiv = parseToDiv;
 
 },{}],11:[function(require,module,exports){
 var PreviewableArticle = (function () {
-    function PreviewableArticle(src, dest) {
+    function PreviewableArticle() {
         this.ignoreScroll = false;
-        this.src = src;
-        this.dest = dest;
         this.bindTitlePreview();
         this.bindContentPreview();
         this.bindScrolls();
     }
+    PreviewableArticle.prototype.getArticle = function () {
+        return {
+            title: this.getInputTitle().val(),
+            content: this.getInputContent().val()
+        };
+    };
+    PreviewableArticle.prototype.getInputContent = function () {
+        return $("textarea.article-content");
+    };
+    PreviewableArticle.prototype.getOutputContent = function () {
+        return $("div.article-content");
+    };
+    PreviewableArticle.prototype.getInputTitle = function () {
+        return $("input.article-title");
+    };
+    PreviewableArticle.prototype.getOutputTitle = function () {
+        return $("h1.article-title");
+    };
     PreviewableArticle.prototype.bindScrolls = function () {
         var _self = this;
         function getPercent(el) {
@@ -372,6 +378,8 @@ var PreviewableArticle = (function () {
         function setPercent(el, percent) {
             el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
         }
+        var src = _self.getInputContent();
+        var dest = _self.getOutputContent();
         function bindScroll(src, dest) {
             src.scroll(function () {
                 if (_self.ignoreScroll) {
@@ -382,20 +390,24 @@ var PreviewableArticle = (function () {
                 setPercent(dest, getPercent(src));
             });
         }
-        bindScroll(this.src, this.dest);
-        bindScroll(this.dest, this.src);
+        bindScroll(src, dest);
+        bindScroll(dest, src);
     };
 
     PreviewableArticle.prototype.bindTitlePreview = function () {
-        this.src.keyup(function (e) {
-            var title = $("input.article-title").val();
-            $("h1.article-title").html(title);
+        var i = this.getInputTitle();
+        var o = this.getOutputTitle();
+        i.keyup(function (e) {
+            var title = i.val();
+            o.html(title);
         });
     };
     PreviewableArticle.prototype.bindContentPreview = function () {
-        $("textarea.article-content").keyup(function (e) {
-            var content = $("textarea.article-content").val();
-            $("div.article-content").html(marked(content));
+        var i = this.getInputContent();
+        var o = this.getOutputContent();
+        i.keyup(function (e) {
+            var content = i.val();
+            o.html(marked(content));
         });
     };
     return PreviewableArticle;

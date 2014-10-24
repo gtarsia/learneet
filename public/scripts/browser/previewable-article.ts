@@ -1,10 +1,30 @@
 declare function marked(s: string);
 
 class PreviewableArticle {
+    getArticle() {
+        return {
+            title: this.getInputTitle().val(),
+            content: this.getInputContent().val()
+        }
+    }
+    getInputContent() {
+        return $("textarea.article-content");
+    }
+    getOutputContent() {
+        return $("div.article-content");
+    }
+    getInputTitle() {
+        return $("input.article-title");
+    }
+    getOutputTitle() {
+        return $("h1.article-title");
+    }
     bindScrolls() {
         var _self = this;
         function getPercent(el) { return 100 * el.scrollTop() / (el[0].scrollHeight - el.height()); }
         function setPercent(el, percent) { el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100); }
+        var src = _self.getInputContent();
+        var dest = _self.getOutputContent();
         function bindScroll(src, dest) {
             src.scroll(function () {
                 if (_self.ignoreScroll) {
@@ -15,28 +35,26 @@ class PreviewableArticle {
                 setPercent(dest, getPercent(src));
             });
         }
-        bindScroll(this.src, this.dest);
-        bindScroll(this.dest, this.src);
+        bindScroll(src, dest);
+        bindScroll(dest, src);
     }
     ignoreScroll: boolean;
     bindTitlePreview() {
-        this.src.keyup(function(e) {
-            var title = $("input.article-title").val();
-            $("h1.article-title").html(title);
+        var i = this.getInputTitle(); var o = this.getOutputTitle();
+        i.keyup(function(e) {
+            var title = i.val();
+            o.html(title);  
         });
     }
     bindContentPreview() {
-        $("textarea.article-content").keyup(function(e) {
-            var content = $("textarea.article-content").val();
-            $("div.article-content").html(marked(content));
+        var i = this.getInputContent(); var o = this.getOutputContent();
+        i.keyup(function(e) {
+            var content = i.val();
+            o.html(marked(content));
         });
     }
-    src: any
-    dest: any
-    constructor(src, dest) {
+    constructor() {
         this.ignoreScroll = false;
-        this.src = src;
-        this.dest = dest;
         this.bindTitlePreview();
         this.bindContentPreview();
         this.bindScrolls();

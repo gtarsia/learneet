@@ -1,22 +1,20 @@
 ﻿import utils = require("./Utils");
 import ClientAjax = require("./client-ajax");
+import PreviewableArticle = require("./previewable-article");
 
 class EmbedCreateArticleGui {
-    getContent(): string {
-        return $("#content").val();
-    }
-    getTitle(): string {
-        return $("#title").val();
-    }
+    previewArticle: PreviewableArticle;
     constructor() {
-        var _this = this;
+        var _self = this;
         $(document).ready(function () {
-            console.log("ready!");
+            _self.previewArticle = new PreviewableArticle();
             $("#create").click(() => {
-                debugger;
+                console.log('Trying to create: ');
+                var article = _self.previewArticle.getArticle();
+                console.log(article);
+                return;
                 console.log('Creando artículo');
-                new ClientAjax.Article.Create().ajax(
-                { content: _this.getContent(), title: _this.getTitle() })
+                new ClientAjax.Article.Create().ajax(article)
                 .done(function(res) {
                     console.log(res);
                 });

@@ -16,12 +16,6 @@ export class EmbedEditArticleGui {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     }
-    getInputContent() {
-        return $("textarea.article-content");
-    }
-    getOutputContent() {
-        return $("div.article-content");
-    }
     getContentId() {
         return "content";
     }
@@ -38,9 +32,7 @@ export class EmbedEditArticleGui {
     constructor() {
         var _self = this;
         $(document).ready(function() {
-            var i = _self.getInputContent();
-            var o = _self.getOutputContent();
-            this.previewArticle = new PreviewableArticle(i, o);
+            this.previewArticle = new PreviewableArticle();
             _self.titlePreviewExample();
             _self.contentPreviewExample();
             var href = $(location).attr("href");

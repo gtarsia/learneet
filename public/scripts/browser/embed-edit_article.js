@@ -7,9 +7,7 @@ var EmbedEditArticleGui = (function () {
         this.id = "-1";
         var _self = this;
         $(document).ready(function () {
-            var i = _self.getInputContent();
-            var o = _self.getOutputContent();
-            this.previewArticle = new PreviewableArticle(i, o);
+            this.previewArticle = new PreviewableArticle();
             _self.titlePreviewExample();
             _self.contentPreviewExample();
             var href = $(location).attr("href");
@@ -37,12 +35,6 @@ var EmbedEditArticleGui = (function () {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
-    };
-    EmbedEditArticleGui.prototype.getInputContent = function () {
-        return $("textarea.article-content");
-    };
-    EmbedEditArticleGui.prototype.getOutputContent = function () {
-        return $("div.article-content");
     };
     EmbedEditArticleGui.prototype.getContentId = function () {
         return "content";
