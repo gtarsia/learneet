@@ -1,10 +1,13 @@
 ﻿import utils = require("./Utils");
 import ClientAjax = require("./client-ajax");
 import PreviewableArticle = require("./previewable-article");
+import Gui = require("./embed-gui");
+import url = require("./../common/url")
 
-class EmbedCreateArticleGui {
+class EmbedCreateArticleGui extends Gui {
     previewArticle: PreviewableArticle;
     constructor() {
+        super();
         var _self = this;
         $(document).ready(function () {
             _self.previewArticle = new PreviewableArticle();
@@ -14,11 +17,11 @@ class EmbedCreateArticleGui {
                 console.log(article);
                 new ClientAjax.Article.Create().ajax(article)
                 .done(function(res) {
-                    console.log(res);
+                    var id = res.result.id;
+                    _self.redirect(url.article.get(id));
                 });
             });
         })
-
     }
 }
 declare var guiName;

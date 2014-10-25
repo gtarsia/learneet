@@ -2,10 +2,11 @@ import ClientAjax = require("./client-ajax");
 import CommonAjax = require('./../common/common-ajax');
 import Article = CommonAjax.Article;
 import url = require("./../common/url");
+import Gui = require("./embed-gui");
 
 //$.template('<div><img src="${url}" />${name}</div>');
 
-class EmbedIndexGui {
+class EmbedIndexGui extends Gui {
     setThumbs(html: string) {
         //$(".childContainer").append(html);
     }
@@ -13,6 +14,7 @@ class EmbedIndexGui {
         return articles.toString();
     }
     constructor() {
+        super();
         var _self = this;
         $(document).ready(function() {
             new ClientAjax.Article.GetAll().ajax({})

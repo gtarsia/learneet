@@ -70,7 +70,7 @@ var Article = exports.Article;
 var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":13}],2:[function(require,module,exports){
+},{"./../common/common-ajax":14}],2:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 
 var GoTo = ClientAjax.GoTo;
@@ -110,15 +110,25 @@ if (guiName == 'EmbedArticle') {
 }
 //# sourceMappingURL=embed-article.js.map
 
-},{"./client-ajax":1,"./rendered-article":12}],3:[function(require,module,exports){
+},{"./client-ajax":1,"./rendered-article":13}],3:[function(require,module,exports){
 //# sourceMappingURL=embed-browse.js.map
 
 },{}],4:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var ClientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
+var Gui = require("./embed-gui");
+var url = require("./../common/url");
 
-var EmbedCreateArticleGui = (function () {
+var EmbedCreateArticleGui = (function (_super) {
+    __extends(EmbedCreateArticleGui, _super);
     function EmbedCreateArticleGui() {
+        _super.call(this);
         var _self = this;
         $(document).ready(function () {
             _self.previewArticle = new PreviewableArticle();
@@ -127,20 +137,21 @@ var EmbedCreateArticleGui = (function () {
                 var article = _self.previewArticle.getArticle();
                 console.log(article);
                 new ClientAjax.Article.Create().ajax(article).done(function (res) {
-                    console.log(res);
+                    var id = res.result.id;
+                    _self.redirect(url.article.get(id));
                 });
             });
         });
     }
     return EmbedCreateArticleGui;
-})();
+})(Gui);
 
 if (guiName == 'EmbedCreateArticle') {
     new EmbedCreateArticleGui();
 }
 //# sourceMappingURL=embed-create_article.js.map
 
-},{"./client-ajax":1,"./previewable-article":11}],5:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./previewable-article":12}],5:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 var GoTo = ClientAjax.GoTo;
 var PreviewableArticle = require("./previewable-article");
@@ -196,13 +207,35 @@ var EmbedEditArticleGui = (function () {
 exports.EmbedEditArticleGui = EmbedEditArticleGui;
 //# sourceMappingURL=embed-edit_article.js.map
 
-},{"./client-ajax":1,"./previewable-article":11}],6:[function(require,module,exports){
+},{"./client-ajax":1,"./previewable-article":12}],6:[function(require,module,exports){
+var Gui = (function () {
+    function Gui() {
+    }
+    Gui.prototype.redirect = function (view) {
+        window.location.href = view;
+    };
+    return Gui;
+})();
+
+module.exports = Gui;
+//# sourceMappingURL=embed-gui.js.map
+
+},{}],7:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var ClientAjax = require("./client-ajax");
 
 var url = require("./../common/url");
+var Gui = require("./embed-gui");
 
-var EmbedIndexGui = (function () {
+var EmbedIndexGui = (function (_super) {
+    __extends(EmbedIndexGui, _super);
     function EmbedIndexGui() {
+        _super.call(this);
         var _self = this;
         $(document).ready(function () {
             new ClientAjax.Article.GetAll().ajax({}).done(function (res) {
@@ -229,14 +262,14 @@ var EmbedIndexGui = (function () {
         return articles.toString();
     };
     return EmbedIndexGui;
-})();
+})(Gui);
 
 if (guiName == 'EmbedIndexGui') {
     gui = new EmbedIndexGui();
 }
 //# sourceMappingURL=embed-index.js.map
 
-},{"./../common/url":14,"./client-ajax":1}],7:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6}],8:[function(require,module,exports){
 var gui = {
     getUsername: function () {
         return $("#username").val();
@@ -260,10 +293,10 @@ $(document).ready(function () {
 });
 //# sourceMappingURL=embed-login.js.map
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 //# sourceMappingURL=embed-register.js.map
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -307,7 +340,7 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":10}],10:[function(require,module,exports){
+},{"./parser":11}],11:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -336,7 +369,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 
 var PreviewableArticle = (function () {
@@ -412,7 +445,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{"./rendered-article":12}],12:[function(require,module,exports){
+},{"./rendered-article":13}],13:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
     }
@@ -434,7 +467,7 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -488,7 +521,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -511,4 +544,4 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
