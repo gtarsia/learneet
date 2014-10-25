@@ -1,6 +1,7 @@
 import commonAjax = require('./../common/common-ajax');
 import Promise = require('bluebird');
 import Article = commonAjax.Article;
+import Fields = Article.Fields;
 import Create = Article.Create;
 import Get = Article.Get;
 import GetAll = Article.GetAll;
@@ -52,5 +53,24 @@ export function get(args: Get.ParamsType) : Promise<Get.ReturnType> {
 }
 
 export function getAll() : Promise<GetAll.ReturnType> {
-	return db.command('asd');
+	function arrayToArticles(array: string[]) : Fields[] {
+		var articles : Fields[] = [];
+		while (array.length > 0) {
+			var title = array.shift(); var content = array.shift();
+			articles.push({ title: title, content: content });
+		}
+		return articles;
+	}
+	return db.sort('ids', 'by', 'nosort', 'get', 'article:*->title', 'GET', 'article:*->content')
+	.then<GetAll.ReturnType>((result: any) => {
+        debugger;
+		var ok = result != null;
+		var why = (result == null ? 'Article with id ' + result.id + ' not found' : '');
+		var r : GetAll.ReturnType = {
+			ok: ok,
+			why: why,
+			result: arrayToArticles(result)
+		}
+		return r;
+	})
 }

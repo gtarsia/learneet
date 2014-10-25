@@ -44,7 +44,26 @@ function get(args) {
 exports.get = get;
 
 function getAll() {
-    return db.command('asd');
+    function arrayToArticles(array) {
+        var articles = [];
+        while (array.length > 0) {
+            var title = array.shift();
+            var content = array.shift();
+            articles.push({ title: title, content: content });
+        }
+        return articles;
+    }
+    return db.sort('ids', 'by', 'nosort', 'get', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
+        debugger;
+        var ok = result != null;
+        var why = (result == null ? 'Article with id ' + result.id + ' not found' : '');
+        var r = {
+            ok: ok,
+            why: why,
+            result: arrayToArticles(result)
+        };
+        return r;
+    });
 }
 exports.getAll = getAll;
 //# sourceMappingURL=article.js.map

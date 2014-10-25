@@ -220,6 +220,5 @@ declare module "redis" {
 		client(args: any[], callback?: ResCallback): void;
 		eval(args: any[], callback?: ResCallback): void;
 		evalsha(args: any[], callback?: ResCallback): void;
-		send_command(args: string, callback?: ResCallback): void
 	}
 }

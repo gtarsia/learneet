@@ -85,6 +85,11 @@ exports.ServerAjax = ServerAjax;
             _super.call(this, CommonGetAll.url(), CommonGetAll.type());
         }
         GetAll.prototype.handler = function (req, res, next) {
+            article.getAll().then(function (result) {
+                debugger;
+                console.log('Se pidieron todos los articulos');
+                res.send(result);
+            });
         };
         return GetAll;
     })(ServerAjax);

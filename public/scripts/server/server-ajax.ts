@@ -82,7 +82,12 @@ export module Article {
             super(CommonGetAll.url(), CommonGetAll.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
-            
+            article.getAll()
+            .then((result: CommonGetAll.ReturnType) => {
+                debugger;
+                console.log('Se pidieron todos los articulos');
+                res.send(result);
+            });
         }
     }
     /*

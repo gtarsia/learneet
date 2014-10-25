@@ -31,6 +31,7 @@
 /// <reference path="typings/katex/katex.d.ts" />
 /// <reference path="typings/learneet/learneet.d.ts" />
 /// <reference path="typings/mocha/mocha.d.ts" />
+/// <reference path="typings/mustache/mustache.d.ts" />
 /// <reference path="typings/node/node.d.ts" />
 /// <reference path="typings/pg/pg.d.ts" />
 /// <reference path="typings/redis/redis.d.ts" />

@@ -72,14 +72,18 @@ function hgetall(key) {
 }
 exports.hgetall = hgetall;
 
-function command(command) {
+function sort() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
     return new Promise(function (resolve, reject) {
-        exports.client.send_command(command, function (err, result) {
+        exports.client.sort(args, function (err, result) {
             if (!isOk(err, reject))
-                return;
+                result;
             resolve(result);
         });
     });
 }
-exports.command = command;
+exports.sort = sort;
 //# sourceMappingURL=db.js.map

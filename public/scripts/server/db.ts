@@ -84,12 +84,12 @@ export function hgetall(key: string) : Promise<any> {
 	});
 }
 
-export function command(command: string) : Promise<any> {
-	return new Promise<any>(
+export function sort(...args: string[]) : Promise<any> {
+	return new Promise<string>(
 	function(resolve: (result: string) => any,
 			 reject: (error: any) => void) {
-		client.send_command(command, function(err, result) {
-			if (!isOk(err, reject)) return;
+		client.sort(args, function(err, result) {
+			if (!isOk(err, reject)) result;
 			resolve(result);
 		});
 	});

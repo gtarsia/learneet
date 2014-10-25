@@ -1,3 +1,6 @@
-.article-thumb
-  .title Title
-  .content contenido
+script#article-thumb-template(type="x-tmpl-mustache")
+  {{#articles}}
+  .article-thumb
+    .title {{title}}
+    .content {{content}}
+  {{/articles}}
