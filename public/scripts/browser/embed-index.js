@@ -1,5 +1,7 @@
 var ClientAjax = require("./client-ajax");
 
+var url = require("./../common/url");
+
 var EmbedIndexGui = (function () {
     function EmbedIndexGui() {
         var _self = this;
@@ -9,10 +11,14 @@ var EmbedIndexGui = (function () {
                     console.log(res.why);
                     return;
                 }
-                var result = res.result;
+                var articles = res.result;
+                var length = articles.length;
+                for (var i = 0; i < length; i++) {
+                    articles[i].url = url.article.get(articles[i].id);
+                }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);
-                var rendered = Mustache.render(template, { articles: result });
+                var rendered = Mustache.render(template, { articles: articles });
                 $("#article-thumb-template").remove();
                 $("#main .childContainer").html(rendered);
             });

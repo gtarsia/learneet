@@ -95,3 +95,13 @@ export function sort(...args: string[]) : Promise<any> {
 	});
 }
 
+export function rpush(key: string, value: string) : Promise<any> {
+	return new Promise<string>(
+	function(resolve: (result: string) => any,
+			 reject: (error: any) => void) {
+		client.rpush([key, value], function(err, result) {
+			if (!isOk(err, reject)) result;
+			resolve(result);
+		});
+	});
+}

@@ -86,4 +86,15 @@ function sort() {
     });
 }
 exports.sort = sort;
+
+function rpush(key, value) {
+    return new Promise(function (resolve, reject) {
+        exports.client.rpush([key, value], function (err, result) {
+            if (!isOk(err, reject))
+                result;
+            resolve(result);
+        });
+    });
+}
+exports.rpush = rpush;
 //# sourceMappingURL=db.js.map

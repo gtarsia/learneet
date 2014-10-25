@@ -1,3 +1,7 @@
+var commonAjax = require('./../common/common-ajax');
+
+var Article = commonAjax.Article;
+
 var db = require('./db');
 
 function isOk(err, reject) {
@@ -9,18 +13,21 @@ function isOk(err, reject) {
 }
 
 function create(args) {
-    var idOuter;
-    return db.incr("articleId").then(function (id) {
+    var id;
+    return db.incr("articleId").then(function (_id) {
         debugger;
-        idOuter = id;
-        return db.hmset("article:" + id, args);
+        id = _id;
+        return db.rpush("article:ids", id);
+    }).then(function () {
+        debugger;
+        return db.hmset("article:" + id, Article.WrapFieldWithId(args, id));
     }).then(function (result) {
         debugger;
         var r = {
             ok: true,
             why: '',
             result: {
-                id: idOuter
+                id: id
             }
         };
         return r;
@@ -47,16 +54,17 @@ function getAll() {
     function arrayToArticles(array) {
         var articles = [];
         while (array.length > 0) {
+            var id = array.shift();
             var title = array.shift();
             var content = array.shift();
-            articles.push({ title: title, content: content });
+            articles.push({ id: id, title: title, content: content });
         }
         return articles;
     }
-    return db.sort('ids', 'by', 'nosort', 'get', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
+    return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
         debugger;
         var ok = result != null;
-        var why = (result == null ? 'Article with id ' + result.id + ' not found' : '');
+        var why = (result == null ? 'Couldn\'t get articles' : '');
         var r = {
             ok: ok,
             why: why,

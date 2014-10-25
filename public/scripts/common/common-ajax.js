@@ -4,6 +4,11 @@
 };
 
 (function (Article) {
+    function WrapFieldWithId(fields, id) {
+        return { title: fields.title, content: fields.content, id: id };
+    }
+    Article.WrapFieldWithId = WrapFieldWithId;
+
     (function (Create) {
         function url() {
             return '/api/create_article';

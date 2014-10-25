@@ -1,7 +1,4 @@
-﻿var UserJs = require("./../common/User");
-var utils = require("./Utils");
-
-var gui = {
+﻿var gui = {
     getUsername: function () {
         return $("#username").val();
     },
@@ -17,23 +14,9 @@ var gui = {
 };
 
 $(document).ready(function () {
-    var classes = {
-        User: UserJs.UserJs.User,
-        Utils: utils.m
-    };
-
     console.log("ready!");
     $("#login").click(function () {
         console.log('Loggueando');
-        gui.cleanWarnings();
-        var user = new classes.User();
-        user.logIn(gui.getUsername(), gui.getPassword(), function (err) {
-            if (err) {
-                gui.warnInvalidLogin();
-            } else {
-                classes.Utils.redirect.to.index();
-            }
-        });
     });
 });
 //# sourceMappingURL=embed-login.js.map

@@ -1,20 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (m) {
-    function _redirect(url) {
-        throw new Error('Not Implemented Exception');
-    }
-    m.redirect = {
-        to: {
-            index: function () {
-                _redirect('/index');
-            }
-        }
-    };
-})(exports.m || (exports.m = {}));
-var m = exports.m;
-//# sourceMappingURL=Utils.js.map
-
-},{}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -86,7 +70,7 @@ var Article = exports.Article;
 var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":15}],3:[function(require,module,exports){
+},{"./../common/common-ajax":13}],2:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 
 var GoTo = ClientAjax.GoTo;
@@ -126,10 +110,10 @@ if (guiName == 'EmbedArticle') {
 }
 //# sourceMappingURL=embed-article.js.map
 
-},{"./client-ajax":2,"./rendered-article":13}],4:[function(require,module,exports){
+},{"./client-ajax":1,"./rendered-article":12}],3:[function(require,module,exports){
 //# sourceMappingURL=embed-browse.js.map
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
 
@@ -156,7 +140,7 @@ if (guiName == 'EmbedCreateArticle') {
 }
 //# sourceMappingURL=embed-create_article.js.map
 
-},{"./client-ajax":2,"./previewable-article":12}],6:[function(require,module,exports){
+},{"./client-ajax":1,"./previewable-article":11}],5:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
 var GoTo = ClientAjax.GoTo;
 var PreviewableArticle = require("./previewable-article");
@@ -212,8 +196,10 @@ var EmbedEditArticleGui = (function () {
 exports.EmbedEditArticleGui = EmbedEditArticleGui;
 //# sourceMappingURL=embed-edit_article.js.map
 
-},{"./client-ajax":2,"./previewable-article":12}],7:[function(require,module,exports){
+},{"./client-ajax":1,"./previewable-article":11}],6:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
+
+var url = require("./../common/url");
 
 var EmbedIndexGui = (function () {
     function EmbedIndexGui() {
@@ -224,10 +210,14 @@ var EmbedIndexGui = (function () {
                     console.log(res.why);
                     return;
                 }
-                var result = res.result;
+                var articles = res.result;
+                var length = articles.length;
+                for (var i = 0; i < length; i++) {
+                    articles[i].url = url.article.get(articles[i].id);
+                }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);
-                var rendered = Mustache.render(template, { articles: result });
+                var rendered = Mustache.render(template, { articles: articles });
                 $("#article-thumb-template").remove();
                 $("#main .childContainer").html(rendered);
             });
@@ -246,10 +236,7 @@ if (guiName == 'EmbedIndexGui') {
 }
 //# sourceMappingURL=embed-index.js.map
 
-},{"./client-ajax":2}],8:[function(require,module,exports){
-var UserJs = require("./../common/User");
-var utils = require("./Utils");
-
+},{"./../common/url":14,"./client-ajax":1}],7:[function(require,module,exports){
 var gui = {
     getUsername: function () {
         return $("#username").val();
@@ -266,31 +253,17 @@ var gui = {
 };
 
 $(document).ready(function () {
-    var classes = {
-        User: UserJs.UserJs.User,
-        Utils: utils.m
-    };
-
     console.log("ready!");
     $("#login").click(function () {
         console.log('Loggueando');
-        gui.cleanWarnings();
-        var user = new classes.User();
-        user.logIn(gui.getUsername(), gui.getPassword(), function (err) {
-            if (err) {
-                gui.warnInvalidLogin();
-            } else {
-                classes.Utils.redirect.to.index();
-            }
-        });
     });
 });
 //# sourceMappingURL=embed-login.js.map
 
-},{"./../common/User":14,"./Utils":1}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 //# sourceMappingURL=embed-register.js.map
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -334,7 +307,7 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":11}],11:[function(require,module,exports){
+},{"./parser":10}],10:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -363,7 +336,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 
 var PreviewableArticle = (function () {
@@ -439,7 +412,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{"./rendered-article":13}],13:[function(require,module,exports){
+},{"./rendered-article":12}],12:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
     }
@@ -461,32 +434,18 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],14:[function(require,module,exports){
-(function (UserJs) {
-    var User = (function () {
-        function User() {
-        }
-        User.prototype.logIn = function (username, password, fn) {
-            console.log('Loggueando al usuario: ' + username + ', password: ' + password);
-            fn(new Error('Not Implemented Exception'));
-        };
-        User.prototype.isLogged = function () {
-            throw new Error('Not implemented');
-        };
-        return User;
-    })();
-    UserJs.User = User;
-})(exports.UserJs || (exports.UserJs = {}));
-var UserJs = exports.UserJs;
-//# sourceMappingURL=User.js.map
-
-},{}],15:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
 };
 
 (function (Article) {
+    function WrapFieldWithId(fields, id) {
+        return { title: fields.title, content: fields.content, id: id };
+    }
+    Article.WrapFieldWithId = WrapFieldWithId;
+
     (function (Create) {
         function url() {
             return '/api/create_article';
@@ -529,4 +488,27 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
+},{}],14:[function(require,module,exports){
+var url;
+(function (url) {
+    (function (article) {
+        function get(id) {
+            return (id != null ? "/article/" + id : "/article/:id");
+        }
+        article.get = get;
+        function create() {
+            return "/create_article";
+        }
+        article.create = create;
+        function edit(id) {
+            return (id != null ? "/edit_article" + id : "/edit_article/:id");
+        }
+        article.edit = edit;
+    })(url.article || (url.article = {}));
+    var article = url.article;
+})(url || (url = {}));
+
+module.exports = url;
+//# sourceMappingURL=url.js.map
+
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14]);
