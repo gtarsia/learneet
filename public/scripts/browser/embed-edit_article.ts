@@ -19,37 +19,37 @@ export class EmbedEditArticleGui {
     getContentId() {
         return "content";
     }
-    setTitle(title) {
-        $("#title").html(title);
-    }
-    setContent(content) {
-        $('#' + this.getContentId()).html(content);
-    }
     getSaveBtn() {
         return $("#saveBtn");
     }
-    previewArticle: PreviewableArticle;
+    article: PreviewableArticle;
     constructor() {
         var _self = this;
         $(document).ready(function() {
-            this.previewArticle = new PreviewableArticle();
-            _self.titlePreviewExample();
-            _self.contentPreviewExample();
-            var href = $(location).attr("href");
-            _self.id = href.substr(href.lastIndexOf('/') + 1);
-            new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) })
+            _self.article = new PreviewableArticle();
+            _self.id = $("[type=hidden]#article-id").val();
+            new ClientAjax.Article.Get().ajax({ id: _self.id })
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result
-                _self.setTitle(result.title);
-                _self.setContent(result.content);
+                _self.article.getInputTitle().val(result.title);
+                _self.article.getInputContent().html(result.content);
+                _self.article.output.getTitle().html(result.title);
+                _self.article.output.getContent().html(marked(result.content));
             });
             _self.getSaveBtn().click(() => {
                 GoTo.editArticle(_self.id);
             });
         });
     }
+}
+
+
+declare var guiName;
+
+if (guiName == 'EmbedEditArticle') {
+    new EmbedEditArticleGui();
 }

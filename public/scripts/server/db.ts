@@ -84,6 +84,22 @@ export function hgetall(key: string) : Promise<any> {
 	});
 }
 
+export function promisedRedis(fn, args: string[]) : Promise<any> {
+	return new Promise<string>(
+	function(resolve: (result: string) => any,
+			 reject: (error: any) => void) {
+		debugger;
+		fn(args, function(err, result) {
+			if (!isOk(err, reject)) result;
+			resolve(result);
+		});
+	});
+}
+
+export function hget(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.hget.bind(client), args]);
+}
+
 export function sort(...args: string[]) : Promise<any> {
 	return new Promise<string>(
 	function(resolve: (result: string) => any,

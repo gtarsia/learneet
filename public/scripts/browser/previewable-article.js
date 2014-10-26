@@ -17,16 +17,10 @@ var PreviewableArticle = (function () {
     PreviewableArticle.prototype.getInputContent = function () {
         return $("textarea.article-content");
     };
-    PreviewableArticle.prototype.getOutputContent = function () {
-        return $("div.article-content");
-    };
     PreviewableArticle.prototype.getInputTitle = function () {
         return $("input.article-title");
     };
 
-    PreviewableArticle.prototype.getOutputTitle = function () {
-        return $("h1.article-title");
-    };
     PreviewableArticle.prototype.bindScrolls = function () {
         var _self = this;
         function getPercent(el) {
@@ -36,7 +30,7 @@ var PreviewableArticle = (function () {
             el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
         }
         var src = _self.getInputContent();
-        var dest = _self.getOutputContent();
+        var dest = _self.output.getContent();
         function bindScroll(src, dest) {
             src.scroll(function () {
                 if (_self.ignoreScroll) {
@@ -53,7 +47,7 @@ var PreviewableArticle = (function () {
 
     PreviewableArticle.prototype.bindTitlePreview = function () {
         var i = this.getInputTitle();
-        var o = this.getOutputTitle();
+        var o = this.output.getTitle();
         i.keyup(function (e) {
             var title = i.val();
             o.html(title);
@@ -61,7 +55,7 @@ var PreviewableArticle = (function () {
     };
     PreviewableArticle.prototype.bindContentPreview = function () {
         var i = this.getInputContent();
-        var o = this.getOutputContent();
+        var o = this.output.getContent();
         i.keyup(function (e) {
             var content = i.val();
             o.html(marked(content));

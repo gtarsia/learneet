@@ -8,4 +8,8 @@ append styles
   link(rel='stylesheet', href='/stylesheets/article.css')
 
 block main
+  input#article-id(type="hidden" value= id)
   include rendered_article
+
+  #buttons
+    button#editBtn(href= editUrl) Edit

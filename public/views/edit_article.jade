@@ -4,12 +4,11 @@ prepend scripts
   script.
     guiName = 'EmbedEditArticle'
 
-append scripts
-
 append styles
   link(rel='stylesheet', href='/stylesheets/edit_article.css')
 
 block main
+  input#article-id(type="hidden" value= id)
   include previewable-article-frame
 
   #buttons

@@ -15,8 +15,10 @@ export module Article {
     export interface Fields {
         title: string; content: string; 
     }
-    export interface FieldsWithId extends Fields {
-        id: string; 
+    export interface Id {
+        id: string;
+    }
+    export interface FieldsWithId extends Fields, Id {
     }
     export function WrapFieldWithId(fields: Fields, id: string) : FieldsWithId {
         return { title: fields.title, content: fields.content, id: id }
@@ -26,15 +28,13 @@ export module Article {
         export function url(): string { return '/api/create_article' }
         export function type(): string { return AjaxType.POST }
         export interface ParamsType extends Fields {}
-        export interface ReturnType extends JsonReturn<{id : Number}> { }
+        export interface ReturnType extends JsonReturn<Id> { }
     }
 
     export module Get {
         export function url(): string { return '/api/get' }
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType { 
-            id: Number
-        }
+        export interface ParamsType extends Id {}
         export interface ReturnType extends JsonReturn<FieldsWithId> { }
     }
 

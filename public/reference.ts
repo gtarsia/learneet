@@ -1,6 +1,6 @@
 //grunt-start
 /// <reference path="app.ts" />
-/// <reference path="routes/routes.ts" />
+/// <reference path="routes.ts" />
 /// <reference path="scripts/browser/Utils.d.ts" />
 /// <reference path="scripts/browser/client-ajax.ts" />
 /// <reference path="scripts/browser/embed-article.ts" />

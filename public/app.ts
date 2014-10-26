@@ -1,5 +1,5 @@
 ﻿import express = require('express');
-import routes = require('./routes/routes');
+import routes = require('./routes');
 import path = require('path');
 import server_ajax = require('./scripts/server/server-ajax');
 import net = require('net');

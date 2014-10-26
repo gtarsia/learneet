@@ -9,9 +9,8 @@ var EmbedArticleGui = (function () {
         var _self = this;
         $(document).ready(function () {
             _self.article = new RenderedArticle();
-            var href = $(location).attr("href");
-            _self.id = href.substr(href.lastIndexOf('/') + 1);
-            new ClientAjax.Article.Get().ajax({ id: parseInt(_self.id) }).done(function (res) {
+            _self.id = $("[type=hidden]#article-id").val();
+            new ClientAjax.Article.Get().ajax({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;

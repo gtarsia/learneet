@@ -72,6 +72,27 @@ function hgetall(key) {
 }
 exports.hgetall = hgetall;
 
+function promisedRedis(fn, args) {
+    return new Promise(function (resolve, reject) {
+        debugger;
+        fn(args, function (err, result) {
+            if (!isOk(err, reject))
+                result;
+            resolve(result);
+        });
+    });
+}
+exports.promisedRedis = promisedRedis;
+
+function hget() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.hget.bind(exports.client), args]);
+}
+exports.hget = hget;
+
 function sort() {
     var args = [];
     for (var _i = 0; _i < (arguments.length - 0); _i++) {

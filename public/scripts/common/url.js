@@ -10,7 +10,7 @@ var url;
         }
         article.create = create;
         function edit(id) {
-            return (id != null ? "/edit_article" + id : "/edit_article/:id");
+            return (id != null ? "/edit_article/" + id : "/edit_article/:id");
         }
         article.edit = edit;
     })(url.article || (url.article = {}));
