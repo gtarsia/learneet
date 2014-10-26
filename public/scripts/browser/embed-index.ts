@@ -27,6 +27,7 @@ class EmbedIndexGui extends Gui {
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
                     articles[i].url = url.article.get(articles[i].id);
+                    articles[i].content = articles[i].content.substr(0, 130) + '...';
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);   // optional, speeds up future uses
