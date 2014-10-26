@@ -4,6 +4,7 @@ import Article = commonAjax.Article;
 import FieldsWithId = Article.FieldsWithId;
 import Create = Article.Create;
 import Get = Article.Get;
+import Update = Article.Update;
 import GetAll = Article.GetAll;
 import db = require('./db');
 
@@ -76,6 +77,20 @@ export function getAll() : Promise<GetAll.ReturnType> {
 			ok: ok,
 			why: why,
 			result: arrayToArticles(result)
+		}
+		return r;
+	})
+}
+
+export function update(args: Update.ParamsType) : Promise<Update.ReturnType> {
+	return db.hmset("article:" + args.id, args)
+	.then<Get.ReturnType>((result: any) => {
+		var ok = result != null;
+		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
+		var r : Get.ReturnType = {
+			ok: ok,
+			why: why,
+			result: result
 		}
 		return r;
 	})

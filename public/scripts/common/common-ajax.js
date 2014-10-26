@@ -44,6 +44,18 @@
         GetAll.type = type;
     })(Article.GetAll || (Article.GetAll = {}));
     var GetAll = Article.GetAll;
+
+    (function (Update) {
+        function url() {
+            return '/api/update';
+        }
+        Update.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        Update.type = type;
+    })(Article.Update || (Article.Update = {}));
+    var Update = Article.Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 

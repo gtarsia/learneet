@@ -1,5 +1,5 @@
 ﻿var ClientAjax = require("./client-ajax");
-var GoTo = ClientAjax.GoTo;
+
 var PreviewableArticle = require("./previewable-article");
 
 var EmbedEditArticleGui = (function () {
@@ -21,7 +21,15 @@ var EmbedEditArticleGui = (function () {
                 _self.article.output.getContent().html(marked(result.content));
             });
             _self.getSaveBtn().click(function () {
-                GoTo.editArticle(_self.id);
+                var article = _self.article.getArticle();
+                new ClientAjax.Article.Update().ajax({
+                    id: _self.id, title: article.title, content: article.content
+                }).done(function (res) {
+                    if (!res.ok)
+                        console.log(res.why);
+                    else
+                        console.log('Se actualizo el articulo');
+                });
             });
         });
     }

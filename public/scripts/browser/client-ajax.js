@@ -52,6 +52,14 @@ exports.ClientAjax = ClientAjax;
         return GetAll;
     })(ClientAjax);
     Article.GetAll = GetAll;
+    var Update = (function (_super) {
+        __extends(Update, _super);
+        function Update() {
+            _super.call(this, Art.Update.url(), Art.Update.type());
+        }
+        return Update;
+    })(ClientAjax);
+    Article.Update = Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 

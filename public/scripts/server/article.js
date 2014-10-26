@@ -74,4 +74,18 @@ function getAll() {
     });
 }
 exports.getAll = getAll;
+
+function update(args) {
+    return db.hmset("article:" + args.id, args).then(function (result) {
+        var ok = result != null;
+        var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
+        var r = {
+            ok: ok,
+            why: why,
+            result: result
+        };
+        return r;
+    });
+}
+exports.update = update;
 //# sourceMappingURL=article.js.map

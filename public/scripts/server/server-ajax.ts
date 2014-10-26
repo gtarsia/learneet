@@ -8,7 +8,8 @@ export function getServerAjaxList(): ServerAjax<any, any>[] {
     return [
         new Article.Create(),
         new Article.Get(),
-        new Article.GetAll()
+        new Article.GetAll(),
+        new Article.Update()
     ];
 }
 
@@ -86,6 +87,22 @@ export module Article {
             .then((result: CommonGetAll.ReturnType) => {
                 debugger;
                 console.log('Se pidieron todos los articulos');
+                res.send(result);
+            });
+        }
+    }
+
+    import CommonUpdate = CommonAjax.Article.Update;
+    export class Update
+        extends ServerAjax<CommonUpdate.ParamsType, CommonUpdate.ReturnType> {
+        constructor() {
+            super(CommonUpdate.url(), CommonUpdate.type());
+        }
+        handler(req: express.Request, res: express.Response, next: Function) {
+            article.update(req.body)
+            .then((result: CommonUpdate.ReturnType) => {
+                debugger;
+                console.log('Se actualizo un articulo');
                 res.send(result);
             });
         }

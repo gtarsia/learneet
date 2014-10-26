@@ -30,7 +30,7 @@ export module Article {
     }
     export class Create
         extends ClientAjax<Art.Create.ParamsType,
-                           Art.Get.ReturnType> {
+                           Art.Create.ReturnType> {
         constructor() {
             super(Art.Create.url(), Art.Create.type());
         }
@@ -40,6 +40,13 @@ export module Article {
                            Art.GetAll.ReturnType> {
         constructor() {
             super(Art.GetAll.url(), Art.GetAll.type());
+        }
+    }
+    export class Update
+        extends ClientAjax<Art.Update.ParamsType,
+                           Art.Update.ReturnType> {
+        constructor() {
+            super(Art.Update.url(), Art.Update.type());
         }
     }
 }

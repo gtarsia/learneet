@@ -13,7 +13,8 @@ function getServerAjaxList() {
     return [
         new Article.Create(),
         new Article.Get(),
-        new Article.GetAll()
+        new Article.GetAll(),
+        new Article.Update()
     ];
 }
 exports.getServerAjaxList = getServerAjaxList;
@@ -94,6 +95,23 @@ exports.ServerAjax = ServerAjax;
         return GetAll;
     })(ServerAjax);
     Article.GetAll = GetAll;
+
+    var CommonUpdate = CommonAjax.Article.Update;
+    var Update = (function (_super) {
+        __extends(Update, _super);
+        function Update() {
+            _super.call(this, CommonUpdate.url(), CommonUpdate.type());
+        }
+        Update.prototype.handler = function (req, res, next) {
+            article.update(req.body).then(function (result) {
+                debugger;
+                console.log('Se actualizo un articulo');
+                res.send(result);
+            });
+        };
+        return Update;
+    })(ServerAjax);
+    Article.Update = Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 //# sourceMappingURL=server-ajax.js.map

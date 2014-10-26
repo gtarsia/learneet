@@ -53,6 +53,14 @@ exports.ClientAjax = ClientAjax;
         return GetAll;
     })(ClientAjax);
     Article.GetAll = GetAll;
+    var Update = (function (_super) {
+        __extends(Update, _super);
+        function Update() {
+            _super.call(this, Art.Update.url(), Art.Update.type());
+        }
+        return Update;
+    })(ClientAjax);
+    Article.Update = Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 
@@ -152,7 +160,7 @@ if (guiName == 'EmbedCreateArticle') {
 
 },{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./previewable-article":12}],5:[function(require,module,exports){
 var ClientAjax = require("./client-ajax");
-var GoTo = ClientAjax.GoTo;
+
 var PreviewableArticle = require("./previewable-article");
 
 var EmbedEditArticleGui = (function () {
@@ -174,7 +182,15 @@ var EmbedEditArticleGui = (function () {
                 _self.article.output.getContent().html(marked(result.content));
             });
             _self.getSaveBtn().click(function () {
-                GoTo.editArticle(_self.id);
+                var article = _self.article.getArticle();
+                new ClientAjax.Article.Update().ajax({
+                    id: _self.id, title: article.title, content: article.content
+                }).done(function (res) {
+                    if (!res.ok)
+                        console.log(res.why);
+                    else
+                        console.log('Se actualizo el articulo');
+                });
             });
         });
     }
@@ -504,6 +520,18 @@ exports.AjaxType = {
         GetAll.type = type;
     })(Article.GetAll || (Article.GetAll = {}));
     var GetAll = Article.GetAll;
+
+    (function (Update) {
+        function url() {
+            return '/api/update';
+        }
+        Update.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        Update.type = type;
+    })(Article.Update || (Article.Update = {}));
+    var Update = Article.Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 
