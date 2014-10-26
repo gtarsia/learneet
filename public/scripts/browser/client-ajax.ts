@@ -51,12 +51,3 @@ export module Article {
     }
 }
 
-export module GoTo {
-    export function article(id: string) {
-        location.href = '/article/' + id;
-    }
-
-    export function editArticle(id: string) {
-        location.href = '/edit_article/' + id;
-    }
-}

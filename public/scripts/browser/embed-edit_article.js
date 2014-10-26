@@ -1,9 +1,18 @@
-﻿var ClientAjax = require("./client-ajax");
-
+﻿var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var ClientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
+var Gui = require("./embed-gui");
+var url = require("./../common/url");
 
-var EmbedEditArticleGui = (function () {
+var EmbedEditArticleGui = (function (_super) {
+    __extends(EmbedEditArticleGui, _super);
     function EmbedEditArticleGui() {
+        _super.call(this);
         this.id = "-1";
         var _self = this;
         $(document).ready(function () {
@@ -31,6 +40,9 @@ var EmbedEditArticleGui = (function () {
                         console.log('Se actualizo el articulo');
                 });
             });
+            _self.getCancelBtn().click(function () {
+                _self.redirect(url.article.get(_self.id));
+            });
         });
     }
     EmbedEditArticleGui.prototype.contentPreviewExample = function () {
@@ -47,10 +59,13 @@ var EmbedEditArticleGui = (function () {
         return "content";
     };
     EmbedEditArticleGui.prototype.getSaveBtn = function () {
-        return $("#saveBtn");
+        return $("button#save");
+    };
+    EmbedEditArticleGui.prototype.getCancelBtn = function () {
+        return $("button#cancel");
     };
     return EmbedEditArticleGui;
-})();
+})(Gui);
 exports.EmbedEditArticleGui = EmbedEditArticleGui;
 
 if (guiName == 'EmbedEditArticle') {

@@ -63,29 +63,25 @@ exports.ClientAjax = ClientAjax;
     Article.Update = Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
-
-(function (GoTo) {
-    function article(id) {
-        location.href = '/article/' + id;
-    }
-    GoTo.article = article;
-
-    function editArticle(id) {
-        location.href = '/edit_article/' + id;
-    }
-    GoTo.editArticle = editArticle;
-})(exports.GoTo || (exports.GoTo = {}));
-var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
 
 },{"./../common/common-ajax":14}],2:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var ClientAjax = require("./client-ajax");
 
-var GoTo = ClientAjax.GoTo;
 var RenderedArticle = require('./rendered-article');
+var Gui = require("./embed-gui");
+var url = require("./../common/url");
 
-var EmbedArticleGui = (function () {
+var EmbedArticleGui = (function (_super) {
+    __extends(EmbedArticleGui, _super);
     function EmbedArticleGui() {
+        _super.call(this);
         this.id = "-1";
         var _self = this;
         $(document).ready(function () {
@@ -101,7 +97,7 @@ var EmbedArticleGui = (function () {
                 _self.article.setContent(marked(result.content));
             });
             _self.getEditBtn().click(function () {
-                GoTo.editArticle(_self.id);
+                _self.redirect(url.article.edit(_self.id));
             });
         });
     }
@@ -109,7 +105,7 @@ var EmbedArticleGui = (function () {
         return $("#editBtn");
     };
     return EmbedArticleGui;
-})();
+})(Gui);
 exports.EmbedArticleGui = EmbedArticleGui;
 
 if (guiName == 'EmbedArticle') {
@@ -117,7 +113,7 @@ if (guiName == 'EmbedArticle') {
 }
 //# sourceMappingURL=embed-article.js.map
 
-},{"./client-ajax":1,"./rendered-article":13}],3:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./rendered-article":13}],3:[function(require,module,exports){
 //# sourceMappingURL=embed-browse.js.map
 
 },{}],4:[function(require,module,exports){
@@ -159,12 +155,21 @@ if (guiName == 'EmbedCreateArticle') {
 //# sourceMappingURL=embed-create_article.js.map
 
 },{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./previewable-article":12}],5:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var ClientAjax = require("./client-ajax");
-
 var PreviewableArticle = require("./previewable-article");
+var Gui = require("./embed-gui");
+var url = require("./../common/url");
 
-var EmbedEditArticleGui = (function () {
+var EmbedEditArticleGui = (function (_super) {
+    __extends(EmbedEditArticleGui, _super);
     function EmbedEditArticleGui() {
+        _super.call(this);
         this.id = "-1";
         var _self = this;
         $(document).ready(function () {
@@ -192,6 +197,9 @@ var EmbedEditArticleGui = (function () {
                         console.log('Se actualizo el articulo');
                 });
             });
+            _self.getCancelBtn().click(function () {
+                _self.redirect(url.article.get(_self.id));
+            });
         });
     }
     EmbedEditArticleGui.prototype.contentPreviewExample = function () {
@@ -208,10 +216,13 @@ var EmbedEditArticleGui = (function () {
         return "content";
     };
     EmbedEditArticleGui.prototype.getSaveBtn = function () {
-        return $("#saveBtn");
+        return $("button#save");
+    };
+    EmbedEditArticleGui.prototype.getCancelBtn = function () {
+        return $("button#cancel");
     };
     return EmbedEditArticleGui;
-})();
+})(Gui);
 exports.EmbedEditArticleGui = EmbedEditArticleGui;
 
 if (guiName == 'EmbedEditArticle') {
@@ -219,7 +230,7 @@ if (guiName == 'EmbedEditArticle') {
 }
 //# sourceMappingURL=embed-edit_article.js.map
 
-},{"./client-ajax":1,"./previewable-article":12}],6:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./previewable-article":12}],6:[function(require,module,exports){
 var Gui = (function () {
     function Gui() {
     }

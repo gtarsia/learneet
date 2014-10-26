@@ -1,17 +1,18 @@
 ﻿import ClientAjax = require("./client-ajax");
 import parser = require('./parser');
-import GoTo = ClientAjax.GoTo;
 import RenderedArticle = require('./rendered-article');
+import Gui = require("./embed-gui");
+import url = require("./../common/url");
 declare function marked(s);
 
-export class EmbedArticleGui {
+export class EmbedArticleGui extends Gui {
     id: string = "-1";
     getEditBtn() {
         return $("#editBtn");
     }
     article: RenderedArticle;
     constructor() {
-        
+        super();        
         var _self = this;
         $(document).ready(function() {
             _self.article = new RenderedArticle();
@@ -27,7 +28,7 @@ export class EmbedArticleGui {
                 _self.article.setContent(marked(result.content));
             });
             _self.getEditBtn().click(() => {
-                GoTo.editArticle(_self.id);
+                _self.redirect(url.article.edit(_self.id))
             });
         });
     }

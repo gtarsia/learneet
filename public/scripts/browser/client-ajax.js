@@ -62,17 +62,4 @@ exports.ClientAjax = ClientAjax;
     Article.Update = Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
-
-(function (GoTo) {
-    function article(id) {
-        location.href = '/article/' + id;
-    }
-    GoTo.article = article;
-
-    function editArticle(id) {
-        location.href = '/edit_article/' + id;
-    }
-    GoTo.editArticle = editArticle;
-})(exports.GoTo || (exports.GoTo = {}));
-var GoTo = exports.GoTo;
 //# sourceMappingURL=client-ajax.js.map
