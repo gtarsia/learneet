@@ -38,6 +38,7 @@ var EmbedEditArticleGui = (function (_super) {
                         console.log(res.why);
                     else
                         console.log('Se actualizo el articulo');
+                    _self.redirect(url.article.get(_self.id));
                 });
             });
             _self.getCancelBtn().click(function () {
