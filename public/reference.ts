@@ -18,6 +18,7 @@
 /// <reference path="scripts/browser/templates/rendered-article.ts" />
 /// <reference path="scripts/common/base-ajax.ts" />
 /// <reference path="scripts/common/url.ts" />
+/// <reference path="scripts/common/validation.ts" />
 /// <reference path="scripts/server/article.ts" />
 /// <reference path="scripts/server/bcrypt.ts" />
 /// <reference path="scripts/server/db.ts" />

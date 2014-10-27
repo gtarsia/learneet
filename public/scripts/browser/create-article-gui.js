@@ -18,9 +18,9 @@ var CreateArticleGui = (function (_super) {
             _self.previewArticle = new PreviewableArticle();
             $("#create").click(function () {
                 console.log('Trying to create: ');
-                var article = _self.previewArticle.getArticle();
+                var article = _self.previewArticle.article;
                 console.log(article);
-                new clientAjax.article.Create().ajax(article).done(function (res) {
+                clientAjax.article.create(article).done(function (res) {
                     var id = res.result.id;
                     _self.redirect(url.article.get(id));
                 });

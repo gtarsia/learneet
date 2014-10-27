@@ -17,13 +17,13 @@ class IndexGui extends Gui {
         super();
         var _self = this;
         $(document).ready(function() {
-            new clientAjax.article.GetAll().ajax({})
+            clientAjax.article.getAll({})
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
-                var articles = res.result;
+                var articles: any = res.result;
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
                     articles[i].url = url.article.get(articles[i].id);

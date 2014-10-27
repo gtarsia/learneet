@@ -9,7 +9,7 @@ export class ClientAjax<ArgsType, ReturnType> {
         this.url = url;
         this.type = type;
     }
-    ajax(params: ArgsType): JQueryXHR {
+    ajax(params: ArgsType): JQueryXHR<ReturnType> {
         switch (this.type) {
         case AjaxType.GET:
             return $.get(this.url, params); break;
@@ -21,33 +21,45 @@ export class ClientAjax<ArgsType, ReturnType> {
 
 export module article {
     import baseGet = baseAjax.article.get;
-    export class Get extends ClientAjax<baseGet.ParamsType, baseGet.ReturnType> {
+    class Get extends ClientAjax<baseGet.ParamsType, baseGet.ReturnType> {
         constructor() {
             super(baseGet.url(), baseGet.type());
         }
     }
+    export function get(params: baseGet.ParamsType): JQueryXHR<baseGet.ReturnType> {
+        return new Get().ajax(params);
+    }
 
     import baseCreate = baseAjax.article.create;
-    export class Create extends ClientAjax<baseCreate.ParamsType, baseCreate.ReturnType> {
+    class Create extends ClientAjax<baseCreate.ParamsType, baseCreate.ReturnType> {
         constructor() {
             super(baseCreate.url(), baseCreate.type());
         }
     }
+    export function create(params: baseCreate.ParamsType): JQueryXHR<baseCreate.ReturnType> {
+        return new Create().ajax(params);
+    }
 
     import baseGetAll = baseAjax.article.getAll;
-    export class GetAll
+    class GetAll
         extends ClientAjax<baseGetAll.ParamsType, baseGetAll.ReturnType> {
         constructor() {
             super(baseGetAll.url(), baseGetAll.type());
         }
     }
+    export function getAll(params: baseGetAll.ParamsType): JQueryXHR<baseGetAll.ReturnType> {
+        return new GetAll().ajax(params);
+    }
 
     import baseUpdate = baseAjax.article.update;
-    export class Update
+    class Update
         extends ClientAjax<baseUpdate.ParamsType, baseUpdate.ReturnType> {
         constructor() {
             super(baseUpdate.url(), baseUpdate.type());
         }
+    }
+    export function update(params: baseUpdate.ParamsType): JQueryXHR<baseUpdate.ReturnType> {
+        return new Update().ajax(params);
     }
 }
 

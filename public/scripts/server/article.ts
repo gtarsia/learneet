@@ -12,7 +12,7 @@ function isOk(err, reject) { if (err) { reject(err); return false;} else return 
 
 export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 	var id;
-	return db.incr("articleId")
+	return db.incr("article:idCounter")
 	.then((_id: string) => {
 		debugger;
 		id = _id;

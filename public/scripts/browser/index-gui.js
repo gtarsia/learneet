@@ -15,7 +15,7 @@ var IndexGui = (function (_super) {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
-            new clientAjax.article.GetAll().ajax({}).done(function (res) {
+            clientAjax.article.getAll({}).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;

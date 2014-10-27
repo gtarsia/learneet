@@ -20,14 +20,14 @@ var ArticleGui = (function (_super) {
         $(document).ready(function () {
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
+            clientAjax.article.get({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result;
-                _self.article.setTitle(result.title);
-                _self.article.setContent(marked(result.content));
+                _self.article.title.val = result.title;
+                _self.article.content.val = marked(result.content);
             });
             _self.getEditBtn().click(function () {
                 _self.redirect(url.article.edit(_self.id));
@@ -84,7 +84,10 @@ exports.ClientAjax = ClientAjax;
         }
         return Get;
     })(ClientAjax);
-    article.Get = Get;
+    function get(params) {
+        return new Get().ajax(params);
+    }
+    article.get = get;
 
     var baseCreate = baseAjax.article.create;
     var Create = (function (_super) {
@@ -94,7 +97,10 @@ exports.ClientAjax = ClientAjax;
         }
         return Create;
     })(ClientAjax);
-    article.Create = Create;
+    function create(params) {
+        return new Create().ajax(params);
+    }
+    article.create = create;
 
     var baseGetAll = baseAjax.article.getAll;
     var GetAll = (function (_super) {
@@ -104,7 +110,10 @@ exports.ClientAjax = ClientAjax;
         }
         return GetAll;
     })(ClientAjax);
-    article.GetAll = GetAll;
+    function getAll(params) {
+        return new GetAll().ajax(params);
+    }
+    article.getAll = getAll;
 
     var baseUpdate = baseAjax.article.update;
     var Update = (function (_super) {
@@ -114,7 +123,10 @@ exports.ClientAjax = ClientAjax;
         }
         return Update;
     })(ClientAjax);
-    article.Update = Update;
+    function update(params) {
+        return new Update().ajax(params);
+    }
+    article.update = update;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
@@ -153,9 +165,9 @@ var CreateArticleGui = (function (_super) {
             _self.previewArticle = new PreviewableArticle();
             $("#create").click(function () {
                 console.log('Trying to create: ');
-                var article = _self.previewArticle.getArticle();
+                var article = _self.previewArticle.article;
                 console.log(article);
-                new clientAjax.article.Create().ajax(article).done(function (res) {
+                clientAjax.article.create(article).done(function (res) {
                     var id = res.result.id;
                     _self.redirect(url.article.get(id));
                 });
@@ -187,24 +199,30 @@ var EditArticleGui = (function (_super) {
     function EditArticleGui() {
         _super.call(this);
         this.id = "-1";
+        this.saveBtn = { get jq() {
+                return $('button#save');
+            } };
+        this.cancelBtn = { get jq() {
+                return $('button#cancel');
+            } };
         var _self = this;
         $(document).ready(function () {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
+            clientAjax.article.get({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result;
-                _self.article.input.getTitle().val(result.title);
-                _self.article.input.getContent().html(result.content);
-                _self.article.output.getTitle().html(result.title);
-                _self.article.output.getContent().html(marked(result.content));
+                _self.article.input.title.val = result.title;
+                _self.article.input.content.val = result.content;
+                _self.article.output.title.val = result.title;
+                _self.article.output.content.val = marked(result.content);
             });
-            _self.getSaveBtn().click(function () {
-                var article = _self.article.getArticle();
-                new clientAjax.article.Update().ajax({
+            _self.saveBtn.jq.click(function () {
+                var article = _self.article.article;
+                clientAjax.article.update({
                     id: _self.id, title: article.title, content: article.content
                 }).done(function (res) {
                     if (!res.ok)
@@ -214,7 +232,7 @@ var EditArticleGui = (function (_super) {
                     _self.redirect(url.article.get(_self.id));
                 });
             });
-            _self.getCancelBtn().click(function () {
+            _self.cancelBtn.jq.click(function () {
                 _self.redirect(url.article.get(_self.id));
             });
         });
@@ -228,15 +246,6 @@ var EditArticleGui = (function (_super) {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
-    };
-    EditArticleGui.prototype.getContentId = function () {
-        return "content";
-    };
-    EditArticleGui.prototype.getSaveBtn = function () {
-        return $("button#save");
-    };
-    EditArticleGui.prototype.getCancelBtn = function () {
-        return $("button#cancel");
     };
     return EditArticleGui;
 })(Gui);
@@ -278,7 +287,7 @@ var IndexGui = (function (_super) {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
-            new clientAjax.article.GetAll().ajax({}).done(function (res) {
+            clientAjax.article.getAll({}).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -391,6 +400,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./gui');
+var clientAjax = require('./client-ajax');
 
 var RegisterGui = (function (_super) {
     __extends(RegisterGui, _super);
@@ -399,12 +409,30 @@ var RegisterGui = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.getRegisterBtn().click(function () {
+                var user = _self.getUser();
+                new clientAjax.user.Register().ajax(user);
                 console.log('Tried to register');
             });
         });
     }
     RegisterGui.prototype.getRegisterBtn = function () {
         return $("button#register");
+    };
+    RegisterGui.prototype.getUsername = function () {
+        return $("input#username");
+    };
+    RegisterGui.prototype.getPassword = function () {
+        return $("input#password");
+    };
+    RegisterGui.prototype.getEmail = function () {
+        return $("input#email");
+    };
+    RegisterGui.prototype.validateUsername = function () {
+    };
+    RegisterGui.prototype.validate = function () {
+    };
+    RegisterGui.prototype.getUser = function () {
+        return {};
     };
     return RegisterGui;
 })(Gui);
@@ -414,22 +442,40 @@ if (guiName == 'RegisterGui') {
 }
 //# sourceMappingURL=register-gui.js.map
 
-},{"./gui":5}],10:[function(require,module,exports){
+},{"./client-ajax":2,"./gui":5}],10:[function(require,module,exports){
 var EditableArticle = (function () {
     function EditableArticle() {
-    }
-    EditableArticle.prototype.getArticle = function () {
-        return {
-            title: this.getTitle().val(),
-            content: this.getContent().val()
+        var _self = this;
+        this.content = {
+            get jq() {
+                return $("textarea.article-content");
+            },
+            get val() {
+                return _self.content.jq.val();
+            },
+            set val(val) {
+                _self.content.jq.val(val);
+            }
         };
-    };
-    EditableArticle.prototype.getContent = function () {
-        return $("textarea.article-content");
-    };
-    EditableArticle.prototype.getTitle = function () {
-        return $("input.article-title");
-    };
+        this.title = {
+            get jq() {
+                return $("input.article-title");
+            },
+            get val() {
+                return _self.title.jq.val();
+            },
+            set val(val) {
+                _self.title.jq.val(val);
+            }
+        };
+    }
+    Object.defineProperty(EditableArticle.prototype, "article", {
+        get: function () {
+            return { title: this.title.val, content: this.content.val };
+        },
+        enumerable: true,
+        configurable: true
+    });
     return EditableArticle;
 })();
 
@@ -449,9 +495,13 @@ var PreviewableArticle = (function () {
         this.bindContentPreview();
         this.bindScrolls();
     }
-    PreviewableArticle.prototype.getArticle = function () {
-        return this.input.getArticle();
-    };
+    Object.defineProperty(PreviewableArticle.prototype, "article", {
+        get: function () {
+            return this.input.article;
+        },
+        enumerable: true,
+        configurable: true
+    });
     PreviewableArticle.prototype.bindScrolls = function () {
         var _self = this;
         function getPercent(el) {
@@ -460,8 +510,6 @@ var PreviewableArticle = (function () {
         function setPercent(el, percent) {
             el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
         }
-        var src = _self.input.getContent();
-        var dest = _self.output.getContent();
         function bindScroll(src, dest) {
             src.scroll(function () {
                 if (_self.ignoreScroll) {
@@ -472,24 +520,24 @@ var PreviewableArticle = (function () {
                 setPercent(dest, getPercent(src));
             });
         }
-        bindScroll(src, dest);
-        bindScroll(dest, src);
+        bindScroll(this.input.content.jq, this.output.content.jq);
+        bindScroll(this.output.content.jq, this.input.content.jq);
     };
 
     PreviewableArticle.prototype.bindTitlePreview = function () {
-        var i = this.input.getTitle();
-        var o = this.output.getTitle();
-        i.keyup(function (e) {
-            var title = i.val();
-            o.html(title);
+        var inputTitle = this.input.title;
+        var outputTitle = this.output.title;
+        inputTitle.jq.keyup(function (e) {
+            var title = inputTitle.val;
+            outputTitle.val = title;
         });
     };
     PreviewableArticle.prototype.bindContentPreview = function () {
-        var i = this.input.getContent();
-        var o = this.output.getContent();
-        i.keyup(function (e) {
-            var content = i.val();
-            o.html(marked(content));
+        var inputContent = this.input.content;
+        var outputContent = this.output.content;
+        inputContent.jq.keyup(function (e) {
+            var content = inputContent.val;
+            outputContent.val = marked(content);
         });
     };
     return PreviewableArticle;
@@ -501,19 +549,30 @@ module.exports = PreviewableArticle;
 },{"./editable-article":10,"./rendered-article":12}],12:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
+        var _self = this;
+        this.content = {
+            get jq() {
+                return $("div.article-content");
+            },
+            get val() {
+                return _self.content.jq.html();
+            },
+            set val(val) {
+                _self.content.jq.html(val);
+            }
+        };
+        this.title = {
+            get jq() {
+                return $("h1.article-title");
+            },
+            get val() {
+                return _self.title.jq.html();
+            },
+            set val(val) {
+                _self.title.jq.html(val);
+            }
+        };
     }
-    RenderedArticle.prototype.getTitle = function () {
-        return $("h1.article-title");
-    };
-    RenderedArticle.prototype.getContent = function () {
-        return $("div.article-content");
-    };
-    RenderedArticle.prototype.setTitle = function (s) {
-        return $("h1.article-title").html(s);
-    };
-    RenderedArticle.prototype.setContent = function (s) {
-        return $("div.article-content").html(s);
-    };
     return RenderedArticle;
 })();
 
@@ -631,4 +690,19 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,13,14]);
+},{}],15:[function(require,module,exports){
+(function (user) {
+    function isUsernameTaken(username) {
+    }
+    user.isUsernameTaken = isUsernameTaken;
+    function isPasswordSafeEnough(password) {
+    }
+    user.isPasswordSafeEnough = isPasswordSafeEnough;
+    function isEmailTaken() {
+    }
+    user.isEmailTaken = isEmailTaken;
+})(exports.user || (exports.user = {}));
+var user = exports.user;
+//# sourceMappingURL=validation.js.map
+
+},{}]},{},[1,2,3,4,5,6,7,8,9,13,14,15]);

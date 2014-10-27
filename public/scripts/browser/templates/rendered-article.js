@@ -1,18 +1,29 @@
 var RenderedArticle = (function () {
     function RenderedArticle() {
+        var _self = this;
+        this.content = {
+            get jq() {
+                return $("div.article-content");
+            },
+            get val() {
+                return _self.content.jq.html();
+            },
+            set val(val) {
+                _self.content.jq.html(val);
+            }
+        };
+        this.title = {
+            get jq() {
+                return $("h1.article-title");
+            },
+            get val() {
+                return _self.title.jq.html();
+            },
+            set val(val) {
+                _self.title.jq.html(val);
+            }
+        };
     }
-    RenderedArticle.prototype.getTitle = function () {
-        return $("h1.article-title");
-    };
-    RenderedArticle.prototype.getContent = function () {
-        return $("div.article-content");
-    };
-    RenderedArticle.prototype.setTitle = function (s) {
-        return $("h1.article-title").html(s);
-    };
-    RenderedArticle.prototype.setContent = function (s) {
-        return $("div.article-content").html(s);
-    };
     return RenderedArticle;
 })();
 

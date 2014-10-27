@@ -13,9 +13,9 @@ class CreateArticleGui extends Gui {
             _self.previewArticle = new PreviewableArticle();
             $("#create").click(() => {
                 console.log('Trying to create: ');
-                var article = _self.previewArticle.getArticle();
+                var article = _self.previewArticle.article;
                 console.log(article);
-                new clientAjax.article.Create().ajax(article)
+                clientAjax.article.create(article)
                 .done(function(res) {
                     var id = res.result.id;
                     _self.redirect(url.article.get(id));

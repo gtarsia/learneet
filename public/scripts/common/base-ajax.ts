@@ -42,7 +42,7 @@ export module article {
         export function url(): string { return '/api/getall' }
         export function type(): string { return AjaxType.GET}
         export interface ParamsType {} 
-        export interface ReturnType extends JsonReturn<{}> {}
+        export interface ReturnType extends JsonReturn<FieldsWithId[]> {}
     }
 
     export module update {

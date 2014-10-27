@@ -35,7 +35,10 @@ exports.ClientAjax = ClientAjax;
         }
         return Get;
     })(ClientAjax);
-    article.Get = Get;
+    function get(params) {
+        return new Get().ajax(params);
+    }
+    article.get = get;
 
     var baseCreate = baseAjax.article.create;
     var Create = (function (_super) {
@@ -45,7 +48,10 @@ exports.ClientAjax = ClientAjax;
         }
         return Create;
     })(ClientAjax);
-    article.Create = Create;
+    function create(params) {
+        return new Create().ajax(params);
+    }
+    article.create = create;
 
     var baseGetAll = baseAjax.article.getAll;
     var GetAll = (function (_super) {
@@ -55,7 +61,10 @@ exports.ClientAjax = ClientAjax;
         }
         return GetAll;
     })(ClientAjax);
-    article.GetAll = GetAll;
+    function getAll(params) {
+        return new GetAll().ajax(params);
+    }
+    article.getAll = getAll;
 
     var baseUpdate = baseAjax.article.update;
     var Update = (function (_super) {
@@ -65,7 +74,10 @@ exports.ClientAjax = ClientAjax;
         }
         return Update;
     })(ClientAjax);
-    article.Update = Update;
+    function update(params) {
+        return new Update().ajax(params);
+    }
+    article.update = update;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

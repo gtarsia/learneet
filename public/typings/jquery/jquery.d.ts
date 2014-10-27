@@ -34,7 +34,7 @@ interface JQueryAjaxSettings {
     /**
      * A pre-request callback function that can be used to modify the jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object before it is sent. Use this to set custom headers, etc. The jqXHR and settings objects are passed as arguments. This is an Ajax Event. Returning false in the beforeSend function will cancel the request. As of jQuery 1.5, the beforeSend option will be called regardless of the type of request.
      */
-    beforeSend? (jqXHR: JQueryXHR, settings: JQueryAjaxSettings): any;
+    beforeSend? (jqXHR: JQueryXHR<any>, settings: JQueryAjaxSettings): any;
     /**
      * If set to false, it will force requested pages not to be cached by the browser. Note: Setting cache to false will only work correctly with HEAD and GET requests. It works by appending "_={timestamp}" to the GET parameters. The parameter is not needed for other types of requests, except in IE8 when a POST is made to a URL that has already been requested by a GET.
      */
@@ -42,7 +42,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called when the request finishes (after success and error callbacks are executed). The function gets passed two arguments: The jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object and a string categorizing the status of the request ("success", "notmodified", "error", "timeout", "abort", or "parsererror"). As of jQuery 1.5, the complete setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
      */
-    complete? (jqXHR: JQueryXHR, textStatus: string): any;
+    complete? (jqXHR: JQueryXHR<any>, textStatus: string): any;
     /**
      * An object of string/regular-expression pairs that determine how jQuery will parse the response, given its content type. (version added: 1.5)
      */
@@ -80,7 +80,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called if the request fails. The function receives three arguments: The jqXHR (in jQuery 1.4.x, XMLHttpRequest) object, a string describing the type of error that occurred and an optional exception object, if one occurred. Possible values for the second argument (besides null) are "timeout", "error", "abort", and "parsererror". When an HTTP error occurs, errorThrown receives the textual portion of the HTTP status, such as "Not Found" or "Internal Server Error." As of jQuery 1.5, the error setting can accept an array of functions. Each function will be called in turn. Note: This handler is not called for cross-domain script and cross-domain JSONP requests. This is an Ajax Event.
      */
-    error? (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): any;
+    error? (jqXHR: JQueryXHR<any>, textStatus: string, errorThrown: string): any;
     /**
      * Whether to trigger global Ajax event handlers for this request. The default is true. Set to false to prevent the global handlers like ajaxStart or ajaxStop from being triggered. This can be used to control various Ajax Events.
      */
@@ -128,7 +128,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called if the request succeeds. The function gets passed three arguments: The data returned from the server, formatted according to the dataType parameter; a string describing the status; and the jqXHR (in jQuery 1.4.x, XMLHttpRequest) object. As of jQuery 1.5, the success setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
      */
-    success? (data: any, textStatus: string, jqXHR: JQueryXHR): any;
+    success? (data: any, textStatus: string, jqXHR: JQueryXHR<any>): any;
     /**
      * Set a timeout (in milliseconds) for the request. This will override any global timeout set with $.ajaxSetup(). The timeout period starts at the point the $.ajax call is made; if several other requests are in progress and the browser has no connections available, it is possible for a request to time out before it can be sent. In jQuery 1.4.x and below, the XMLHttpRequest object will be in an invalid state if the request times out; accessing any object members may throw an exception. In Firefox 3.0+ only, script and JSONP requests cannot be cancelled by a timeout; the script will run even if it arrives after the timeout period.
      */
@@ -162,7 +162,7 @@ interface JQueryAjaxSettings {
 /**
  * Interface for the jqXHR object
  */
-interface JQueryXHR extends XMLHttpRequest, JQueryPromise<any> {
+interface JQueryXHR<type> extends XMLHttpRequest, JQueryPromise<type> {
     /**
      * The .overrideMimeType() method may be used in the beforeSend() callback function, for example, to modify the response content-type header. As of jQuery 1.5.1, the jqXHR object also contains the overrideMimeType() method (it was available in jQuery 1.4.x, as well, but was temporarily removed in jQuery 1.5). 
      */
@@ -176,7 +176,7 @@ interface JQueryXHR extends XMLHttpRequest, JQueryPromise<any> {
     /**
      * Incorporates the functionality of the .done() and .fail() methods, allowing (as of jQuery 1.8) the underlying Promise to be manipulated. Refer to deferred.then() for implementation details.
      */
-    then(doneCallback: (data: any, textStatus: string, jqXHR: JQueryXHR) => void, failCallback?: (jqXHR: JQueryXHR, textStatus: string, errorThrown: any) => void): JQueryPromise<any>;
+    then(doneCallback: (data: type, textStatus: string, jqXHR: JQueryXHR<any>) => void, failCallback?: (jqXHR: JQueryXHR<any>, textStatus: string, errorThrown: any) => void): JQueryPromise<type>;
     /**
      * Property containing the parsed response if the response Content-Type is json
      */
@@ -704,14 +704,14 @@ interface JQueryStatic {
      *
      * @param settings A set of key/value pairs that configure the Ajax request. All settings are optional. A default can be set for any option with $.ajaxSetup().
      */
-    ajax(settings: JQueryAjaxSettings): JQueryXHR;
+    ajax(settings: JQueryAjaxSettings): JQueryXHR<any>;
     /**
      * Perform an asynchronous HTTP (Ajax) request.
      *
      * @param url A string containing the URL to which the request is sent.
      * @param settings A set of key/value pairs that configure the Ajax request. All settings are optional. A default can be set for any option with $.ajaxSetup().
      */
-    ajax(url: string, settings?: JQueryAjaxSettings): JQueryXHR;
+    ajax(url: string, settings?: JQueryAjaxSettings): JQueryXHR<any>;
 
     /**
      * Handle custom Ajax options or modify existing options before each request is sent and before they are processed by $.ajax().
@@ -719,13 +719,13 @@ interface JQueryStatic {
      * @param dataTypes An optional string containing one or more space-separated dataTypes
      * @param handler A handler to set default values for future Ajax requests.
      */
-    ajaxPrefilter(dataTypes: string, handler: (opts: any, originalOpts: JQueryAjaxSettings, jqXHR: JQueryXHR) => any): void;
+    ajaxPrefilter(dataTypes: string, handler: (opts: any, originalOpts: JQueryAjaxSettings, jqXHR: JQueryXHR<any>) => any): void;
     /**
      * Handle custom Ajax options or modify existing options before each request is sent and before they are processed by $.ajax().
      *
      * @param handler A handler to set default values for future Ajax requests.
      */
-    ajaxPrefilter(handler: (opts: any, originalOpts: JQueryAjaxSettings, jqXHR: JQueryXHR) => any): void;
+    ajaxPrefilter(handler: (opts: any, originalOpts: JQueryAjaxSettings, jqXHR: JQueryXHR<any>) => any): void;
 
     ajaxSettings: JQueryAjaxSettings;
 
@@ -743,7 +743,7 @@ interface JQueryStatic {
      * @param success A callback function that is executed if the request succeeds.
      * @param dataType The type of data expected from the server. Default: Intelligent Guess (xml, json, script, or html).
      */
-    get(url: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any, dataType?: string): JQueryXHR;
+    get(url: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any, dataType?: string): JQueryXHR<any>;
     /**
      * Load data from the server using a HTTP GET request.
      *
@@ -752,7 +752,7 @@ interface JQueryStatic {
      * @param success A callback function that is executed if the request succeeds.
      * @param dataType The type of data expected from the server. Default: Intelligent Guess (xml, json, script, or html).
      */
-    get(url: string, data?: Object, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any, dataType?: string): JQueryXHR;
+    get(url: string, data?: Object, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any, dataType?: string): JQueryXHR<any>;
     /**
      * Load data from the server using a HTTP GET request.
      *
@@ -761,22 +761,14 @@ interface JQueryStatic {
      * @param success A callback function that is executed if the request succeeds.
      * @param dataType The type of data expected from the server. Default: Intelligent Guess (xml, json, script, or html).
      */
-    get(url: string, data?: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any, dataType?: string): JQueryXHR;
+    get(url: string, data?: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any, dataType?: string): JQueryXHR<any>;
     /**
      * Load JSON-encoded data from the server using a GET HTTP request.
      *
      * @param url A string containing the URL to which the request is sent.
      * @param success A callback function that is executed if the request succeeds.
      */
-    getJSON(url: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any): JQueryXHR;
-    /**
-     * Load JSON-encoded data from the server using a GET HTTP request.
-     *
-     * @param url A string containing the URL to which the request is sent.
-     * @param data A plain object or string that is sent to the server with the request.
-     * @param success A callback function that is executed if the request succeeds.
-     */
-    getJSON(url: string, data?: Object, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any): JQueryXHR;
+    getJSON(url: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any): JQueryXHR<any>;
     /**
      * Load JSON-encoded data from the server using a GET HTTP request.
      *
@@ -784,14 +776,22 @@ interface JQueryStatic {
      * @param data A plain object or string that is sent to the server with the request.
      * @param success A callback function that is executed if the request succeeds.
      */
-    getJSON(url: string, data?: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any): JQueryXHR;
+    getJSON(url: string, data?: Object, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any): JQueryXHR<any>;
+    /**
+     * Load JSON-encoded data from the server using a GET HTTP request.
+     *
+     * @param url A string containing the URL to which the request is sent.
+     * @param data A plain object or string that is sent to the server with the request.
+     * @param success A callback function that is executed if the request succeeds.
+     */
+    getJSON(url: string, data?: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any): JQueryXHR<any>;
     /**
      * Load a JavaScript file from the server using a GET HTTP request, then execute it.
      *
      * @param url A string containing the URL to which the request is sent.
      * @param success A callback function that is executed if the request succeeds.
      */
-    getScript(url: string, success?: (script: string, textStatus: string, jqXHR: JQueryXHR) => any): JQueryXHR;
+    getScript(url: string, success?: (script: string, textStatus: string, jqXHR: JQueryXHR<any>) => any): JQueryXHR<any>;
 
     /**
      * Create a serialized representation of an array or object, suitable for use in a URL query string or Ajax request.
@@ -805,7 +805,7 @@ interface JQueryStatic {
      * @param success A callback function that is executed if the request succeeds. Required if dataType is provided, but can be null in that case.
      * @param dataType The type of data expected from the server. Default: Intelligent Guess (xml, json, script, text, html).
      */
-    post(url: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any, dataType?: string): JQueryXHR;
+    post(url: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any, dataType?: string): JQueryXHR<any>;
     /**
      * Load data from the server using a HTTP POST request.
      *
@@ -814,7 +814,7 @@ interface JQueryStatic {
      * @param success A callback function that is executed if the request succeeds. Required if dataType is provided, but can be null in that case.
      * @param dataType The type of data expected from the server. Default: Intelligent Guess (xml, json, script, text, html).
      */
-    post(url: string, data?: Object, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any, dataType?: string): JQueryXHR;
+    post(url: string, data?: Object, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any, dataType?: string): JQueryXHR<any>;
     /**
      * Load data from the server using a HTTP POST request.
      *
@@ -823,7 +823,7 @@ interface JQueryStatic {
      * @param success A callback function that is executed if the request succeeds. Required if dataType is provided, but can be null in that case.
      * @param dataType The type of data expected from the server. Default: Intelligent Guess (xml, json, script, text, html).
      */
-    post(url: string, data?: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR) => any, dataType?: string): JQueryXHR;
+    post(url: string, data?: string, success?: (data: any, textStatus: string, jqXHR: JQueryXHR<any>) => any, dataType?: string): JQueryXHR<any>;
 
     /**
      * A multi-purpose callbacks list object that provides a powerful way to manage callback lists.
@@ -1289,13 +1289,13 @@ interface JQuery {
      *
      * @param handler The function to be invoked.
      */
-    ajaxError(handler: (event: JQueryEventObject, jqXHR: JQueryXHR, ajaxSettings: JQueryAjaxSettings, thrownError: any) => any): JQuery;
+    ajaxError(handler: (event: JQueryEventObject, jqXHR: JQueryXHR<any>, ajaxSettings: JQueryAjaxSettings, thrownError: any) => any): JQuery;
     /**
      * Attach a function to be executed before an Ajax request is sent. This is an Ajax Event.
      *
      * @param handler The function to be invoked.
      */
-    ajaxSend(handler: (event: JQueryEventObject, jqXHR: JQueryXHR, ajaxOptions: JQueryAjaxSettings) => any): JQuery;
+    ajaxSend(handler: (event: JQueryEventObject, jqXHR: JQueryXHR<any>, ajaxOptions: JQueryAjaxSettings) => any): JQuery;
     /**
      * Register a handler to be called when the first Ajax request begins. This is an Ajax Event.
      *

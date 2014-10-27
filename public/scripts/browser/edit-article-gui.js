@@ -14,24 +14,30 @@ var EditArticleGui = (function (_super) {
     function EditArticleGui() {
         _super.call(this);
         this.id = "-1";
+        this.saveBtn = { get jq() {
+                return $('button#save');
+            } };
+        this.cancelBtn = { get jq() {
+                return $('button#cancel');
+            } };
         var _self = this;
         $(document).ready(function () {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
+            clientAjax.article.get({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result;
-                _self.article.input.getTitle().val(result.title);
-                _self.article.input.getContent().html(result.content);
-                _self.article.output.getTitle().html(result.title);
-                _self.article.output.getContent().html(marked(result.content));
+                _self.article.input.title.val = result.title;
+                _self.article.input.content.val = result.content;
+                _self.article.output.title.val = result.title;
+                _self.article.output.content.val = marked(result.content);
             });
-            _self.getSaveBtn().click(function () {
-                var article = _self.article.getArticle();
-                new clientAjax.article.Update().ajax({
+            _self.saveBtn.jq.click(function () {
+                var article = _self.article.article;
+                clientAjax.article.update({
                     id: _self.id, title: article.title, content: article.content
                 }).done(function (res) {
                     if (!res.ok)
@@ -41,7 +47,7 @@ var EditArticleGui = (function (_super) {
                     _self.redirect(url.article.get(_self.id));
                 });
             });
-            _self.getCancelBtn().click(function () {
+            _self.cancelBtn.jq.click(function () {
                 _self.redirect(url.article.get(_self.id));
             });
         });
@@ -55,15 +61,6 @@ var EditArticleGui = (function (_super) {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
-    };
-    EditArticleGui.prototype.getContentId = function () {
-        return "content";
-    };
-    EditArticleGui.prototype.getSaveBtn = function () {
-        return $("button#save");
-    };
-    EditArticleGui.prototype.getCancelBtn = function () {
-        return $("button#cancel");
     };
     return EditArticleGui;
 })(Gui);

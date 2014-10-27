@@ -1,19 +1,19 @@
 
 class RenderedArticle {
-    getTitle() {
-        return $("h1.article-title");
-    }
-    getContent() {
-        return $("div.article-content");
-    }
-    setTitle(s) {
-        return $("h1.article-title").html(s);
-    }
-    setContent(s) {
-        return $("div.article-content").html(s);
-    }
+    content;
+    title;
     constructor() {
-        
+        var _self = this;
+        this.content = { 
+            get jq() { return $("div.article-content"); },
+            get val() { return _self.content.jq.html(); },
+            set val(val) { _self.content.jq.html(val); }
+        };
+        this.title = {
+            get jq() { return $("h1.article-title"); },
+            get val() { return _self.title.jq.html(); },
+            set val(val) { _self.title.jq.html(val); } 
+        }
     }
 }
  

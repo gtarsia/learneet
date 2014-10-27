@@ -5,6 +5,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./gui');
+var clientAjax = require('./client-ajax');
 
 var RegisterGui = (function (_super) {
     __extends(RegisterGui, _super);
@@ -13,12 +14,30 @@ var RegisterGui = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.getRegisterBtn().click(function () {
+                var user = _self.getUser();
+                new clientAjax.user.Register().ajax(user);
                 console.log('Tried to register');
             });
         });
     }
     RegisterGui.prototype.getRegisterBtn = function () {
         return $("button#register");
+    };
+    RegisterGui.prototype.getUsername = function () {
+        return $("input#username");
+    };
+    RegisterGui.prototype.getPassword = function () {
+        return $("input#password");
+    };
+    RegisterGui.prototype.getEmail = function () {
+        return $("input#email");
+    };
+    RegisterGui.prototype.validateUsername = function () {
+    };
+    RegisterGui.prototype.validate = function () {
+    };
+    RegisterGui.prototype.getUser = function () {
+        return {};
     };
     return RegisterGui;
 })(Gui);

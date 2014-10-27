@@ -19,14 +19,14 @@ var ArticleGui = (function (_super) {
         $(document).ready(function () {
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
+            clientAjax.article.get({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result;
-                _self.article.setTitle(result.title);
-                _self.article.setContent(marked(result.content));
+                _self.article.title.val = result.title;
+                _self.article.content.val = marked(result.content);
             });
             _self.getEditBtn().click(function () {
                 _self.redirect(url.article.edit(_self.id));

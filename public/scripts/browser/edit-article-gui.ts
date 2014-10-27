@@ -17,15 +17,8 @@ export class EditArticleGui extends Gui {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     }
-    getContentId() {
-        return "content";
-    }
-    getSaveBtn() {
-        return $("button#save");
-    }
-    getCancelBtn() {
-        return $("button#cancel");
-    }
+    saveBtn = { get jq() { return $('button#save') } };
+    cancelBtn = { get jq() { return $('button#cancel') } };
     article: PreviewableArticle;
     constructor() {
         super();
@@ -33,21 +26,21 @@ export class EditArticleGui extends Gui {
         $(document).ready(function() {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new clientAjax.article.Get().ajax({ id: _self.id })
+            clientAjax.article.get({ id: _self.id })
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result
-                _self.article.input.getTitle().val(result.title);
-                _self.article.input.getContent().html(result.content);
-                _self.article.output.getTitle().html(result.title);
-                _self.article.output.getContent().html(marked(result.content));
+                _self.article.input.title.val = result.title;
+                _self.article.input.content.val = result.content;
+                _self.article.output.title.val = result.title;
+                _self.article.output.content.val = marked(result.content);
             });
-            _self.getSaveBtn().click(() => {
-                var article = _self.article.getArticle();
-                new clientAjax.article.Update().ajax({
+            _self.saveBtn.jq.click(() => {
+                var article = _self.article.article;
+                clientAjax.article.update({
                     id: _self.id, title: article.title, content: article.content
                 })
                 .done(function(res) {
@@ -56,7 +49,7 @@ export class EditArticleGui extends Gui {
                     _self.redirect(url.article.get(_self.id)); 
                 });
             });
-            _self.getCancelBtn().click(() => {
+            _self.cancelBtn.jq.click(() => {
                 _self.redirect(url.article.get(_self.id));
             });
         });

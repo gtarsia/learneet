@@ -14,7 +14,7 @@ function isOk(err, reject) {
 
 function create(args) {
     var id;
-    return db.incr("articleId").then(function (_id) {
+    return db.incr("article:idCounter").then(function (_id) {
         debugger;
         id = _id;
         return db.rpush("article:ids", id);

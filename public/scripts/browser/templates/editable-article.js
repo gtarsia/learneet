@@ -1,18 +1,36 @@
 var EditableArticle = (function () {
     function EditableArticle() {
-    }
-    EditableArticle.prototype.getArticle = function () {
-        return {
-            title: this.getTitle().val(),
-            content: this.getContent().val()
+        var _self = this;
+        this.content = {
+            get jq() {
+                return $("textarea.article-content");
+            },
+            get val() {
+                return _self.content.jq.val();
+            },
+            set val(val) {
+                _self.content.jq.val(val);
+            }
         };
-    };
-    EditableArticle.prototype.getContent = function () {
-        return $("textarea.article-content");
-    };
-    EditableArticle.prototype.getTitle = function () {
-        return $("input.article-title");
-    };
+        this.title = {
+            get jq() {
+                return $("input.article-title");
+            },
+            get val() {
+                return _self.title.jq.val();
+            },
+            set val(val) {
+                _self.title.jq.val(val);
+            }
+        };
+    }
+    Object.defineProperty(EditableArticle.prototype, "article", {
+        get: function () {
+            return { title: this.title.val, content: this.content.val };
+        },
+        enumerable: true,
+        configurable: true
+    });
     return EditableArticle;
 })();
 
