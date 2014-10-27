@@ -26,7 +26,7 @@ class RegisterGui extends Gui {
         $(document).ready(() => {
             _self.registerBtn.jq.click(() => {
                 var user: any = _self.getUser();
-                new clientAjax.user.Register().ajax(user)
+                clientAjax.user.register(user)
                 console.log('Tried to register');
             });
         });

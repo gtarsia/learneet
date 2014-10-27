@@ -91,6 +91,10 @@ var article = exports.article;
         return Register;
     })(ClientAjax);
     user.Register = Register;
+    function register(params) {
+        return new Register().ajax(params);
+    }
+    user.register = register;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map

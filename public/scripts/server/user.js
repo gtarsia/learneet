@@ -1,17 +1,22 @@
 var db = require('./db');
 var bcrypt = require('./bcrypt');
 
+function hash() {
+    return bcrypt.genSalt(10).then(function (salt) {
+        return bcrypt.hash(salt);
+    });
+}
+exports.hash = hash;
+
 function register(params) {
     var id;
     var hash;
-    return bcrypt.genSalt(10).then(function (salt) {
-        return bcrypt.hash(salt);
-    }).then(function (_hash) {
+    return hash(params.password).then(function (_hash) {
         hash = _hash;
         return db.incr("user:ids");
     }).then(function (_id) {
         id = _id;
-        return exports.create({
+        return db.hmset("user:" + id, {
             username: params.username,
             hash: hash,
             id: id,
@@ -27,17 +32,6 @@ function register(params) {
     });
 }
 exports.register = register;
-
-function create(user) {
-    return db.hmset("user:" + user.id, {
-        username: user.username,
-        hash: user.hash,
-        id: user.id,
-        email: user.email,
-        activated: user.activated
-    });
-}
-exports.create = create;
 
 function auth(username, password) {
 }

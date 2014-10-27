@@ -71,5 +71,8 @@ export module user {
             super(baseRegister.url(), baseRegister.type());
         }
     }
+    export function register(params: baseRegister.ParamsType): JQueryXHR<baseRegister.ReturnType> {
+        return new Register().ajax(params);
+    }
 }
 
