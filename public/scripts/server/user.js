@@ -13,7 +13,7 @@ var user;
             return db.incr("user:ids");
         }).then(function (_id) {
             id = _id;
-            db.hmset("user:" + id, {
+            return db.hmset("user:" + id, {
                 username: params.username,
                 hash: hash,
                 id: id,

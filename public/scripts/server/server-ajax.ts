@@ -9,7 +9,8 @@ export function getServerAjaxList(): ServerAjax<any, any>[] {
         new Article.Create(),
         new Article.Get(),
         new Article.GetAll(),
-        new Article.Update()
+        new Article.Update(),
+        new User.Register()
     ];
 }
 
@@ -112,4 +113,22 @@ export module Article {
         DB.Article.Create(params, cb);
     }
     */
+}
+
+export module User {
+    import CommonRegister = CommonAjax.User.Register;
+    export class Update
+        extends ServerAjax<CommonUpdate.ParamsType, CommonUpdate.ReturnType> {
+        constructor() {
+            super(CommonUpdate.url(), CommonUpdate.type());
+        }
+        handler(req: express.Request, res: express.Response, next: Function) {
+            article.update(req.body)
+            .then((result: CommonUpdate.ReturnType) => {
+                debugger;
+                console.log('Se actualizo un articulo');
+                res.send(result);
+            });
+        }
+    }
 }

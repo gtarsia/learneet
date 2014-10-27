@@ -1,11 +1,10 @@
 import db = require('./db');
 import bcrypt = require('./bcrypt');
+import CommonAjax = require('./../common/common-ajax');
+import RegisterFields = CommonAjax.RegisterFields;
 
 module user {
-    export interface RegisterParams { 
-        username: string; password: string; email: string;
-    }
-    export function register(params: RegisterParams) {
+    export function register(params: RegisterFields) {
         var id;
         var hash;
         return bcrypt.genSalt(10)
@@ -18,7 +17,7 @@ module user {
         })
         .then((_id: string) => {
             id = _id;
-            db.hmset("user:" + id, {
+            return db.hmset("user:" + id, {
                 username: params.username,
                 hash: hash,
                 id: id,

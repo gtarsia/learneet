@@ -14,7 +14,8 @@ function getServerAjaxList() {
         new Article.Create(),
         new Article.Get(),
         new Article.GetAll(),
-        new Article.Update()
+        new Article.Update(),
+        new User.Register()
     ];
 }
 exports.getServerAjaxList = getServerAjaxList;
@@ -114,4 +115,23 @@ exports.ServerAjax = ServerAjax;
     Article.Update = Update;
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
+
+(function (User) {
+    var Update = (function (_super) {
+        __extends(Update, _super);
+        function Update() {
+            _super.call(this, CommonUpdate.url(), CommonUpdate.type());
+        }
+        Update.prototype.handler = function (req, res, next) {
+            article.update(req.body).then(function (result) {
+                debugger;
+                console.log('Se actualizo un articulo');
+                res.send(result);
+            });
+        };
+        return Update;
+    })(ServerAjax);
+    User.Update = Update;
+})(exports.User || (exports.User = {}));
+var User = exports.User;
 //# sourceMappingURL=server-ajax.js.map

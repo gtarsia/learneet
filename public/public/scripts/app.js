@@ -548,6 +548,21 @@ exports.AjaxType = {
 })(exports.Article || (exports.Article = {}));
 var Article = exports.Article;
 
+(function (User) {
+    (function (Register) {
+        function url() {
+            return '/api/register';
+        }
+        Register.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        Register.type = type;
+    })(User.Register || (User.Register = {}));
+    var Register = User.Register;
+})(exports.User || (exports.User = {}));
+var User = exports.User;
+
 if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map

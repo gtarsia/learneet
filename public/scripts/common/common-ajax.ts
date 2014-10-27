@@ -53,6 +53,19 @@ export module Article {
     }
 }
 
+export module User {
+    export interface RegisterFields {
+        username: string; password: string; email: string;
+    }
+
+    export module Register {
+        export function url(): string { return '/api/register'}
+        export function type(): string { return AjaxType.POST }
+        export interface ParamsType extends RegisterFields {}
+        export interface ReturnType extends JsonReturn<Boolean> {}
+    }
+}
+
 /*
 export interface CommonAjax {
     url(): string
