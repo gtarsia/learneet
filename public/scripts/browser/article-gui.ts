@@ -1,4 +1,4 @@
-﻿import ClientAjax = require("./client-ajax");
+﻿import clientAjax = require("./client-ajax");
 import parser = require('./parser');
 import RenderedArticle = require('./rendered-article');
 import Gui = require("./gui");
@@ -17,7 +17,7 @@ export class ArticleGui extends Gui {
         $(document).ready(function() {
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new ClientAjax.Article.Get().ajax({ id: _self.id })
+            new clientAjax.article.Get().ajax({ id: _self.id })
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);

@@ -1,4 +1,4 @@
-﻿import ClientAjax = require("./client-ajax");
+﻿import clientAjax = require("./client-ajax");
 import PreviewableArticle = require("./previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
@@ -33,7 +33,7 @@ export class EditArticleGui extends Gui {
         $(document).ready(function() {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new ClientAjax.Article.Get().ajax({ id: _self.id })
+            new clientAjax.article.Get().ajax({ id: _self.id })
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -47,7 +47,7 @@ export class EditArticleGui extends Gui {
             });
             _self.getSaveBtn().click(() => {
                 var article = _self.article.getArticle();
-                new ClientAjax.Article.Update().ajax({
+                new clientAjax.article.Update().ajax({
                     id: _self.id, title: article.title, content: article.content
                 })
                 .done(function(res) {

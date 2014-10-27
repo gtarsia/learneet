@@ -4,7 +4,7 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 
 var RenderedArticle = require('./rendered-article');
 var Gui = require("./gui");
@@ -19,7 +19,7 @@ var ArticleGui = (function (_super) {
         $(document).ready(function () {
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new ClientAjax.Article.Get().ajax({ id: _self.id }).done(function (res) {
+            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;

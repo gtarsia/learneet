@@ -1,7 +1,6 @@
 import article = require('./../scripts/server/article');
 import should = require('should');
-import commonAjax = require('./../scripts/common/common-ajax');
-import Article = commonAjax.Article;
+import baseAjax = require('./../scripts/common/base-ajax');
 import redis = require("redis");
 var client = redis.createClient();
 
@@ -15,19 +14,21 @@ describe('DB', () => {
         });
     });
 })
-
+import baseCreate = baseAjax.article.create;
+import baseGet = baseAjax.article.get;
 describe('Article', () => {
     describe("ABM", () => {
+        
         var art = {
             title: 'Como hacer ecuaciones', 
             content: 'Este es el contenido'
         };
         article.create(art)
-        .then((res : Article.Create.ReturnType) => {
+        .then((res : baseCreate.ReturnType) => {
             console.log('Create returned: ' + res);
             return article.get({ id: res.result.id});
         })
-        .then((result : Article.Get.ReturnType) => {
+        .then((result : baseGet.ReturnType) => {
             console.log('Get returned: ' + result);
             should(result).equal(art);
         });

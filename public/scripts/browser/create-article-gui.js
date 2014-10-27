@@ -4,7 +4,7 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
@@ -20,7 +20,7 @@ var CreateArticleGui = (function (_super) {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.getArticle();
                 console.log(article);
-                new ClientAjax.Article.Create().ajax(article).done(function (res) {
+                new clientAjax.article.Create().ajax(article).done(function (res) {
                     var id = res.result.id;
                     _self.redirect(url.article.get(id));
                 });

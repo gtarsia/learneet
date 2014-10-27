@@ -3,8 +3,9 @@
 append styles
   link(rel='stylesheet', href='/stylesheets/register.css')
 
-append scripts
-  script(src='scripts/browser/embed-register.js')
+prepend scripts
+  script.
+    guiName = 'RegisterGui'
 
 block main
   #register-outer

@@ -4,19 +4,19 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var CommonAjax = require('./../common/common-ajax');
+var baseAjax = require('./../common/base-ajax');
 
-var AjaxType = CommonAjax.AjaxType;
+var AjaxType = baseAjax.AjaxType;
 var article = require('./article');
 var user = require('./user');
 
 function getServerAjaxList() {
     return [
-        new Article.Create(),
-        new Article.Get(),
-        new Article.GetAll(),
-        new Article.Update(),
-        new User.Register()
+        new articleAjax.Create(),
+        new articleAjax.Get(),
+        new articleAjax.GetAll(),
+        new articleAjax.Update(),
+        new userAjax.Register()
     ];
 }
 exports.getServerAjaxList = getServerAjaxList;
@@ -50,11 +50,12 @@ var ServerAjax = (function () {
 })();
 exports.ServerAjax = ServerAjax;
 
-(function (Article) {
+(function (articleAjax) {
+    var baseCreate = baseAjax.article.create;
     var Create = (function (_super) {
         __extends(Create, _super);
         function Create() {
-            _super.call(this, CommonAjax.Article.Create.url(), CommonAjax.Article.Create.type());
+            _super.call(this, baseCreate.url(), baseCreate.type());
         }
         Create.prototype.handler = function (req, res, next) {
             article.create(req.body).then(function (result) {
@@ -63,12 +64,13 @@ exports.ServerAjax = ServerAjax;
         };
         return Create;
     })(ServerAjax);
-    Article.Create = Create;
+    articleAjax.Create = Create;
 
+    var baseGet = baseAjax.article.get;
     var Get = (function (_super) {
         __extends(Get, _super);
         function Get() {
-            _super.call(this, CommonAjax.Article.Get.url(), CommonAjax.Article.Get.type());
+            _super.call(this, baseGet.url(), baseGet.type());
         }
         Get.prototype.handler = function (req, res, next) {
             article.get(req.query).then(function (result) {
@@ -79,13 +81,13 @@ exports.ServerAjax = ServerAjax;
         };
         return Get;
     })(ServerAjax);
-    Article.Get = Get;
+    articleAjax.Get = Get;
 
-    var CommonGetAll = CommonAjax.Article.GetAll;
+    var baseGetAll = baseAjax.article.getAll;
     var GetAll = (function (_super) {
         __extends(GetAll, _super);
         function GetAll() {
-            _super.call(this, CommonGetAll.url(), CommonGetAll.type());
+            _super.call(this, baseGetAll.url(), baseGetAll.type());
         }
         GetAll.prototype.handler = function (req, res, next) {
             article.getAll().then(function (result) {
@@ -96,13 +98,13 @@ exports.ServerAjax = ServerAjax;
         };
         return GetAll;
     })(ServerAjax);
-    Article.GetAll = GetAll;
+    articleAjax.GetAll = GetAll;
 
-    var CommonUpdate = CommonAjax.Article.Update;
+    var baseUpdate = baseAjax.article.update;
     var Update = (function (_super) {
         __extends(Update, _super);
         function Update() {
-            _super.call(this, CommonUpdate.url(), CommonUpdate.type());
+            _super.call(this, baseUpdate.url(), baseUpdate.type());
         }
         Update.prototype.handler = function (req, res, next) {
             article.update(req.body).then(function (result) {
@@ -113,16 +115,16 @@ exports.ServerAjax = ServerAjax;
         };
         return Update;
     })(ServerAjax);
-    Article.Update = Update;
-})(exports.Article || (exports.Article = {}));
-var Article = exports.Article;
+    articleAjax.Update = Update;
+})(exports.articleAjax || (exports.articleAjax = {}));
+var articleAjax = exports.articleAjax;
 
-(function (User) {
-    var CommonRegister = CommonAjax.User.Register;
+(function (userAjax) {
+    var baseRegister = baseAjax.user.register;
     var Register = (function (_super) {
         __extends(Register, _super);
         function Register() {
-            _super.call(this, CommonRegister.url(), CommonRegister.type());
+            _super.call(this, baseRegister.url(), baseRegister.type());
         }
         Register.prototype.handler = function (req, res, next) {
             user.register(req.body).then(function (result) {
@@ -133,7 +135,7 @@ var Article = exports.Article;
         };
         return Register;
     })(ServerAjax);
-    User.Register = Register;
-})(exports.User || (exports.User = {}));
-var User = exports.User;
+    userAjax.Register = Register;
+})(exports.userAjax || (exports.userAjax = {}));
+var userAjax = exports.userAjax;
 //# sourceMappingURL=server-ajax.js.map

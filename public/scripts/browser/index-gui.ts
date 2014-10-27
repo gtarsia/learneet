@@ -1,6 +1,6 @@
-import ClientAjax = require("./client-ajax");
-import CommonAjax = require('./../common/common-ajax');
-import Article = CommonAjax.Article;
+import clientAjax = require("./client-ajax");
+import baseAjax = require('./../common/base-ajax');
+import baseArticle = baseAjax.article;
 import url = require("./../common/url");
 import Gui = require("./gui");
 
@@ -10,14 +10,14 @@ class IndexGui extends Gui {
     setThumbs(html: string) {
         //$(".childContainer").append(html);
     }
-    buildArticleThumbsTemplate(articles: Article.Fields[]) {
+    buildArticleThumbsTemplate(articles: baseArticle.Fields[]) {
         return articles.toString();
     }
     constructor() {
         super();
         var _self = this;
         $(document).ready(function() {
-            new ClientAjax.Article.GetAll().ajax({})
+            new clientAjax.article.GetAll().ajax({})
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);

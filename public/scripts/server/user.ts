@@ -1,9 +1,10 @@
 import db = require('./db');
 import bcrypt = require('./bcrypt');
-import CommonAjax = require('./../common/common-ajax');
-import Register = CommonAjax.User.Register;
+import baseAjax = require('./../common/base-ajax');
+import register = baseAjax.user.register;
+import UserFields = baseAjax.user.UserFields;
 
-export function register(params: Register.ParamsType) : Promise<Register.ReturnType> {
+export function register(params: register.ParamsType) : Promise<register.ReturnType> {
     var id;
     var hash;
     return bcrypt.genSalt(10)
@@ -16,12 +17,13 @@ export function register(params: Register.ParamsType) : Promise<Register.ReturnT
     })
     .then((_id: string) => {
         id = _id;
-        return db.hmset("user:" + id, {
+        return create({
             username: params.username,
             hash: hash,
             id: id,
-            email: params.email
-        })
+            email: params.email,
+            activated: false
+        });
     })
     .then((res: string) => {
         return {
@@ -29,6 +31,16 @@ export function register(params: Register.ParamsType) : Promise<Register.ReturnT
             why: '',
             result: (res == 'OK')
         }
+    });
+}
+
+export function create(user: UserFields) {
+    return db.hmset("user:" + user.id, {
+        username: user.username,
+        hash: user.hash,
+        id: user.id,
+        email: user.email,
+        activated: user.activated
     });
 }
 

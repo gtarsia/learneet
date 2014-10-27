@@ -1,6 +1,6 @@
 ﻿import utils = require('./Utils');
-import CommonAjax = require('./../common/common-ajax');
-import AjaxType = CommonAjax.AjaxType;
+import baseAjax = require('./../common/base-ajax');
+import AjaxType = baseAjax.AjaxType;
 
 export class ClientAjax<ArgsType, ReturnType> {
     type: string;
@@ -19,34 +19,44 @@ export class ClientAjax<ArgsType, ReturnType> {
     }
 }
 
-export module Article {
-    import Art = CommonAjax.Article;
-    export class Get
-        extends ClientAjax<Art.Get.ParamsType,
-                           Art.Get.ReturnType> {
+export module article {
+    import baseGet = baseAjax.article.get;
+    export class Get extends ClientAjax<baseGet.ParamsType, baseGet.ReturnType> {
         constructor() {
-            super(Art.Get.url(), Art.Get.type());
+            super(baseGet.url(), baseGet.type());
         }
     }
-    export class Create
-        extends ClientAjax<Art.Create.ParamsType,
-                           Art.Create.ReturnType> {
+
+    import baseCreate = baseAjax.article.create;
+    export class Create extends ClientAjax<baseCreate.ParamsType, baseCreate.ReturnType> {
         constructor() {
-            super(Art.Create.url(), Art.Create.type());
+            super(baseCreate.url(), baseCreate.type());
         }
     }
+
+    import baseGetAll = baseAjax.article.getAll;
     export class GetAll
-        extends ClientAjax<Art.GetAll.ParamsType,
-                           Art.GetAll.ReturnType> {
+        extends ClientAjax<baseGetAll.ParamsType, baseGetAll.ReturnType> {
         constructor() {
-            super(Art.GetAll.url(), Art.GetAll.type());
+            super(baseGetAll.url(), baseGetAll.type());
         }
     }
+
+    import baseUpdate = baseAjax.article.update;
     export class Update
-        extends ClientAjax<Art.Update.ParamsType,
-                           Art.Update.ReturnType> {
+        extends ClientAjax<baseUpdate.ParamsType, baseUpdate.ReturnType> {
         constructor() {
-            super(Art.Update.url(), Art.Update.type());
+            super(baseUpdate.url(), baseUpdate.type());
+        }
+    }
+}
+
+export module user {
+    import baseRegister = baseAjax.user.register;
+    export class Register 
+        extends ClientAjax<baseRegister.ParamsType, baseRegister.ReturnType> {
+        constructor() {
+            super(baseRegister.url(), baseRegister.type());
         }
     }
 }

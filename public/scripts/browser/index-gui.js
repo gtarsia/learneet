@@ -4,7 +4,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 
 var url = require("./../common/url");
 var Gui = require("./gui");
@@ -15,7 +15,7 @@ var IndexGui = (function (_super) {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
-            new ClientAjax.Article.GetAll().ajax({}).done(function (res) {
+            new clientAjax.article.GetAll().ajax({}).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;

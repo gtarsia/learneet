@@ -11,11 +11,12 @@ function register(params) {
         return db.incr("user:ids");
     }).then(function (_id) {
         id = _id;
-        return db.hmset("user:" + id, {
+        return exports.create({
             username: params.username,
             hash: hash,
             id: id,
-            email: params.email
+            email: params.email,
+            activated: false
         });
     }).then(function (res) {
         return {
@@ -26,6 +27,17 @@ function register(params) {
     });
 }
 exports.register = register;
+
+function create(user) {
+    return db.hmset("user:" + user.id, {
+        username: user.username,
+        hash: user.hash,
+        id: user.id,
+        email: user.email,
+        activated: user.activated
+    });
+}
+exports.create = create;
 
 function auth(username, password) {
 }

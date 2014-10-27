@@ -1,5 +1,5 @@
 ﻿import utils = require("./Utils");
-import ClientAjax = require("./client-ajax");
+import clientAjax = require("./client-ajax");
 import PreviewableArticle = require("./previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url")
@@ -15,7 +15,7 @@ class CreateArticleGui extends Gui {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.getArticle();
                 console.log(article);
-                new ClientAjax.Article.Create().ajax(article)
+                new clientAjax.article.Create().ajax(article)
                 .done(function(res) {
                     var id = res.result.id;
                     _self.redirect(url.article.get(id));

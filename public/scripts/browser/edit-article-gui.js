@@ -4,7 +4,7 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
@@ -18,7 +18,7 @@ var EditArticleGui = (function (_super) {
         $(document).ready(function () {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new ClientAjax.Article.Get().ajax({ id: _self.id }).done(function (res) {
+            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -31,7 +31,7 @@ var EditArticleGui = (function (_super) {
             });
             _self.getSaveBtn().click(function () {
                 var article = _self.article.getArticle();
-                new ClientAjax.Article.Update().ajax({
+                new clientAjax.article.Update().ajax({
                     id: _self.id, title: article.title, content: article.content
                 }).done(function (res) {
                     if (!res.ok)

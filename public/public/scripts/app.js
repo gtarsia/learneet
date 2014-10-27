@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 
 var RenderedArticle = require('./rendered-article');
 var Gui = require("./gui");
@@ -20,7 +20,7 @@ var ArticleGui = (function (_super) {
         $(document).ready(function () {
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new ClientAjax.Article.Get().ajax({ id: _self.id }).done(function (res) {
+            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -46,15 +46,15 @@ if (guiName == 'ArticleGui') {
 }
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":12,"./client-ajax":2,"./gui":5,"./rendered-article":10}],2:[function(require,module,exports){
+},{"./../common/url":13,"./client-ajax":2,"./gui":5,"./rendered-article":11}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var CommonAjax = require('./../common/common-ajax');
-var AjaxType = CommonAjax.AjaxType;
+var baseAjax = require('./../common/base-ajax');
+var AjaxType = baseAjax.AjaxType;
 
 var ClientAjax = (function () {
     function ClientAjax(url, type) {
@@ -75,52 +75,71 @@ var ClientAjax = (function () {
 })();
 exports.ClientAjax = ClientAjax;
 
-(function (Article) {
-    var Art = CommonAjax.Article;
+(function (article) {
+    var baseGet = baseAjax.article.get;
     var Get = (function (_super) {
         __extends(Get, _super);
         function Get() {
-            _super.call(this, Art.Get.url(), Art.Get.type());
+            _super.call(this, baseGet.url(), baseGet.type());
         }
         return Get;
     })(ClientAjax);
-    Article.Get = Get;
+    article.Get = Get;
+
+    var baseCreate = baseAjax.article.create;
     var Create = (function (_super) {
         __extends(Create, _super);
         function Create() {
-            _super.call(this, Art.Create.url(), Art.Create.type());
+            _super.call(this, baseCreate.url(), baseCreate.type());
         }
         return Create;
     })(ClientAjax);
-    Article.Create = Create;
+    article.Create = Create;
+
+    var baseGetAll = baseAjax.article.getAll;
     var GetAll = (function (_super) {
         __extends(GetAll, _super);
         function GetAll() {
-            _super.call(this, Art.GetAll.url(), Art.GetAll.type());
+            _super.call(this, baseGetAll.url(), baseGetAll.type());
         }
         return GetAll;
     })(ClientAjax);
-    Article.GetAll = GetAll;
+    article.GetAll = GetAll;
+
+    var baseUpdate = baseAjax.article.update;
     var Update = (function (_super) {
         __extends(Update, _super);
         function Update() {
-            _super.call(this, Art.Update.url(), Art.Update.type());
+            _super.call(this, baseUpdate.url(), baseUpdate.type());
         }
         return Update;
     })(ClientAjax);
-    Article.Update = Update;
-})(exports.Article || (exports.Article = {}));
-var Article = exports.Article;
+    article.Update = Update;
+})(exports.article || (exports.article = {}));
+var article = exports.article;
+
+(function (user) {
+    var baseRegister = baseAjax.user.register;
+    var Register = (function (_super) {
+        __extends(Register, _super);
+        function Register() {
+            _super.call(this, baseRegister.url(), baseRegister.type());
+        }
+        return Register;
+    })(ClientAjax);
+    user.Register = Register;
+})(exports.user || (exports.user = {}));
+var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":11}],3:[function(require,module,exports){
+},{"./../common/base-ajax":12}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
@@ -136,7 +155,7 @@ var CreateArticleGui = (function (_super) {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.getArticle();
                 console.log(article);
-                new ClientAjax.Article.Create().ajax(article).done(function (res) {
+                new clientAjax.article.Create().ajax(article).done(function (res) {
                     var id = res.result.id;
                     _self.redirect(url.article.get(id));
                 });
@@ -151,14 +170,14 @@ if (guiName == 'CreateArticleGui') {
 }
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":12,"./client-ajax":2,"./gui":5,"./previewable-article":9}],4:[function(require,module,exports){
+},{"./../common/url":13,"./client-ajax":2,"./gui":5,"./previewable-article":9}],4:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
@@ -172,7 +191,7 @@ var EditArticleGui = (function (_super) {
         $(document).ready(function () {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            new ClientAjax.Article.Get().ajax({ id: _self.id }).done(function (res) {
+            new clientAjax.article.Get().ajax({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -185,7 +204,7 @@ var EditArticleGui = (function (_super) {
             });
             _self.getSaveBtn().click(function () {
                 var article = _self.article.getArticle();
-                new ClientAjax.Article.Update().ajax({
+                new clientAjax.article.Update().ajax({
                     id: _self.id, title: article.title, content: article.content
                 }).done(function (res) {
                     if (!res.ok)
@@ -228,7 +247,7 @@ if (guiName == 'EditArticleGui') {
 }
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/url":12,"./client-ajax":2,"./gui":5,"./previewable-article":9}],5:[function(require,module,exports){
+},{"./../common/url":13,"./client-ajax":2,"./gui":5,"./previewable-article":9}],5:[function(require,module,exports){
 var Gui = (function () {
     function Gui() {
     }
@@ -248,7 +267,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ClientAjax = require("./client-ajax");
+var clientAjax = require("./client-ajax");
 
 var url = require("./../common/url");
 var Gui = require("./gui");
@@ -259,7 +278,7 @@ var IndexGui = (function (_super) {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
-            new ClientAjax.Article.GetAll().ajax({}).done(function (res) {
+            new clientAjax.article.GetAll().ajax({}).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -291,7 +310,7 @@ if (guiName == 'IndexGui') {
 }
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":12,"./client-ajax":2,"./gui":5}],7:[function(require,module,exports){
+},{"./../common/url":13,"./client-ajax":2,"./gui":5}],7:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -434,7 +453,38 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{"./rendered-article":10}],10:[function(require,module,exports){
+},{"./rendered-article":11}],10:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Gui = require('./gui');
+
+var RegisterGui = (function (_super) {
+    __extends(RegisterGui, _super);
+    function RegisterGui() {
+        _super.call(this);
+        var _self = this;
+        $(document).ready(function () {
+            _self.getRegisterBtn().click(function () {
+                console.log('Tried to register');
+            });
+        });
+    }
+    RegisterGui.prototype.getRegisterBtn = function () {
+        return $("button#register");
+    };
+    return RegisterGui;
+})(Gui);
+
+if (guiName == 'RegisterGui') {
+    gui = new RegisterGui();
+}
+//# sourceMappingURL=register-gui.js.map
+
+},{"./gui":5}],11:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
     }
@@ -456,88 +506,88 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
 };
 
-(function (Article) {
+(function (article) {
     function WrapFieldWithId(fields, id) {
         return { title: fields.title, content: fields.content, id: id };
     }
-    Article.WrapFieldWithId = WrapFieldWithId;
+    article.WrapFieldWithId = WrapFieldWithId;
 
-    (function (Create) {
+    (function (create) {
         function url() {
             return '/api/create_article';
         }
-        Create.url = url;
+        create.url = url;
         function type() {
             return exports.AjaxType.POST;
         }
-        Create.type = type;
-    })(Article.Create || (Article.Create = {}));
-    var Create = Article.Create;
+        create.type = type;
+    })(article.create || (article.create = {}));
+    var create = article.create;
 
-    (function (Get) {
+    (function (get) {
         function url() {
             return '/api/get';
         }
-        Get.url = url;
+        get.url = url;
         function type() {
             return exports.AjaxType.GET;
         }
-        Get.type = type;
-    })(Article.Get || (Article.Get = {}));
-    var Get = Article.Get;
+        get.type = type;
+    })(article.get || (article.get = {}));
+    var get = article.get;
 
-    (function (GetAll) {
+    (function (getAll) {
         function url() {
             return '/api/getall';
         }
-        GetAll.url = url;
+        getAll.url = url;
         function type() {
             return exports.AjaxType.GET;
         }
-        GetAll.type = type;
-    })(Article.GetAll || (Article.GetAll = {}));
-    var GetAll = Article.GetAll;
+        getAll.type = type;
+    })(article.getAll || (article.getAll = {}));
+    var getAll = article.getAll;
 
-    (function (Update) {
+    (function (update) {
         function url() {
             return '/api/update';
         }
-        Update.url = url;
+        update.url = url;
         function type() {
             return exports.AjaxType.POST;
         }
-        Update.type = type;
-    })(Article.Update || (Article.Update = {}));
-    var Update = Article.Update;
-})(exports.Article || (exports.Article = {}));
-var Article = exports.Article;
+        update.type = type;
+    })(article.update || (article.update = {}));
+    var update = article.update;
+})(exports.article || (exports.article = {}));
+var article = exports.article;
 
-(function (User) {
-    (function (Register) {
+(function (user) {
+    (function (register) {
         function url() {
             return '/api/register';
         }
-        Register.url = url;
+        register.url = url;
         function type() {
             return exports.AjaxType.POST;
         }
-        Register.type = type;
-    })(User.Register || (User.Register = {}));
-    var Register = User.Register;
-})(exports.User || (exports.User = {}));
-var User = exports.User;
+        register.type = type;
+    })(user.register || (user.register = {}));
+    var register = user.register;
+})(exports.user || (exports.user = {}));
+var user = exports.user;
 
 if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
-//# sourceMappingURL=common-ajax.js.map
+//# sourceMappingURL=base-ajax.js.map
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -567,4 +617,4 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13]);

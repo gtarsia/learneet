@@ -1,16 +1,16 @@
-import commonAjax = require('./../common/common-ajax');
+import baseAjax = require('./../common/base-ajax');
 import Promise = require('bluebird');
-import Article = commonAjax.Article;
-import FieldsWithId = Article.FieldsWithId;
-import Create = Article.Create;
-import Get = Article.Get;
-import Update = Article.Update;
-import GetAll = Article.GetAll;
+import article = baseAjax.article;
+import FieldsWithId = article.FieldsWithId;
+import create = article.create;
+import get = article.get;
+import update = article.update;
+import getAll = article.getAll;
 import db = require('./db');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
 
-export function create(args: Create.ParamsType) : Promise<Create.ReturnType> {
+export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 	var id;
 	return db.incr("articleId")
 	.then((_id: string) => {
@@ -20,11 +20,11 @@ export function create(args: Create.ParamsType) : Promise<Create.ReturnType> {
 	})
 	.then(() => {
 		debugger;
-		return db.hmset("article:" + id, Article.WrapFieldWithId(args, id));
+		return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
 	})
-	.then<Create.ReturnType>((result: string) => {
+	.then<create.ReturnType>((result: string) => {
 		debugger;
-		var r : Create.ReturnType = {
+		var r : create.ReturnType = {
 			ok: true,
 			why: '',
 			result: {
@@ -42,13 +42,13 @@ export function create(args: Create.ParamsType) : Promise<Create.ReturnType> {
 	})
 }
 
-export function get(args: Get.ParamsType) : Promise<Get.ReturnType> {
+export function get(args: get.ParamsType) : Promise<get.ReturnType> {
 	return db.hgetall("article:" + args.id.toString())
-	.then<Get.ReturnType>((result: any) => {
+	.then<get.ReturnType>((result: any) => {
         debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
-		var r : Get.ReturnType = {
+		var r : get.ReturnType = {
 			ok: ok,
 			why: why,
 			result: result
@@ -57,7 +57,7 @@ export function get(args: Get.ParamsType) : Promise<Get.ReturnType> {
 	})
 }
 
-export function getAll() : Promise<GetAll.ReturnType> {
+export function getAll() : Promise<getAll.ReturnType> {
 	function arrayToArticles(array: string[]) : FieldsWithId[] {
 		var articles : FieldsWithId[] = [];
 		while (array.length > 0) {
@@ -69,11 +69,11 @@ export function getAll() : Promise<GetAll.ReturnType> {
 	}
 	return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id',
 	    'GET', 'article:*->title', 'GET', 'article:*->content')
-	.then<GetAll.ReturnType>((result: any) => {
+	.then<getAll.ReturnType>((result: any) => {
         debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Couldn\'t get articles' : '');
-		var r : GetAll.ReturnType = {
+		var r : getAll.ReturnType = {
 			ok: ok,
 			why: why,
 			result: arrayToArticles(result)
@@ -82,12 +82,12 @@ export function getAll() : Promise<GetAll.ReturnType> {
 	})
 }
 
-export function update(args: Update.ParamsType) : Promise<Update.ReturnType> {
+export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 	return db.hmset("article:" + args.id, args)
-	.then<Get.ReturnType>((result: any) => {
+	.then<get.ReturnType>((result: any) => {
 		var ok = result != null;
 		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
-		var r : Get.ReturnType = {
+		var r : get.ReturnType = {
 			ok: ok,
 			why: why,
 			result: result

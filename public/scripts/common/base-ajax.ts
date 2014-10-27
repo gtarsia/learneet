@@ -10,7 +10,7 @@ export interface JsonReturn<T> {
     result: T;
 }
 
-export module Article {
+export module article {
 
     export interface Fields {
         title: string; content: string; 
@@ -24,28 +24,28 @@ export module Article {
         return { title: fields.title, content: fields.content, id: id }
     }
 
-    export module Create {
+    export module create {
         export function url(): string { return '/api/create_article' }
         export function type(): string { return AjaxType.POST }
         export interface ParamsType extends Fields {}
         export interface ReturnType extends JsonReturn<Id> { }
     }
 
-    export module Get {
+    export module get {
         export function url(): string { return '/api/get' }
         export function type(): string { return AjaxType.GET }
         export interface ParamsType extends Id {}
         export interface ReturnType extends JsonReturn<FieldsWithId> { }
     }
 
-    export module GetAll {
+    export module getAll {
         export function url(): string { return '/api/getall' }
         export function type(): string { return AjaxType.GET}
         export interface ParamsType {} 
         export interface ReturnType extends JsonReturn<{}> {}
     }
 
-    export module Update {
+    export module update {
         export function url(): string { return '/api/update' }
         export function type(): string { return AjaxType.POST }
         export interface ParamsType extends FieldsWithId {}
@@ -53,12 +53,18 @@ export module Article {
     }
 }
 
-export module User {
-    export interface RegisterFields {
-        username: string; password: string; email: string;
+export module user {
+    export interface BaseFields {
+        username: string; email: string;
+    }
+    export interface RegisterFields extends BaseFields {
+        password: string; 
+    }
+    export interface UserFields extends BaseFields {
+        activated: Boolean; hash: string; id: string;
     }
 
-    export module Register {
+    export module register {
         export function url(): string { return '/api/register'}
         export function type(): string { return AjaxType.POST }
         export interface ParamsType extends RegisterFields {}

@@ -1,6 +1,6 @@
-var commonAjax = require('./../common/common-ajax');
+var baseAjax = require('./../common/base-ajax');
 
-var Article = commonAjax.Article;
+var article = baseAjax.article;
 
 var db = require('./db');
 
@@ -20,7 +20,7 @@ function create(args) {
         return db.rpush("article:ids", id);
     }).then(function () {
         debugger;
-        return db.hmset("article:" + id, Article.WrapFieldWithId(args, id));
+        return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
     }).then(function (result) {
         debugger;
         var r = {

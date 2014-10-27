@@ -1,17 +1,17 @@
-import CommonAjax = require('./../common/common-ajax');
+import baseAjax = require('./../common/base-ajax');
 import express = require('express');
-import AjaxType = CommonAjax.AjaxType;
+import AjaxType = baseAjax.AjaxType;
 import article = require('./article');
 import user = require('./user');
 
 //FUNCION DEFINITIVA
 export function getServerAjaxList(): ServerAjax<any, any>[] {
     return [
-        new Article.Create(),
-        new Article.Get(),
-        new Article.GetAll(),
-        new Article.Update(),
-        new User.Register()
+        new articleAjax.Create(),
+        new articleAjax.Get(),
+        new articleAjax.GetAll(),
+        new articleAjax.Update(),
+        new userAjax.Register()
     ];
 }
 
@@ -43,34 +43,32 @@ export class ServerAjax<ArgsType, ReturnType> {
     }
 }
 
-export module Article {
-    import CommonCreate = CommonAjax.Article.Create;
+export module articleAjax {
+    import baseCreate = baseAjax.article.create;
     export class Create
-        extends ServerAjax<CommonCreate.ParamsType,
-                            CommonCreate.ReturnType> {
+        extends ServerAjax<baseCreate.ParamsType,
+                            baseCreate.ReturnType> {
         constructor() {
-            super(CommonAjax.Article.Create.url(),
-                  CommonAjax.Article.Create.type());
+            super(baseCreate.url(), baseCreate.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
             article.create(req.body)
-            .then((result: CommonCreate.ReturnType) => {
+            .then((result: baseCreate.ReturnType) => {
                 res.send(result);
             });
         }
     }
 
-    import CommonGet = CommonAjax.Article.Get;
+    import baseGet = baseAjax.article.get;
     export class Get
-        extends ServerAjax<CommonGet.ParamsType,
-                           CommonGet.ReturnType> {
+        extends ServerAjax<baseGet.ParamsType,
+                           baseGet.ReturnType> {
         constructor() {
-            super(CommonAjax.Article.Get.url(),
-                  CommonAjax.Article.Get.type());
+            super(baseGet.url(), baseGet.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
             article.get(req.query)
-            .then((result: CommonGet.ReturnType) => {
+            .then((result: baseGet.ReturnType) => {
                 debugger;
                 console.log('Se pidio los articulos');
                 res.send(result);
@@ -78,15 +76,15 @@ export module Article {
         }    
     }
 
-    import CommonGetAll = CommonAjax.Article.GetAll;
+    import baseGetAll = baseAjax.article.getAll;
     export class GetAll
-        extends ServerAjax<CommonGetAll.ParamsType, CommonGetAll.ReturnType> {
+        extends ServerAjax<baseGetAll.ParamsType, baseGetAll.ReturnType> {
         constructor() {
-            super(CommonGetAll.url(), CommonGetAll.type());
+            super(baseGetAll.url(), baseGetAll.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
             article.getAll()
-            .then((result: CommonGetAll.ReturnType) => {
+            .then((result: baseGetAll.ReturnType) => {
                 debugger;
                 console.log('Se pidieron todos los articulos');
                 res.send(result);
@@ -94,15 +92,15 @@ export module Article {
         }
     }
 
-    import CommonUpdate = CommonAjax.Article.Update;
+    import baseUpdate = baseAjax.article.update;
     export class Update
-        extends ServerAjax<CommonUpdate.ParamsType, CommonUpdate.ReturnType> {
+        extends ServerAjax<baseUpdate.ParamsType, baseUpdate.ReturnType> {
         constructor() {
-            super(CommonUpdate.url(), CommonUpdate.type());
+            super(baseUpdate.url(), baseUpdate.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
             article.update(req.body)
-            .then((result: CommonUpdate.ReturnType) => {
+            .then((result: baseUpdate.ReturnType) => {
                 debugger;
                 console.log('Se actualizo un articulo');
                 res.send(result);
@@ -116,16 +114,16 @@ export module Article {
     */
 }
 
-export module User {
-    import CommonRegister = CommonAjax.User.Register;
+export module userAjax {
+    import baseRegister = baseAjax.user.register;
     export class Register
-        extends ServerAjax<CommonRegister.ParamsType, CommonRegister.ReturnType> {
+        extends ServerAjax<baseRegister.ParamsType, baseRegister.ReturnType> {
         constructor() {
-            super(CommonRegister.url(), CommonRegister.type());
+            super(baseRegister.url(), baseRegister.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
             user.register(req.body)
-            .then((result: CommonRegister.ReturnType) => {
+            .then((result: baseRegister.ReturnType) => {
                 debugger;
                 console.log('Se registro un usuario');
                 res.send(result);
