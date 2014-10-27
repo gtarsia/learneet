@@ -9,6 +9,9 @@ module url {
             return (id != null ? "/edit_article/" + id : "/edit_article/:id");
         }
     }
+    export module user {
+        export function register() { return "/register"; }
+    }
 }
 
 export = url

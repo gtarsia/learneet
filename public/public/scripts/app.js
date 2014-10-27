@@ -570,6 +570,13 @@ var url;
         article.edit = edit;
     })(url.article || (url.article = {}));
     var article = url.article;
+    (function (user) {
+        function register() {
+            return "/register";
+        }
+        user.register = register;
+    })(url.user || (url.user = {}));
+    var user = url.user;
 })(url || (url = {}));
 
 module.exports = url;

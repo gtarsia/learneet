@@ -1,20 +1,24 @@
 ﻿extends layout
 
-block content
-  div
-    label username
-    input#username(type="text")
-  div
-    label Email
-    input#email(type="text")
-  div
-    label Repeat Email
-    input#repeat-email(type="text")
-  div
-    label Password
-    input#password(type="password")
-  div
-    label Repeat Password
-    input#email(type="password")
-  input#Register(type="button")
-  input#Cancel(type="button")
+append styles
+  link(rel='stylesheet', href='/stylesheets/register.css')
+
+append scripts
+  script(src='scripts/browser/embed-register.js')
+
+block main
+  #register-outer
+    #register-inner
+      .input
+        input#username(type="text" placeholder="username")
+      .input
+        input#password(type="password" placeholder="password")
+      .input
+        input#repeat-password(type="password" placeholder="repeat password")
+      .input
+        input#email(type="text" placeholder="email")
+      .input
+        input#repeat-email(type="text" placeholder="repeat email")
+      #buttons
+        button#register Register
+        button#cancel Cancel

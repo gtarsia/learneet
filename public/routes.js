@@ -34,7 +34,7 @@ function set(app) {
         });
     });
     app.get('/login', renderCb('login', 'Login'));
-    app.get('/register', renderCb('register', 'Register'));
+    app.get(url.user.register(), renderCb('register', 'Register'));
     app.get('/register_finished', renderCb('register_finished', 'Register Finished'));
 }
 exports.set = set;
