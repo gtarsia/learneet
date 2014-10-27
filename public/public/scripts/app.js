@@ -7,7 +7,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var clientAjax = require("./client-ajax");
 
-var RenderedArticle = require('./rendered-article');
+var RenderedArticle = require('./templates/rendered-article');
 var Gui = require("./gui");
 var url = require("./../common/url");
 
@@ -46,7 +46,7 @@ if (guiName == 'ArticleGui') {
 }
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":13,"./client-ajax":2,"./gui":5,"./rendered-article":11}],2:[function(require,module,exports){
+},{"./../common/url":14,"./client-ajax":2,"./gui":5,"./templates/rendered-article":12}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -132,7 +132,7 @@ var article = exports.article;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":12}],3:[function(require,module,exports){
+},{"./../common/base-ajax":13}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -140,7 +140,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var clientAjax = require("./client-ajax");
-var PreviewableArticle = require("./previewable-article");
+var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
 
@@ -170,7 +170,7 @@ if (guiName == 'CreateArticleGui') {
 }
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":13,"./client-ajax":2,"./gui":5,"./previewable-article":9}],4:[function(require,module,exports){
+},{"./../common/url":14,"./client-ajax":2,"./gui":5,"./templates/previewable-article":11}],4:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -178,7 +178,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var clientAjax = require("./client-ajax");
-var PreviewableArticle = require("./previewable-article");
+var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
 
@@ -197,8 +197,8 @@ var EditArticleGui = (function (_super) {
                     return;
                 }
                 var result = res.result;
-                _self.article.getInputTitle().val(result.title);
-                _self.article.getInputContent().html(result.content);
+                _self.article.input.getTitle().val(result.title);
+                _self.article.input.getContent().html(result.content);
                 _self.article.output.getTitle().html(result.title);
                 _self.article.output.getContent().html(marked(result.content));
             });
@@ -247,7 +247,7 @@ if (guiName == 'EditArticleGui') {
 }
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/url":13,"./client-ajax":2,"./gui":5,"./previewable-article":9}],5:[function(require,module,exports){
+},{"./../common/url":14,"./client-ajax":2,"./gui":5,"./templates/previewable-article":11}],5:[function(require,module,exports){
 var Gui = (function () {
     function Gui() {
     }
@@ -310,7 +310,7 @@ if (guiName == 'IndexGui') {
 }
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":13,"./client-ajax":2,"./gui":5}],7:[function(require,module,exports){
+},{"./../common/url":14,"./client-ajax":2,"./gui":5}],7:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -384,76 +384,6 @@ exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
 },{}],9:[function(require,module,exports){
-var RenderedArticle = require('./rendered-article');
-
-var PreviewableArticle = (function () {
-    function PreviewableArticle() {
-        this.output = new RenderedArticle();
-        this.ignoreScroll = false;
-        this.bindTitlePreview();
-        this.bindContentPreview();
-        this.bindScrolls();
-    }
-    PreviewableArticle.prototype.getArticle = function () {
-        return {
-            title: this.getInputTitle().val(),
-            content: this.getInputContent().val()
-        };
-    };
-    PreviewableArticle.prototype.getInputContent = function () {
-        return $("textarea.article-content");
-    };
-    PreviewableArticle.prototype.getInputTitle = function () {
-        return $("input.article-title");
-    };
-
-    PreviewableArticle.prototype.bindScrolls = function () {
-        var _self = this;
-        function getPercent(el) {
-            return 100 * el.scrollTop() / (el[0].scrollHeight - el.height());
-        }
-        function setPercent(el, percent) {
-            el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
-        }
-        var src = _self.getInputContent();
-        var dest = _self.output.getContent();
-        function bindScroll(src, dest) {
-            src.scroll(function () {
-                if (_self.ignoreScroll) {
-                    _self.ignoreScroll = false;
-                    return;
-                }
-                _self.ignoreScroll = true;
-                setPercent(dest, getPercent(src));
-            });
-        }
-        bindScroll(src, dest);
-        bindScroll(dest, src);
-    };
-
-    PreviewableArticle.prototype.bindTitlePreview = function () {
-        var i = this.getInputTitle();
-        var o = this.output.getTitle();
-        i.keyup(function (e) {
-            var title = i.val();
-            o.html(title);
-        });
-    };
-    PreviewableArticle.prototype.bindContentPreview = function () {
-        var i = this.getInputContent();
-        var o = this.output.getContent();
-        i.keyup(function (e) {
-            var content = i.val();
-            o.html(marked(content));
-        });
-    };
-    return PreviewableArticle;
-})();
-
-module.exports = PreviewableArticle;
-//# sourceMappingURL=previewable-article.js.map
-
-},{"./rendered-article":11}],10:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -484,7 +414,91 @@ if (guiName == 'RegisterGui') {
 }
 //# sourceMappingURL=register-gui.js.map
 
-},{"./gui":5}],11:[function(require,module,exports){
+},{"./gui":5}],10:[function(require,module,exports){
+var EditableArticle = (function () {
+    function EditableArticle() {
+    }
+    EditableArticle.prototype.getArticle = function () {
+        return {
+            title: this.getTitle().val(),
+            content: this.getContent().val()
+        };
+    };
+    EditableArticle.prototype.getContent = function () {
+        return $("textarea.article-content");
+    };
+    EditableArticle.prototype.getTitle = function () {
+        return $("input.article-title");
+    };
+    return EditableArticle;
+})();
+
+module.exports = EditableArticle;
+//# sourceMappingURL=editable-article.js.map
+
+},{}],11:[function(require,module,exports){
+var RenderedArticle = require('./rendered-article');
+var EditableArticle = require("./editable-article");
+
+var PreviewableArticle = (function () {
+    function PreviewableArticle() {
+        this.input = new EditableArticle();
+        this.output = new RenderedArticle();
+        this.ignoreScroll = false;
+        this.bindTitlePreview();
+        this.bindContentPreview();
+        this.bindScrolls();
+    }
+    PreviewableArticle.prototype.getArticle = function () {
+        return this.input.getArticle();
+    };
+    PreviewableArticle.prototype.bindScrolls = function () {
+        var _self = this;
+        function getPercent(el) {
+            return 100 * el.scrollTop() / (el[0].scrollHeight - el.height());
+        }
+        function setPercent(el, percent) {
+            el.scrollTop((el[0].scrollHeight - el.height()) * percent / 100);
+        }
+        var src = _self.input.getContent();
+        var dest = _self.output.getContent();
+        function bindScroll(src, dest) {
+            src.scroll(function () {
+                if (_self.ignoreScroll) {
+                    _self.ignoreScroll = false;
+                    return;
+                }
+                _self.ignoreScroll = true;
+                setPercent(dest, getPercent(src));
+            });
+        }
+        bindScroll(src, dest);
+        bindScroll(dest, src);
+    };
+
+    PreviewableArticle.prototype.bindTitlePreview = function () {
+        var i = this.input.getTitle();
+        var o = this.output.getTitle();
+        i.keyup(function (e) {
+            var title = i.val();
+            o.html(title);
+        });
+    };
+    PreviewableArticle.prototype.bindContentPreview = function () {
+        var i = this.input.getContent();
+        var o = this.output.getContent();
+        i.keyup(function (e) {
+            var content = i.val();
+            o.html(marked(content));
+        });
+    };
+    return PreviewableArticle;
+})();
+
+module.exports = PreviewableArticle;
+//# sourceMappingURL=previewable-article.js.map
+
+},{"./editable-article":10,"./rendered-article":12}],12:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
     }
@@ -506,7 +520,7 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -587,7 +601,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -617,4 +631,4 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,13,14]);

@@ -53,7 +53,7 @@ module.exports = function (grunt) {
                 }
             },
             bro: {
-                files: ['public/scripts/browser/*.js'],
+                files: ['public/scripts/browser/**/*.js'],
                 tasks: ['browserify'],
                 options: {
                     interrupt: true,

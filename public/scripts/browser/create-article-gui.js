@@ -5,7 +5,7 @@
     d.prototype = new __();
 };
 var clientAjax = require("./client-ajax");
-var PreviewableArticle = require("./previewable-article");
+var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
 

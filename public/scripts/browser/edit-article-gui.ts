@@ -1,5 +1,5 @@
 ﻿import clientAjax = require("./client-ajax");
-import PreviewableArticle = require("./previewable-article");
+import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
 
@@ -40,8 +40,8 @@ export class EditArticleGui extends Gui {
                     return;
                 }
                 var result = res.result
-                _self.article.getInputTitle().val(result.title);
-                _self.article.getInputContent().html(result.content);
+                _self.article.input.getTitle().val(result.title);
+                _self.article.input.getContent().html(result.content);
                 _self.article.output.getTitle().html(result.title);
                 _self.article.output.getContent().html(marked(result.content));
             });

@@ -1,6 +1,6 @@
 ﻿import utils = require("./Utils");
 import clientAjax = require("./client-ajax");
-import PreviewableArticle = require("./previewable-article");
+import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url")
 

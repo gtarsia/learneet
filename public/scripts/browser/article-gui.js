@@ -6,7 +6,7 @@
 };
 var clientAjax = require("./client-ajax");
 
-var RenderedArticle = require('./rendered-article');
+var RenderedArticle = require('./templates/rendered-article');
 var Gui = require("./gui");
 var url = require("./../common/url");
 

@@ -5,7 +5,7 @@
     d.prototype = new __();
 };
 var clientAjax = require("./client-ajax");
-var PreviewableArticle = require("./previewable-article");
+var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
 
@@ -24,8 +24,8 @@ var EditArticleGui = (function (_super) {
                     return;
                 }
                 var result = res.result;
-                _self.article.getInputTitle().val(result.title);
-                _self.article.getInputContent().html(result.content);
+                _self.article.input.getTitle().val(result.title);
+                _self.article.input.getContent().html(result.content);
                 _self.article.output.getTitle().html(result.title);
                 _self.article.output.getContent().html(marked(result.content));
             });

@@ -1,6 +1,6 @@
 ﻿import clientAjax = require("./client-ajax");
 import parser = require('./parser');
-import RenderedArticle = require('./rendered-article');
+import RenderedArticle = require('./templates/rendered-article');
 import Gui = require("./gui");
 import url = require("./../common/url");
 declare function marked(s);
