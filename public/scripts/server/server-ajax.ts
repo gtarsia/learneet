@@ -2,6 +2,7 @@ import CommonAjax = require('./../common/common-ajax');
 import express = require('express');
 import AjaxType = CommonAjax.AjaxType;
 import article = require('./article');
+import user = require('./user');
 
 //FUNCION DEFINITIVA
 export function getServerAjaxList(): ServerAjax<any, any>[] {
@@ -117,16 +118,16 @@ export module Article {
 
 export module User {
     import CommonRegister = CommonAjax.User.Register;
-    export class Update
-        extends ServerAjax<CommonUpdate.ParamsType, CommonUpdate.ReturnType> {
+    export class Register
+        extends ServerAjax<CommonRegister.ParamsType, CommonRegister.ReturnType> {
         constructor() {
-            super(CommonUpdate.url(), CommonUpdate.type());
+            super(CommonRegister.url(), CommonRegister.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
-            article.update(req.body)
-            .then((result: CommonUpdate.ReturnType) => {
+            user.register(req.body)
+            .then((result: CommonRegister.ReturnType) => {
                 debugger;
-                console.log('Se actualizo un articulo');
+                console.log('Se registro un usuario');
                 res.send(result);
             });
         }

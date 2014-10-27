@@ -8,6 +8,7 @@ var CommonAjax = require('./../common/common-ajax');
 
 var AjaxType = CommonAjax.AjaxType;
 var article = require('./article');
+var user = require('./user');
 
 function getServerAjaxList() {
     return [
@@ -117,21 +118,22 @@ exports.ServerAjax = ServerAjax;
 var Article = exports.Article;
 
 (function (User) {
-    var Update = (function (_super) {
-        __extends(Update, _super);
-        function Update() {
-            _super.call(this, CommonUpdate.url(), CommonUpdate.type());
+    var CommonRegister = CommonAjax.User.Register;
+    var Register = (function (_super) {
+        __extends(Register, _super);
+        function Register() {
+            _super.call(this, CommonRegister.url(), CommonRegister.type());
         }
-        Update.prototype.handler = function (req, res, next) {
-            article.update(req.body).then(function (result) {
+        Register.prototype.handler = function (req, res, next) {
+            user.register(req.body).then(function (result) {
                 debugger;
-                console.log('Se actualizo un articulo');
+                console.log('Se registro un usuario');
                 res.send(result);
             });
         };
-        return Update;
+        return Register;
     })(ServerAjax);
-    User.Update = Update;
+    User.Register = Register;
 })(exports.User || (exports.User = {}));
 var User = exports.User;
 //# sourceMappingURL=server-ajax.js.map
