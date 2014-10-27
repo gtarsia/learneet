@@ -263,6 +263,23 @@ var Gui = (function () {
     Gui.prototype.redirect = function (view) {
         window.location.href = view;
     };
+    Gui.prototype.propertize = function (selector, valFnName) {
+        var obj = {
+            get jq() {
+                return $(selector);
+            }
+        };
+        if (valFnName != '')
+            Object.defineProperty(obj, "val", {
+                get: function () {
+                    return obj.jq[valFnName]();
+                },
+                set: function (val) {
+                    obj.jq[valFnName](val);
+                }
+            });
+        return obj;
+    };
     return Gui;
 })();
 
@@ -407,32 +424,23 @@ var RegisterGui = (function (_super) {
     function RegisterGui() {
         _super.call(this);
         var _self = this;
+        _self.registerBtn = _self.propertize('button#register');
+        _self.username = _self.propertize('input#username', 'val');
+        _self.password = _self.propertize('input#password', 'val');
+        _self.email = _self.propertize('input#email', 'val');
         $(document).ready(function () {
-            _self.getRegisterBtn().click(function () {
+            _self.registerBtn.jq.click(function () {
                 var user = _self.getUser();
                 new clientAjax.user.Register().ajax(user);
                 console.log('Tried to register');
             });
         });
     }
-    RegisterGui.prototype.getRegisterBtn = function () {
-        return $("button#register");
-    };
-    RegisterGui.prototype.getUsername = function () {
-        return $("input#username");
-    };
-    RegisterGui.prototype.getPassword = function () {
-        return $("input#password");
-    };
-    RegisterGui.prototype.getEmail = function () {
-        return $("input#email");
-    };
     RegisterGui.prototype.validateUsername = function () {
     };
     RegisterGui.prototype.validate = function () {
     };
     RegisterGui.prototype.getUser = function () {
-        return {};
     };
     return RegisterGui;
 })(Gui);

@@ -6,33 +6,25 @@ export interface Validation {
 }
 
 class RegisterGui extends Gui {
-    getRegisterBtn() {
-        return $("button#register");
-    }
-    getUsername() {
-        return $("input#username");
-    }
-    getPassword() {
-        return $("input#password");
-    }
-    getEmail() {
-        return $("input#email");
-    }
+    registerBtn;
+    username;
+    password;
+    email;
     validateUsername() {
-
     }
     validate() {
     }
     getUser() {
-        return {
-
-        }
     }
     constructor() {
         super();
         var _self = this;
+        _self.registerBtn = _self.propertize('button#register');
+        _self.username = _self.propertize('input#username', 'val');
+        _self.password = _self.propertize('input#password', 'val');
+        _self.email = _self.propertize('input#email', 'val');
         $(document).ready(() => {
-            _self.getRegisterBtn().click(() => {
+            _self.registerBtn.jq.click(() => {
                 var user: any = _self.getUser();
                 new clientAjax.user.Register().ajax(user)
                 console.log('Tried to register');
