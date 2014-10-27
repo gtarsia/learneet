@@ -6,12 +6,12 @@
 };
 var ClientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
-var Gui = require("./embed-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 
-var EmbedCreateArticleGui = (function (_super) {
-    __extends(EmbedCreateArticleGui, _super);
-    function EmbedCreateArticleGui() {
+var CreateArticleGui = (function (_super) {
+    __extends(CreateArticleGui, _super);
+    function CreateArticleGui() {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
@@ -27,10 +27,10 @@ var EmbedCreateArticleGui = (function (_super) {
             });
         });
     }
-    return EmbedCreateArticleGui;
+    return CreateArticleGui;
 })(Gui);
 
-if (guiName == 'EmbedCreateArticle') {
-    new EmbedCreateArticleGui();
+if (guiName == 'CreateArticleGui') {
+    new CreateArticleGui();
 }
-//# sourceMappingURL=embed-create_article.js.map
+//# sourceMappingURL=create-article-gui.js.map

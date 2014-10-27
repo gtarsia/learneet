@@ -1,10 +1,11 @@
 ﻿extends layout
 
+prepend scripts
+  script.
+    guiName = 'EditArticleGui'
+
 append styles
   link(rel='stylesheet', href='/stylesheets/login.css')
-
-append scripts
-  script(src='scripts/browser/embed-login.js')
 
 block content
   #warnings

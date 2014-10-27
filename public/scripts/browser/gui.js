@@ -8,4 +8,4 @@ var Gui = (function () {
 })();
 
 module.exports = Gui;
-//# sourceMappingURL=embed-gui.js.map
+//# sourceMappingURL=gui.js.map

@@ -7,11 +7,11 @@ var __extends = this.__extends || function (d, b) {
 var ClientAjax = require("./client-ajax");
 
 var url = require("./../common/url");
-var Gui = require("./embed-gui");
+var Gui = require("./gui");
 
-var EmbedIndexGui = (function (_super) {
-    __extends(EmbedIndexGui, _super);
-    function EmbedIndexGui() {
+var IndexGui = (function (_super) {
+    __extends(IndexGui, _super);
+    function IndexGui() {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
@@ -34,15 +34,15 @@ var EmbedIndexGui = (function (_super) {
             });
         });
     }
-    EmbedIndexGui.prototype.setThumbs = function (html) {
+    IndexGui.prototype.setThumbs = function (html) {
     };
-    EmbedIndexGui.prototype.buildArticleThumbsTemplate = function (articles) {
+    IndexGui.prototype.buildArticleThumbsTemplate = function (articles) {
         return articles.toString();
     };
-    return EmbedIndexGui;
+    return IndexGui;
 })(Gui);
 
-if (guiName == 'EmbedIndexGui') {
-    gui = new EmbedIndexGui();
+if (guiName == 'IndexGui') {
+    gui = new IndexGui();
 }
-//# sourceMappingURL=embed-index.js.map
+//# sourceMappingURL=index-gui.js.map

@@ -1,11 +1,11 @@
 ﻿import ClientAjax = require("./client-ajax");
 import parser = require('./parser');
 import RenderedArticle = require('./rendered-article');
-import Gui = require("./embed-gui");
+import Gui = require("./gui");
 import url = require("./../common/url");
 declare function marked(s);
 
-export class EmbedArticleGui extends Gui {
+export class ArticleGui extends Gui {
     id: string = "-1";
     getEditBtn() {
         return $("#editBtn");
@@ -36,6 +36,6 @@ export class EmbedArticleGui extends Gui {
 
 declare var guiName;
 
-if (guiName == 'EmbedArticle') {
-    new EmbedArticleGui();
+if (guiName == 'ArticleGui') {
+    new ArticleGui();
 }

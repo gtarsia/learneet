@@ -1,9 +1,9 @@
-﻿- var authenticated = true;
+﻿- var authenticated = false;
 
 #parentHeader.parentContainer
   #childHeader.childContainer
     include header_common
-    if authenticated
+    if auth
       include header_logged
     else
       include header_not_logged

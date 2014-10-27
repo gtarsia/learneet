@@ -5,6 +5,54 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var ClientAjax = require("./client-ajax");
+
+var RenderedArticle = require('./rendered-article');
+var Gui = require("./gui");
+var url = require("./../common/url");
+
+var ArticleGui = (function (_super) {
+    __extends(ArticleGui, _super);
+    function ArticleGui() {
+        _super.call(this);
+        this.id = "-1";
+        var _self = this;
+        $(document).ready(function () {
+            _self.article = new RenderedArticle();
+            _self.id = $("[type=hidden]#article-id").val();
+            new ClientAjax.Article.Get().ajax({ id: _self.id }).done(function (res) {
+                if (!res.ok) {
+                    console.log(res.why);
+                    return;
+                }
+                var result = res.result;
+                _self.article.setTitle(result.title);
+                _self.article.setContent(marked(result.content));
+            });
+            _self.getEditBtn().click(function () {
+                _self.redirect(url.article.edit(_self.id));
+            });
+        });
+    }
+    ArticleGui.prototype.getEditBtn = function () {
+        return $("#editBtn");
+    };
+    return ArticleGui;
+})(Gui);
+exports.ArticleGui = ArticleGui;
+
+if (guiName == 'ArticleGui') {
+    new ArticleGui();
+}
+//# sourceMappingURL=article-gui.js.map
+
+},{"./../common/url":12,"./client-ajax":2,"./gui":5,"./rendered-article":10}],2:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var CommonAjax = require('./../common/common-ajax');
 var AjaxType = CommonAjax.AjaxType;
 
@@ -65,58 +113,7 @@ exports.ClientAjax = ClientAjax;
 var Article = exports.Article;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/common-ajax":14}],2:[function(require,module,exports){
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var ClientAjax = require("./client-ajax");
-
-var RenderedArticle = require('./rendered-article');
-var Gui = require("./embed-gui");
-var url = require("./../common/url");
-
-var EmbedArticleGui = (function (_super) {
-    __extends(EmbedArticleGui, _super);
-    function EmbedArticleGui() {
-        _super.call(this);
-        this.id = "-1";
-        var _self = this;
-        $(document).ready(function () {
-            _self.article = new RenderedArticle();
-            _self.id = $("[type=hidden]#article-id").val();
-            new ClientAjax.Article.Get().ajax({ id: _self.id }).done(function (res) {
-                if (!res.ok) {
-                    console.log(res.why);
-                    return;
-                }
-                var result = res.result;
-                _self.article.setTitle(result.title);
-                _self.article.setContent(marked(result.content));
-            });
-            _self.getEditBtn().click(function () {
-                _self.redirect(url.article.edit(_self.id));
-            });
-        });
-    }
-    EmbedArticleGui.prototype.getEditBtn = function () {
-        return $("#editBtn");
-    };
-    return EmbedArticleGui;
-})(Gui);
-exports.EmbedArticleGui = EmbedArticleGui;
-
-if (guiName == 'EmbedArticle') {
-    new EmbedArticleGui();
-}
-//# sourceMappingURL=embed-article.js.map
-
-},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./rendered-article":13}],3:[function(require,module,exports){
-//# sourceMappingURL=embed-browse.js.map
-
-},{}],4:[function(require,module,exports){
+},{"./../common/common-ajax":11}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -125,12 +122,12 @@ var __extends = this.__extends || function (d, b) {
 };
 var ClientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
-var Gui = require("./embed-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 
-var EmbedCreateArticleGui = (function (_super) {
-    __extends(EmbedCreateArticleGui, _super);
-    function EmbedCreateArticleGui() {
+var CreateArticleGui = (function (_super) {
+    __extends(CreateArticleGui, _super);
+    function CreateArticleGui() {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
@@ -146,15 +143,15 @@ var EmbedCreateArticleGui = (function (_super) {
             });
         });
     }
-    return EmbedCreateArticleGui;
+    return CreateArticleGui;
 })(Gui);
 
-if (guiName == 'EmbedCreateArticle') {
-    new EmbedCreateArticleGui();
+if (guiName == 'CreateArticleGui') {
+    new CreateArticleGui();
 }
-//# sourceMappingURL=embed-create_article.js.map
+//# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./previewable-article":12}],5:[function(require,module,exports){
+},{"./../common/url":12,"./client-ajax":2,"./gui":5,"./previewable-article":9}],4:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -163,12 +160,12 @@ var __extends = this.__extends || function (d, b) {
 };
 var ClientAjax = require("./client-ajax");
 var PreviewableArticle = require("./previewable-article");
-var Gui = require("./embed-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 
-var EmbedEditArticleGui = (function (_super) {
-    __extends(EmbedEditArticleGui, _super);
-    function EmbedEditArticleGui() {
+var EditArticleGui = (function (_super) {
+    __extends(EditArticleGui, _super);
+    function EditArticleGui() {
         _super.call(this);
         this.id = "-1";
         var _self = this;
@@ -203,35 +200,35 @@ var EmbedEditArticleGui = (function (_super) {
             });
         });
     }
-    EmbedEditArticleGui.prototype.contentPreviewExample = function () {
+    EditArticleGui.prototype.contentPreviewExample = function () {
         var content = "An h1 header\n============\n\nParagraphs are separated by a blank line.\n\n2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists\nlook like:\n\n  * this one\n  * that one\n  * the other one\n\nNote that --- not considering the asterisk --- the actual text\ncontent starts at 4-columns in.\n\n> Block quotes are\n> written like so.\n>\n> They can span multiple paragraphs,\n> if you like.\n\nUse 3 dashes for an em-dash. Use 2 dashes for ranges (ex., \"it's all\nin chapters 12--14\"). Three dots ... will be converted to an ellipsis.\nUnicode is supported. ☺\n\n\n\nAn h2 header\n------------\n\nHere's a numbered list:\n\n 1. first item\n 2. second item\n 3. third item\n\nNote again how the actual text starts at 4 columns in (4 characters\nfrom the left side). Here's a code sample:\n\n    # Let me re-iterate ...\n    for i in 1 .. 10 { do-something(i) }\n\nAs you probably guessed, indented 4 spaces. By the way, instead of\nindenting the block, you can use delimited blocks, if you like:\n\n~~~\ndefine foobar() {\n    print \"Welcome to flavor country!\";\n}\n~~~\n\n(which makes copying & pasting easier). You can optionally mark the\ndelimited block for Pandoc to syntax highlight it:\n\n~~~python\nimport time\n# Quick, count to ten!\nfor i in range(10):\n    # (but not *too* quick)\n    time.sleep(0.5)\n    print i\n~~~\n\n\n\n### An h3 header ###\n\nNow a nested list:\n\n 1. First, get these ingredients:\n\n      * carrots\n      * celery\n      * lentils\n\n 2. Boil some water.\n\n 3. Dump everything in the pot and follow\n    this algorithm:\n\n        find wooden spoon\n        uncover pot\n        stir\n        cover pot\n        balance wooden spoon precariously on pot handle\n        wait 10 minutes\n        goto first step (or shut off burner when done)\n\n    Do not bump wooden spoon or it will fall.\n\nNotice again how text always lines up on 4-space indents (including\nthat last line which continues item 3 above).\n\nHere's a link to [a website](http://foo.bar), to a [local\ndoc](local-doc.html), and to a [section heading in the current\ndoc](#an-h2-header). Here's a footnote [^1].\n\n[^1]: Footnote text goes here.\n\nTables can look like this:\n\nsize  material      color\n----  ------------  ------------\n9     leather       brown\n10    hemp canvas   natural\n11    glass         transparent\n\nTable: Shoes, their sizes, and what they're made of\n\n(The above is the caption for the table.) Pandoc also supports\nmulti-line tables:\n\n--------  -----------------------\nkeyword   text\n--------  -----------------------\nred       Sunsets, apples, and\n          other red or reddish\n          things.\n\ngreen     Leaves, grass, frogs\n          and other things it's\n          not easy being.\n--------  -----------------------\n\nA horizontal rule follows.\n\n***\n\nHere's a definition list:\n\napples\n  : Good for making applesauce.\noranges\n  : Citrus!\ntomatoes\n  : There's no \"e\" in tomatoe.\n\nAgain, text is indented 4 spaces. (Put a blank line between each\nterm/definition pair to spread things out more.)\n\nHere's a \"line block\":\n\n| Line one\n|   Line too\n| Line tree\n\nand images can be specified like so:\n\n![example image](example-image.jpg \"An exemplary image\")\n\nInline math equations go in like so: $\omega = d\phi / dt$. Display\nmath should get its own line and be put in in double-dollarsigns:\n\n$$I = \int \rho R^{2} dV$$\n\nAnd note that you can backslash-escape any punctuation characters\nwhich you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc.';";
         $("textarea.article-content").html(content);
         $("div.article-content").html(marked(content));
     };
-    EmbedEditArticleGui.prototype.titlePreviewExample = function () {
+    EditArticleGui.prototype.titlePreviewExample = function () {
         var title = 'How to write markdown';
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     };
-    EmbedEditArticleGui.prototype.getContentId = function () {
+    EditArticleGui.prototype.getContentId = function () {
         return "content";
     };
-    EmbedEditArticleGui.prototype.getSaveBtn = function () {
+    EditArticleGui.prototype.getSaveBtn = function () {
         return $("button#save");
     };
-    EmbedEditArticleGui.prototype.getCancelBtn = function () {
+    EditArticleGui.prototype.getCancelBtn = function () {
         return $("button#cancel");
     };
-    return EmbedEditArticleGui;
+    return EditArticleGui;
 })(Gui);
-exports.EmbedEditArticleGui = EmbedEditArticleGui;
+exports.EditArticleGui = EditArticleGui;
 
-if (guiName == 'EmbedEditArticle') {
-    new EmbedEditArticleGui();
+if (guiName == 'EditArticleGui') {
+    new EditArticleGui();
 }
-//# sourceMappingURL=embed-edit_article.js.map
+//# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6,"./previewable-article":12}],6:[function(require,module,exports){
+},{"./../common/url":12,"./client-ajax":2,"./gui":5,"./previewable-article":9}],5:[function(require,module,exports){
 var Gui = (function () {
     function Gui() {
     }
@@ -242,9 +239,9 @@ var Gui = (function () {
 })();
 
 module.exports = Gui;
-//# sourceMappingURL=embed-gui.js.map
+//# sourceMappingURL=gui.js.map
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -254,11 +251,11 @@ var __extends = this.__extends || function (d, b) {
 var ClientAjax = require("./client-ajax");
 
 var url = require("./../common/url");
-var Gui = require("./embed-gui");
+var Gui = require("./gui");
 
-var EmbedIndexGui = (function (_super) {
-    __extends(EmbedIndexGui, _super);
-    function EmbedIndexGui() {
+var IndexGui = (function (_super) {
+    __extends(IndexGui, _super);
+    function IndexGui() {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
@@ -281,47 +278,20 @@ var EmbedIndexGui = (function (_super) {
             });
         });
     }
-    EmbedIndexGui.prototype.setThumbs = function (html) {
+    IndexGui.prototype.setThumbs = function (html) {
     };
-    EmbedIndexGui.prototype.buildArticleThumbsTemplate = function (articles) {
+    IndexGui.prototype.buildArticleThumbsTemplate = function (articles) {
         return articles.toString();
     };
-    return EmbedIndexGui;
+    return IndexGui;
 })(Gui);
 
-if (guiName == 'EmbedIndexGui') {
-    gui = new EmbedIndexGui();
+if (guiName == 'IndexGui') {
+    gui = new IndexGui();
 }
-//# sourceMappingURL=embed-index.js.map
+//# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":15,"./client-ajax":1,"./embed-gui":6}],8:[function(require,module,exports){
-var gui = {
-    getUsername: function () {
-        return $("#username").val();
-    },
-    getPassword: function () {
-        return $("#password").val();
-    },
-    warnInvalidLogin: function () {
-        $("#warnings").html('Could not login');
-    },
-    cleanWarnings: function () {
-        $("#warnings").html('');
-    }
-};
-
-$(document).ready(function () {
-    console.log("ready!");
-    $("#login").click(function () {
-        console.log('Loggueando');
-    });
-});
-//# sourceMappingURL=embed-login.js.map
-
-},{}],9:[function(require,module,exports){
-//# sourceMappingURL=embed-register.js.map
-
-},{}],10:[function(require,module,exports){
+},{"./../common/url":12,"./client-ajax":2,"./gui":5}],7:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -365,7 +335,7 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":11}],11:[function(require,module,exports){
+},{"./parser":8}],8:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -394,7 +364,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],12:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 
 var PreviewableArticle = (function () {
@@ -464,7 +434,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{"./rendered-article":13}],13:[function(require,module,exports){
+},{"./rendered-article":10}],10:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
     }
@@ -486,7 +456,7 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],14:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -567,7 +537,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=common-ajax.js.map
 
-},{}],15:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -597,4 +567,4 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12]);

@@ -7,12 +7,12 @@
 var ClientAjax = require("./client-ajax");
 
 var RenderedArticle = require('./rendered-article');
-var Gui = require("./embed-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 
-var EmbedArticleGui = (function (_super) {
-    __extends(EmbedArticleGui, _super);
-    function EmbedArticleGui() {
+var ArticleGui = (function (_super) {
+    __extends(ArticleGui, _super);
+    function ArticleGui() {
         _super.call(this);
         this.id = "-1";
         var _self = this;
@@ -33,14 +33,14 @@ var EmbedArticleGui = (function (_super) {
             });
         });
     }
-    EmbedArticleGui.prototype.getEditBtn = function () {
+    ArticleGui.prototype.getEditBtn = function () {
         return $("#editBtn");
     };
-    return EmbedArticleGui;
+    return ArticleGui;
 })(Gui);
-exports.EmbedArticleGui = EmbedArticleGui;
+exports.ArticleGui = ArticleGui;
 
-if (guiName == 'EmbedArticle') {
-    new EmbedArticleGui();
+if (guiName == 'ArticleGui') {
+    new ArticleGui();
 }
-//# sourceMappingURL=embed-article.js.map
+//# sourceMappingURL=article-gui.js.map

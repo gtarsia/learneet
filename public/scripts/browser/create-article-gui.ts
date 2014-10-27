@@ -1,10 +1,10 @@
 ﻿import utils = require("./Utils");
 import ClientAjax = require("./client-ajax");
 import PreviewableArticle = require("./previewable-article");
-import Gui = require("./embed-gui");
+import Gui = require("./gui");
 import url = require("./../common/url")
 
-class EmbedCreateArticleGui extends Gui {
+class CreateArticleGui extends Gui {
     previewArticle: PreviewableArticle;
     constructor() {
         super();
@@ -25,6 +25,6 @@ class EmbedCreateArticleGui extends Gui {
     }
 }
 declare var guiName;
-if (guiName == 'EmbedCreateArticle') {
-    new EmbedCreateArticleGui();
+if (guiName == 'CreateArticleGui') {
+    new CreateArticleGui();
 }
