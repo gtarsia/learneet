@@ -87,9 +87,9 @@ export module user {
     }
 
     import baseAuth = baseAjax.user.auth;
-    export function auth(params) {
-        return baseAjax<baseAuth.ParamsType, baseAuth.ReturnType>
-        (baseAuth.url(), baseAuth.type(), params);
+    export function auth(params: baseAuth.ParamsType) 
+    : JQueryXHR<baseAuth.ReturnType> {
+        return baseAjax(baseAuth.url(), baseAuth.type(), params);
     }
 }
 
