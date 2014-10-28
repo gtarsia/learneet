@@ -1,8 +1,10 @@
 import db = require('./db');
 import bcrypt = require('./bcrypt');
 import baseAjax = require('./../common/base-ajax');
-import register = baseAjax.user.register;
-import UserFields = baseAjax.user.UserFields;
+import baseUser = baseAjax.user;
+import register = baseUser.register;
+import baseAuth = baseUser.auth;
+import UserFields = baseUser.UserFields;
 
 export function hash(password: string) : Promise<string> {
     return bcrypt.genSalt(10)
@@ -34,12 +36,16 @@ export function register(params: register.ParamsType) : Promise<register.ReturnT
     });
 }
 
-export function auth(username: string, password: string) {
-    return db.hget("user:" + username, "hash")
+export function auth(params: baseAuth.ParamsType): Promise<baseAuth.ReturnType> {
+    return db.hget("user:" + params.username, "hash")
     .then((hash) => {
-        return bcrypt.compare(password, hash);
+        return bcrypt.compare(params.password, hash);
     })
-    .then((result) => {
-        console.log(result);
+    .then((result: Boolean) => {
+        return {
+            why: (result ? 'Invalid authentication' : ''),
+            ok: true,
+            result: result
+        }
     })
 }

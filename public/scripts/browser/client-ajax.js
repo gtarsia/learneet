@@ -26,6 +26,18 @@ var ClientAjax = (function () {
 })();
 exports.ClientAjax = ClientAjax;
 
+function baseAjax(url, type, params) {
+    switch (this.type) {
+        case AjaxType.GET:
+            return $.get(url, params);
+            break;
+        case AjaxType.POST:
+            return $.post(url, params);
+            break;
+    }
+}
+exports.baseAjax = baseAjax;
+
 (function (article) {
     var baseGet = baseAjax.article.get;
     var Get = (function (_super) {
@@ -95,6 +107,12 @@ var article = exports.article;
         return new Register().ajax(params);
     }
     user.register = register;
+
+    var baseAuth = baseAjax.user.auth;
+    function auth(params) {
+        return exports.baseAjax(baseAuth.url(), baseAuth.type(), params);
+    }
+    user.auth = auth;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map

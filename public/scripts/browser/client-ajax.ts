@@ -2,6 +2,7 @@
 import baseAjax = require('./../common/base-ajax');
 import AjaxType = baseAjax.AjaxType;
 
+
 export class ClientAjax<ArgsType, ReturnType> {
     type: string;
     url: string;
@@ -16,6 +17,16 @@ export class ClientAjax<ArgsType, ReturnType> {
         case AjaxType.POST:
             return $.post(this.url, params); break;
         }
+    }
+}
+
+export function baseAjax<ArgType, ReturnType>
+(url: string, type: string, params: ArgType) {
+    switch (this.type) {
+    case AjaxType.GET:
+        return $.get(url, params); break;
+    case AjaxType.POST:
+        return $.post(url, params); break;
     }
 }
 
@@ -66,13 +77,19 @@ export module article {
 export module user {
     import baseRegister = baseAjax.user.register;
     export class Register 
-        extends ClientAjax<baseRegister.ParamsType, baseRegister.ReturnType> {
+    extends ClientAjax<baseRegister.ParamsType, baseRegister.ReturnType> {
         constructor() {
             super(baseRegister.url(), baseRegister.type());
         }
     }
     export function register(params: baseRegister.ParamsType): JQueryXHR<baseRegister.ReturnType> {
         return new Register().ajax(params);
+    }
+
+    import baseAuth = baseAjax.user.auth;
+    export function auth(params) {
+        return baseAjax<baseAuth.ParamsType, baseAuth.ReturnType>
+        (baseAuth.url(), baseAuth.type(), params);
     }
 }
 

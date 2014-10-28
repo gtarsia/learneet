@@ -70,6 +70,16 @@ export module user {
         export interface ParamsType extends RegisterFields {}
         export interface ReturnType extends JsonReturn<Boolean> {}
     }
+
+    export interface AuthFields {
+        username: string; password: string;
+    }
+    export module auth {
+        export function url(): string { return '/api/auth'}
+        export function type(): string { return AjaxType.POST }
+        export interface ParamsType extends AuthFields {};
+        export interface ReturnType extends JsonReturn<Boolean> {} 
+    }
 }
 
 /*

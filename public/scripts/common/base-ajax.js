@@ -71,6 +71,19 @@ var article = exports.article;
         register.type = type;
     })(user.register || (user.register = {}));
     var register = user.register;
+
+    (function (auth) {
+        function url() {
+            return '/api/auth';
+        }
+        auth.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        auth.type = type;
+        ;
+    })(user.auth || (user.auth = {}));
+    var auth = user.auth;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 

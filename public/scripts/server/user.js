@@ -30,11 +30,15 @@ function register(params) {
 }
 exports.register = register;
 
-function auth(username, password) {
-    return db.hget("user:" + username, "hash").then(function (hash) {
-        return bcrypt.compare(password, hash);
+function auth(params) {
+    return db.hget("user:" + params.username, "hash").then(function (hash) {
+        return bcrypt.compare(params.password, hash);
     }).then(function (result) {
-        console.log(result);
+        return {
+            why: (result ? 'Invalid authentication' : ''),
+            ok: true,
+            result: result
+        };
     });
 }
 exports.auth = auth;
