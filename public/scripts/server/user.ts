@@ -4,26 +4,22 @@ import baseAjax = require('./../common/base-ajax');
 import register = baseAjax.user.register;
 import UserFields = baseAjax.user.UserFields;
 
-export function hash() : Promise<string> {
+export function hash(password: string) : Promise<string> {
     return bcrypt.genSalt(10)
     .then((salt: string) => {
-        return bcrypt.hash(salt);
+        return bcrypt.hash(password, salt);
     });
 }
 
 export function register(params: register.ParamsType) : Promise<register.ReturnType> {
     var id;
-    var hash;
+    var hashed;
     return hash(params.password)
     .then((_hash: string) => {
-        hash = _hash;
-        return db.incr("user:ids")
-    })
-    .then((_id: string) => {
-        id = _id;
-        return db.hmset("user:" + id, {
+        hashed = _hash;
+        return db.hmset("user:" + params.username, {
             username: params.username,
-            hash: hash,
+            hash: hashed,
             id: id,
             email: params.email,
             activated: false
@@ -39,5 +35,11 @@ export function register(params: register.ParamsType) : Promise<register.ReturnT
 }
 
 export function auth(username: string, password: string) {
-
+    return db.hget("user:" + username, "hash")
+    .then((hash) => {
+        return bcrypt.compare(password, hash);
+    })
+    .then((result) => {
+        console.log(result);
+    })
 }

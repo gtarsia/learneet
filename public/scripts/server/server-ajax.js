@@ -127,6 +127,7 @@ var articleAjax = exports.articleAjax;
             _super.call(this, baseRegister.url(), baseRegister.type());
         }
         Register.prototype.handler = function (req, res, next) {
+            debugger;
             user.register(req.body).then(function (result) {
                 debugger;
                 console.log('Se registro un usuario');

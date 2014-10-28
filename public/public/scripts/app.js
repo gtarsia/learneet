@@ -445,6 +445,11 @@ var RegisterGui = (function (_super) {
     RegisterGui.prototype.validate = function () {
     };
     RegisterGui.prototype.getUser = function () {
+        return {
+            username: this.username.val,
+            password: this.password.val,
+            email: this.email.val
+        };
     };
     return RegisterGui;
 })(Gui);

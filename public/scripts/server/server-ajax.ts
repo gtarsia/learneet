@@ -122,6 +122,7 @@ export module userAjax {
             super(baseRegister.url(), baseRegister.type());
         }
         handler(req: express.Request, res: express.Response, next: Function) {
+            debugger;
             user.register(req.body)
             .then((result: baseRegister.ReturnType) => {
                 debugger;

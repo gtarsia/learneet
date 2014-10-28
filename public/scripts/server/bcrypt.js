@@ -1,14 +1,34 @@
 var Promise = require('bluebird');
-var bcryptjs = Promise.promisifyAll(require('bcryptjs'));
+var bcryptjs = require('bcryptjs');
+
+function isOk(err, reject) {
+    if (err) {
+        reject(err);
+        return false;
+    } else
+        return true;
+}
+
+function promisify(fn) {
+    return new Promise(function (resolve, reject) {
+        debugger;
+        fn(function (err, result) {
+            if (!isOk(err, reject))
+                result;
+            resolve(result);
+        });
+    });
+}
 
 var bcrypt;
 (function (bcrypt) {
     function genSalt(size) {
-        return bcryptjs.genSalt(size);
+        return promisify(bcryptjs.genSalt.bind(bcryptjs, size));
     }
     bcrypt.genSalt = genSalt;
-    function hash(key) {
-        return bcryptjs.hash(key);
+    function hash(s, salt) {
+        debugger;
+        return promisify(bcryptjs.hash.bind(bcryptjs, s, salt));
     }
     bcrypt.hash = hash;
     function compare(key, hash) {

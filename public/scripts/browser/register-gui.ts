@@ -15,6 +15,11 @@ class RegisterGui extends Gui {
     validate() {
     }
     getUser() {
+        return {
+            username: this.username.val,
+            password: this.password.val,
+            email: this.email.val
+        }
     }
     constructor() {
         super();
@@ -25,7 +30,7 @@ class RegisterGui extends Gui {
         _self.email = _self.propertize('input#email', 'val');
         $(document).ready(() => {
             _self.registerBtn.jq.click(() => {
-                var user: any = _self.getUser();
+                var user = _self.getUser();
                 clientAjax.user.register(user)
                 console.log('Tried to register');
             });
