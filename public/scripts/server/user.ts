@@ -41,10 +41,10 @@ export function auth(params: baseAuth.ParamsType): Promise<baseAuth.ReturnType> 
     .then((hash) => {
         return bcrypt.compare(params.password, hash);
     })
-    .then((result: Boolean) => {
+    .then((result: boolean) => {
         return {
-            why: (result ? 'Invalid authentication' : ''),
-            ok: true,
+            why: (result ? '' : 'Invalid authentication'),
+            ok: result,
             result: result
         }
     })

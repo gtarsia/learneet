@@ -10,7 +10,8 @@ function getServerAjaxList() {
         article.get(),
         article.getAll(),
         article.update(),
-        user.register()
+        user.register(),
+        user.auth()
     ];
 }
 exports.getServerAjaxList = getServerAjaxList;
@@ -84,6 +85,17 @@ var article = exports.article;
         });
     }
     user.register = register;
+
+    var baseAuth = baseAjax.user.auth;
+    function auth() {
+        return exports.buildAjax(baseAuth.url(), baseAuth.type(), function (req, res) {
+            debugger;
+            dbUser.auth(req.body).then(function (result) {
+                res.send(result);
+            });
+        });
+    }
+    user.auth = auth;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 //# sourceMappingURL=server-ajax.js.map

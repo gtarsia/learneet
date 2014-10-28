@@ -11,7 +11,8 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.get(),
         article.getAll(),
         article.update(),
-        user.register()
+        user.register(),
+        user.auth()
     ];
 }
 
@@ -81,6 +82,18 @@ export module user {
         return buildAjax<baseRegister.ParamsType, baseRegister.ReturnType>
         (baseRegister.url(), baseRegister.type(), (req, res) => {
             dbUser.register(req.body)
+            .then((result: baseRegister.ReturnType) => {
+                res.send(result);
+            });
+        })
+    }
+
+    import baseAuth = baseAjax.user.auth;
+    export function auth() {
+        return buildAjax<baseAuth.ParamsType, baseAuth.ReturnType>
+        (baseAuth.url(), baseAuth.type(), (req, res) => {
+            debugger;
+            dbUser.auth(req.body)
             .then((result: baseRegister.ReturnType) => {
                 res.send(result);
             });

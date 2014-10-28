@@ -35,8 +35,8 @@ function auth(params) {
         return bcrypt.compare(params.password, hash);
     }).then(function (result) {
         return {
-            why: (result ? 'Invalid authentication' : ''),
-            ok: true,
+            why: (result ? '' : 'Invalid authentication'),
+            ok: result,
             result: result
         };
     });

@@ -23,8 +23,8 @@ module bcrypt {
         debugger;
         return promisify<string>(bcryptjs.hash.bind(bcryptjs, s, salt));
     }
-    export function compare(key: string, hash: string): Promise<string> {
-        return bcryptjs.compare(key, hash);
+    export function compare(key: string, hash: string): Promise<Boolean> {
+        return promisify<Boolean>(bcryptjs.compare.bind(bcryptjs, key, hash));
     }
 }
 

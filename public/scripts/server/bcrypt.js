@@ -32,7 +32,7 @@ var bcrypt;
     }
     bcrypt.hash = hash;
     function compare(key, hash) {
-        return bcryptjs.compare(key, hash);
+        return promisify(bcryptjs.compare.bind(bcryptjs, key, hash));
     }
     bcrypt.compare = compare;
 })(bcrypt || (bcrypt = {}));
