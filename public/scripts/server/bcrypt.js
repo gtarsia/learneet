@@ -11,7 +11,6 @@ function isOk(err, reject) {
 
 function promisify(fn) {
     return new Promise(function (resolve, reject) {
-        debugger;
         fn(function (err, result) {
             if (!isOk(err, reject))
                 result;

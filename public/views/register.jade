@@ -1,6 +1,7 @@
 ﻿extends layout
 
 append styles
+  link(rel='stylesheet', href='/stylesheets/form.css')
   link(rel='stylesheet', href='/stylesheets/register.css')
 
 prepend scripts
@@ -8,18 +9,13 @@ prepend scripts
     guiName = 'RegisterGui'
 
 block main
-  #register-outer
-    #register-inner
-      .input
-        input#username(type="text" placeholder="username")
-      .input
-        input#password(type="password" placeholder="password")
-      .input
-        input#repeat-password(type="password" placeholder="repeat password")
-      .input
-        input#email(type="text" placeholder="email")
-      .input
-        input#repeat-email(type="text" placeholder="repeat email")
-      #buttons
+  .form-outer
+    .form-inner
+      input.form-input#username(type="text" placeholder="username")
+      input.form-input#password(type="password" placeholder="password")
+      input.form-input#repeat-password(type="password" placeholder="repeat password")
+      input.form-input#email(type="text" placeholder="email")
+      input.form-input#repeat-email(type="text" placeholder="repeat email")
+      .buttons
         button#register Register
         button#cancel Cancel

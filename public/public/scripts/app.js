@@ -46,7 +46,7 @@ if (guiName == 'ArticleGui') {
 }
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":14,"./client-ajax":2,"./gui":5,"./templates/rendered-article":12}],2:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":2,"./gui":5,"./templates/rendered-article":13}],2:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
@@ -105,7 +105,7 @@ var article = exports.article;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":13}],3:[function(require,module,exports){
+},{"./../common/base-ajax":14}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -143,7 +143,7 @@ if (guiName == 'CreateArticleGui') {
 }
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":14,"./client-ajax":2,"./gui":5,"./templates/previewable-article":11}],4:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":2,"./gui":5,"./templates/previewable-article":12}],4:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -217,7 +217,7 @@ if (guiName == 'EditArticleGui') {
 }
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/url":14,"./client-ajax":2,"./gui":5,"./templates/previewable-article":11}],5:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":2,"./gui":5,"./templates/previewable-article":12}],5:[function(require,module,exports){
 var Gui = (function () {
     function Gui() {
     }
@@ -297,7 +297,7 @@ if (guiName == 'IndexGui') {
 }
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":14,"./client-ajax":2,"./gui":5}],7:[function(require,module,exports){
+},{"./../common/url":15,"./client-ajax":2,"./gui":5}],7:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -341,7 +341,50 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":8}],8:[function(require,module,exports){
+},{"./parser":9}],8:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Gui = require('./gui');
+var clientAjax = require('./client-ajax');
+
+var LogInGui = (function (_super) {
+    __extends(LogInGui, _super);
+    function LogInGui() {
+        _super.call(this);
+        var _self = this;
+        _self.loginBtn = _self.propertize('button#login');
+        _self.username = _self.propertize('input#username', 'val');
+        _self.password = _self.propertize('input#password', 'val');
+        $(document).ready(function () {
+            _self.loginBtn.jq.click(function () {
+                var user = _self.getUser();
+                clientAjax.user.auth(user).done(function (res) {
+                    console.log('Tried to login and was ' + res.result);
+                    if (!res.ok)
+                        console.log('It wasn\'t ok because ' + res.why);
+                });
+            });
+        });
+    }
+    LogInGui.prototype.getUser = function () {
+        return {
+            username: this.username.val,
+            password: this.password.val
+        };
+    };
+    return LogInGui;
+})(Gui);
+
+if (guiName == 'LogInGui') {
+    gui = new LogInGui();
+}
+//# sourceMappingURL=login-gui.js.map
+
+},{"./client-ajax":2,"./gui":5}],9:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -370,7 +413,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -416,7 +459,7 @@ if (guiName == 'RegisterGui') {
 }
 //# sourceMappingURL=register-gui.js.map
 
-},{"./client-ajax":2,"./gui":5}],10:[function(require,module,exports){
+},{"./client-ajax":2,"./gui":5}],11:[function(require,module,exports){
 var EditableArticle = (function () {
     function EditableArticle() {
         var _self = this;
@@ -456,7 +499,7 @@ var EditableArticle = (function () {
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 
@@ -520,7 +563,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{"./editable-article":10,"./rendered-article":12}],12:[function(require,module,exports){
+},{"./editable-article":11,"./rendered-article":13}],13:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
         var _self = this;
@@ -553,7 +596,7 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -647,7 +690,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -677,7 +720,7 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (user) {
     function isUsernameTaken(username) {
     }
@@ -692,4 +735,4 @@ module.exports = url;
 var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,13,14,15]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,14,15,16]);

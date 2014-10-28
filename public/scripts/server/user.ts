@@ -36,16 +36,22 @@ export function register(params: register.ParamsType) : Promise<register.ReturnT
     });
 }
 
+export function get(username: string): Promise<baseUser.UserFields> {
+    return db.hgetall("user:" + username);
+}
+
 export function auth(params: baseAuth.ParamsType): Promise<baseAuth.ReturnType> {
-    return db.hget("user:" + params.username, "hash")
-    .then((hash) => {
-        return bcrypt.compare(params.password, hash);
+    var user;
+    return db.hgetall("user:" + params.username)
+    .then((_user) => {
+        user = _user;
+        return bcrypt.compare(params.password, user.hash);
     })
     .then((result: boolean) => {
         return {
             why: (result ? '' : 'Invalid authentication'),
             ok: result,
-            result: result
+            result: user
         }
     })
 }

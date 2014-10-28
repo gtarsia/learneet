@@ -30,14 +30,21 @@ function register(params) {
 }
 exports.register = register;
 
+function get(username) {
+    return db.hgetall("user:" + username);
+}
+exports.get = get;
+
 function auth(params) {
-    return db.hget("user:" + params.username, "hash").then(function (hash) {
-        return bcrypt.compare(params.password, hash);
+    var user;
+    return db.hgetall("user:" + params.username).then(function (_user) {
+        user = _user;
+        return bcrypt.compare(params.password, user.hash);
     }).then(function (result) {
         return {
             why: (result ? '' : 'Invalid authentication'),
             ok: result,
-            result: result
+            result: user
         };
     });
 }

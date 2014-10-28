@@ -7,7 +7,6 @@ function promisify<T>(fn): Promise<T> {
     return new Promise<T>(
     function(resolve: (result: T) => any,
              reject: (error: any) => void) {
-        debugger;
         fn(function(err, result) {
             if (!isOk(err, reject)) result;
             resolve(result);

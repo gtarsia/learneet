@@ -1,19 +1,18 @@
 ﻿extends layout
 
-prepend scripts
-  script.
-    guiName = 'EditArticleGui'
-
 append styles
+  link(rel='stylesheet', href='/stylesheets/form.css')
   link(rel='stylesheet', href='/stylesheets/login.css')
 
-block content
-  #warnings
-  div
-    label Username
-    input#username(type="text")
-  div
-    label Password
-    input#password(type="password")
-  input#login(type="button", value="Log in")
-  input#cancel(type="button", value="Cancel")
+prepend scripts
+  script.
+    guiName = 'LogInGui'
+
+block main
+  .form-outer
+    .form-inner
+      input.form-input#username(type="text" placeholder="username")
+      input.form-input#password(type="password" placeholder="password")
+      .buttons
+        button#login Log in
+        button#cancel Cancel

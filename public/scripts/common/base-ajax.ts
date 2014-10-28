@@ -78,7 +78,7 @@ export module user {
         export function url(): string { return '/api/auth'}
         export function type(): string { return AjaxType.POST }
         export interface ParamsType extends AuthFields {};
-        export interface ReturnType extends JsonReturn<Boolean> {} 
+        export interface ReturnType extends JsonReturn<{username: string; id: string;}> {} 
     }
 }
 
