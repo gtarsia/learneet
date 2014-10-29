@@ -4,6 +4,7 @@ var db = require('./scripts/server/db');
 
 function renderCb(url, title, fn) {
     return function (req, res) {
+        console.log('Is it logged? ' + req.isAuthenticated());
         if (fn != null)
             fn(req, res);
         else

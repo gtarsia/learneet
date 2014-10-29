@@ -26,9 +26,10 @@ class LogInGui extends Gui {
                 var user = _self.getUser();
                 clientAjax.user.auth(user)
                 .done((res) => {
-                    console.log('Tried to login and was ' + res.result);
-                    if (!res.ok) console.log('It wasn\'t ok because ' + res.why);
-
+                    console.log('Logged in');
+                })
+                .fail((res) => {
+                    console.log('Couldn\'t log');
                 })
             });
         });

@@ -7,7 +7,8 @@ import db = require('./scripts/server/db');
 
 function renderCb(url: string, title: string, 
 	fn? : (req: express.Request, res: express.Response) => void) {
-    return function (req: express.Request, res: express.Response) {
+    return function (req: any, res: express.Response) {
+        console.log('Is it logged? ' + req.isAuthenticated());
     	if (fn != null) fn(req, res);	
         else res.render(url, { title: title + ' - Learneet' });
     };

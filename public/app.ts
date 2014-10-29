@@ -5,6 +5,7 @@ import server_ajax = require('./scripts/server/server-ajax');
 import net = require('net');
 import dbUser = require('./scripts/server/user');
 import passport = require('passport')
+var session: any = require('express-session')
 var local: any = require('passport-local');
 var LocalStrategy = local.Strategy;
 var morgan : any = require('morgan');
@@ -27,14 +28,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({resave: true, saveUninitialized: true, secret: 'keyboard cat'}))
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(
     function(username, password, done) {
         dbUser.auth({ username: username, password: password })
         .then((res) => {
-            debugger;
-            if (!res.ok) done(res.why);
+            if (!res.ok) done(null, false, { message: res.why});
             done(null, res.result);
         })
         .catch((err) => {
@@ -61,14 +62,14 @@ passport.deserializeUser(function(username, done) {
 if ('development' == app.get('env')) {
     app.use(errorhandler());
 }
-
 routes.set(app);
 
 app.post('/api/auth', 
   passport.authenticate('local', {  }),
   function(req, res) {
-    res.send({ didOk: 'Yes, my good friend' });
-  });
+    res.send({ ok: true, why: '' });
+  }
+);
 
 var ajaxList = server_ajax.getServerAjaxList();
 ajaxList.forEach(ajax => ajax.setExpressAjax(app));

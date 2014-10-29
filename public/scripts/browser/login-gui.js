@@ -19,9 +19,9 @@ var LogInGui = (function (_super) {
             _self.loginBtn.jq.click(function () {
                 var user = _self.getUser();
                 clientAjax.user.auth(user).done(function (res) {
-                    console.log('Tried to login and was ' + res.result);
-                    if (!res.ok)
-                        console.log('It wasn\'t ok because ' + res.why);
+                    console.log('Logged in');
+                }).fail(function (res) {
+                    console.log('Couldn\'t log');
                 });
             });
         });
