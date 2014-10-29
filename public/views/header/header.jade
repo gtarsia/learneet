@@ -3,7 +3,7 @@
 #parentHeader.parentContainer
   #childHeader.childContainer
     include header_common
-    if auth
+    if user
       include header_logged
     else
       include header_not_logged

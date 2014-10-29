@@ -55,12 +55,15 @@ passport.deserializeUser(function (username, done) {
 if ('development' == app.get('env')) {
     app.use(errorhandler());
 }
+app.get('*', function (req, res, next) {
+    res.locals.user = req.user || null;
+    next();
+});
 routes.set(app);
 
 app.post('/api/auth', passport.authenticate('local', {}), function (req, res) {
     res.send({ ok: true, why: '' });
 });
-
 var ajaxList = server_ajax.getServerAjaxList();
 ajaxList.forEach(function (ajax) {
     return ajax.setExpressAjax(app);

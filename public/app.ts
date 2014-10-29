@@ -62,6 +62,10 @@ passport.deserializeUser(function(username, done) {
 if ('development' == app.get('env')) {
     app.use(errorhandler());
 }
+app.get('*', function(req, res, next) {
+  res.locals.user = req.user || null;
+  next();
+});
 routes.set(app);
 
 app.post('/api/auth', 
@@ -70,7 +74,6 @@ app.post('/api/auth',
     res.send({ ok: true, why: '' });
   }
 );
-
 var ajaxList = server_ajax.getServerAjaxList();
 ajaxList.forEach(ajax => ajax.setExpressAjax(app));
 app.listen(app.get('port'), function () {
