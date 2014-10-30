@@ -10,6 +10,7 @@ class RegisterGui extends Gui {
     username;
     password;
     email;
+    form
     validateUsername() {
     }
     validate() {
@@ -28,11 +29,20 @@ class RegisterGui extends Gui {
         _self.username = _self.propertize('input#username', 'val');
         _self.password = _self.propertize('input#password', 'val');
         _self.email = _self.propertize('input#email', 'val');
+        _self.form = _self.propertize('form.form-inner');
         $(document).ready(() => {
-            _self.registerBtn.jq.click(() => {
+            _self.username.jq.focus();
+            _self.form.jq.submit((event) => {
+                event.preventDefault();
                 var user = _self.getUser();
                 clientAjax.user.register(user)
-                console.log('Tried to register');
+                .done((res) => {
+                    if (!res.ok) {
+                        console.log('Couldn\'t register because ' + res.why);
+                        return;
+                    }
+                    _self.redirect('/');
+                });
             });
         });
     }

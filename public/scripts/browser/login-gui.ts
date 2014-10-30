@@ -24,6 +24,7 @@ class LogInGui extends Gui {
         _self.password = _self.propertize('input#password', 'val');
         _self.form = _self.propertize('form.form-inner');
         $(document).ready(() => {
+            _self.username.jq.focus();
             _self.form.jq.submit((event) => {
                 event.preventDefault();
                 var user = _self.getUser();

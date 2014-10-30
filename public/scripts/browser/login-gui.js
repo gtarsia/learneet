@@ -17,6 +17,7 @@ var LogInGui = (function (_super) {
         _self.password = _self.propertize('input#password', 'val');
         _self.form = _self.propertize('form.form-inner');
         $(document).ready(function () {
+            _self.username.jq.focus();
             _self.form.jq.submit(function (event) {
                 event.preventDefault();
                 var user = _self.getUser();

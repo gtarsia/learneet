@@ -10,12 +10,12 @@ prepend scripts
 
 block main
   .form-outer
-    .form-inner
+    form.form-inner
       input.form-input#username(type="text" placeholder="username")
       input.form-input#password(type="password" placeholder="password")
       input.form-input#repeat-password(type="password" placeholder="repeat password")
       input.form-input#email(type="text" placeholder="email")
       input.form-input#repeat-email(type="text" placeholder="repeat email")
       .buttons
-        button#register Register
+        input#register(type="submit" value="Register")
         button#cancel Cancel
