@@ -38,7 +38,8 @@ class PreviewableArticle {
         var outputContent = this.output.content;
         inputContent.jq.keyup(function(e) {
             var content = inputContent.val;
-            outputContent.val = marked(content);
+            var html = katex.renderToString("\\displaystyle {" + content + "}");
+            outputContent.val = html;
         });
     }
     constructor() {

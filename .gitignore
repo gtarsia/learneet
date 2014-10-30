@@ -1,8 +1,11 @@
-app/**/*.js
-*.js.map
 tscommand*
+
 .tscache
+
 node_modules
+*
 *.css
+!*.min.css
 Thumbs.db
+
 *.txt
