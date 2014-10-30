@@ -359,11 +359,14 @@ var LogInGui = (function (_super) {
         _self.loginBtn = _self.propertize('button#login');
         _self.username = _self.propertize('input#username', 'val');
         _self.password = _self.propertize('input#password', 'val');
+        _self.form = _self.propertize('form.form-inner');
         $(document).ready(function () {
-            _self.loginBtn.jq.click(function () {
+            _self.form.jq.submit(function (event) {
+                event.preventDefault();
                 var user = _self.getUser();
                 clientAjax.user.auth(user).done(function (res) {
                     console.log('Logged in');
+                    _self.redirect('/');
                 }).fail(function (res) {
                     console.log('Couldn\'t log');
                 });

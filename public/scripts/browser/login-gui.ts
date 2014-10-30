@@ -9,6 +9,7 @@ class LogInGui extends Gui {
     username;
     password;
     loginBtn;
+    form;
     getUser() {
         return {
             username: this.username.val,
@@ -21,12 +22,15 @@ class LogInGui extends Gui {
         _self.loginBtn = _self.propertize('button#login');
         _self.username = _self.propertize('input#username', 'val');
         _self.password = _self.propertize('input#password', 'val');
+        _self.form = _self.propertize('form.form-inner');
         $(document).ready(() => {
-            _self.loginBtn.jq.click(() => {
+            _self.form.jq.submit((event) => {
+                event.preventDefault();
                 var user = _self.getUser();
                 clientAjax.user.auth(user)
                 .done((res) => {
                     console.log('Logged in');
+                    _self.redirect('/');
                 })
                 .fail((res) => {
                     console.log('Couldn\'t log');

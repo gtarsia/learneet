@@ -1,5 +1,6 @@
 var gui;
 
+
 /*
 var exports = {};
 var customExports = {};
@@ -23,3 +24,4 @@ function startGui(gui) {
 }
 
 var guiName = '';
+var headerName = '';

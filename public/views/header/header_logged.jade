@@ -1,5 +1,9 @@
-﻿span#rightHeader
+﻿prepend scripts
+  script.
+    headerName = 'LoggedHeaderGui'
+
+span#rightHeader
   img#avatar(src="/images/avatar.png")
-  | Erandros
+  | #{user.username}
   input#options(type="image", src="/images/wrench.png")
-  button(href="/logout") Log out
+  button(onclick="location.href = '/logout'") Log out

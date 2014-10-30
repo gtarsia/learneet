@@ -59,11 +59,15 @@ app.get('*', function (req, res, next) {
     res.locals.user = req.user || null;
     next();
 });
-routes.set(app);
-
 app.post('/api/auth', passport.authenticate('local', {}), function (req, res) {
     res.send({ ok: true, why: '' });
 });
+app.get('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/');
+});
+routes.set(app);
+
 var ajaxList = server_ajax.getServerAjaxList();
 ajaxList.forEach(function (ajax) {
     return ajax.setExpressAjax(app);
