@@ -33,13 +33,29 @@ class PreviewableArticle {
             outputTitle.val = title;  
         });
     }
+    translateWithParsing(content) {
+        var copy = content;
+        var found = false;
+        while(found) {
+            var index = copy.indexOf('$$');
+            found = (index != -1);
+            if (found) {
+                
+            }
+        }
+
+        return katex.renderToString("\\displaystyle {" + cap + "}");
+    }
     bindContentPreview() {
         var inputContent = this.input.content;
         var outputContent = this.output.content;
         inputContent.jq.keyup(function(e) {
+            var 
+            //translateWithParsing();
             var content = inputContent.val;
-            var html = katex.renderToString("\\displaystyle {" + content + "}");
-            outputContent.val = html;
+            content = translateWithRegex(content);
+            //content = katex.renderToString("\\displaystyle {" + content + "}");
+            outputContent.val = marked(content);
         });
     }
     constructor() {

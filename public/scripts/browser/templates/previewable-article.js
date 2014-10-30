@@ -51,6 +51,11 @@ var PreviewableArticle = (function () {
         var inputContent = this.input.content;
         var outputContent = this.output.content;
         inputContent.jq.keyup(function (e) {
+            var a = performance.now();
+            translateWithRegex();
+            var b = performance.now();
+            translateWithParsing();
+            var c = performance.now();
             var content = inputContent.val;
             var html = katex.renderToString("\\displaystyle {" + content + "}");
             outputContent.val = html;
