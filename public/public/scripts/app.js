@@ -561,18 +561,41 @@ var PreviewableArticle = (function () {
             outputTitle.val = title;
         });
     };
+    PreviewableArticle.prototype.translateWithParsing = function (content) {
+        var output = '';
+        var occurenceIndex = 0;
+        var openKatex = false;
+        var startIndex = 0;
+        var length = content.length;
+        while (occurenceIndex != -1 && startIndex < length) {
+            occurenceIndex = content.indexOf('$$', startIndex);
+
+            var endIndex = (occurenceIndex == -1 ? length : occurenceIndex);
+
+            var section = content.substring(startIndex, endIndex);
+
+            if (openKatex)
+                section = katex.renderToString("\\displaystyle {" + section + "}");
+
+            output += section;
+
+            startIndex = endIndex + 2;
+
+            if (occurenceIndex != -1) {
+                openKatex = !openKatex;
+            }
+        }
+        return output;
+    };
     PreviewableArticle.prototype.bindContentPreview = function () {
+        var _self = this;
         var inputContent = this.input.content;
         var outputContent = this.output.content;
         inputContent.jq.keyup(function (e) {
-            var a = performance.now();
-            translateWithRegex();
-            var b = performance.now();
-            translateWithParsing();
-            var c = performance.now();
             var content = inputContent.val;
-            var html = katex.renderToString("\\displaystyle {" + content + "}");
-            outputContent.val = html;
+            content = _self.translateWithParsing(content);
+
+            outputContent.val = marked(content);
         });
     };
     return PreviewableArticle;

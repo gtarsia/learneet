@@ -34,26 +34,41 @@ class PreviewableArticle {
         });
     }
     translateWithParsing(content) {
-        var copy = content;
-        var found = false;
-        while(found) {
-            var index = copy.indexOf('$$');
-            found = (index != -1);
-            if (found) {
-                
+        var output = '';
+        var occurenceIndex = 0;
+        var openKatex = false;
+        var startIndex = 0;
+        var length = content.length;
+        while(occurenceIndex != -1 && startIndex < length) {
+            // find next occurence of $$
+            occurenceIndex = content.indexOf('$$', startIndex);
+            // the end index should be the end of string if no symbol was found
+            var endIndex = (occurenceIndex == -1 ? length : occurenceIndex);
+            // get section to be added
+            var section = content.substring(startIndex, endIndex);
+            // if it's a katex block, parse it as such
+            if (openKatex)
+                section = katex.renderToString("\\displaystyle {" + section + "}");
+            // add that section
+            output += section;
+            // point startIndex to endIndex so we reference the next section in the next iteration
+            // we also skip the two characters of the symbol
+            startIndex = endIndex + 2;
+            // if an occurence has been found
+            if (occurenceIndex != -1) {
+                openKatex = !openKatex;
             }
         }
-
-        return katex.renderToString("\\displaystyle {" + cap + "}");
+        return output;
     }
     bindContentPreview() {
+        var _self = this;
         var inputContent = this.input.content;
         var outputContent = this.output.content;
         inputContent.jq.keyup(function(e) {
-            var 
             //translateWithParsing();
             var content = inputContent.val;
-            content = translateWithRegex(content);
+            content = _self.translateWithParsing(content);
             //content = katex.renderToString("\\displaystyle {" + content + "}");
             outputContent.val = marked(content);
         });
