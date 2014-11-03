@@ -6,6 +6,7 @@ import create = article.create;
 import get = article.get;
 import update = article.update;
 import getAll = article.getAll;
+import queryTitle = article.queryTitle;
 import db = require('./db');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
@@ -95,3 +96,5 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 		return r;
 	})
 }
+
+export function queryTitle(query: )
