@@ -3,6 +3,7 @@ var baseAjax = require('./../common/base-ajax');
 var article = baseAjax.article;
 
 var redis = require("redis");
+
 var db = require('./db');
 
 function isOk(err, reject) {

@@ -129,4 +129,3 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 	})
 }
 
-export function queryTitle(query: )

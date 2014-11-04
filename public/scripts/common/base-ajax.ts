@@ -14,7 +14,7 @@ export module article {
     export interface Title {
         title: string; 
     }
-    export interface Fields, Title {
+    export interface Fields extends Title {
         content: string; 
     }
     export interface Id {
