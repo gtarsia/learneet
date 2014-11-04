@@ -33,6 +33,18 @@
     })(article.get || (article.get = {}));
     var get = article.get;
 
+    (function (getTitleWithId) {
+        function url() {
+            return '/api/gettitleandid';
+        }
+        getTitleWithId.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        getTitleWithId.type = type;
+    })(article.getTitleWithId || (article.getTitleWithId = {}));
+    var getTitleWithId = article.getTitleWithId;
+
     (function (getAll) {
         function url() {
             return '/api/getall';

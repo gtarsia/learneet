@@ -4,6 +4,7 @@ import article = baseAjax.article;
 import FieldsWithId = article.FieldsWithId;
 import create = article.create;
 import get = article.get;
+import getTitleWithId = article.getTitleWithId;
 import update = article.update;
 import getAll = article.getAll;
 import redis = require("redis");
@@ -55,6 +56,11 @@ export function get(args: get.ParamsType) : Promise<get.ReturnType> {
 	})
 }
 
+export function getTitleAndId(args: getTitleWithId.ParamsType)
+: Promise<getTitleWithId.ReturnType> {
+	return db.hmget("article:" + args.id, "id", "title")
+}
+
 export function getAll() : Promise<getAll.ReturnType> {
 	function arrayToArticles(array: string[]) : FieldsWithId[] {
 		var articles : FieldsWithId[] = [];
@@ -104,6 +110,34 @@ export module TitleSearch {
 		multi = add(multi, id, newTitle);
 		debugger;
 		multi.exec();
+	}
+
+	export function query(args: queryTitle.ParamsType) : Promise<queryTitle.ReturnType> {
+		var words = args.query.split(' ');
+		var length = words.length;
+		for (var i = 0; i < length; i++) {
+			words[i] = "search_words:".concat(words[i]);
+		}
+		return db.sinter.apply(db, words)
+		.then((ids: any) => {
+			if (ids == null) return [];
+			var multi = db.multi();
+			var length = ids.length;
+			for (var i = 0; i < length; i++) {
+				multi.hmget(["article:" + ids[i], "title", "content"])
+			}
+			return Promise.promisify(multi.exec);
+		})
+		.then<queryTitle.ReturnType>((result: string[]) => {
+			var length = result.length;
+			var articles: queryTitle.ReturnType = [];
+			for(var i = 0; i < length; i++) {
+				var title = result.shift();
+				var content = result.content();
+				articles.push({title: title, content: content});
+			}
+			return Promise.promisify(() => { return articles });
+		})
 	}
 }
 

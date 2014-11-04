@@ -103,12 +103,20 @@ export function hget(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.hget.bind(client), args]);
 }
 
+export function hmget(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.hmget.bind(client), args]);
+}
+
 export function sadd(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.sadd.bind(client), args]);
 }
 
 export function srem(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.srem.bind(client), args]);
+}
+
+export function sinter(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.sinter.bind(client), args]);
 }
 
 export function sort(...args: string[]) : Promise<any> {

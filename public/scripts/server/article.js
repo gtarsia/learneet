@@ -1,5 +1,5 @@
 var baseAjax = require('./../common/base-ajax');
-
+var Promise = require('bluebird');
 var article = baseAjax.article;
 
 var redis = require("redis");
@@ -47,6 +47,11 @@ function get(args) {
     });
 }
 exports.get = get;
+
+function getTitleAndId(args) {
+    return db.hmget("article:" + args.id, "id", "title");
+}
+exports.getTitleAndId = getTitleAndId;
 
 function getAll() {
     function arrayToArticles(array) {
@@ -101,6 +106,36 @@ exports.getAll = getAll;
         multi.exec();
     }
     TitleSearch.update = update;
+
+    function query(args) {
+        var words = args.query.split(' ');
+        var length = words.length;
+        for (var i = 0; i < length; i++) {
+            words[i] = "search_words:".concat(words[i]);
+        }
+        return db.sinter.apply(db, words).then(function (ids) {
+            if (ids == null)
+                return [];
+            var multi = db.multi();
+            var length = ids.length;
+            for (var i = 0; i < length; i++) {
+                multi.hmget(["article:" + ids[i], "title", "content"]);
+            }
+            return Promise.promisify(multi.exec);
+        }).then(function (result) {
+            var length = result.length;
+            var articles = [];
+            for (var i = 0; i < length; i++) {
+                var title = result.shift();
+                var content = result.content();
+                articles.push({ title: title, content: content });
+            }
+            return Promise.promisify(function () {
+                return articles;
+            });
+        });
+    }
+    TitleSearch.query = query;
 })(exports.TitleSearch || (exports.TitleSearch = {}));
 var TitleSearch = exports.TitleSearch;
 

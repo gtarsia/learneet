@@ -97,6 +97,15 @@ function hget() {
 }
 exports.hget = hget;
 
+function hmget() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.hmget.bind(exports.client), args]);
+}
+exports.hmget = hmget;
+
 function sadd() {
     var args = [];
     for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -114,6 +123,15 @@ function srem() {
     return exports.promisedRedis.apply(this, [exports.client.srem.bind(exports.client), args]);
 }
 exports.srem = srem;
+
+function sinter() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.sinter.bind(exports.client), args]);
+}
+exports.sinter = sinter;
 
 function sort() {
     var args = [];

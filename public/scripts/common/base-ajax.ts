@@ -14,15 +14,15 @@ export module article {
     export interface Title {
         title: string; 
     }
-    export interface Fields extends Title {
-        content: string; 
+    export interface Content {
+        content: string;
     }
     export interface Id {
         id: string;
     }
-
-    export interface FieldsWithId extends Fields, Id {
-    }
+    export interface Fields extends Title, Content {}
+    export interface TitleWithId extends Title, Id {}
+    export interface FieldsWithId extends Fields, Id {}
     export function WrapFieldWithId(fields: Fields, id: string) : FieldsWithId {
         return { title: fields.title, content: fields.content, id: id }
     }
@@ -39,6 +39,13 @@ export module article {
         export function type(): string { return AjaxType.GET }
         export interface ParamsType extends Id {}
         export interface ReturnType extends JsonReturn<FieldsWithId> { }
+    }
+
+    export module getTitleWithId {
+        export function url(): string { return '/api/gettitleandid' }
+        export function type(): string { return AjaxType.GET }
+        export interface ParamsType extends Id {}
+        export interface ReturnType extends JsonReturn<TitleWithId> { }
     }
 
     export module getAll {
@@ -59,7 +66,7 @@ export module article {
         export function url(): string { return '/api/querytitle'}
         export function type(): string { return AjaxType.GET }
         export interface ParamsType { query: string }
-        export interface ReturnType extends Title, Id { }
+        export interface ReturnType extends JsonReturn<TitleWithId[]> { }
     }
 }
 
