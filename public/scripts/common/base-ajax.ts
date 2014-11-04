@@ -11,13 +11,16 @@ export interface JsonReturn<T> {
 }
 
 export module article {
-
-    export interface Fields {
-        title: string; content: string; 
+    export interface Title {
+        title: string; 
+    }
+    export interface Fields, Title {
+        content: string; 
     }
     export interface Id {
         id: string;
     }
+
     export interface FieldsWithId extends Fields, Id {
     }
     export function WrapFieldWithId(fields: Fields, id: string) : FieldsWithId {
@@ -50,6 +53,13 @@ export module article {
         export function type(): string { return AjaxType.POST }
         export interface ParamsType extends FieldsWithId {}
         export interface ReturnType extends JsonReturn<Id> { }
+    }
+
+    export module queryTitle {
+        export function url(): string { return '/api/querytitle'}
+        export function type(): string { return AjaxType.GET }
+        export interface ParamsType { query: string }
+        export interface ReturnType extends Title, Id { }
     }
 }
 

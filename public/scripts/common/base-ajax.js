@@ -56,6 +56,18 @@
         update.type = type;
     })(article.update || (article.update = {}));
     var update = article.update;
+
+    (function (queryTitle) {
+        function url() {
+            return '/api/querytitle';
+        }
+        queryTitle.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        queryTitle.type = type;
+    })(article.queryTitle || (article.queryTitle = {}));
+    var queryTitle = article.queryTitle;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
