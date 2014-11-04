@@ -6,6 +6,7 @@ import create = article.create;
 import get = article.get;
 import update = article.update;
 import getAll = article.getAll;
+import redis = require("redis");
 import db = require('./db');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
@@ -14,16 +15,13 @@ export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 	var id;
 	return db.incr("article:idCounter")
 	.then((_id: string) => {
-		debugger;
 		id = _id;
 		return db.rpush("article:ids", id);
 	})
 	.then(() => {
-		debugger;
-		return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
+		return update(article.WrapFieldWithId(args, id));
 	})
-	.then<create.ReturnType>((result: string) => {
-		debugger;
+	.then<update.ReturnType>((result: update.ReturnType) => {
 		var r : create.ReturnType = {
 			ok: true,
 			why: '',
@@ -45,7 +43,6 @@ export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 export function get(args: get.ParamsType) : Promise<get.ReturnType> {
 	return db.hgetall("article:" + args.id.toString())
 	.then<get.ReturnType>((result: any) => {
-        debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
 		var r : get.ReturnType = {
@@ -70,7 +67,6 @@ export function getAll() : Promise<getAll.ReturnType> {
 	return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id',
 	    'GET', 'article:*->title', 'GET', 'article:*->content')
 	.then<getAll.ReturnType>((result: any) => {
-        debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Couldn\'t get articles' : '');
 		var r : getAll.ReturnType = {
@@ -82,15 +78,51 @@ export function getAll() : Promise<getAll.ReturnType> {
 	})
 }
 
+export module TitleSearch {
+	export function remove(multi: any, id: string, oldTitle: string) {
+		var words = oldTitle.split(' ');
+		var length = words.length;
+		for (var i = 0; i < length; i++) {
+			multi = multi.srem(["search_words:" + words[i], id], redis.print);
+		}
+		return multi;
+	}
+
+	export function add(multi: any, id: string, newTitle: string) {
+		var words = newTitle.split(' ');
+		var length = words.length;
+		for (var i = 0; i < length; i++) {
+			multi = multi.sadd(["search_words:" + words[i], id], redis.print);
+		}
+		return multi;
+	}
+
+	export function update(id: string, oldTitle: string, newTitle: string) {
+		var multi = db.multi();
+		multi = remove(multi, id, oldTitle);
+		multi = add(multi, id, newTitle);
+		debugger;
+		multi.exec();
+	}
+}
+
 export function update(args: update.ParamsType) : Promise<update.ReturnType> {
-	return db.hmset("article:" + args.id, args)
-	.then<get.ReturnType>((result: any) => {
+	var oldTitle;
+	return get(args)
+	.then((res) => {
+		oldTitle = res.result.title;
+		return db.hmset("article:" + args.id, args)
+	})
+	.then((result: string) => {
+		TitleSearch.update(args.id, oldTitle, args.title);
 		var ok = result != null;
 		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
-		var r : get.ReturnType = {
+		var r : update.ReturnType = {
 			ok: ok,
 			why: why,
-			result: result
+			result: {
+				id: args.id
+			}
 		}
 		return r;
 	})

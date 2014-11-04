@@ -74,5 +74,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.registerTask("default", ["watch"]);
-    grunt.registerTask("watchbro", ["watch:bro"]);
+    grunt.registerTask("scripts", ["watch:scripts"]);
+    grunt.registerTask("bro", ["watch:bro"]);
 };

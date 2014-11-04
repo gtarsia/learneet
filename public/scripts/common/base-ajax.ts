@@ -49,7 +49,7 @@ export module article {
         export function url(): string { return '/api/update' }
         export function type(): string { return AjaxType.POST }
         export interface ParamsType extends FieldsWithId {}
-        export interface ReturnType extends JsonReturn<FieldsWithId> { }
+        export interface ReturnType extends JsonReturn<Id> { }
     }
 }
 

@@ -2,6 +2,7 @@ var baseAjax = require('./../common/base-ajax');
 
 var article = baseAjax.article;
 
+var redis = require("redis");
 var db = require('./db');
 
 function isOk(err, reject) {
@@ -15,14 +16,11 @@ function isOk(err, reject) {
 function create(args) {
     var id;
     return db.incr("article:idCounter").then(function (_id) {
-        debugger;
         id = _id;
         return db.rpush("article:ids", id);
     }).then(function () {
-        debugger;
-        return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
+        return exports.update(article.WrapFieldWithId(args, id));
     }).then(function (result) {
-        debugger;
         var r = {
             ok: true,
             why: '',
@@ -37,7 +35,6 @@ exports.create = create;
 
 function get(args) {
     return db.hgetall("article:" + args.id.toString()).then(function (result) {
-        debugger;
         var ok = result != null;
         var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
         var r = {
@@ -62,7 +59,6 @@ function getAll() {
         return articles;
     }
     return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
-        debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get articles' : '');
         var r = {
@@ -75,14 +71,53 @@ function getAll() {
 }
 exports.getAll = getAll;
 
+(function (TitleSearch) {
+    function remove(multi, id, oldTitle) {
+        var words = oldTitle.split(' ');
+        var length = words.length;
+        for (var i = 0; i < length; i++) {
+            multi = multi.srem(["search_words:" + words[i], id], redis.print);
+        }
+        return multi;
+    }
+    TitleSearch.remove = remove;
+
+    function add(multi, id, newTitle) {
+        var words = newTitle.split(' ');
+        var length = words.length;
+        for (var i = 0; i < length; i++) {
+            multi = multi.sadd(["search_words:" + words[i], id], redis.print);
+        }
+        return multi;
+    }
+    TitleSearch.add = add;
+
+    function update(id, oldTitle, newTitle) {
+        var multi = db.multi();
+        multi = remove(multi, id, oldTitle);
+        multi = add(multi, id, newTitle);
+        debugger;
+        multi.exec();
+    }
+    TitleSearch.update = update;
+})(exports.TitleSearch || (exports.TitleSearch = {}));
+var TitleSearch = exports.TitleSearch;
+
 function update(args) {
-    return db.hmset("article:" + args.id, args).then(function (result) {
+    var oldTitle;
+    return exports.get(args).then(function (res) {
+        oldTitle = res.result.title;
+        return db.hmset("article:" + args.id, args);
+    }).then(function (result) {
+        TitleSearch.update(args.id, oldTitle, args.title);
         var ok = result != null;
         var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
         var r = {
             ok: ok,
             why: why,
-            result: result
+            result: {
+                id: args.id
+            }
         };
         return r;
     });

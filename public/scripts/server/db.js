@@ -74,7 +74,6 @@ exports.hgetall = hgetall;
 
 function promisedRedis(fn, args) {
     return new Promise(function (resolve, reject) {
-        debugger;
         fn(args, function (err, result) {
             if (!isOk(err, reject))
                 result;
@@ -84,6 +83,11 @@ function promisedRedis(fn, args) {
 }
 exports.promisedRedis = promisedRedis;
 
+function multi() {
+    return exports.client.multi();
+}
+exports.multi = multi;
+
 function hget() {
     var args = [];
     for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -92,6 +96,24 @@ function hget() {
     return exports.promisedRedis.apply(this, [exports.client.hget.bind(exports.client), args]);
 }
 exports.hget = hget;
+
+function sadd() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.sadd.bind(exports.client), args]);
+}
+exports.sadd = sadd;
+
+function srem() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.srem.bind(exports.client), args]);
+}
+exports.srem = srem;
 
 function sort() {
     var args = [];

@@ -191,7 +191,7 @@ declare module "redis" {
 		shutdown(args: any[], callback?: ResCallback): void;
 		lastsave(args: any[], callback?: ResCallback): void;
 		type(args: any[], callback?: ResCallback): void;
-		multi(args: any[], callback?: ResCallback): void;
+		multi(): any;
 		exec(args: any[], callback?: ResCallback): void;
 		discard(args: any[], callback?: ResCallback): void;
 		sync(args: any[], callback?: ResCallback): void;
