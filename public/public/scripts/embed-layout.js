@@ -25,3 +25,4 @@ function startGui(gui) {
 
 var guiName = '';
 var headerName = '';
+var clientAjax = '';

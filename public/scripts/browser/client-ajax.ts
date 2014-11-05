@@ -37,6 +37,12 @@ export module article {
     : JQueryXHR<baseUpdate.ReturnType> {
         return buildAjax(baseUpdate.url(), baseUpdate.type(), params);
     }
+
+    import baseQuery = baseAjax.article.queryTitle;
+    export function query(params: baseQuery.ParamsType)
+    : JQueryXHR<baseQuery.ReturnType> {
+        return buildAjax(baseQuery.url(), baseQuery.type(), params);
+    }
 }
 
 export module user {

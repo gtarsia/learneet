@@ -37,6 +37,12 @@ exports.buildAjax = buildAjax;
         return exports.buildAjax(baseUpdate.url(), baseUpdate.type(), params);
     }
     article.update = update;
+
+    var baseQuery = baseAjax.article.queryTitle;
+    function query(params) {
+        return exports.buildAjax(baseQuery.url(), baseQuery.type(), params);
+    }
+    article.query = query;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

@@ -73,6 +73,17 @@ export module article {
             });
         })
     }
+
+    import baseQuery = baseAjax.article.queryTitle;
+    export function query() {
+        return buildAjax<baseQuery.ParamsType, baseQuery.ReturnType>
+        (baseQuery.url(), baseUpdate.type(), (req, res) => {
+            dbArticle.TitleSearch.query(req.query)
+            .then((result: baseQuery.ReturnType) => {
+                res.send(result);
+            })
+        })
+    }
 }
 
 export module user {

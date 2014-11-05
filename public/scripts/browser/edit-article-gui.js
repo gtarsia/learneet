@@ -62,6 +62,8 @@ var EditArticleGui = (function (_super) {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     };
+    EditArticleGui.prototype.query = function (s) {
+    };
     return EditArticleGui;
 })(Gui);
 exports.EditArticleGui = EditArticleGui;

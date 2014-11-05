@@ -124,19 +124,25 @@ export module TitleSearch {
 			var multi = db.multi();
 			var length = ids.length;
 			for (var i = 0; i < length; i++) {
-				multi.hmget(["article:" + ids[i], "title", "content"])
+				multi.hmget(["article:" + ids[i], "id", "title"])
 			}
-			return Promise.promisify(multi.exec);
+			var promise: any = Promise.promisify(multi.exec);
+			return promise;
 		})
-		.then<queryTitle.ReturnType>((result: string[]) => {
+		.then((result: string[]) => {
+			debugger;
 			var length = result.length;
-			var articles: queryTitle.ReturnType = [];
+			var articles: article.TitleWithId[] = [];
 			for(var i = 0; i < length; i++) {
+				var id = result.shift();
 				var title = result.shift();
-				var content = result.content();
-				articles.push({title: title, content: content});
+				articles.push({id: id, title: title});
 			}
-			return Promise.promisify(() => { return articles });
+			return {
+				ok: true,
+				why: '',
+				result: articles
+			}
 		})
 	}
 }

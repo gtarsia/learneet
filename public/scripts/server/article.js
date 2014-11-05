@@ -119,20 +119,24 @@ exports.getAll = getAll;
             var multi = db.multi();
             var length = ids.length;
             for (var i = 0; i < length; i++) {
-                multi.hmget(["article:" + ids[i], "title", "content"]);
+                multi.hmget(["article:" + ids[i], "id", "title"]);
             }
-            return Promise.promisify(multi.exec);
+            var promise = Promise.promisify(multi.exec);
+            return promise;
         }).then(function (result) {
+            debugger;
             var length = result.length;
             var articles = [];
             for (var i = 0; i < length; i++) {
+                var id = result.shift();
                 var title = result.shift();
-                var content = result.content();
-                articles.push({ title: title, content: content });
+                articles.push({ id: id, title: title });
             }
-            return Promise.promisify(function () {
-                return articles;
-            });
+            return {
+                ok: true,
+                why: '',
+                result: articles
+            };
         });
     }
     TitleSearch.query = query;

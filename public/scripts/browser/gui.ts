@@ -1,3 +1,6 @@
+var ClientAjax = require('./client-ajax');
+declare var clientAjax;
+clientAjax = ClientAjax;
 
 class Gui {
     redirect(view: string) {

@@ -86,6 +86,12 @@ exports.buildAjax = buildAjax;
         return exports.buildAjax(baseUpdate.url(), baseUpdate.type(), params);
     }
     article.update = update;
+
+    var baseQuery = baseAjax.article.queryTitle;
+    function query(params) {
+        return exports.buildAjax(baseQuery.url(), baseQuery.type(), params);
+    }
+    article.query = query;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
@@ -216,6 +222,8 @@ var EditArticleGui = (function (_super) {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     };
+    EditArticleGui.prototype.query = function (s) {
+    };
     return EditArticleGui;
 })(Gui);
 exports.EditArticleGui = EditArticleGui;
@@ -226,6 +234,10 @@ if (guiName == 'EditArticleGui') {
 //# sourceMappingURL=edit-article-gui.js.map
 
 },{"./../common/url":15,"./client-ajax":2,"./gui":5,"./templates/previewable-article":12}],5:[function(require,module,exports){
+var ClientAjax = require('./client-ajax');
+
+clientAjax = ClientAjax;
+
 var Gui = (function () {
     function Gui() {
     }
@@ -255,7 +267,7 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{}],6:[function(require,module,exports){
+},{"./client-ajax":2}],6:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

@@ -1,3 +1,7 @@
+var ClientAjax = require('./client-ajax');
+
+clientAjax = ClientAjax;
+
 var Gui = (function () {
     function Gui() {
     }

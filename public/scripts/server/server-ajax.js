@@ -71,6 +71,16 @@ exports.buildAjax = buildAjax;
         });
     }
     article.update = update;
+
+    var baseQuery = baseAjax.article.queryTitle;
+    function query() {
+        return exports.buildAjax(baseQuery.url(), baseUpdate.type(), function (req, res) {
+            dbArticle.TitleSearch.query(req.query).then(function (result) {
+                res.send(result);
+            });
+        });
+    }
+    article.query = query;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

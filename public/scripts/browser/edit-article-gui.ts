@@ -17,6 +17,9 @@ export class EditArticleGui extends Gui {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     }
+    query(s: string) {
+        
+    }
     saveBtn = { get jq() { return $('button#save') } };
     cancelBtn = { get jq() { return $('button#cancel') } };
     article: PreviewableArticle;
