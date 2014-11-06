@@ -10,7 +10,8 @@ append styles
 block main
   input#article-id(type="hidden" value= id)
   include templates/previewable-article
-  
-  #buttons
-    button#save Save
-    button#cancel Cancel
+  #second-floor
+    include templates/dependencies
+    #buttons
+      button#save Save
+      button#cancel Cancel

@@ -9,6 +9,7 @@ class Gui {
     propertize(selector: string, valFnName?: string): {jq: JQuery; val?: string;} {
         var obj = {
             get jq() { return $(selector); },
+            get selector() { return selector; }
         }
         if (valFnName != '') 
         Object.defineProperty(obj, "val", {

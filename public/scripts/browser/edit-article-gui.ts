@@ -22,13 +22,22 @@ export class EditArticleGui extends Gui {
     }
     saveBtn = { get jq() { return $('button#save') } };
     cancelBtn = { get jq() { return $('button#cancel') } };
+    dependencyFound;
+    addDependencyBtn;
     article: PreviewableArticle;
     constructor() {
         super();
         var _self = this;
         $(document).ready(function() {
+            _self.dependencyFound = _self.propertize("input#dependencyFound", 'val');
+            _self.addDependencyBtn = _self.propertize("button#add");
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
+            _self.dependencyFound.jq.selectize({
+                persist: false,
+                createOnBlur: true,
+                create: true
+            });
             clientAjax.article.get({ id: _self.id })
             .done(function(res) {
                 if (!res.ok) {
@@ -54,6 +63,9 @@ export class EditArticleGui extends Gui {
             });
             _self.cancelBtn.jq.click(() => {
                 _self.redirect(url.article.get(_self.id));
+            });
+            _self.addDependencyBtn.jq.click(() => {
+                console.log('Tried to add ' + _self.dependencyFound.val)
             });
         });
     }

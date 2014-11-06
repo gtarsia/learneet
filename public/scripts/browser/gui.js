@@ -12,6 +12,9 @@ var Gui = (function () {
         var obj = {
             get jq() {
                 return $(selector);
+            },
+            get selector() {
+                return selector;
             }
         };
         if (valFnName != '')

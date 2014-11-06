@@ -182,8 +182,15 @@ var EditArticleGui = (function (_super) {
             } };
         var _self = this;
         $(document).ready(function () {
+            _self.dependencyFound = _self.propertize("input#dependencyFound", 'val');
+            _self.addDependencyBtn = _self.propertize("button#add");
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
+            _self.dependencyFound.jq.selectize({
+                persist: false,
+                createOnBlur: true,
+                create: true
+            });
             clientAjax.article.get({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -209,6 +216,9 @@ var EditArticleGui = (function (_super) {
             });
             _self.cancelBtn.jq.click(function () {
                 _self.redirect(url.article.get(_self.id));
+            });
+            _self.addDependencyBtn.jq.click(function () {
+                console.log('Tried to add ' + _self.dependencyFound.val);
             });
         });
     }
@@ -248,6 +258,9 @@ var Gui = (function () {
         var obj = {
             get jq() {
                 return $(selector);
+            },
+            get selector() {
+                return selector;
             }
         };
         if (valFnName != '')
