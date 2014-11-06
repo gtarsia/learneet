@@ -108,12 +108,14 @@ exports.getAll = getAll;
     TitleSearch.update = update;
 
     function query(args) {
+        debugger;
         var words = args.query.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
             words[i] = "search_words:".concat(words[i]);
         }
         return db.sinter.apply(db, words).then(function (ids) {
+            debugger;
             if (ids == null)
                 return [];
             var multi = db.multi();
@@ -121,8 +123,8 @@ exports.getAll = getAll;
             for (var i = 0; i < length; i++) {
                 multi.hmget(["article:" + ids[i], "id", "title"]);
             }
-            var promise = Promise.promisify(multi.exec);
-            return promise;
+            var promise = Promise.promisify(multi.exec, multi);
+            return promise();
         }).then(function (result) {
             debugger;
             var length = result.length;

@@ -10,6 +10,7 @@ function getServerAjaxList() {
         article.get(),
         article.getAll(),
         article.update(),
+        article.query(),
         user.register()
     ];
 }
@@ -74,7 +75,8 @@ exports.buildAjax = buildAjax;
 
     var baseQuery = baseAjax.article.queryTitle;
     function query() {
-        return exports.buildAjax(baseQuery.url(), baseUpdate.type(), function (req, res) {
+        return exports.buildAjax(baseQuery.url(), baseQuery.type(), function (req, res) {
+            debugger;
             dbArticle.TitleSearch.query(req.query).then(function (result) {
                 res.send(result);
             });

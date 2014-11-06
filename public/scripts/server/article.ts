@@ -113,6 +113,7 @@ export module TitleSearch {
 	}
 
 	export function query(args: queryTitle.ParamsType) : Promise<queryTitle.ReturnType> {
+		debugger;
 		var words = args.query.split(' ');
 		var length = words.length;
 		for (var i = 0; i < length; i++) {
@@ -120,14 +121,15 @@ export module TitleSearch {
 		}
 		return db.sinter.apply(db, words)
 		.then((ids: any) => {
+			debugger;
 			if (ids == null) return [];
 			var multi = db.multi();
 			var length = ids.length;
 			for (var i = 0; i < length; i++) {
 				multi.hmget(["article:" + ids[i], "id", "title"])
 			}
-			var promise: any = Promise.promisify(multi.exec);
-			return promise;
+			var promise: any = Promise.promisify(multi.exec, multi);
+			return promise();
 		})
 		.then((result: string[]) => {
 			debugger;

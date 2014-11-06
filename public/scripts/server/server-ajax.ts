@@ -11,6 +11,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.get(),
         article.getAll(),
         article.update(),
+        article.query(),
         user.register()
     ];
 }
@@ -77,7 +78,8 @@ export module article {
     import baseQuery = baseAjax.article.queryTitle;
     export function query() {
         return buildAjax<baseQuery.ParamsType, baseQuery.ReturnType>
-        (baseQuery.url(), baseUpdate.type(), (req, res) => {
+        (baseQuery.url(), baseQuery.type(), (req, res) => {
+            debugger;
             dbArticle.TitleSearch.query(req.query)
             .then((result: baseQuery.ReturnType) => {
                 res.send(result);

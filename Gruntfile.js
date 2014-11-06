@@ -46,7 +46,7 @@ module.exports = function (grunt) {
         watch: {
             scripts: {
                 files: ['public/**/*.ts'],
-                tasks: ['ts:dev'],
+                tasks: ['ts:dev', 'notify:ts_ok'],
                 options: {
                     interrupt: true,
                     atBegin: true
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
             },
             bro: {
                 files: ['public/scripts/browser/**/*.js'],
-                tasks: ['browserify'],
+                tasks: ['browserify', 'notify:bro_ok'],
                 options: {
                     interrupt: true,
                     atBegin: true
@@ -67,12 +67,25 @@ module.exports = function (grunt) {
                 'public/scripts/common/*.js'],
                 dest: 'public/public/scripts/app.js'
             }   
+        },
+        notify: {
+            ts_ok: {
+              options: {
+                message: 'Typescript ok!'
+              }
+            },
+            bro_ok: {
+              options: {
+                message: 'Browserify ok!'
+              }
+            }
         }
     });
-    
+
     grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-notify');
     grunt.registerTask("default", ["watch"]);
     grunt.registerTask("scripts", ["watch:scripts"]);
     grunt.registerTask("bro", ["watch:bro"]);
