@@ -108,12 +108,10 @@ export module TitleSearch {
 		var multi = db.multi();
 		multi = remove(multi, id, oldTitle);
 		multi = add(multi, id, newTitle);
-		debugger;
 		multi.exec();
 	}
 
 	export function query(args: queryTitle.ParamsType) : Promise<queryTitle.ReturnType> {
-		debugger;
 		var words = args.query.split(' ');
 		var length = words.length;
 		for (var i = 0; i < length; i++) {
@@ -121,7 +119,6 @@ export module TitleSearch {
 		}
 		return db.sinter.apply(db, words)
 		.then((ids: any) => {
-			debugger;
 			if (ids == null) return [];
 			var multi = db.multi();
 			var length = ids.length;
@@ -131,13 +128,14 @@ export module TitleSearch {
 			var promise: any = Promise.promisify(multi.exec, multi);
 			return promise();
 		})
-		.then((result: string[]) => {
+		.then((result: any[]) => {
 			debugger;
 			var length = result.length;
 			var articles: article.TitleWithId[] = [];
 			for(var i = 0; i < length; i++) {
-				var id = result.shift();
-				var title = result.shift();
+                var article: string[] = result.shift();
+				var id = article.shift();
+				var title = article.shift();
 				articles.push({id: id, title: title});
 			}
 			return {

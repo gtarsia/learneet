@@ -102,20 +102,17 @@ exports.getAll = getAll;
         var multi = db.multi();
         multi = remove(multi, id, oldTitle);
         multi = add(multi, id, newTitle);
-        debugger;
         multi.exec();
     }
     TitleSearch.update = update;
 
     function query(args) {
-        debugger;
         var words = args.query.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
             words[i] = "search_words:".concat(words[i]);
         }
         return db.sinter.apply(db, words).then(function (ids) {
-            debugger;
             if (ids == null)
                 return [];
             var multi = db.multi();
@@ -130,8 +127,9 @@ exports.getAll = getAll;
             var length = result.length;
             var articles = [];
             for (var i = 0; i < length; i++) {
-                var id = result.shift();
-                var title = result.shift();
+                var article = result.shift();
+                var id = article.shift();
+                var title = article.shift();
                 articles.push({ id: id, title: title });
             }
             return {

@@ -34,9 +34,27 @@ export class EditArticleGui extends Gui {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
             _self.dependencyFound.jq.selectize({
-                persist: false,
-                createOnBlur: true,
-                create: true
+                create: false,
+                valueField: 'id',
+                labelField: 'title',
+                searchField: 'title',
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+                    clientAjax.article.query({query: query})
+                    .then(res => {
+                        callback(res.result);
+                    })
+                },
+                render: {
+                    option: function(item, escape) {
+                        return '<div>' +
+                            '<span class="dependency">' +
+                                '<span class="dependency-title">' + item.title + '</span>' +
+                                '<span class="dependency-by"></span>' +
+                            '</span>' +
+                        '</div>';
+                    }
+                }
             });
             clientAjax.article.get({ id: _self.id })
             .done(function(res) {
@@ -73,7 +91,7 @@ export class EditArticleGui extends Gui {
 
 
 declare var guiName;
-
+declare var gui;
 if (guiName == 'EditArticleGui') {
-    new EditArticleGui();
+    gui = new EditArticleGui();
 }
