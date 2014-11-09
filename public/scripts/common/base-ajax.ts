@@ -68,6 +68,13 @@ export module article {
         export interface ParamsType { query: string }
         export interface ReturnType extends JsonReturn<TitleWithId[]> { }
     }
+
+    export module addDependency {
+        export function url(): string { return '/api/adddependency'}
+        export function type(): string { return AjaxType.POST }
+        export interface ParamsType { dependentId: string; dependencyId: string; }
+        export interface ReturnType extends JsonReturn<boolean> {}
+    }
 }
 
 export module user {

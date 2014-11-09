@@ -71,7 +71,16 @@ var EditArticleGui = (function (_super) {
                 _self.redirect(url.article.get(_self.id));
             });
             _self.addDependencyBtn.jq.click(function () {
-                console.log('Tried to add ' + _self.dependencyFound.val);
+                debugger;
+                var id = _self.dependencyFound.jq.val();
+                if (id != "") {
+                    clientAjax.article.addDependency({
+                        dependentId: _self.id,
+                        dependencyId: id
+                    }).then(function (res) {
+                        console.log(res);
+                    });
+                }
             });
         });
     }

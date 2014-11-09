@@ -6,6 +6,7 @@ import create = article.create;
 import get = article.get;
 import getTitleWithId = article.getTitleWithId;
 import update = article.update;
+import addDependency = article.addDependency;
 import getAll = article.getAll;
 import redis = require("redis");
 import queryTitle = article.queryTitle;
@@ -167,5 +168,10 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 		}
 		return r;
 	})
+}
+
+export function addDependency(args: addDependency.ParamsType)
+: Promise<addDependency.ReturnType> {
+	return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId);
 }
 

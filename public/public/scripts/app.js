@@ -92,6 +92,12 @@ exports.buildAjax = buildAjax;
         return exports.buildAjax(baseQuery.url(), baseQuery.type(), params);
     }
     article.query = query;
+
+    var baseAddDep = baseAjax.article.addDependency;
+    function addDependency(params) {
+        return exports.buildAjax(baseAddDep.url(), baseAddDep.type(), params);
+    }
+    article.addDependency = addDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
@@ -231,7 +237,16 @@ var EditArticleGui = (function (_super) {
                 _self.redirect(url.article.get(_self.id));
             });
             _self.addDependencyBtn.jq.click(function () {
-                console.log('Tried to add ' + _self.dependencyFound.val);
+                debugger;
+                var id = _self.dependencyFound.jq.val();
+                if (id != "") {
+                    clientAjax.article.addDependency({
+                        dependentId: _self.id,
+                        dependencyId: id
+                    }).then(function (res) {
+                        console.log(res);
+                    });
+                }
             });
         });
     }
@@ -766,6 +781,18 @@ exports.AjaxType = {
         queryTitle.type = type;
     })(article.queryTitle || (article.queryTitle = {}));
     var queryTitle = article.queryTitle;
+
+    (function (addDependency) {
+        function url() {
+            return '/api/adddependency';
+        }
+        addDependency.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        addDependency.type = type;
+    })(article.addDependency || (article.addDependency = {}));
+    var addDependency = article.addDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

@@ -83,7 +83,17 @@ export class EditArticleGui extends Gui {
                 _self.redirect(url.article.get(_self.id));
             });
             _self.addDependencyBtn.jq.click(() => {
-                console.log('Tried to add ' + _self.dependencyFound.val)
+                debugger;
+                var id = _self.dependencyFound.jq.val();
+                if (id != "") {
+                    clientAjax.article.addDependency({
+                        dependentId: _self.id,
+                        dependencyId: id
+                    })
+                    .then(res => {
+                        console.log(res);
+                    });
+                }
             });
         });
     }

@@ -43,6 +43,12 @@ exports.buildAjax = buildAjax;
         return exports.buildAjax(baseQuery.url(), baseQuery.type(), params);
     }
     article.query = query;
+
+    var baseAddDep = baseAjax.article.addDependency;
+    function addDependency(params) {
+        return exports.buildAjax(baseAddDep.url(), baseAddDep.type(), params);
+    }
+    article.addDependency = addDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

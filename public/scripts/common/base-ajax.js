@@ -80,6 +80,18 @@
         queryTitle.type = type;
     })(article.queryTitle || (article.queryTitle = {}));
     var queryTitle = article.queryTitle;
+
+    (function (addDependency) {
+        function url() {
+            return '/api/adddependency';
+        }
+        addDependency.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        addDependency.type = type;
+    })(article.addDependency || (article.addDependency = {}));
+    var addDependency = article.addDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

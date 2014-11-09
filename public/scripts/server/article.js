@@ -163,4 +163,9 @@ function update(args) {
     });
 }
 exports.update = update;
+
+function addDependency(args) {
+    return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId);
+}
+exports.addDependency = addDependency;
 //# sourceMappingURL=article.js.map
