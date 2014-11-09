@@ -2,11 +2,14 @@ import baseAjax = require('./../common/base-ajax');
 import Promise = require('bluebird');
 import article = baseAjax.article;
 import FieldsWithId = article.FieldsWithId;
+import TitleWithId = article.TitleWithId;
 import create = article.create;
 import get = article.get;
 import getTitleWithId = article.getTitleWithId;
 import update = article.update;
 import addDependency = article.addDependency;
+import getDependencies = article.getDependencies;
+import remDeps = article.remDependency;
 import getAll = article.getAll;
 import redis = require("redis");
 import queryTitle = article.queryTitle;
@@ -172,6 +175,46 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 
 export function addDependency(args: addDependency.ParamsType)
 : Promise<addDependency.ReturnType> {
-	return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId);
+	debugger;
+	return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId)
+	.then((res: string) => {
+		debugger;
+		return {
+			ok: true,
+			why: '',
+			result: (res == '1')
+		}
+	});
 }
 
+export function getDependencies(args: getDependencies.ParamsType)
+: Promise<getDependencies.ReturnType> {
+	return db.sort('article:' + args.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id',
+	    'GET', 'article:*->title')
+	.then((array: string[]) => {
+		var articles : TitleWithId[] = [];
+		while (array.length > 0) {
+			var id = array.shift();
+			var title = array.shift();
+			articles.push({ id: id, title: title});
+		}
+		return {
+			ok: true,
+			why: '',
+			result: articles
+		};
+	});
+}
+
+export function remDependency(args: remDeps.ParamsType)
+: Promise<remDeps.ReturnType> {
+    debugger;
+	return db.srem('article:' + args.dependentId + ':dependencies', args.dependencyId)
+	.then(res => {
+		return {
+			ok: true,
+			why: '',
+			result: res == '1'
+		}	
+	})
+}

@@ -20,17 +20,38 @@ export class EditArticleGui extends Gui {
     query(s: string) {
         
     }
+    removeDependency(jq) {
+        var id = $(jq).siblings(this.dependencyIds.jq).val();
+        clientAjax.article.remDependency({
+            dependentId: this.id,
+            dependencyId: id
+        })
+        .then(res => {
+            debugger;
+            if (res.result == true) {
+                $(jq).parent(this.dependency.jq).remove();
+            }
+        });
+    }
     saveBtn = { get jq() { return $('button#save') } };
     cancelBtn = { get jq() { return $('button#cancel') } };
+    dependency;
     dependencyFound;
     addDependencyBtn;
+    removeDependencyBtns;
+    dependencyIds;
     article: PreviewableArticle;
+    dependenciesTemplate;
     constructor() {
         super();
         var _self = this;
         $(document).ready(function() {
             _self.dependencyFound = _self.propertize("input#dependencyFound", 'val');
             _self.addDependencyBtn = _self.propertize("button#add");
+            _self.dependenciesTemplate = _self.propertize("#dependencies-template");
+            _self.removeDependencyBtns = _self.propertize(".removeDependency");
+            _self.dependencyIds = _self.propertize(".dependencyId");
+            _self.dependency = _self.propertize(".dependency")
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
             _self.dependencyFound.jq.selectize({
@@ -68,6 +89,23 @@ export class EditArticleGui extends Gui {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
+            clientAjax.article.getDependencies({ id: _self.id})
+            .done(res => {
+                var deps: any = res.result;
+                var length = deps.length;
+                for (var i = 0; i < length; i++) {
+                    deps[i].url = url.article.get(deps[i].id);
+                }
+                var template = _self.dependenciesTemplate.jq.html();
+                Mustache.parse(template);   // optional, speeds up future uses
+                var rendered = Mustache.render(template, 
+                    { deps: deps});
+                _self.dependenciesTemplate.jq.after(rendered);
+                _self.removeDependencyBtns.jq.on("click", () => {
+                    var myThis = eval("this");
+                    _self.removeDependency(myThis);
+                })
+            })
             _self.saveBtn.jq.click(() => {
                 var article = _self.article.article;
                 clientAjax.article.update({

@@ -49,6 +49,18 @@ exports.buildAjax = buildAjax;
         return exports.buildAjax(baseAddDep.url(), baseAddDep.type(), params);
     }
     article.addDependency = addDependency;
+
+    var baseGetDeps = baseAjax.article.getDependencies;
+    function getDependencies(params) {
+        return exports.buildAjax(baseGetDeps.url(), baseGetDeps.type(), params);
+    }
+    article.getDependencies = getDependencies;
+
+    var baseRemDep = baseAjax.article.remDependency;
+    function remDependency(params) {
+        return exports.buildAjax(baseRemDep.url(), baseRemDep.type(), params);
+    }
+    article.remDependency = remDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

@@ -1,13 +1,15 @@
 #dependencies.rectangular-frame
   h1 Dependencies
   ul
-    script#dependencies-template(type="x-tmpl-mustache")
-      li
+    script#dependencies-template(type="x-tmpl-mustache") 
+      {{#deps}}
+      li.dependency
+        input.dependencyId(type="hidden" value="{{id}}")
         img.avatar(src="/images/avatar.png")
-        | {{#dependencies}}
         a.title(href="{{url}}") {{title}}
-        i by {{author}}
-        | {{/dependencies}}
+        i  by Him 
+        input.removeDependency(type="image" src="/images/remove.png")
+      {{/deps}}
 
     input#dependencyFound(type="text") 
     button#add Add dependency

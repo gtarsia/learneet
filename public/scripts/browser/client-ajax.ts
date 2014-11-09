@@ -49,6 +49,18 @@ export module article {
     : JQueryXHR<baseQuery.ReturnType> {
         return buildAjax(baseAddDep.url(), baseAddDep.type(), params);
     }
+
+    import baseGetDeps = baseAjax.article.getDependencies;
+    export function getDependencies(params: baseGetDeps.ParamsType)
+    : JQueryXHR<baseGetDeps.ReturnType> {
+        return buildAjax(baseGetDeps.url(), baseGetDeps.type(), params)
+    }
+
+    import baseRemDep = baseAjax.article.remDependency;
+    export function remDependency(params: baseRemDep.ParamsType)
+    : JQueryXHR<baseRemDep.ReturnType> {
+        return buildAjax(baseRemDep.url(), baseRemDep.type(), params);
+    }
 }
 
 export module user {

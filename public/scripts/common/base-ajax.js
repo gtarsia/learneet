@@ -92,6 +92,30 @@
         addDependency.type = type;
     })(article.addDependency || (article.addDependency = {}));
     var addDependency = article.addDependency;
+
+    (function (getDependencies) {
+        function url() {
+            return '/api/getdependencies';
+        }
+        getDependencies.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        getDependencies.type = type;
+    })(article.getDependencies || (article.getDependencies = {}));
+    var getDependencies = article.getDependencies;
+
+    (function (remDependency) {
+        function url() {
+            return '/api/remdependency';
+        }
+        remDependency.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        remDependency.type = type;
+    })(article.remDependency || (article.remDependency = {}));
+    var remDependency = article.remDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

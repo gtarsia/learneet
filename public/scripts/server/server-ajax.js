@@ -11,6 +11,9 @@ function getServerAjaxList() {
         article.getAll(),
         article.update(),
         article.query(),
+        article.addDependency(),
+        article.getDependencies(),
+        article.remDependency(),
         user.register()
     ];
 }
@@ -83,6 +86,39 @@ exports.buildAjax = buildAjax;
         });
     }
     article.query = query;
+
+    var baseAddDependency = baseAjax.article.addDependency;
+    function addDependency() {
+        return exports.buildAjax(baseAddDependency.url(), baseAddDependency.type(), function (req, res) {
+            debugger;
+            dbArticle.addDependency(req.body).then(function (result) {
+                debugger;
+                res.send(result);
+            });
+        });
+    }
+    article.addDependency = addDependency;
+
+    var baseGetDeps = baseAjax.article.getDependencies;
+    function getDependencies() {
+        return exports.buildAjax(baseGetDeps.url(), baseGetDeps.type(), function (req, res) {
+            dbArticle.getDependencies(req.query).then(function (result) {
+                res.send(result);
+            });
+        });
+    }
+    article.getDependencies = getDependencies;
+
+    var baseRemDep = baseAjax.article.remDependency;
+    function remDependency() {
+        return exports.buildAjax(baseRemDep.url(), baseRemDep.type(), function (req, res) {
+            debugger;
+            dbArticle.remDependency(req.body).then(function (result) {
+                res.send(result);
+            });
+        });
+    }
+    article.remDependency = remDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

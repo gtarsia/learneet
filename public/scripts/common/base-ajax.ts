@@ -75,6 +75,20 @@ export module article {
         export interface ParamsType { dependentId: string; dependencyId: string; }
         export interface ReturnType extends JsonReturn<boolean> {}
     }
+
+    export module getDependencies {
+        export function url(): string { return '/api/getdependencies' }
+        export function type(): string { return AjaxType.GET }
+        export interface ParamsType { id: string; }
+        export interface ReturnType extends JsonReturn<TitleWithId[]> {}
+    }
+
+    export module remDependency {
+        export function url(): string { return '/api/remdependency'}
+        export function type(): string { return AjaxType.POST }
+        export interface ParamsType { dependentId: string; dependencyId: string; }
+        export interface ReturnType extends JsonReturn<boolean> {}
+    }
 }
 
 export module user {

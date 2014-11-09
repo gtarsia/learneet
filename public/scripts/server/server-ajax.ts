@@ -12,6 +12,9 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.getAll(),
         article.update(),
         article.query(),
+        article.addDependency(),
+        article.getDependencies(),
+        article.remDependency(),
         user.register()
     ];
 }
@@ -82,6 +85,42 @@ export module article {
             debugger;
             dbArticle.TitleSearch.query(req.query)
             .then((result: baseQuery.ReturnType) => {
+                res.send(result);
+            })
+        })
+    }
+
+    import baseAddDependency = baseAjax.article.addDependency;
+    export function addDependency() {
+        return buildAjax<baseAddDependency.ParamsType, baseAddDependency.ReturnType>
+        (baseAddDependency.url(), baseAddDependency.type(), (req, res) => {
+            debugger;
+            dbArticle.addDependency(req.body)
+            .then(result => {
+                debugger;
+                res.send(result);
+            });
+        })
+    }
+
+    import baseGetDeps = baseAjax.article.getDependencies;
+    export function getDependencies() {
+        return buildAjax<baseGetDeps.ParamsType, baseAddDependency.ReturnType>
+        (baseGetDeps.url(), baseGetDeps.type(), (req, res) => {
+            dbArticle.getDependencies(req.query)
+            .then(result => {
+                res.send(result);
+            })
+        })
+    }
+
+    import baseRemDep = baseAjax.article.remDependency;
+    export function remDependency() {
+        return buildAjax<baseRemDep.ParamsType, baseRemDep.ReturnType>
+        (baseRemDep.url(), baseRemDep.type(), (req, res) => {
+            debugger;
+            dbArticle.remDependency(req.body)
+            .then(result => {
                 res.send(result);
             })
         })

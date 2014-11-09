@@ -165,7 +165,44 @@ function update(args) {
 exports.update = update;
 
 function addDependency(args) {
-    return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId);
+    debugger;
+    return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId).then(function (res) {
+        debugger;
+        return {
+            ok: true,
+            why: '',
+            result: (res == '1')
+        };
+    });
 }
 exports.addDependency = addDependency;
+
+function getDependencies(args) {
+    return db.sort('article:' + args.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title').then(function (array) {
+        var articles = [];
+        while (array.length > 0) {
+            var id = array.shift();
+            var title = array.shift();
+            articles.push({ id: id, title: title });
+        }
+        return {
+            ok: true,
+            why: '',
+            result: articles
+        };
+    });
+}
+exports.getDependencies = getDependencies;
+
+function remDependency(args) {
+    debugger;
+    return db.srem('article:' + args.dependentId + ':dependencies', args.dependencyId).then(function (res) {
+        return {
+            ok: true,
+            why: '',
+            result: res == '1'
+        };
+    });
+}
+exports.remDependency = remDependency;
 //# sourceMappingURL=article.js.map
