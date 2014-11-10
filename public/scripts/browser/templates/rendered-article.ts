@@ -15,6 +15,14 @@ class RenderedArticle {
             set val(val) { _self.title.jq.html(val); } 
         }
     }
+    scroll(line: number) {
+        var outputLine = $(".line" + line);
+        if (outputLine.length) {
+            this.content.jq.scrollTop(
+                (this.content.jq.scrollTop() - this.content.jq.offset().top)
+                + outputLine.offset().top - this.content.jq.height()/2);
+        }
+    }
 }
  
 export = RenderedArticle; 

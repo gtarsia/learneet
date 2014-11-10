@@ -672,8 +672,11 @@ var PreviewableArticle = (function () {
                 setPercent(dest, getPercent(src));
             });
         }
-        bindScroll(this.input.content.jq, this.output.content.jq);
-        bindScroll(this.output.content.jq, this.input.content.jq);
+        _self.input.content.jq.bind("change keyup", function () {
+            var line = this.value.substr(0, this.selectionStart).split("\n").length - 1;
+            _self.output.scroll(line);
+            console.log(line);
+        });
     };
 
     PreviewableArticle.prototype.bindTitlePreview = function () {
@@ -754,6 +757,12 @@ var RenderedArticle = (function () {
             }
         };
     }
+    RenderedArticle.prototype.scroll = function (line) {
+        var outputLine = $(".line" + line);
+        if (outputLine.length) {
+            this.content.jq.scrollTop((this.content.jq.scrollTop() - this.content.jq.offset().top) + outputLine.offset().top - this.content.jq.height() / 2);
+        }
+    };
     return RenderedArticle;
 })();
 

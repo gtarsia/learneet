@@ -21,8 +21,13 @@ class PreviewableArticle {
                 setPercent(dest, getPercent(src));
             });
         }
-        bindScroll(this.input.content.jq, this.output.content.jq);
-        bindScroll(this.output.content.jq, this.input.content.jq);
+        _self.input.content.jq.bind("change keyup", function() {
+            var line = this.value.substr(0, this.selectionStart).split("\n").length - 1;
+            _self.output.scroll(line);
+            console.log(line);
+        });
+        //bindScroll(this.input.content.jq, this.output.content.jq);
+        //bindScroll(this.output.content.jq, this.input.content.jq);
     }
     ignoreScroll: boolean;
     bindTitlePreview() {

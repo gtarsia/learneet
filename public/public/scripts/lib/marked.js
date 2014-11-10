@@ -836,8 +836,8 @@ Renderer.prototype.heading = function(text, level, raw, lines) {
     + ' id="'
     + this.options.headerPrefix
     + raw.toLowerCase().replace(/[^\w]+/g, '-')
-    + '"'
-    + lines 
+    + '" '
+    + 'class="' + lines + '" '
     + '>'
     + text
     + '</h'
