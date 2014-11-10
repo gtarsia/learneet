@@ -17,38 +17,69 @@ import db = require('./db');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
 
+export function notOkObj(reason: string): any {
+	return {
+		ok: false,
+		why: reason
+	}
+}
+
+export function okObj<T>(obj: T): any {
+	return {
+		ok: true,
+		why: '',
+		result: obj
+	}
+}
+
 export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 	var id;
+	if (!args.title || !args.content) {
+		return notOkObj('Title or content was null or empty');
+	}
 	return db.incr("article:idCounter")
 	.then((_id: string) => {
 		id = _id;
-		return db.rpush("article:ids", id);
+		return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
 	})
-	.then(() => {
-		return update(article.WrapFieldWithId(args, id));
-	})
-	.then<update.ReturnType>((result: update.ReturnType) => {
-		var r : create.ReturnType = {
-			ok: true,
-			why: '',
-			result: {
-				id: id
-			}
-		}
-		return r;
-		/*
-		return new Promise<Create.ReturnType>(
-		function(resolve: (result: Get.ReturnType) => any, 
-                 reject: (error: any) => void) {
-
+	.then((result) => {
+		if (result != 'OK') return notOkObj('Could\'t create object');
+		db.sadd("article:ids", id)
+		.then(() => {
+			TitleSearch.update(id, "", args.title);
 		})
-		*/
+		return okObj({id: id});
+	})
+}
+
+export function update(args: update.ParamsType) : Promise<update.ReturnType> {
+	var oldTitle;
+	if (!args.title && !args.content) {
+		return notOkObj('Title or content was null or empty')
+	}
+	return get(args)
+	.then((res) => {
+		if (!res.ok) {
+			return notOkObj('Can\'t upload article, because we couldn\'t find it');
+		}
+		else {
+			oldTitle = res.result.title;
+			return db.hmset("article:" + args.id, args)
+			.then((res: string) => {
+				if (!res) {
+					notOkObj('Article update wasn\'t succesful');
+				}
+				TitleSearch.update(args.id, oldTitle, args.title);
+				return okObj({});
+			})
+		}
 	})
 }
 
 export function get(args: get.ParamsType) : Promise<get.ReturnType> {
 	return db.hgetall("article:" + args.id.toString())
 	.then<get.ReturnType>((result: any) => {
+		debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
 		var r : get.ReturnType = {
@@ -68,9 +99,11 @@ export function getTitleAndId(args: getTitleWithId.ParamsType)
 export function getAll() : Promise<getAll.ReturnType> {
 	function arrayToArticles(array: string[]) : FieldsWithId[] {
 		var articles : FieldsWithId[] = [];
-		while (array.length > 0) {
+		var length = array.length;
+		while (length > 0) {
 			var id = array.shift();
 			var title = array.shift(); var content = array.shift();
+			length -= 3;
 			articles.push({ id: id, title: title, content: content });
 		}
 		return articles;
@@ -78,6 +111,7 @@ export function getAll() : Promise<getAll.ReturnType> {
 	return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id',
 	    'GET', 'article:*->title', 'GET', 'article:*->content')
 	.then<getAll.ReturnType>((result: any) => {
+		debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Couldn\'t get articles' : '');
 		var r : getAll.ReturnType = {
@@ -151,27 +185,7 @@ export module TitleSearch {
 	}
 }
 
-export function update(args: update.ParamsType) : Promise<update.ReturnType> {
-	var oldTitle;
-	return get(args)
-	.then((res) => {
-		oldTitle = res.result.title;
-		return db.hmset("article:" + args.id, args)
-	})
-	.then((result: string) => {
-		TitleSearch.update(args.id, oldTitle, args.title);
-		var ok = result != null;
-		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
-		var r : update.ReturnType = {
-			ok: ok,
-			why: why,
-			result: {
-				id: args.id
-			}
-		}
-		return r;
-	})
-}
+
 
 export function addDependency(args: addDependency.ParamsType)
 : Promise<addDependency.ReturnType> {

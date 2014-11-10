@@ -7,6 +7,7 @@ import Gui = require("./gui");
 //$.template('<div><img src="${url}" />${name}</div>');
 
 class IndexGui extends Gui {
+    createBtn;
     setThumbs(html: string) {
         //$(".childContainer").append(html);
     }
@@ -17,6 +18,7 @@ class IndexGui extends Gui {
         super();
         var _self = this;
         $(document).ready(function() {
+            _self.createBtn = _self.propertize("#create");
             clientAjax.article.getAll({})
             .done(function(res) {
                 if (!res.ok) {
@@ -33,8 +35,11 @@ class IndexGui extends Gui {
                 Mustache.parse(template);   // optional, speeds up future uses
                 var rendered = Mustache.render(template, 
                     { articles: articles});
-                $("#article-thumb-template").remove();
-                $("#main .childContainer").html(rendered);
+                $("#article-thumb-template").after(rendered);
+                //$("#main .childContainer").html(rendered);
+            });
+            _self.createBtn.jq.click(() => {
+                _self.redirect(url.article.create());
             });
         });
     }

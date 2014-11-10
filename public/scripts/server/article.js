@@ -14,28 +14,67 @@ function isOk(err, reject) {
         return true;
 }
 
+function notOkObj(reason) {
+    return {
+        ok: false,
+        why: reason
+    };
+}
+exports.notOkObj = notOkObj;
+
+function okObj(obj) {
+    return {
+        ok: true,
+        why: '',
+        result: obj
+    };
+}
+exports.okObj = okObj;
+
 function create(args) {
     var id;
+    if (!args.title || !args.content) {
+        return exports.notOkObj('Title or content was null or empty');
+    }
     return db.incr("article:idCounter").then(function (_id) {
         id = _id;
-        return db.rpush("article:ids", id);
-    }).then(function () {
-        return exports.update(article.WrapFieldWithId(args, id));
+        return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
     }).then(function (result) {
-        var r = {
-            ok: true,
-            why: '',
-            result: {
-                id: id
-            }
-        };
-        return r;
+        if (result != 'OK')
+            return exports.notOkObj('Could\'t create object');
+        db.sadd("article:ids", id).then(function () {
+            TitleSearch.update(id, "", args.title);
+        });
+        return exports.okObj({ id: id });
     });
 }
 exports.create = create;
 
+function update(args) {
+    var oldTitle;
+    if (!args.title && !args.content) {
+        return exports.notOkObj('Title or content was null or empty');
+    }
+    return exports.get(args).then(function (res) {
+        if (!res.ok) {
+            return exports.notOkObj('Can\'t upload article, because we couldn\'t find it');
+        } else {
+            oldTitle = res.result.title;
+            return db.hmset("article:" + args.id, args).then(function (res) {
+                if (!res) {
+                    exports.notOkObj('Article update wasn\'t succesful');
+                }
+                TitleSearch.update(args.id, oldTitle, args.title);
+                return exports.okObj({});
+            });
+        }
+    });
+}
+exports.update = update;
+
 function get(args) {
     return db.hgetall("article:" + args.id.toString()).then(function (result) {
+        debugger;
         var ok = result != null;
         var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
         var r = {
@@ -56,15 +95,18 @@ exports.getTitleAndId = getTitleAndId;
 function getAll() {
     function arrayToArticles(array) {
         var articles = [];
-        while (array.length > 0) {
+        var length = array.length;
+        while (length > 0) {
             var id = array.shift();
             var title = array.shift();
             var content = array.shift();
+            length -= 3;
             articles.push({ id: id, title: title, content: content });
         }
         return articles;
     }
     return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
+        debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get articles' : '');
         var r = {
@@ -142,27 +184,6 @@ exports.getAll = getAll;
     TitleSearch.query = query;
 })(exports.TitleSearch || (exports.TitleSearch = {}));
 var TitleSearch = exports.TitleSearch;
-
-function update(args) {
-    var oldTitle;
-    return exports.get(args).then(function (res) {
-        oldTitle = res.result.title;
-        return db.hmset("article:" + args.id, args);
-    }).then(function (result) {
-        TitleSearch.update(args.id, oldTitle, args.title);
-        var ok = result != null;
-        var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
-        var r = {
-            ok: ok,
-            why: why,
-            result: {
-                id: args.id
-            }
-        };
-        return r;
-    });
-}
-exports.update = update;
 
 function addDependency(args) {
     debugger;

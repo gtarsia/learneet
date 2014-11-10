@@ -15,6 +15,7 @@ var IndexGui = (function (_super) {
         _super.call(this);
         var _self = this;
         $(document).ready(function () {
+            _self.createBtn = _self.propertize("#create");
             clientAjax.article.getAll({}).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -29,8 +30,10 @@ var IndexGui = (function (_super) {
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, { articles: articles });
-                $("#article-thumb-template").remove();
-                $("#main .childContainer").html(rendered);
+                $("#article-thumb-template").after(rendered);
+            });
+            _self.createBtn.jq.click(function () {
+                _self.redirect(url.article.create());
             });
         });
     }
