@@ -132,13 +132,14 @@ Lexer.lex = function(src, options) {
  * Preprocessing
  */
 
+var offset;
 Lexer.prototype.lex = function(src) {
   src = src
     .replace(/\r\n|\r/g, '\n')
     .replace(/\t/g, '    ')
     .replace(/\u00a0/g, ' ')
     .replace(/\u2424/g, '\n');
-
+  offset = 0;
   return this.token(src, true);
 };
 
@@ -157,15 +158,18 @@ Lexer.prototype.token = function(src, top, bq) {
     , space
     , i
     , l;
-
   while (src) {
     // newline
     if (cap = this.rules.newline.exec(src)) {
       src = src.substring(cap[0].length);
       if (cap[0].length > 1) {
+        var lines = cap[0].split('\n').length - 2;
         this.tokens.push({
-          type: 'space'
+          type: 'space',
+          offset: offset,
+          lines: lines
         });
+        offset += lines;
       }
     }
 
@@ -173,47 +177,62 @@ Lexer.prototype.token = function(src, top, bq) {
     if (cap = this.rules.code.exec(src)) {
       src = src.substring(cap[0].length);
       cap = cap[0].replace(/^ {4}/gm, '');
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.push({
         type: 'code',
+        offset: offset,
+        lines: lines,
         text: !this.options.pedantic
           ? cap.replace(/\n+$/, '')
           : cap
       });
+      offset += lines;
       continue;
     }
 
     // fences (gfm)
     if (cap = this.rules.fences.exec(src)) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.push({
         type: 'code',
+        offset: offset,
+        lines: lines,
         lang: cap[2],
         text: cap[3]
       });
+      offset += lines;
       continue;
     }
 
     // heading
     if (cap = this.rules.heading.exec(src)) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.push({
         type: 'heading',
+        offset: offset,
+        lines: lines,
         depth: cap[1].length,
         text: cap[2]
       });
+      offset += lines;
       continue;
     }
 
     // table no leading pipe (gfm)
     if (top && (cap = this.rules.nptable.exec(src))) {
       src = src.substring(cap[0].length);
-
+      var lines = cap[0].split('\n').length - 1;
       item = {
         type: 'table',
+        offset: offset,
+        lines: lines,
         header: cap[1].replace(/^ *| *\| *$/g, '').split(/ *\| */),
         align: cap[2].replace(/^ *|\| *$/g, '').split(/ *\| */),
         cells: cap[3].replace(/\n$/, '').split('\n')
       };
+      offset += lines;
 
       for (i = 0; i < item.align.length; i++) {
         if (/^ *-+: *$/.test(item.align[i])) {
@@ -239,20 +258,28 @@ Lexer.prototype.token = function(src, top, bq) {
     // lheading
     if (cap = this.rules.lheading.exec(src)) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.push({
         type: 'heading',
         depth: cap[2] === '=' ? 1 : 2,
+        offset: offset,
+        lines: lines,
         text: cap[1]
       });
+      offset += lines;
       continue;
     }
 
     // hr
     if (cap = this.rules.hr.exec(src)) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.push({
+        lines: lines,
+        offset: offset,
         type: 'hr'
       });
+      offset += lines;
       continue;
     }
 
@@ -282,7 +309,6 @@ Lexer.prototype.token = function(src, top, bq) {
     if (cap = this.rules.list.exec(src)) {
       src = src.substring(cap[0].length);
       bull = cap[2];
-
       this.tokens.push({
         type: 'list_start',
         ordered: bull.length > 1
@@ -330,16 +356,14 @@ Lexer.prototype.token = function(src, top, bq) {
           next = item.charAt(item.length - 1) === '\n';
           if (!loose) loose = next;
         }
-
         this.tokens.push({
           type: loose
             ? 'loose_item_start'
-            : 'list_item_start'
+            : 'list_item_start',
         });
-
+        
         // Recurse.
         this.token(item, false, bq);
-
         this.tokens.push({
           type: 'list_item_end'
         });
@@ -355,36 +379,48 @@ Lexer.prototype.token = function(src, top, bq) {
     // html
     if (cap = this.rules.html.exec(src)) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.push({
+        lines: lines,
+        offset: offset,
         type: this.options.sanitize
           ? 'paragraph'
           : 'html',
         pre: cap[1] === 'pre' || cap[1] === 'script' || cap[1] === 'style',
         text: cap[0]
       });
+      offset += lines;
       continue;
     }
 
     // def
     if ((!bq && top) && (cap = this.rules.def.exec(src))) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.links[cap[1].toLowerCase()] = {
+        lines: lines,
+        offset: offset,
         href: cap[2],
         title: cap[3]
       };
+      offset += lines;
       continue;
     }
 
     // table (gfm)
     if (top && (cap = this.rules.table.exec(src))) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
 
       item = {
+        lines: lines,
+        offset: offset,
         type: 'table',
         header: cap[1].replace(/^ *| *\| *$/g, '').split(/ *\| */),
         align: cap[2].replace(/^ *|\| *$/g, '').split(/ *\| */),
         cells: cap[3].replace(/(?: *\| *)?\n$/, '').split('\n')
       };
+      offset += lines;
 
       for (i = 0; i < item.align.length; i++) {
         if (/^ *-+: *$/.test(item.align[i])) {
@@ -412,12 +448,16 @@ Lexer.prototype.token = function(src, top, bq) {
     // top-level paragraph
     if (top && (cap = this.rules.paragraph.exec(src))) {
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length - 1;
       this.tokens.push({
+        lines: lines,
+        offset: offset,
         type: 'paragraph',
         text: cap[1].charAt(cap[1].length - 1) === '\n'
           ? cap[1].slice(0, -1)
           : cap[1]
       });
+      offset += lines;
       continue;
     }
 
@@ -425,10 +465,14 @@ Lexer.prototype.token = function(src, top, bq) {
     if (cap = this.rules.text.exec(src)) {
       // Top-level should never reach here.
       src = src.substring(cap[0].length);
+      var lines = cap[0].split('\n').length;
       this.tokens.push({
+        lines: lines,
+        offset: offset,
         type: 'text',
         text: cap[0]
       });
+      offset += lines;
       continue;
     }
 
@@ -754,7 +798,7 @@ function Renderer(options) {
   this.options = options || {};
 }
 
-Renderer.prototype.code = function(code, lang, escaped) {
+Renderer.prototype.code = function(code, lang, escaped, lines) {
   if (this.options.highlight) {
     var out = this.options.highlight(code, lang);
     if (out != null && out !== code) {
@@ -764,7 +808,7 @@ Renderer.prototype.code = function(code, lang, escaped) {
   }
 
   if (!lang) {
-    return '<pre><code>'
+    return '<pre class="' + lines + '"><code>'
       + (escaped ? code : escape(code, true))
       + '\n</code></pre>';
   }
@@ -772,26 +816,29 @@ Renderer.prototype.code = function(code, lang, escaped) {
   return '<pre><code class="'
     + this.options.langPrefix
     + escape(lang, true)
+    + " " + lines 
     + '">'
     + (escaped ? code : escape(code, true))
     + '\n</code></pre>\n';
 };
 
-Renderer.prototype.blockquote = function(quote) {
-  return '<blockquote>\n' + quote + '</blockquote>\n';
+Renderer.prototype.blockquote = function(quote, lines) {
+  return '<blockquote class="' + lines + '">\n' + quote + '</blockquote>\n';
 };
 
 Renderer.prototype.html = function(html) {
   return html;
 };
 
-Renderer.prototype.heading = function(text, level, raw) {
+Renderer.prototype.heading = function(text, level, raw, lines) {
   return '<h'
     + level
     + ' id="'
     + this.options.headerPrefix
     + raw.toLowerCase().replace(/[^\w]+/g, '-')
-    + '">'
+    + '"'
+    + lines 
+    + '>'
     + text
     + '</h'
     + level
@@ -802,17 +849,25 @@ Renderer.prototype.hr = function() {
   return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
 };
 
-Renderer.prototype.list = function(body, ordered) {
+Renderer.prototype.list = function(body, ordered, lines) {
   var type = ordered ? 'ol' : 'ul';
-  return '<' + type + '>\n' + body + '</' + type + '>\n';
+  return '<' + type + ' class="' + lines + '">\n' + body + '</' + type + '>\n';
 };
 
-Renderer.prototype.listitem = function(text) {
-  return '<li>' + text + '</li>\n';
+Renderer.prototype.listitem = function(text, lines, offset) {
+  if (lines) {
+    var cls = "";
+    for (var i = 0; i < lines; i++) {
+      cls += "line" + (offset + i).toString() + " "
+    }
+    cls += "";
+    lines = cls;
+  }
+  return '<li class="' + lines + '">' + text + '</li>\n';
 };
 
-Renderer.prototype.paragraph = function(text) {
-  return '<p>' + text + '</p>\n';
+Renderer.prototype.paragraph = function(text, lines) {
+  return '<p class="' + lines + '">' + text + '</p>\n';
 };
 
 Renderer.prototype.table = function(header, body) {
@@ -830,33 +885,33 @@ Renderer.prototype.tablerow = function(content) {
   return '<tr>\n' + content + '</tr>\n';
 };
 
-Renderer.prototype.tablecell = function(content, flags) {
+Renderer.prototype.tablecell = function(content, flags, lines) {
   var type = flags.header ? 'th' : 'td';
   var tag = flags.align
-    ? '<' + type + ' style="text-align:' + flags.align + '">'
+    ? '<' + type + ' style="text-align:' + flags.align + '" class="' + lines + '">'
     : '<' + type + '>';
   return tag + content + '</' + type + '>\n';
 };
 
 // span level renderer
-Renderer.prototype.strong = function(text) {
-  return '<strong>' + text + '</strong>';
+Renderer.prototype.strong = function(text, lines) {
+  return '<strong class="' + lines + '">' + text + '</strong>';
 };
 
-Renderer.prototype.em = function(text) {
-  return '<em>' + text + '</em>';
+Renderer.prototype.em = function(text, lines) {
+  return '<em class="' + lines + '">' + text + '</em>';
 };
 
-Renderer.prototype.codespan = function(text) {
-  return '<code>' + text + '</code>';
+Renderer.prototype.codespan = function(text, lines) {
+  return '<code class="' + lines + '">' + text + '</code>';
 };
 
 Renderer.prototype.br = function() {
   return this.options.xhtml ? '<br/>' : '<br>';
 };
 
-Renderer.prototype.del = function(text) {
-  return '<del>' + text + '</del>';
+Renderer.prototype.del = function(text, lines) {
+  return '<del class="' + lines + '">' + text + '</del>';
 };
 
 Renderer.prototype.link = function(href, title, text) {
@@ -880,8 +935,8 @@ Renderer.prototype.link = function(href, title, text) {
   return out;
 };
 
-Renderer.prototype.image = function(href, title, text) {
-  var out = '<img src="' + href + '" alt="' + text + '"';
+Renderer.prototype.image = function(href, title, text, lines) {
+  var out = '<img src="' + href + '" alt="' + text + '" class="' + lines + '"';
   if (title) {
     out += ' title="' + title + '"';
   }
@@ -962,23 +1017,34 @@ Parser.prototype.parseText = function() {
  */
 
 Parser.prototype.tok = function() {
+  if (this.token.lines) {
+    var length = this.token.lines;
+    var cls = "";
+    for (var i = 0; i < length; i++) {
+      cls += "line" + (this.token.offset + i).toString() + " "
+    }
+    cls += "";
+    this.token.lines = cls;
+  }
   switch (this.token.type) {
     case 'space': {
       return '';
     }
     case 'hr': {
-      return this.renderer.hr();
+      return this.renderer.hr(this.token.lines);
     }
     case 'heading': {
       return this.renderer.heading(
         this.inline.output(this.token.text),
         this.token.depth,
-        this.token.text);
+        this.token.text,
+        this.token.lines);
     }
     case 'code': {
       return this.renderer.code(this.token.text,
         this.token.lang,
-        this.token.escaped);
+        this.token.escaped,
+        this.token.lines);
     }
     case 'table': {
       var header = ''
@@ -1013,7 +1079,7 @@ Parser.prototype.tok = function() {
 
         body += this.renderer.tablerow(cell);
       }
-      return this.renderer.table(header, body);
+      return this.renderer.table(header, body, this.token.lines);
     }
     case 'blockquote_start': {
       var body = '';
@@ -1022,7 +1088,7 @@ Parser.prototype.tok = function() {
         body += this.tok();
       }
 
-      return this.renderer.blockquote(body);
+      return this.renderer.blockquote(body, lines);
     }
     case 'list_start': {
       var body = ''
@@ -1031,19 +1097,23 @@ Parser.prototype.tok = function() {
       while (this.next().type !== 'list_end') {
         body += this.tok();
       }
-
       return this.renderer.list(body, ordered);
     }
     case 'list_item_start': {
+      var lines;
+      var offset;
       var body = '';
-
       while (this.next().type !== 'list_item_end') {
+        if (!lines)
+          lines = this.token.lines;
+        if (!offset)
+          offset = this.token.offset;
         body += this.token.type === 'text'
           ? this.parseText()
           : this.tok();
       }
 
-      return this.renderer.listitem(body);
+      return this.renderer.listitem(body, lines, offset);
     }
     case 'loose_item_start': {
       var body = '';
@@ -1061,10 +1131,10 @@ Parser.prototype.tok = function() {
       return this.renderer.html(html);
     }
     case 'paragraph': {
-      return this.renderer.paragraph(this.inline.output(this.token.text));
+      return this.renderer.paragraph(this.inline.output(this.token.text), this.token.lines);
     }
     case 'text': {
-      return this.renderer.paragraph(this.parseText());
+      return this.renderer.paragraph(this.parseText(), this.token.lines);
     }
   }
 };
