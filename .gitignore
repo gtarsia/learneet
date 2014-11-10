@@ -3,7 +3,7 @@ tscommand*
 .tscache
 
 node_modules
-*
+*.map
 *.css
 !*.min.css
 Thumbs.db

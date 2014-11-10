@@ -1,0 +1,12 @@
+#dependencies.rectangular-frame
+  h1 Dependencies
+  ul
+    script#dependencies-template(type="x-tmpl-mustache") 
+      {{#deps}}
+      li.dependency
+        input.dependencyId(type="hidden" value="{{id}}")
+        img.avatar(src="/images/avatar.png")
+        a.title(href="{{url}}") {{title}}
+        i  by Him 
+      {{/deps}}
+    input#dependencyFound(type="text")
