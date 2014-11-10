@@ -18,6 +18,8 @@ class RenderedArticle {
     scroll(line: number) {
         var outputLine = $(".line" + line);
         if (outputLine.length) {
+            $(".selected").removeClass("selected");
+            outputLine.addClass("selected");
             this.content.jq.scrollTop(
                 (this.content.jq.scrollTop() - this.content.jq.offset().top)
                 + outputLine.offset().top - this.content.jq.height()/2);

@@ -672,7 +672,7 @@ var PreviewableArticle = (function () {
                 setPercent(dest, getPercent(src));
             });
         }
-        _self.input.content.jq.bind("change keyup", function () {
+        _self.input.content.jq.bind("change keyup mouseup", function () {
             var line = this.value.substr(0, this.selectionStart).split("\n").length - 1;
             _self.output.scroll(line);
             console.log(line);
@@ -760,6 +760,8 @@ var RenderedArticle = (function () {
     RenderedArticle.prototype.scroll = function (line) {
         var outputLine = $(".line" + line);
         if (outputLine.length) {
+            $(".selected").removeClass("selected");
+            outputLine.addClass("selected");
             this.content.jq.scrollTop((this.content.jq.scrollTop() - this.content.jq.offset().top) + outputLine.offset().top - this.content.jq.height() / 2);
         }
     };

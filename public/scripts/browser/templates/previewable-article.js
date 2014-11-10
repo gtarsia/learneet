@@ -35,7 +35,7 @@ var PreviewableArticle = (function () {
                 setPercent(dest, getPercent(src));
             });
         }
-        _self.input.content.jq.bind("change keyup", function () {
+        _self.input.content.jq.bind("change keyup mouseup", function () {
             var line = this.value.substr(0, this.selectionStart).split("\n").length - 1;
             _self.output.scroll(line);
             console.log(line);
