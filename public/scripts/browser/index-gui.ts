@@ -36,6 +36,15 @@ class IndexGui extends Gui {
                 var rendered = Mustache.render(template, 
                     { articles: articles});
                 $("#article-thumb-template").after(rendered);
+                $('.article-thumb').velocity({opacity: 0}, {duration: 0});
+                $.each($('.article-thumb'), function(i, el){
+                    setTimeout(function(){
+                       $(el).velocity({
+                        opacity: 1.0, translateX: '100px'
+                       }, 250);
+                    }, ( i * 100 ));
+                    
+                });
                 //$("#main .childContainer").html(rendered);
             });
             _self.createBtn.jq.click(() => {

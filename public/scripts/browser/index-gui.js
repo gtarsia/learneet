@@ -31,6 +31,14 @@ var IndexGui = (function (_super) {
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, { articles: articles });
                 $("#article-thumb-template").after(rendered);
+                $('.article-thumb').velocity({ opacity: 0 }, { duration: 0 });
+                $.each($('.article-thumb'), function (i, el) {
+                    setTimeout(function () {
+                        $(el).velocity({
+                            opacity: 1.0, translateX: '100px'
+                        }, 250);
+                    }, (i * 100));
+                });
             });
             _self.createBtn.jq.click(function () {
                 _self.redirect(url.article.create());

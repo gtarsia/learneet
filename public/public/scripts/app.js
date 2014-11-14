@@ -201,6 +201,7 @@ var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
+var val = require("./../common/validation");
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
@@ -270,41 +271,12 @@ var EditArticleGui = (function (_super) {
                 });
             });
             _self.saveBtn.jq.click(function () {
-                if (_self.changesDescription.val.length <= 15) {
-                    var api = _self.changesDescription.jq.qtip({
-                        content: { text: 'Description should be at least 15 chars long' },
-                        show: { when: false, ready: true },
-                        position: {
-                            my: 'top left',
-                            at: 'bottom center'
-                        }
-                    });
-                    setTimeout(api.qtip.bind(api, 'destroy'), 5000);
-                }
-                return;
-                var article = _self.article.article;
-                clientAjax.article.update({
-                    article: {
-                        id: _self.id,
-                        title: article.title,
-                        content: article.content
-                    },
-                    version: {
-                        changesDescription: _self.changesDescription.val
-                    }
-                }).done(function (res) {
-                    if (!res.ok)
-                        console.log(res.why);
-                    else
-                        console.log('Se actualizo el articulo');
-                    _self.redirect(url.article.get(_self.id));
-                });
+                _self.saveArticle();
             });
             _self.cancelBtn.jq.click(function () {
                 _self.redirect(url.article.get(_self.id));
             });
             _self.addDependencyBtn.jq.click(function () {
-                debugger;
                 var id = _self.dependencyFound.jq.val();
                 if (id != "") {
                     clientAjax.article.addDependency({
@@ -336,10 +308,41 @@ var EditArticleGui = (function (_super) {
             dependentId: this.id,
             dependencyId: id
         }).then(function (res) {
-            debugger;
             if (res.result == true) {
                 $(jq).parent(_this.dependency.jq).remove();
             }
+        });
+    };
+
+    EditArticleGui.prototype.saveArticle = function () {
+        var description = this.changesDescription.val;
+        var its = val.version.changesDescription(description);
+        if (!its.ok) {
+            var api = this.changesDescription.jq.qtip({
+                content: { text: its.because },
+                show: { when: false, ready: true },
+                position: { my: 'top left', at: 'bottom center' },
+                hide: false
+            });
+            setTimeout(api.qtip.bind(api, 'destroy'), 5000);
+        }
+        return;
+        var article = this.article.article;
+        clientAjax.article.update({
+            article: {
+                id: this.id,
+                title: article.title,
+                content: article.content
+            },
+            version: {
+                changesDescription: this.changesDescription.val
+            }
+        }).done(function (res) {
+            if (!res.ok)
+                console.log(res.why);
+            else
+                console.log('Se actualizo el articulo');
+            this.redirect(url.article.get(this.id));
         });
     };
     return EditArticleGui;
@@ -351,7 +354,7 @@ if (guiName == 'EditArticleGui') {
 }
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/url":15,"./client-ajax":2,"./gui":5,"./templates/previewable-article":12}],5:[function(require,module,exports){
+},{"./../common/url":15,"./../common/validation":16,"./client-ajax":2,"./gui":5,"./templates/previewable-article":12}],5:[function(require,module,exports){
 var ClientAjax = require('./client-ajax');
 
 clientAjax = ClientAjax;
@@ -422,6 +425,14 @@ var IndexGui = (function (_super) {
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, { articles: articles });
                 $("#article-thumb-template").after(rendered);
+                $('.article-thumb').velocity({ opacity: 0 }, { duration: 0 });
+                $.each($('.article-thumb'), function (i, el) {
+                    setTimeout(function () {
+                        $(el).velocity({
+                            opacity: 1.0, translateX: '100px'
+                        }, 250);
+                    }, (i * 100));
+                });
             });
             _self.createBtn.jq.click(function () {
                 _self.redirect(url.article.create());
@@ -977,6 +988,31 @@ module.exports = url;
 //# sourceMappingURL=url.js.map
 
 },{}],16:[function(require,module,exports){
+function notOkBase(base) {
+    return function (reason) {
+        return { ok: false, because: base + ' ' + reason };
+    };
+}
+exports.notOkBase = notOkBase;
+
+function ok() {
+    return { ok: true, because: '' };
+}
+exports.ok = ok;
+
+(function (version) {
+    function changesDescription(changesDescription) {
+        var notOk = exports.notOkBase('Changes description should');
+        if (typeof changesDescription != 'string')
+            return notOk('be of type string');
+        if (changesDescription.length <= 15)
+            return notOk('be longer than 15 characters');
+        return exports.ok();
+    }
+    version.changesDescription = changesDescription;
+})(exports.version || (exports.version = {}));
+var version = exports.version;
+
 (function (user) {
     function isUsernameTaken(username) {
     }

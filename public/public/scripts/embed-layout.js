@@ -17,12 +17,10 @@ function getScriptName() {
 }
 */
 
-function startGui(gui) {
-	$(document).ready(function () {
-    	gui = new gui();
-	});
-}
-
 var guiName = '';
 var headerName = '';
 var clientAjax = '';
+
+test() {
+    
+}

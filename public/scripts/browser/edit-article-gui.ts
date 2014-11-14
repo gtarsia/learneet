@@ -2,6 +2,7 @@
 import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
+import val = require("./../common/validation");
 
 declare function marked(c: string);
 
@@ -27,7 +28,6 @@ export class EditArticleGui extends Gui {
             dependencyId: id
         })
         .then(res => {
-            debugger;
             if (res.result == true) {
                 $(jq).parent(this.dependency.jq).remove();
             }
@@ -43,6 +43,36 @@ export class EditArticleGui extends Gui {
     article: PreviewableArticle;
     dependenciesTemplate;
     changesDescription;
+    saveArticle() {
+        var description = this.changesDescription.val;
+        var its = val.version.changesDescription(description);
+        if (!its.ok) {
+            var api = this.changesDescription.jq.qtip({ // Grab some elements to apply the tooltip to
+                content: { text: its.because },
+                show: { when: false, ready: true },
+                position: { my: 'top left', at: 'bottom center' },
+                hide: false
+            })
+            setTimeout(api.qtip.bind(api, 'destroy'), 5000)
+        }
+        return;
+        var article = this.article.article;
+        clientAjax.article.update({
+            article: {
+                id: this.id, 
+                title: article.title, 
+                content: article.content
+            },
+            version: {
+                changesDescription: this.changesDescription.val
+            }
+        })
+        .done(function(res) {
+            if (!res.ok) console.log(res.why);
+            else console.log('Se actualizo el articulo');
+            this.redirect(url.article.get(this.id)); 
+        });
+    }
     constructor() {
         super();
         var _self = this;
@@ -110,40 +140,12 @@ export class EditArticleGui extends Gui {
                 })
             })
             _self.saveBtn.jq.click(() => {
-                if (_self.changesDescription.val.length <= 15) {
-                    var api = _self.changesDescription.jq.qtip({ // Grab some elements to apply the tooltip to
-                        content: { text: 'Description should be at least 15 chars long' },
-                        show: { when: false, ready: true },
-                        position: {
-                            my: 'top left',
-                            at: 'bottom center'
-                        }
-                    })
-                    setTimeout(api.qtip.bind(api, 'destroy'), 5000)
-                }
-                return;
-                var article = _self.article.article;
-                clientAjax.article.update({
-                    article: {
-                        id: _self.id, 
-                        title: article.title, 
-                        content: article.content
-                    },
-                    version: {
-                        changesDescription: _self.changesDescription.val
-                    }
-                })
-                .done(function(res) {
-                    if (!res.ok) console.log(res.why);
-                    else console.log('Se actualizo el articulo');
-                    _self.redirect(url.article.get(_self.id)); 
-                });
+                _self.saveArticle();
             });
             _self.cancelBtn.jq.click(() => {
                 _self.redirect(url.article.get(_self.id));
             });
             _self.addDependencyBtn.jq.click(() => {
-                debugger;
                 var id = _self.dependencyFound.jq.val();
                 if (id != "") {
                     clientAjax.article.addDependency({

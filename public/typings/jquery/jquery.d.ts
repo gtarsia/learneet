@@ -3921,6 +3921,8 @@ interface JQuery {
      * @param callback The new function to add to the queue, with a function to call that will dequeue the next item.
      */
     queue(queueName: string, callback: Function): JQuery;
+
+    velocity(cssProps?: any, s?: any): any
 }
 declare module "jquery" {
     export = $;
