@@ -42,6 +42,7 @@ export class EditArticleGui extends Gui {
     dependencyIds;
     article: PreviewableArticle;
     dependenciesTemplate;
+    changesDescription;
     constructor() {
         super();
         var _self = this;
@@ -52,6 +53,7 @@ export class EditArticleGui extends Gui {
             _self.removeDependencyBtns = _self.propertize(".removeDependency");
             _self.dependencyIds = _self.propertize(".dependencyId");
             _self.dependency = _self.propertize(".dependency")
+            _self.changesDescription = _self.propertize("#changesDescription", "val")
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
             _self.dependencyFound.jq.selectize({
@@ -109,7 +111,14 @@ export class EditArticleGui extends Gui {
             _self.saveBtn.jq.click(() => {
                 var article = _self.article.article;
                 clientAjax.article.update({
-                    id: _self.id, title: article.title, content: article.content
+                    article: {
+                        id: _self.id, 
+                        title: article.title, 
+                        content: article.content
+                    },
+                    version: {
+                        changesDescription: _self.changesDescription.val
+                    }
                 })
                 .done(function(res) {
                     if (!res.ok) console.log(res.why);

@@ -14,6 +14,8 @@ import getAll = article.getAll;
 import redis = require("redis");
 import queryTitle = article.queryTitle;
 import db = require('./db');
+import keys = require('./redis-keys');
+import version = require('./version');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
 
@@ -54,23 +56,26 @@ export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 
 export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 	var oldTitle;
-	if (!args.title && !args.content) {
+	var article = args.article;
+	if (!article.title && !article.content) {
 		return notOkObj('Title or content was null or empty')
 	}
-	return get(args)
+	return get(args.article)
 	.then((res) => {
 		if (!res.ok) {
 			return notOkObj('Can\'t upload article, because we couldn\'t find it');
 		}
 		else {
+			var versionId;
 			oldTitle = res.result.title;
-			return db.hmset("article:" + args.id, args)
+			return version.add(article.id)
 			.then((res: string) => {
-				if (!res) {
-					notOkObj('Article update wasn\'t succesful');
-				}
-				TitleSearch.update(args.id, oldTitle, args.title);
-				return okObj({});
+			    return db.hmset(keys.article({articleId: article.id}), article)
+			})
+			.then((res: string) => {
+				if (!res) notOkObj('Article update wasn\'t succesful');
+				TitleSearch.update(article.id, oldTitle, article.title);
+				return okObj({id: article.id});
 			})
 		}
 	})
@@ -184,7 +189,6 @@ export module TitleSearch {
 		})
 	}
 }
-
 
 
 export function addDependency(args: addDependency.ParamsType)

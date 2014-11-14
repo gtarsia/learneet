@@ -20,6 +20,9 @@ export module article {
     export interface Id {
         id: string;
     }
+    export interface Desc {
+        changesDescription: string;
+    }
     export interface Fields extends Title, Content {}
     export interface TitleWithId extends Title, Id {}
     export interface FieldsWithId extends Fields, Id {}
@@ -58,7 +61,7 @@ export module article {
     export module update {
         export function url(): string { return '/api/update' }
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType extends FieldsWithId {}
+        export interface ParamsType { article: FieldsWithId; version: Desc;}
         export interface ReturnType extends JsonReturn<Id> { }
     }
 

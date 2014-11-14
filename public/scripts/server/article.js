@@ -5,6 +5,8 @@ var article = baseAjax.article;
 var redis = require("redis");
 
 var db = require('./db');
+var keys = require('./redis-keys');
+var version = require('./version');
 
 function isOk(err, reject) {
     if (err) {
@@ -52,20 +54,23 @@ exports.create = create;
 
 function update(args) {
     var oldTitle;
-    if (!args.title && !args.content) {
+    var article = args.article;
+    if (!article.title && !article.content) {
         return exports.notOkObj('Title or content was null or empty');
     }
-    return exports.get(args).then(function (res) {
+    return exports.get(args.article).then(function (res) {
         if (!res.ok) {
             return exports.notOkObj('Can\'t upload article, because we couldn\'t find it');
         } else {
+            var versionId;
             oldTitle = res.result.title;
-            return db.hmset("article:" + args.id, args).then(function (res) {
-                if (!res) {
+            return version.add(article.id).then(function (res) {
+                return db.hmset(keys.article({ articleId: article.id }), article);
+            }).then(function (res) {
+                if (!res)
                     exports.notOkObj('Article update wasn\'t succesful');
-                }
-                TitleSearch.update(args.id, oldTitle, args.title);
-                return exports.okObj({});
+                TitleSearch.update(article.id, oldTitle, article.title);
+                return exports.okObj({ id: article.id });
             });
         }
     });

@@ -88,6 +88,15 @@ function multi() {
 }
 exports.multi = multi;
 
+function rename() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.rename.bind(exports.client), args]);
+}
+exports.rename = rename;
+
 function hget() {
     var args = [];
     for (var _i = 0; _i < (arguments.length - 0); _i++) {

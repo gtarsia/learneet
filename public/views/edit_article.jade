@@ -11,7 +11,10 @@ block main
   input#article-id(type="hidden" value= id)
   include templates/previewable-article
   #second-floor
+    #save-frame.rectangular-frame
+      h1 Changes description
+        input#changesDescription.selectize-input(type="text" placeholder="Write changes done to the article...")
+      #buttons
+        button#save Save
+        button#cancel Cancel
     include templates/editable-dependencies
-    #buttons
-      button#save Save
-      button#cancel Cancel

@@ -99,6 +99,10 @@ export function multi(): any {
 	return client.multi();
 }
 
+export function rename(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.rename.bind(client), args]);
+}
+
 export function hget(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.hget.bind(client), args]);
 }
