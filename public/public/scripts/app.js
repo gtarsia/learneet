@@ -215,7 +215,7 @@ var EditArticleGui = (function (_super) {
             } };
         var _self = this;
         $(document).ready(function () {
-            _self.dependencyFound = _self.propertize("input#dependencyFound", 'val');
+            _self.dependencyFound = _self.propertize("select#dependencyFound", 'val');
             _self.addDependencyBtn = _self.propertize("button#add");
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.removeDependencyBtns = _self.propertize(".removeDependency");
@@ -242,6 +242,7 @@ var EditArticleGui = (function (_super) {
                     }
                 }
             });
+            $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
             clientAjax.article.get({ id: _self.id }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -269,6 +270,18 @@ var EditArticleGui = (function (_super) {
                 });
             });
             _self.saveBtn.jq.click(function () {
+                if (_self.changesDescription.val.length <= 15) {
+                    var api = _self.changesDescription.jq.qtip({
+                        content: { text: 'Description should be at least 15 chars long' },
+                        show: { when: false, ready: true },
+                        position: {
+                            my: 'top left',
+                            at: 'bottom center'
+                        }
+                    });
+                    setTimeout(api.qtip.bind(api, 'destroy'), 5000);
+                }
+                return;
                 var article = _self.article.article;
                 clientAjax.article.update({
                     article: {
