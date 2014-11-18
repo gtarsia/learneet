@@ -4,9 +4,9 @@ import redis = require("redis");
 var fakeredis : any = require("fakeredis");
 
 //var client = fakeredis.createClient();
-export var client = redis.createClient(15855, 
-	'pub-redis-15855.us-east-1-2.1.ec2.garantiadata.com');
-client.auth('compadrito25', err => {
+export var client = redis.createClient(3476, 
+	'50.30.35.9');
+client.auth('9e227f8f82d63dfbb4a6b72b16985f51', err => {
 	if (err) throw err;
 })
 

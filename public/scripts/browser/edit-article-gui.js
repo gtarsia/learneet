@@ -133,7 +133,6 @@ var EditArticleGui = (function (_super) {
             });
             setTimeout(api.qtip.bind(api, 'destroy'), 5000);
         }
-        return;
         var article = this.article.article;
         clientAjax.article.update({
             article: {

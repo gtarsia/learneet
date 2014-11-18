@@ -3,8 +3,8 @@ var redis = require("redis");
 
 var fakeredis = require("fakeredis");
 
-exports.client = redis.createClient(15855, 'pub-redis-15855.us-east-1-2.1.ec2.garantiadata.com');
-exports.client.auth('compadrito25', function (err) {
+exports.client = redis.createClient(3476, '50.30.35.9');
+exports.client.auth('9e227f8f82d63dfbb4a6b72b16985f51', function (err) {
     if (err)
         throw err;
 });

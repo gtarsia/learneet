@@ -21,13 +21,22 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
 
 export function buildAjax<ArgsType, ReturnType>
 (url: string, type: string, handler: (req: express.Request, res: express.Response)=> void) {
+    function parsingHandler() {
+        return (req, res) => {
+            if (type == AjaxType.GET)
+                req.query = JSON.parse(req.query.p);
+            else if (type == AjaxType.POST)
+                req.body = JSON.parse(req.body.p);
+            handler(req, res);
+        }
+    }
     return {
         setExpressAjax: (app: express.Express) => {
             switch (type) {
             case AjaxType.GET:
-                app.get(url, handler); break;
+                app.get(url, parsingHandler()); break;
             case AjaxType.POST:
-                app.post(url, handler); break;
+                app.post(url, parsingHandler()); break;
             }
         }
     }

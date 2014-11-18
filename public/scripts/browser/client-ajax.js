@@ -2,12 +2,13 @@
 var AjaxType = baseAjax.AjaxType;
 
 function buildAjax(url, type, params) {
+    var obj = { p: JSON.stringify(params) };
     switch (type) {
         case AjaxType.GET:
-            return $.get(url, params);
+            return $.get(url, obj);
             break;
         case AjaxType.POST:
-            return $.post(url, params);
+            return $.post(url, obj);
             break;
     }
 }

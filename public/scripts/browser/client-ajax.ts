@@ -5,11 +5,12 @@ import AjaxType = baseAjax.AjaxType;
 
 export function buildAjax<ArgType, ReturnType>
 (url: string, type: string, params: ArgType) {
+    var obj = {p: JSON.stringify(params)};
     switch (type) {
     case AjaxType.GET:
-        return $.get(url, params); break;
+        return $.get(url, obj); break;
     case AjaxType.POST:
-        return $.post(url, params); break;
+        return $.post(url, obj); break;
     }
 }
 

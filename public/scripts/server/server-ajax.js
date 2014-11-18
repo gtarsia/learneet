@@ -20,14 +20,23 @@ function getServerAjaxList() {
 exports.getServerAjaxList = getServerAjaxList;
 
 function buildAjax(url, type, handler) {
+    function parsingHandler() {
+        return function (req, res) {
+            if (type == AjaxType.GET)
+                req.query = JSON.parse(req.query.p);
+            else if (type == AjaxType.POST)
+                req.body = JSON.parse(req.body.p);
+            handler(req, res);
+        };
+    }
     return {
         setExpressAjax: function (app) {
             switch (type) {
                 case AjaxType.GET:
-                    app.get(url, handler);
+                    app.get(url, parsingHandler());
                     break;
                 case AjaxType.POST:
-                    app.post(url, handler);
+                    app.post(url, parsingHandler());
                     break;
             }
         }

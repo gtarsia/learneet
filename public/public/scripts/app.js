@@ -65,12 +65,13 @@ var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
 function buildAjax(url, type, params) {
+    var obj = { p: JSON.stringify(params) };
     switch (type) {
         case AjaxType.GET:
-            return $.get(url, params);
+            return $.get(url, obj);
             break;
         case AjaxType.POST:
-            return $.post(url, params);
+            return $.post(url, obj);
             break;
     }
 }
@@ -326,7 +327,6 @@ var EditArticleGui = (function (_super) {
             });
             setTimeout(api.qtip.bind(api, 'destroy'), 5000);
         }
-        return;
         var article = this.article.article;
         clientAjax.article.update({
             article: {

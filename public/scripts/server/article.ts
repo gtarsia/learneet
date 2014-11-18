@@ -55,6 +55,7 @@ export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 }
 
 export function update(args: update.ParamsType) : Promise<update.ReturnType> {
+    debugger;
 	var oldTitle;
 	var article = args.article;
 	if (!article.title && !article.content) {
@@ -62,6 +63,7 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 	}
 	return get(args.article)
 	.then((res) => {
+    	debugger;
 		if (!res.ok) {
 			return notOkObj('Can\'t upload article, because we couldn\'t find it');
 		}
@@ -84,7 +86,6 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 export function get(args: get.ParamsType) : Promise<get.ReturnType> {
 	return db.hgetall("article:" + args.id.toString())
 	.then<get.ReturnType>((result: any) => {
-		debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
 		var r : get.ReturnType = {

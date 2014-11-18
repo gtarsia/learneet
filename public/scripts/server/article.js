@@ -53,12 +53,14 @@ function create(args) {
 exports.create = create;
 
 function update(args) {
+    debugger;
     var oldTitle;
     var article = args.article;
     if (!article.title && !article.content) {
         return exports.notOkObj('Title or content was null or empty');
     }
     return exports.get(args.article).then(function (res) {
+        debugger;
         if (!res.ok) {
             return exports.notOkObj('Can\'t upload article, because we couldn\'t find it');
         } else {
@@ -79,7 +81,6 @@ exports.update = update;
 
 function get(args) {
     return db.hgetall("article:" + args.id.toString()).then(function (result) {
-        debugger;
         var ok = result != null;
         var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
         var r = {
