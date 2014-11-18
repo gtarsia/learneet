@@ -21,6 +21,6 @@ var guiName = '';
 var headerName = '';
 var clientAjax = '';
 
-test() {
+function test() {
     
 }

@@ -1,0 +1,19 @@
+extends layout
+
+prepend scripts
+  script.
+    guiName = 'AddProposalGui'
+
+append styles
+  link(rel='stylesheet', href='/stylesheets/add_proposal.css')
+
+block main
+  input#article-id(type="hidden" value= id)
+  include templates/previewable-article
+  #second-floor
+    #propose-frame.rectangular-frame
+      h1 Changes description
+        div
+          input#changesDescription.selectize-input(type="text" placeholder="Write changes done to the article...")
+        #buttons
+          button#save Propose

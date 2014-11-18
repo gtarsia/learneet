@@ -11,6 +11,7 @@ export class ArticleGui extends Gui {
     getEditBtn() {
         return $("#editBtn");
     }
+    addProposalBtn = this.propertize("button#addProposal");
     article: RenderedArticle;
     constructor() {
         super();        
@@ -46,6 +47,9 @@ export class ArticleGui extends Gui {
             });
             _self.getEditBtn().click(() => {
                 _self.redirect(url.article.edit(_self.id))
+            });
+            _self.addProposalBtn.jq.click(() => {
+                _self.redirect(url.article.addProposal(_self.id));
             });
         });
     }

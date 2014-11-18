@@ -13,6 +13,10 @@ var url;
             return (id != null ? "/edit_article/" + id : "/edit_article/:id");
         }
         article.edit = edit;
+        function addProposal(id) {
+            return (id != null ? "/add_proposal/" + id : "/add_proposal/:id");
+        }
+        article.addProposal = addProposal;
     })(url.article || (url.article = {}));
     var article = url.article;
     (function (user) {
