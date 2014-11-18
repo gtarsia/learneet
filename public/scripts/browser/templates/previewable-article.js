@@ -1,5 +1,6 @@
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
+var clientAjax = require(".././client-ajax");
 
 var PreviewableArticle = (function () {
     function PreviewableArticle() {
@@ -85,6 +86,20 @@ var PreviewableArticle = (function () {
             content = _self.translateWithParsing(content);
 
             outputContent.val = marked(content);
+        });
+    };
+    PreviewableArticle.prototype.fetchDBArticle = function (args) {
+        var _self = this;
+        clientAjax.article.get(args).done(function (res) {
+            if (!res.ok) {
+                console.log(res.why);
+                return;
+            }
+            var result = res.result;
+            _self.input.title.val = result.title;
+            _self.input.content.val = result.content;
+            _self.output.title.val = result.title;
+            _self.output.content.val = marked(result.content);
         });
     };
     return PreviewableArticle;

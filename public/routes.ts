@@ -38,6 +38,15 @@ export function set(app) {
             });
         }); 
     });
+    app.get(url.article.addProposal(), (req, res) => {
+        var id = req.params.id;
+        db.hget('article:' + id, 'title')
+        .then(title => {
+            res.render('add_proposal', { 
+                url: url.article.edit(id), id: id, title: title + ' - Learneet'
+            });
+        }); 
+    })
     app.get('/login', renderCb('login', 'Login'));
     app.get(url.user.register(), renderCb('register', 'Register'));
     app.get('/register_finished', renderCb('register_finished', 'Register Finished'));

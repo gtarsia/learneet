@@ -2,6 +2,7 @@ declare function marked(s: string) : string;
 
 import RenderedArticle = require('./rendered-article');
 import EditableArticle = require("./editable-article");
+import clientAjax = require(".././client-ajax")
 
 class PreviewableArticle {
     output: RenderedArticle;
@@ -76,6 +77,21 @@ class PreviewableArticle {
             content = _self.translateWithParsing(content);
             //content = katex.renderToString("\\displaystyle {" + content + "}");
             outputContent.val = marked(content);
+        });
+    }
+    fetchDBArticle(args: {id: string}) {
+        var _self = this;
+        clientAjax.article.get(args)
+        .done(function(res) {
+            if (!res.ok) {
+                console.log(res.why);
+                return;
+            }
+            var result = res.result
+            _self.input.title.val = result.title;
+            _self.input.content.val = result.content;
+            _self.output.title.val = result.title;
+            _self.output.content.val = marked(result.content);
         });
     }
     constructor() {
