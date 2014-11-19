@@ -31,6 +31,7 @@
 /// <reference path="tests/db.ts" />
 /// <reference path="typings/bcryptjs/bcryptjs.d.ts" />
 /// <reference path="typings/bluebird/bluebird.d.ts" />
+/// <reference path="typings/diff/diff.d.ts" />
 /// <reference path="typings/expect.js/expect.js.d.ts" />
 /// <reference path="typings/express/express.d.ts" />
 /// <reference path="typings/jquery/jquery.d.ts" />

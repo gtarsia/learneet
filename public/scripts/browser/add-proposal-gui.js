@@ -6,36 +6,31 @@ var __extends = this.__extends || function (d, b) {
 };
 var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
-var url = require("./../common/url");
+
+var diff = require("diff");
 
 var AddProposalGui = (function (_super) {
     __extends(AddProposalGui, _super);
     function AddProposalGui() {
         _super.call(this);
         this.id = "-1";
-        this.saveBtn = { get jq() {
-                return $('button#save');
-            } };
-        this.cancelBtn = { get jq() {
-                return $('button#cancel');
-            } };
+        this.proposeBtn = this.propertize('button#propose');
+        this.changesDescription = this.propertize("#changesDescription", "val");
         var _self = this;
         $(document).ready(function () {
             _self.changesDescription = _self.propertize("#changesDescription", "val");
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            _self.article.fetchDBArticle({ id: _self.id });
-            _self.saveBtn.jq.click(function () {
-                _self.saveArticle();
+            _self.article.fetchDBArticle({ id: _self.id }).then(function () {
+                _self.oldStr = _self.article.input.content;
             });
-            _self.cancelBtn.jq.click(function () {
-                _self.redirect(url.article.get(_self.id));
+            _self.proposeBtn.jq.click(function () {
+                var str = _self.article.input.content;
+                var patch = diff.createPatch('', _self.oldStr, str);
+                console.log('The patch is :' + patch);
             });
         });
     }
-    AddProposalGui.prototype.query = function (s) {
-    };
-
     AddProposalGui.prototype.saveArticle = function () {
     };
     return AddProposalGui;

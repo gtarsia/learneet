@@ -90,7 +90,7 @@ var PreviewableArticle = (function () {
     };
     PreviewableArticle.prototype.fetchDBArticle = function (args) {
         var _self = this;
-        clientAjax.article.get(args).done(function (res) {
+        return clientAjax.article.get(args).then(function (res) {
             if (!res.ok) {
                 console.log(res.why);
                 return;
