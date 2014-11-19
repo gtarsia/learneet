@@ -3,11 +3,11 @@
     POST: "POST"
 };
 
-(function (article) {
+(function (_article) {
     function WrapFieldWithId(fields, id) {
-        return { title: fields.title, content: fields.content, id: id };
+        return { article: { title: fields.article.title, content: fields.article.content, id: id } };
     }
-    article.WrapFieldWithId = WrapFieldWithId;
+    _article.WrapFieldWithId = WrapFieldWithId;
 
     (function (create) {
         function url() {
@@ -18,8 +18,8 @@
             return exports.AjaxType.POST;
         }
         create.type = type;
-    })(article.create || (article.create = {}));
-    var create = article.create;
+    })(_article.create || (_article.create = {}));
+    var create = _article.create;
 
     (function (get) {
         function url() {
@@ -30,8 +30,8 @@
             return exports.AjaxType.GET;
         }
         get.type = type;
-    })(article.get || (article.get = {}));
-    var get = article.get;
+    })(_article.get || (_article.get = {}));
+    var get = _article.get;
 
     (function (getTitleWithId) {
         function url() {
@@ -42,8 +42,8 @@
             return exports.AjaxType.GET;
         }
         getTitleWithId.type = type;
-    })(article.getTitleWithId || (article.getTitleWithId = {}));
-    var getTitleWithId = article.getTitleWithId;
+    })(_article.getTitleWithId || (_article.getTitleWithId = {}));
+    var getTitleWithId = _article.getTitleWithId;
 
     (function (getAll) {
         function url() {
@@ -54,8 +54,8 @@
             return exports.AjaxType.GET;
         }
         getAll.type = type;
-    })(article.getAll || (article.getAll = {}));
-    var getAll = article.getAll;
+    })(_article.getAll || (_article.getAll = {}));
+    var getAll = _article.getAll;
 
     (function (update) {
         function url() {
@@ -66,8 +66,8 @@
             return exports.AjaxType.POST;
         }
         update.type = type;
-    })(article.update || (article.update = {}));
-    var update = article.update;
+    })(_article.update || (_article.update = {}));
+    var update = _article.update;
 
     (function (queryTitle) {
         function url() {
@@ -78,8 +78,8 @@
             return exports.AjaxType.GET;
         }
         queryTitle.type = type;
-    })(article.queryTitle || (article.queryTitle = {}));
-    var queryTitle = article.queryTitle;
+    })(_article.queryTitle || (_article.queryTitle = {}));
+    var queryTitle = _article.queryTitle;
 
     (function (addDependency) {
         function url() {
@@ -90,8 +90,8 @@
             return exports.AjaxType.POST;
         }
         addDependency.type = type;
-    })(article.addDependency || (article.addDependency = {}));
-    var addDependency = article.addDependency;
+    })(_article.addDependency || (_article.addDependency = {}));
+    var addDependency = _article.addDependency;
 
     (function (getDependencies) {
         function url() {
@@ -102,8 +102,8 @@
             return exports.AjaxType.GET;
         }
         getDependencies.type = type;
-    })(article.getDependencies || (article.getDependencies = {}));
-    var getDependencies = article.getDependencies;
+    })(_article.getDependencies || (_article.getDependencies = {}));
+    var getDependencies = _article.getDependencies;
 
     (function (remDependency) {
         function url() {
@@ -114,10 +114,25 @@
             return exports.AjaxType.POST;
         }
         remDependency.type = type;
-    })(article.remDependency || (article.remDependency = {}));
-    var remDependency = article.remDependency;
+    })(_article.remDependency || (_article.remDependency = {}));
+    var remDependency = _article.remDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
+
+(function (proposal) {
+    (function (add) {
+        function url() {
+            return '/api/add_proposal';
+        }
+        add.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        add.type = type;
+    })(proposal.add || (proposal.add = {}));
+    var add = proposal.add;
+})(exports.proposal || (exports.proposal = {}));
+var proposal = exports.proposal;
 
 (function (user) {
     (function (register) {

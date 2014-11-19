@@ -1,3 +1,4 @@
+/*
 import db = require('./db');
 import keys = require('./redis-keys');
 
@@ -18,3 +19,4 @@ export function add(articleId: string): any {
         ));
     })
 }
+*/

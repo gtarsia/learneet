@@ -2,7 +2,8 @@
 import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
-import val = require("./../common/validation");
+import validate = require("./../common/validate");
+import baseAjax = require("./../common/base-ajax");
 
 declare function marked(c: string);
 
@@ -24,8 +25,8 @@ export class EditArticleGui extends Gui {
     removeDependency(jq) {
         var id = $(jq).siblings(this.dependencyIds.jq).val();
         clientAjax.article.remDependency({
-            dependentId: this.id,
-            dependencyId: id
+            dependent: { id: this.id},
+            dependency: { id: id}
         })
         .then(res => {
             if (res.result == true) {
@@ -45,7 +46,7 @@ export class EditArticleGui extends Gui {
     changesDescription;
     saveArticle() {
         var description = this.changesDescription.val;
-        var its = val.version.changesDescription(description);
+        var its = validate.version.changesDescription(description);
         if (!its.ok) {
             var api = this.changesDescription.jq.qtip({ // Grab some elements to apply the tooltip to
                 content: { text: its.because },
@@ -55,17 +56,8 @@ export class EditArticleGui extends Gui {
             })
             setTimeout(api.qtip.bind(api, 'destroy'), 5000)
         }
-        var article = this.article.article;
-        clientAjax.article.update({
-            article: {
-                id: this.id, 
-                title: article.title, 
-                content: article.content
-            },
-            version: {
-                changesDescription: this.changesDescription.val
-            }
-        })
+        var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
+        clientAjax.article.update(article)
         .done(function(res) {
             if (!res.ok) console.log(res.why);
             else console.log('Se actualizo el articulo');
@@ -109,7 +101,7 @@ export class EditArticleGui extends Gui {
                 }
             });
             $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            clientAjax.article.get({ id: _self.id })
+            clientAjax.article.get({ article: { id: _self.id }})
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -121,7 +113,7 @@ export class EditArticleGui extends Gui {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
-            clientAjax.article.getDependencies({ id: _self.id})
+            clientAjax.article.getDependencies({ article: { id: _self.id}})
             .done(res => {
                 var deps: any = res.result;
                 var length = deps.length;
@@ -148,8 +140,8 @@ export class EditArticleGui extends Gui {
                 var id = _self.dependencyFound.jq.val();
                 if (id != "") {
                     clientAjax.article.addDependency({
-                        dependentId: _self.id,
-                        dependencyId: id
+                        dependent: {id: _self.id},
+                        dependency: {id: id}
                     })
                     .then(res => {
                         console.log(res);

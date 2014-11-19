@@ -20,7 +20,7 @@ export class ArticleGui extends Gui {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            clientAjax.article.get({ id: _self.id })
+            clientAjax.article.get({article: { id: _self.id }})
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -31,7 +31,7 @@ export class ArticleGui extends Gui {
                 _self.article.content.val = marked(result.content);
             });
             clientAjax.article.getDependencies({
-                id: _self.id
+                article: { id: _self.id }
             })
             .done(function(res) {
                 var deps: any = res.result;

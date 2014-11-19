@@ -2,7 +2,8 @@ declare function marked(s: string) : string;
 
 import RenderedArticle = require('./rendered-article');
 import EditableArticle = require("./editable-article");
-import clientAjax = require(".././client-ajax")
+import clientAjax = require(".././client-ajax");
+import baseAjax = require("../.././common/base-ajax");
 
 class PreviewableArticle {
     output: RenderedArticle;
@@ -79,9 +80,9 @@ class PreviewableArticle {
             outputContent.val = marked(content);
         });
     }
-    fetchDBArticle(args: {id: string}) {
+    fetchDBArticle(args: {id: string}): JQueryPromise<baseAjax.article.get.ReturnType> {
         var _self = this;
-        return clientAjax.article.get(args)
+        return clientAjax.article.get({article: args})
         .then(function(res) {
             if (!res.ok) {
                 console.log(res.why);
@@ -92,6 +93,7 @@ class PreviewableArticle {
             _self.input.content.val = result.content;
             _self.output.title.val = result.title;
             _self.output.content.val = marked(result.content);
+            return null;
         });
     }
     constructor() {

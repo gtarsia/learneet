@@ -8,7 +8,8 @@ var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
-var val = require("./../common/validation");
+var validate = require("./../common/validate");
+var baseAjax = require("./../common/base-ajax");
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
@@ -51,7 +52,7 @@ var EditArticleGui = (function (_super) {
                 }
             });
             $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            clientAjax.article.get({ id: _self.id }).done(function (res) {
+            clientAjax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -62,7 +63,7 @@ var EditArticleGui = (function (_super) {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
-            clientAjax.article.getDependencies({ id: _self.id }).done(function (res) {
+            clientAjax.article.getDependencies({ article: { id: _self.id } }).done(function (res) {
                 var deps = res.result;
                 var length = deps.length;
                 for (var i = 0; i < length; i++) {
@@ -87,8 +88,8 @@ var EditArticleGui = (function (_super) {
                 var id = _self.dependencyFound.jq.val();
                 if (id != "") {
                     clientAjax.article.addDependency({
-                        dependentId: _self.id,
-                        dependencyId: id
+                        dependent: { id: _self.id },
+                        dependency: { id: id }
                     }).then(function (res) {
                         console.log(res);
                     });
@@ -112,8 +113,8 @@ var EditArticleGui = (function (_super) {
         var _this = this;
         var id = $(jq).siblings(this.dependencyIds.jq).val();
         clientAjax.article.remDependency({
-            dependentId: this.id,
-            dependencyId: id
+            dependent: { id: this.id },
+            dependency: { id: id }
         }).then(function (res) {
             if (res.result == true) {
                 $(jq).parent(_this.dependency.jq).remove();
@@ -123,7 +124,7 @@ var EditArticleGui = (function (_super) {
 
     EditArticleGui.prototype.saveArticle = function () {
         var description = this.changesDescription.val;
-        var its = val.version.changesDescription(description);
+        var its = validate.version.changesDescription(description);
         if (!its.ok) {
             var api = this.changesDescription.jq.qtip({
                 content: { text: its.because },
@@ -133,17 +134,8 @@ var EditArticleGui = (function (_super) {
             });
             setTimeout(api.qtip.bind(api, 'destroy'), 5000);
         }
-        var article = this.article.article;
-        clientAjax.article.update({
-            article: {
-                id: this.id,
-                title: article.title,
-                content: article.content
-            },
-            version: {
-                changesDescription: this.changesDescription.val
-            }
-        }).done(function (res) {
+        var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
+        clientAjax.article.update(article).done(function (res) {
             if (!res.ok)
                 console.log(res.why);
             else

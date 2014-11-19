@@ -1,21 +1,21 @@
 import baseAjax = require('./../common/base-ajax');
 import Promise = require('bluebird');
-import article = baseAjax.article;
-import FieldsWithId = article.FieldsWithId;
-import TitleWithId = article.TitleWithId;
-import create = article.create;
-import get = article.get;
-import getTitleWithId = article.getTitleWithId;
-import update = article.update;
-import addDependency = article.addDependency;
-import getDependencies = article.getDependencies;
-import remDeps = article.remDependency;
-import getAll = article.getAll;
+import baseArticle = baseAjax.article;
+import FieldsWithId = baseArticle.FieldsWithId;
+import TitleWithId = baseArticle.TitleWithId;
+import create = baseArticle.create;
+import get = baseArticle.get;
+import getTitleWithId = baseArticle.getTitleWithId;
+import update = baseArticle.update;
+import addDependency = baseArticle.addDependency;
+import getDependencies = baseArticle.getDependencies;
+import remDeps = baseArticle.remDependency;
+import getAll = baseArticle.getAll;
 import redis = require("redis");
-import queryTitle = article.queryTitle;
+import queryTitle = baseArticle.queryTitle;
 import db = require('./db');
 import keys = require('./redis-keys');
-import version = require('./version');
+//import version = require('./version');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
 
@@ -36,19 +36,20 @@ export function okObj<T>(obj: T): any {
 
 export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 	var id;
-	if (!args.title || !args.content) {
+	var article = args.article;
+	if (!article.title || !article.content) {
 		return notOkObj('Title or content was null or empty');
 	}
-	return db.incr("article:idCounter")
+	return db.incr(keys.articlesIdCounter())
 	.then((_id: string) => {
 		id = _id;
-		return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
+		return db.hmset(keys.article({article: {id: id}}), baseArticle.WrapFieldWithId(args, id));
 	})
 	.then((result) => {
 		if (result != 'OK') return notOkObj('Could\'t create object');
-		db.sadd("article:ids", id)
+		db.sadd(keys.articlesIdSet(), id)
 		.then(() => {
-			TitleSearch.update(id, "", args.title);
+			TitleSearch.update(id, "", article.title);
 		})
 		return okObj({id: id});
 	})
@@ -61,7 +62,7 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 	if (!article.title && !article.content) {
 		return notOkObj('Title or content was null or empty')
 	}
-	return get(args.article)
+	return get(args)
 	.then((res) => {
     	debugger;
 		if (!res.ok) {
@@ -70,10 +71,7 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 		else {
 			var versionId;
 			oldTitle = res.result.title;
-			return version.add(article.id)
-			.then((res: string) => {
-			    return db.hmset(keys.article({articleId: article.id}), article)
-			})
+		    return db.hmset(keys.article(args), article)
 			.then((res: string) => {
 				if (!res) notOkObj('Article update wasn\'t succesful');
 				TitleSearch.update(article.id, oldTitle, article.title);
@@ -84,10 +82,11 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 }
 
 export function get(args: get.ParamsType) : Promise<get.ReturnType> {
-	return db.hgetall("article:" + args.id.toString())
+	var article = args.article;
+	return db.hgetall(keys.article(args))
 	.then<get.ReturnType>((result: any) => {
 		var ok = result != null;
-		var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
+		var why = (result == null ? 'Article with id ' + article.id + ' not found' : '');
 		var r : get.ReturnType = {
 			ok: ok,
 			why: why,
@@ -99,7 +98,8 @@ export function get(args: get.ParamsType) : Promise<get.ReturnType> {
 
 export function getTitleAndId(args: getTitleWithId.ParamsType)
 : Promise<getTitleWithId.ReturnType> {
-	return db.hmget("article:" + args.id, "id", "title")
+	var article = args.article;
+	return db.hmget(keys.article(args), "id", "title")
 }
 
 export function getAll() : Promise<getAll.ReturnType> {
@@ -114,7 +114,7 @@ export function getAll() : Promise<getAll.ReturnType> {
 		}
 		return articles;
 	}
-	return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id',
+	return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'article:*->id',
 	    'GET', 'article:*->title', 'GET', 'article:*->content')
 	.then<getAll.ReturnType>((result: any) => {
 		debugger;
@@ -167,7 +167,7 @@ export module TitleSearch {
 			var multi = db.multi();
 			var length = ids.length;
 			for (var i = 0; i < length; i++) {
-				multi.hmget(["article:" + ids[i], "id", "title"])
+				multi.hmget([keys.article({ article: {id: ids[i]}}), "id", "title"])
 			}
 			var promise: any = Promise.promisify(multi.exec, multi);
 			return promise();
@@ -175,7 +175,7 @@ export module TitleSearch {
 		.then((result: any[]) => {
 			debugger;
 			var length = result.length;
-			var articles: article.TitleWithId[] = [];
+			var articles: baseArticle.TitleWithId[] = [];
 			for(var i = 0; i < length; i++) {
                 var article: string[] = result.shift();
 				var id = article.shift();
@@ -194,8 +194,9 @@ export module TitleSearch {
 
 export function addDependency(args: addDependency.ParamsType)
 : Promise<addDependency.ReturnType> {
-	debugger;
-	return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId)
+	var dependent = args.dependent;
+	var dependency = args.dependency;
+	return db.sadd(keys.dependency(args))
 	.then((res: string) => {
 		debugger;
 		return {
@@ -208,7 +209,8 @@ export function addDependency(args: addDependency.ParamsType)
 
 export function getDependencies(args: getDependencies.ParamsType)
 : Promise<getDependencies.ReturnType> {
-	return db.sort('article:' + args.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id',
+	var article = args.article;
+	return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id',
 	    'GET', 'article:*->title')
 	.then((array: string[]) => {
 		var articles : TitleWithId[] = [];
@@ -227,8 +229,9 @@ export function getDependencies(args: getDependencies.ParamsType)
 
 export function remDependency(args: remDeps.ParamsType)
 : Promise<remDeps.ReturnType> {
-    debugger;
-	return db.srem('article:' + args.dependentId + ':dependencies', args.dependencyId)
+	var dependent = args.dependent;
+	var dependency = args.dependency;
+	return db.srem(keys.dependency(args))
 	.then(res => {
 		return {
 			ok: true,

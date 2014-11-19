@@ -1,12 +1,11 @@
 var baseAjax = require('./../common/base-ajax');
 var Promise = require('bluebird');
-var article = baseAjax.article;
+var baseArticle = baseAjax.article;
 
 var redis = require("redis");
 
 var db = require('./db');
 var keys = require('./redis-keys');
-var version = require('./version');
 
 function isOk(err, reject) {
     if (err) {
@@ -35,17 +34,18 @@ exports.okObj = okObj;
 
 function create(args) {
     var id;
-    if (!args.title || !args.content) {
+    var article = args.article;
+    if (!article.title || !article.content) {
         return exports.notOkObj('Title or content was null or empty');
     }
-    return db.incr("article:idCounter").then(function (_id) {
+    return db.incr(keys.articlesIdCounter()).then(function (_id) {
         id = _id;
-        return db.hmset("article:" + id, article.WrapFieldWithId(args, id));
+        return db.hmset(keys.article({ article: { id: id } }), baseArticle.WrapFieldWithId(args, id));
     }).then(function (result) {
         if (result != 'OK')
             return exports.notOkObj('Could\'t create object');
-        db.sadd("article:ids", id).then(function () {
-            TitleSearch.update(id, "", args.title);
+        db.sadd(keys.articlesIdSet(), id).then(function () {
+            TitleSearch.update(id, "", article.title);
         });
         return exports.okObj({ id: id });
     });
@@ -59,16 +59,14 @@ function update(args) {
     if (!article.title && !article.content) {
         return exports.notOkObj('Title or content was null or empty');
     }
-    return exports.get(args.article).then(function (res) {
+    return exports.get(args).then(function (res) {
         debugger;
         if (!res.ok) {
             return exports.notOkObj('Can\'t upload article, because we couldn\'t find it');
         } else {
             var versionId;
             oldTitle = res.result.title;
-            return version.add(article.id).then(function (res) {
-                return db.hmset(keys.article({ articleId: article.id }), article);
-            }).then(function (res) {
+            return db.hmset(keys.article(args), article).then(function (res) {
                 if (!res)
                     exports.notOkObj('Article update wasn\'t succesful');
                 TitleSearch.update(article.id, oldTitle, article.title);
@@ -80,9 +78,10 @@ function update(args) {
 exports.update = update;
 
 function get(args) {
-    return db.hgetall("article:" + args.id.toString()).then(function (result) {
+    var article = args.article;
+    return db.hgetall(keys.article(args)).then(function (result) {
         var ok = result != null;
-        var why = (result == null ? 'Article with id ' + args.id + ' not found' : '');
+        var why = (result == null ? 'Article with id ' + article.id + ' not found' : '');
         var r = {
             ok: ok,
             why: why,
@@ -94,7 +93,8 @@ function get(args) {
 exports.get = get;
 
 function getTitleAndId(args) {
-    return db.hmget("article:" + args.id, "id", "title");
+    var article = args.article;
+    return db.hmget(keys.article(args), "id", "title");
 }
 exports.getTitleAndId = getTitleAndId;
 
@@ -111,7 +111,7 @@ function getAll() {
         }
         return articles;
     }
-    return db.sort('article:ids', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
+    return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
         debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get articles' : '');
@@ -166,7 +166,7 @@ exports.getAll = getAll;
             var multi = db.multi();
             var length = ids.length;
             for (var i = 0; i < length; i++) {
-                multi.hmget(["article:" + ids[i], "id", "title"]);
+                multi.hmget([keys.article({ article: { id: ids[i] } }), "id", "title"]);
             }
             var promise = Promise.promisify(multi.exec, multi);
             return promise();
@@ -192,8 +192,9 @@ exports.getAll = getAll;
 var TitleSearch = exports.TitleSearch;
 
 function addDependency(args) {
-    debugger;
-    return db.sadd('article:' + args.dependentId + ':dependencies', args.dependencyId).then(function (res) {
+    var dependent = args.dependent;
+    var dependency = args.dependency;
+    return db.sadd(keys.dependency(args)).then(function (res) {
         debugger;
         return {
             ok: true,
@@ -205,7 +206,8 @@ function addDependency(args) {
 exports.addDependency = addDependency;
 
 function getDependencies(args) {
-    return db.sort('article:' + args.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title').then(function (array) {
+    var article = args.article;
+    return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title').then(function (array) {
         var articles = [];
         while (array.length > 0) {
             var id = array.shift();
@@ -222,8 +224,9 @@ function getDependencies(args) {
 exports.getDependencies = getDependencies;
 
 function remDependency(args) {
-    debugger;
-    return db.srem('article:' + args.dependentId + ':dependencies', args.dependencyId).then(function (res) {
+    var dependent = args.dependent;
+    var dependency = args.dependency;
+    return db.srem(keys.dependency(args)).then(function (res) {
         return {
             ok: true,
             why: '',

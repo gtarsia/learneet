@@ -15,7 +15,7 @@ class EditableArticle {
             set val(val) { _self.title.jq.val(val); } 
         }
     }
-    get article() { return { title: this.title.val, content: this.content.val} }
+    get article() { return { article: { title: this.title.val, content: this.content.val} } }
 }
 
 export = EditableArticle;

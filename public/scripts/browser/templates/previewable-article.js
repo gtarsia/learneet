@@ -90,7 +90,7 @@ var PreviewableArticle = (function () {
     };
     PreviewableArticle.prototype.fetchDBArticle = function (args) {
         var _self = this;
-        return clientAjax.article.get(args).then(function (res) {
+        return clientAjax.article.get({ article: args }).then(function (res) {
             if (!res.ok) {
                 console.log(res.why);
                 return;
@@ -100,6 +100,7 @@ var PreviewableArticle = (function () {
             _self.input.content.val = result.content;
             _self.output.title.val = result.title;
             _self.output.content.val = marked(result.content);
+            return null;
         });
     };
     return PreviewableArticle;

@@ -34,7 +34,7 @@ export module article {
     }
 
     import baseUpdate = baseAjax.article.update;
-    export function update(params: baseUpdate.ParamsType) 
+    export function update(params: { article: {title: string; content: string; id: string}}) 
     : JQueryXHR<baseUpdate.ReturnType> {
         return buildAjax(baseUpdate.url(), baseUpdate.type(), params);
     }

@@ -1,3 +1,4 @@
+/*
 import article = require('./../scripts/server/article');
 import should = require('should');
 import baseAjax = require('./../scripts/common/base-ajax');
@@ -34,3 +35,4 @@ describe('Article', () => {
         });
     });
 });
+*/

@@ -136,6 +136,16 @@ export module article {
     }
 }
 
+export module proposal {
+    import baseAdd = baseAjax.proposal.add;
+    export function add() {
+        return buildAjax<baseAdd.ParamsType, baseAdd.ReturnType>
+        (baseAdd.url(), baseAdd.type(), (req, res) => {
+
+        })
+    }
+}
+
 export module user {
     import baseRegister = baseAjax.user.register;
     export function register() {

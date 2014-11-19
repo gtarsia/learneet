@@ -8,6 +8,7 @@ var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 
 var diff = require("diff");
+var validate = require('./../common/validate');
 
 var AddProposalGui = (function (_super) {
     __extends(AddProposalGui, _super);
@@ -22,11 +23,22 @@ var AddProposalGui = (function (_super) {
             _self.article = new PreviewableArticle();
             _self.id = $("[type=hidden]#article-id").val();
             _self.article.fetchDBArticle({ id: _self.id }).then(function () {
-                _self.oldStr = _self.article.input.content;
+                _self.oldStr = _self.article.input.content.val;
             });
             _self.proposeBtn.jq.click(function () {
-                var str = _self.article.input.content;
-                var patch = diff.createPatch('', _self.oldStr, str);
+                var description = _self.changesDescription.val;
+                var its = validate.version.changesDescription(description);
+                if (!its.ok) {
+                    var api = _self.changesDescription.jq.qtip({
+                        content: { text: its.because },
+                        show: { when: false, ready: true },
+                        position: { my: 'top left', at: 'bottom center' },
+                        hide: false
+                    });
+                    setTimeout(api.qtip.bind(api, 'destroy'), 5000);
+                }
+                var str = _self.article.input.content.val;
+                var patch = diff.createPatch('', _self.oldStr, str, '', '');
                 console.log('The patch is :' + patch);
             });
         });

@@ -3923,6 +3923,8 @@ interface JQuery {
     queue(queueName: string, callback: Function): JQuery;
 
     velocity(cssProps?: any, s?: any): any
+
+    qtip: any
 }
 declare module "jquery" {
     export = $;

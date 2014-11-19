@@ -1,40 +1,56 @@
-function baseArticle(articleId) {
-    return "article:" + articleId;
+function j(array) {
+    return array.join(":");
 }
-exports.baseArticle = baseArticle;
+exports.j = j;
 
+function baseArticles() {
+    return "articles";
+}
+exports.baseArticles = baseArticles;
 function article(args) {
-    return exports.baseArticle(args.articleId);
+    return exports.j([exports.baseArticles(), args.article.id]);
 }
 exports.article = article;
-
-function articleIdCounter(args) {
-    return exports.baseArticle(args.articleId) + ":idCounter";
+function articlesIdCounter() {
+    return exports.j([exports.baseArticles(), "idCounter"]);
 }
-exports.articleIdCounter = articleIdCounter;
-
-function articleIdSet(args) {
-    return exports.baseArticle(args.articleId) + ":ids";
+exports.articlesIdCounter = articlesIdCounter;
+function articlesIdSet() {
+    return exports.j([exports.baseArticles(), "ids"]);
 }
-exports.articleIdSet = articleIdSet;
+exports.articlesIdSet = articlesIdSet;
 
-function baseVersion(articleId) {
-    return "article:" + articleId + ":version:";
+function baseProposals(args) {
+    return exports.j([exports.article(args), "proposals"]);
 }
-exports.baseVersion = baseVersion;
+exports.baseProposals = baseProposals;
+function proposal(args) {
+    return exports.j([exports.baseProposals(args), args.proposal.id]);
+}
+exports.proposal = proposal;
+function proposalsIdCounter(args) {
+    return exports.j([exports.baseProposals(args), "idCounter"]);
+}
+exports.proposalsIdCounter = proposalsIdCounter;
+function proposalsIdSet(args) {
+    return exports.j([exports.baseProposals(args), "idSet"]);
+}
+exports.proposalsIdSet = proposalsIdSet;
 
-function version(args) {
-    return exports.baseVersion(args.articleId) + args.versionId;
+function baseDependencies(args) {
+    return exports.j([exports.article(args), 'dependencies']);
 }
-exports.version = version;
-
-function versionIdCounter(args) {
-    return exports.baseVersion(args.articleId) + "idCounter";
+exports.baseDependencies = baseDependencies;
+function dependency(args) {
+    return exports.j([exports.baseDependencies({ article: args.dependent }), args.dependency.id]);
 }
-exports.versionIdCounter = versionIdCounter;
-
-function versionIdSet(args) {
-    return exports.baseVersion(args.articleId) + "idSet";
+exports.dependency = dependency;
+function dependenciesIdCounter(args) {
+    return exports.j([exports.baseDependencies(args), "idCounter"]);
 }
-exports.versionIdSet = versionIdSet;
+exports.dependenciesIdCounter = dependenciesIdCounter;
+function dependenciesIdSet(args) {
+    return exports.j([exports.baseDependencies(args), "idSet"]);
+}
+exports.dependenciesIdSet = dependenciesIdSet;
 //# sourceMappingURL=redis-keys.js.map

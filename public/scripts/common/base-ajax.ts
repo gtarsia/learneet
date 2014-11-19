@@ -10,44 +10,48 @@ export interface JsonReturn<T> {
     result: T;
 }
 
+export interface Title {
+    title: string; 
+}
+export interface Content {
+    content: string;
+}
+export interface Id {
+    id: string;
+}
+export interface Desc {
+    description: string;
+}
+export interface Changes {
+    changes: string;
+}
 export module article {
-    export interface Title {
-        title: string; 
-    }
-    export interface Content {
-        content: string;
-    }
-    export interface Id {
-        id: string;
-    }
-    export interface Desc {
-        changesDescription: string;
-    }
     export interface Fields extends Title, Content {}
     export interface TitleWithId extends Title, Id {}
     export interface FieldsWithId extends Fields, Id {}
-    export function WrapFieldWithId(fields: Fields, id: string) : FieldsWithId {
-        return { title: fields.title, content: fields.content, id: id }
+    export function WrapFieldWithId(fields: {article: Fields}, id: string) : {article: FieldsWithId} {
+        return { article: { 
+            title: fields.article.title, content: fields.article.content, id: id } }
     }
 
     export module create {
         export function url(): string { return '/api/create_article' }
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType extends Fields {}
+        export interface ParamsType { article: Fields}
         export interface ReturnType extends JsonReturn<Id> { }
     }
 
     export module get {
         export function url(): string { return '/api/get' }
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType extends Id {}
-        export interface ReturnType extends JsonReturn<FieldsWithId> { }
+        export interface ParamsType { article: Id }
+        export interface ReturnType extends JsonReturn<FieldsWithId> {}
     }
 
     export module getTitleWithId {
         export function url(): string { return '/api/gettitleandid' }
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType extends Id {}
+        export interface ParamsType { article: Id }
         export interface ReturnType extends JsonReturn<TitleWithId> { }
     }
 
@@ -61,7 +65,7 @@ export module article {
     export module update {
         export function url(): string { return '/api/update' }
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType { article: FieldsWithId; version: Desc;}
+        export interface ParamsType { article: FieldsWithId; }
         export interface ReturnType extends JsonReturn<Id> { }
     }
 
@@ -75,22 +79,32 @@ export module article {
     export module addDependency {
         export function url(): string { return '/api/adddependency'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType { dependentId: string; dependencyId: string; }
+        export interface ParamsType { dependent: Id; dependency: Id; }
         export interface ReturnType extends JsonReturn<boolean> {}
     }
 
     export module getDependencies {
         export function url(): string { return '/api/getdependencies' }
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType { id: string; }
+        export interface ParamsType { article: Id }
         export interface ReturnType extends JsonReturn<TitleWithId[]> {}
     }
 
     export module remDependency {
         export function url(): string { return '/api/remdependency'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType { dependentId: string; dependencyId: string; }
+        export interface ParamsType { dependent: Id; dependency: Id; }
         export interface ReturnType extends JsonReturn<boolean> {}
+    }
+}
+
+export module proposal {
+    export interface AddType extends Id, Desc, Changes {}
+    export module add {
+        export function url(): string { return '/api/add_proposal'}
+        export function type(): string { return AjaxType.POST }
+        export interface ParamsType { article: AddType }
+        export interface ReturnType extends JsonReturn<void> {}
     }
 }
 

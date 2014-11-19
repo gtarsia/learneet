@@ -131,6 +131,16 @@ exports.buildAjax = buildAjax;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
+(function (proposal) {
+    var baseAdd = baseAjax.proposal.add;
+    function add() {
+        return exports.buildAjax(baseAdd.url(), baseAdd.type(), function (req, res) {
+        });
+    }
+    proposal.add = add;
+})(exports.proposal || (exports.proposal = {}));
+var proposal = exports.proposal;
+
 (function (user) {
     var baseRegister = baseAjax.user.register;
     function register() {

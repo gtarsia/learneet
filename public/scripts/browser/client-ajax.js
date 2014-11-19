@@ -14,54 +14,54 @@ function buildAjax(url, type, params) {
 }
 exports.buildAjax = buildAjax;
 
-(function (article) {
+(function (_article) {
     var baseGet = baseAjax.article.get;
     function get(params) {
         return exports.buildAjax(baseGet.url(), baseGet.type(), params);
     }
-    article.get = get;
+    _article.get = get;
 
     var baseCreate = baseAjax.article.create;
     function create(params) {
         return exports.buildAjax(baseCreate.url(), baseCreate.type(), params);
     }
-    article.create = create;
+    _article.create = create;
 
     var baseGetAll = baseAjax.article.getAll;
     function getAll(params) {
         return exports.buildAjax(baseGetAll.url(), baseGetAll.type(), params);
     }
-    article.getAll = getAll;
+    _article.getAll = getAll;
 
     var baseUpdate = baseAjax.article.update;
     function update(params) {
         return exports.buildAjax(baseUpdate.url(), baseUpdate.type(), params);
     }
-    article.update = update;
+    _article.update = update;
 
     var baseQuery = baseAjax.article.queryTitle;
     function query(params) {
         return exports.buildAjax(baseQuery.url(), baseQuery.type(), params);
     }
-    article.query = query;
+    _article.query = query;
 
     var baseAddDep = baseAjax.article.addDependency;
     function addDependency(params) {
         return exports.buildAjax(baseAddDep.url(), baseAddDep.type(), params);
     }
-    article.addDependency = addDependency;
+    _article.addDependency = addDependency;
 
     var baseGetDeps = baseAjax.article.getDependencies;
     function getDependencies(params) {
         return exports.buildAjax(baseGetDeps.url(), baseGetDeps.type(), params);
     }
-    article.getDependencies = getDependencies;
+    _article.getDependencies = getDependencies;
 
     var baseRemDep = baseAjax.article.remDependency;
     function remDependency(params) {
         return exports.buildAjax(baseRemDep.url(), baseRemDep.type(), params);
     }
-    article.remDependency = remDependency;
+    _article.remDependency = remDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

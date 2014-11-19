@@ -26,7 +26,7 @@ var EditableArticle = (function () {
     }
     Object.defineProperty(EditableArticle.prototype, "article", {
         get: function () {
-            return { title: this.title.val, content: this.content.val };
+            return { article: { title: this.title.val, content: this.content.val } };
         },
         enumerable: true,
         configurable: true
