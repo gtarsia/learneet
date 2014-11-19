@@ -19,7 +19,7 @@ export function articlesIdCounter() {
     return j([baseArticles(), "idCounter"]);
 }
 export function articlesIdSet() {
-    return j([baseArticles(), "ids"]);
+    return j([baseArticles(), "idSet"]);
 }
 
 //Proposals

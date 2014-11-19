@@ -16,7 +16,7 @@ function articlesIdCounter() {
 }
 exports.articlesIdCounter = articlesIdCounter;
 function articlesIdSet() {
-    return exports.j([exports.baseArticles(), "ids"]);
+    return exports.j([exports.baseArticles(), "idSet"]);
 }
 exports.articlesIdSet = articlesIdSet;
 
