@@ -114,8 +114,8 @@ export function getAll() : Promise<getAll.ReturnType> {
 		}
 		return articles;
 	}
-	return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'article:*->id',
-	    'GET', 'article:*->title', 'GET', 'article:*->content')
+	return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'articles:*->id',
+	    'GET', 'articles:*->title', 'GET', 'articles:*->content')
 	.then<getAll.ReturnType>((result: any) => {
 		debugger;
 		var ok = result != null;
@@ -211,7 +211,7 @@ export function getDependencies(args: getDependencies.ParamsType)
 : Promise<getDependencies.ReturnType> {
 	var article = args.article;
 	return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id',
-	    'GET', 'article:*->title')
+	    'GET', 'articles:*->title')
 	.then((array: string[]) => {
 		var articles : TitleWithId[] = [];
 		while (array.length > 0) {

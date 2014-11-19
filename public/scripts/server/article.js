@@ -111,7 +111,7 @@ function getAll() {
         }
         return articles;
     }
-    return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title', 'GET', 'article:*->content').then(function (result) {
+    return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'articles:*->id', 'GET', 'articles:*->title', 'GET', 'articles:*->content').then(function (result) {
         debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get articles' : '');
@@ -207,7 +207,7 @@ exports.addDependency = addDependency;
 
 function getDependencies(args) {
     var article = args.article;
-    return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'article:*->title').then(function (array) {
+    return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'articles:*->title').then(function (array) {
         var articles = [];
         while (array.length > 0) {
             var id = array.shift();
