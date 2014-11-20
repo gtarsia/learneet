@@ -38,7 +38,7 @@ export function set(app) {
             });
         }); 
     });
-    app.get(url.article.addProposal(), (req, res) => {
+    app.get(url.proposals.add(), (req, res) => {
         var id = req.params.id;
         db.hget('article:' + id, 'title')
         .then(title => {
@@ -46,6 +46,9 @@ export function set(app) {
                 url: url.article.edit(id), id: id, title: title + ' - Learneet'
             });
         }); 
+    })
+    app.get(url.proposals.getAll(), (req, res) => {
+        res.render('proposals', {id: req.params.id});
     })
     app.get('/login', renderCb('login', 'Login'));
     app.get(url.user.register(), renderCb('register', 'Register'));

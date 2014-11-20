@@ -20,7 +20,7 @@ export interface Id {
     id: string;
 }
 export interface Desc {
-    description: string;
+    changesDescription: string;
 }
 export interface ModContent {
     modifiedContent: string;
@@ -99,12 +99,30 @@ export module article {
 }
 
 export module proposal {
-    export interface AddType extends Id, Desc, ModContent {}
+    export interface AddType {
+        article: Id;
+        description: string;
+        modifiedContent: string;
+    }
     export module add {
         export function url(): string { return '/api/add_proposal'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType { article: AddType }
+        export interface ParamsType {
+            proposal: AddType
+        }
         export interface ReturnType extends JsonReturn<void> {}
+    }
+
+    export module getAll {
+        export function url(): string { return '/api/get_all'}
+        export function type(): string { return AjaxType.POST }
+        export interface ParamsType {
+            proposal: {article: {id: string} }
+        }
+        export interface ProposalWithId {
+            id: string; changes: string; description: string;
+        }
+        export interface ReturnType extends JsonReturn<{ proposals: ProposalWithId[]}> {}
     }
 }
 

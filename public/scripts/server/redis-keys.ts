@@ -36,6 +36,10 @@ export function proposalsIdCounter(args: ArticleWithId) {
 export function proposalsIdSet(args: ArticleWithId) {
     return j([baseProposals(args), "idSet"]);
 }
+export function proposalsNoSortField(args: 
+    { proposal: { article: {id: string}}; }, field: string ) {
+    return j([baseProposals(args.proposal), '*->' + field]);
+}
 
 export function baseDependencies(args: ArticleWithId) {
     return j([article(args), 'dependencies']);

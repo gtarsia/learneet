@@ -49,14 +49,15 @@ export class ArticleGui extends Gui {
                 _self.redirect(url.article.edit(_self.id))
             });
             _self.addProposalBtn.jq.click(() => {
-                _self.redirect(url.article.addProposal(_self.id));
+                _self.redirect(url.proposals.add(_self.id));
             });
         });
     }
 } 
 
 declare var guiName;
+declare var gui;
 
 if (guiName == 'ArticleGui') {
-    new ArticleGui();
+    gui = new ArticleGui();
 }

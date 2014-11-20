@@ -36,6 +36,10 @@ function proposalsIdSet(args) {
     return exports.j([exports.baseProposals(args), "idSet"]);
 }
 exports.proposalsIdSet = proposalsIdSet;
+function proposalsNoSortField(args, field) {
+    return exports.j([exports.baseProposals(args.proposal), '*->' + field]);
+}
+exports.proposalsNoSortField = proposalsNoSortField;
 
 function baseDependencies(args) {
     return exports.j([exports.article(args), 'dependencies']);

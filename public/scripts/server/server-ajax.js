@@ -15,6 +15,7 @@ function getServerAjaxList() {
         article.addDependency(),
         article.getDependencies(),
         article.remDependency(),
+        proposal.add(),
         user.register()
     ];
 }

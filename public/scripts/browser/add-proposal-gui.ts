@@ -37,7 +37,13 @@ export class AddProposalGui extends Gui {
                         hide: false
                     })
                     setTimeout(api.qtip.bind(api, 'destroy'), 5000)
+                    return;
                 }
+                clientAjax.proposal.add({ proposal: {
+                    article: {id: _self.id},
+                    description: _self.changesDescription.val,
+                    modifiedContent: _self.article.input.content.val
+                }});
             });
         });
     }

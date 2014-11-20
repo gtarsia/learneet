@@ -65,6 +65,15 @@ exports.buildAjax = buildAjax;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
+(function (proposal) {
+    var baseAddProp = baseAjax.proposal.add;
+    function add(params) {
+        return exports.buildAjax(baseAddProp.url(), baseAddProp.type(), params);
+    }
+    proposal.add = add;
+})(exports.proposal || (exports.proposal = {}));
+var proposal = exports.proposal;
+
 (function (user) {
     var baseRegister = baseAjax.user.register;
     function register(params) {

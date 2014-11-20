@@ -131,6 +131,18 @@ var article = exports.article;
         add.type = type;
     })(proposal.add || (proposal.add = {}));
     var add = proposal.add;
+
+    (function (getAll) {
+        function url() {
+            return '/api/get_all';
+        }
+        getAll.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        getAll.type = type;
+    })(proposal.getAll || (proposal.getAll = {}));
+    var getAll = proposal.getAll;
 })(exports.proposal || (exports.proposal = {}));
 var proposal = exports.proposal;
 

@@ -16,6 +16,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.addDependency(),
         article.getDependencies(),
         article.remDependency(),
+        proposal.add(),
         user.register()
     ];
 }

@@ -64,6 +64,14 @@ export module article {
     }
 }
 
+export module proposal {
+    import baseAddProp = baseAjax.proposal.add;
+    export function add(params: baseAddProp.ParamsType)
+    : JQueryXHR<baseAddProp.ReturnType> {
+        return buildAjax(baseAddProp.url(), baseAddProp.type(), params);
+    }
+}
+
 export module user {
     import baseRegister = baseAjax.user.register;
     export function register(params: baseRegister.ParamsType) 

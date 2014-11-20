@@ -47,7 +47,7 @@ var ArticleGui = (function (_super) {
                 _self.redirect(url.article.edit(_self.id));
             });
             _self.addProposalBtn.jq.click(function () {
-                _self.redirect(url.article.addProposal(_self.id));
+                _self.redirect(url.proposals.add(_self.id));
             });
         });
     }
@@ -59,6 +59,6 @@ var ArticleGui = (function (_super) {
 exports.ArticleGui = ArticleGui;
 
 if (guiName == 'ArticleGui') {
-    new ArticleGui();
+    gui = new ArticleGui();
 }
 //# sourceMappingURL=article-gui.js.map

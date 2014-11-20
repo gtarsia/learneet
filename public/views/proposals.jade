@@ -1,0 +1,31 @@
+extends layout
+
+prepend scripts
+  script.
+    guiName = 'ProposalsGui'
+
+append styles
+  link(rel='stylesheet', href='/stylesheets/proposals.css')
+
+block main
+  #proposals
+    h1 Proposals
+    .frame
+      input#proposal-id(type="hidden" value="{{id}}")
+      img.avatar(src="/images/avatar.png")
+      a.description(href="{{url}}") Hacer un par de cambios
+      i  by Him 
+  //
+    #proposals
+    h1 Proposals
+    ul
+      script#proposals-template(type="x-tmpl-mustache") 
+        {{#deps}}
+        li.proposal
+          input.proposal(type="hidden" value="{{id}}")
+          img.avatar(src="/images/avatar.png")
+          a.title(href="{{url}}") {{title}}
+          i  by Him 
+        {{/deps}}
+
+
