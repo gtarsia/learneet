@@ -38,9 +38,6 @@ export class AddProposalGui extends Gui {
                     })
                     setTimeout(api.qtip.bind(api, 'destroy'), 5000)
                 }
-                var str = _self.article.input.content.val;
-                var patch = diff.createPatch('', _self.oldStr, str, '', '');
-                console.log('The patch is :' + patch);
             });
         });
     }

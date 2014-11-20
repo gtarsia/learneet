@@ -7,7 +7,6 @@ var __extends = this.__extends || function (d, b) {
 var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 
-var diff = require("diff");
 var validate = require('./../common/validate');
 
 var AddProposalGui = (function (_super) {
@@ -37,9 +36,6 @@ var AddProposalGui = (function (_super) {
                     });
                     setTimeout(api.qtip.bind(api, 'destroy'), 5000);
                 }
-                var str = _self.article.input.content.val;
-                var patch = diff.createPatch('', _self.oldStr, str, '', '');
-                console.log('The patch is :' + patch);
             });
         });
     }

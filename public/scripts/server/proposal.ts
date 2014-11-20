@@ -24,21 +24,34 @@ export function okObj<T>(obj: T): any {
 
 export function add(args: add.ParamsType): Promise<add.ReturnType> {
     var article = args.article;
-    var id;
     var changes;
+    var id;
     return dbArticle.get(args)
-    .then(() => {
-        db.incr(keys.proposalsIdCounter(args))
+    .then((res) => {
+        debugger;
+        if (!res.ok) {
+            console.log(res.why); return;
+        }
+        var originalContent = res.result.content;
+        changes = diff.diffLines(originalContent, args.article.modifiedContent);
+        return db.incr(keys.proposalsIdCounter(args))
+        .then((_id) => {
+            debugger;
+            id = _id;
+            return db.sadd(keys.proposalsIdSet(args))
+        })
+        .then(() => {
+            debugger;
+            var key = { article: args.article, proposal: {id: id}};
+            var val = { changes: changes, 
+                description: article.description
+            };
+            return db.hmset(keys.proposal(key), val)
+        })
+        .then(() => {
+            debugger;
+            return okObj<void>(null);
+        })
     })
-    .then((_id) => {
-        id = _id;
-    })
-    .then(() => {
-        var key = { article: args.article, proposal: {id: id}};
-        var val = {changes: article.changes, description: article.description};
-        return db.hmset(keys.proposal(key), val)
-    })
-    .then(() => {
-        return okObj<void>(null);
-    })
+    
 }

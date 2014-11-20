@@ -2,6 +2,7 @@ var db = require('./db');
 var keys = require('./redis-keys');
 
 var dbArticle = require('./article');
+var diff = require('diff');
 
 function notOkObj(reason) {
     return {
@@ -22,18 +23,32 @@ exports.okObj = okObj;
 
 function add(args) {
     var article = args.article;
-    var id;
     var changes;
-    return dbArticle.get(args).then(function () {
-        db.incr(keys.proposalsIdCounter(args));
-    }).then(function (_id) {
-        id = _id;
-    }).then(function () {
-        var key = { article: args.article, proposal: { id: id } };
-        var val = { changes: article.changes, description: article.description };
-        return db.hmset(keys.proposal(key), val);
-    }).then(function () {
-        return exports.okObj(null);
+    var id;
+    return dbArticle.get(args).then(function (res) {
+        debugger;
+        if (!res.ok) {
+            console.log(res.why);
+            return;
+        }
+        var originalContent = res.result.content;
+        changes = diff.diffLines(originalContent, args.article.modifiedContent);
+        return db.incr(keys.proposalsIdCounter(args)).then(function (_id) {
+            debugger;
+            id = _id;
+            return db.sadd(keys.proposalsIdSet(args));
+        }).then(function () {
+            debugger;
+            var key = { article: args.article, proposal: { id: id } };
+            var val = {
+                changes: changes,
+                description: article.description
+            };
+            return db.hmset(keys.proposal(key), val);
+        }).then(function () {
+            debugger;
+            return exports.okObj(null);
+        });
     });
 }
 exports.add = add;

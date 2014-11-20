@@ -22,8 +22,8 @@ export interface Id {
 export interface Desc {
     description: string;
 }
-export interface Changes {
-    changes: string;
+export interface ModContent {
+    modifiedContent: string;
 }
 export module article {
     export interface Fields extends Title, Content {}
@@ -99,7 +99,7 @@ export module article {
 }
 
 export module proposal {
-    export interface AddType extends Id, Desc, Changes {}
+    export interface AddType extends Id, Desc, ModContent {}
     export module add {
         export function url(): string { return '/api/add_proposal'}
         export function type(): string { return AjaxType.POST }
