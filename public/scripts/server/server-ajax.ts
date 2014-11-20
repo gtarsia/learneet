@@ -19,6 +19,26 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
     ];
 }
 
+export function restCb(url: string, type: string, fn: any) {
+    function parsingHandler() {
+        return (req, res) => {
+            if (type == AjaxType.GET)
+                req.query = JSON.parse(req.query.p);
+            else if (type == AjaxType.POST)
+                req.body = JSON.parse(req.body.p);
+            handler(req, res);
+        }
+    }
+    return (app: express.Express) => {
+        switch (type) {
+        case AjaxType.GET:
+            app.get(url, parsingHandler()); break;
+        case AjaxType.POST:
+            app.post(url, parsingHandler()); break;
+        }
+    }
+}
+
 export function buildAjax<ArgsType, ReturnType>
 (url: string, type: string, handler: (req: express.Request, res: express.Response)=> void) {
     function parsingHandler() {
@@ -141,7 +161,10 @@ export module proposal {
     export function add() {
         return buildAjax<baseAdd.ParamsType, baseAdd.ReturnType>
         (baseAdd.url(), baseAdd.type(), (req, res) => {
-
+            dbProposal.add(req.body)
+            .then(result => {
+                res.send(result);
+            })
         })
     }
 }
