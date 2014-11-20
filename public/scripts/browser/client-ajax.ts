@@ -70,6 +70,12 @@ export module proposal {
     : JQueryXHR<baseAddProp.ReturnType> {
         return buildAjax(baseAddProp.url(), baseAddProp.type(), params);
     }
+
+    import baseGetAll = baseAjax.proposal.getAll;
+    export function getAll(params: baseGetAll.ParamsType)
+    : JQueryXHR<baseGetAll.ReturnType> {
+        return buildAjax(baseGetAll.url(), baseGetAll.type(), params);
+    }
 }
 
 export module user {

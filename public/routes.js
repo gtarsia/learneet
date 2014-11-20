@@ -20,6 +20,7 @@ function set(app) {
         db.hget('article:' + id, 'title').then(function (title) {
             res.render('article', {
                 editUrl: url.article.edit(id),
+                viewProposalsUrl: url.proposals.getAll(id),
                 id: id,
                 title: title + ' - Learneet'
             });

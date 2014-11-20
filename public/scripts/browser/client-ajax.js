@@ -71,6 +71,12 @@ var article = exports.article;
         return exports.buildAjax(baseAddProp.url(), baseAddProp.type(), params);
     }
     proposal.add = add;
+
+    var baseGetAll = baseAjax.proposal.getAll;
+    function getAll(params) {
+        return exports.buildAjax(baseGetAll.url(), baseGetAll.type(), params);
+    }
+    proposal.getAll = getAll;
 })(exports.proposal || (exports.proposal = {}));
 var proposal = exports.proposal;
 

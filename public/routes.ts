@@ -23,6 +23,7 @@ export function set(app) {
         .then(title => {
             res.render('article', { 
                 editUrl: url.article.edit(id),
+                viewProposalsUrl: url.proposals.getAll(id),
                 id: id,
                 title: title + ' - Learneet'
             });

@@ -16,6 +16,7 @@ function getServerAjaxList() {
         article.getDependencies(),
         article.remDependency(),
         proposal.add(),
+        proposal.getAll(),
         user.register()
     ];
 }
@@ -106,6 +107,12 @@ var article = exports.article;
         return exports.restCb(baseAdd.url(), baseAdd.type(), dbProposal.add);
     }
     proposal.add = add;
+
+    var baseGetAll = baseAjax.proposal.getAll;
+    function getAll() {
+        return exports.restCb(baseGetAll.url(), baseGetAll.type(), dbProposal.getAll);
+    }
+    proposal.getAll = getAll;
 })(exports.proposal || (exports.proposal = {}));
 var proposal = exports.proposal;
 

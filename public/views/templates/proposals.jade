@@ -1,11 +1,10 @@
 #proposals
-  h1 Proposals
   ul
-    script#dependencies-template(type="x-tmpl-mustache") 
-      {{#deps}}
-      li.dependency
-        input.dependencyId(type="hidden" value="{{id}}")
+    script#proposals-template(type="x-tmpl-mustache") 
+      {{#props}}
+      .frame
+        input#proposal-id(type="hidden" value="{{proposalId}}")
         img.avatar(src="/images/avatar.png")
-        a.title(href="{{url}}") {{title}}
+        a.description(href="{{url}}") {{description}}
         i  by Him 
-      {{/deps}}
+      {{/props}}

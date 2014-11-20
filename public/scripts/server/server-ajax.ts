@@ -17,6 +17,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.getDependencies(),
         article.remDependency(),
         proposal.add(),
+        proposal.getAll(),
         user.register()
     ];
 }
@@ -102,6 +103,12 @@ export module proposal {
     export function add() {
         return restCb(baseAdd.url(), baseAdd.type(),
             dbProposal.add);
+    }
+
+    import baseGetAll = baseAjax.proposal.getAll;
+    export function getAll() {
+        return restCb(baseGetAll.url(), baseGetAll.type(),
+            dbProposal.getAll);
     }
 }
 

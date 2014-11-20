@@ -12,6 +12,7 @@ export class ArticleGui extends Gui {
         return $("#editBtn");
     }
     addProposalBtn = this.propertize("button#addProposal");
+    viewProposalsBtn = this.propertize("button#viewProposals");
     article: RenderedArticle;
     constructor() {
         super();        
@@ -51,6 +52,9 @@ export class ArticleGui extends Gui {
             _self.addProposalBtn.jq.click(() => {
                 _self.redirect(url.proposals.add(_self.id));
             });
+            _self.viewProposalsBtn.jq.click(() => {
+                _self.redirect(url.proposals.getAll(_self.id));
+            })
         });
     }
 } 

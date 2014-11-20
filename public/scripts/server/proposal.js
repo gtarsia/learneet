@@ -43,6 +43,7 @@ function add(args) {
             debugger;
             var key = { article: { id: article.id }, proposal: { id: id } };
             var val = {
+                id: id,
                 changes: changes,
                 description: proposal.description
             };
@@ -69,6 +70,7 @@ function getAll(args) {
         }
         return proposals;
     }
+    debugger;
     return db.sort(keys.proposalsIdSet(args.proposal), 'by', 'nosort', 'GET', keys.proposalsNoSortField(args, 'id'), 'GET', keys.proposalsNoSortField(args, 'changes'), 'GET', keys.proposalsNoSortField(args, 'description')).then(function (result) {
         debugger;
         var ok = result != null;

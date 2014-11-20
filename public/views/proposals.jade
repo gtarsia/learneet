@@ -8,13 +8,10 @@ append styles
   link(rel='stylesheet', href='/stylesheets/proposals.css')
 
 block main
+  input#article-id(type="hidden" value=id)
   #proposals
     h1 Proposals
-    .frame
-      input#proposal-id(type="hidden" value="{{id}}")
-      img.avatar(src="/images/avatar.png")
-      a.description(href="{{url}}") Hacer un par de cambios
-      i  by Him 
+    include templates/proposals
   //
     #proposals
     h1 Proposals

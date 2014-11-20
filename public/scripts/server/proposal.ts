@@ -46,7 +46,9 @@ export function add(args: add.ParamsType): Promise<add.ReturnType> {
         .then(() => {
             debugger;
             var key = { article: {id: article.id }, proposal: {id: id}};
-            var val = { changes: changes, 
+            var val = { 
+                id: id,
+                changes: changes, 
                 description: proposal.description
             };
             return db.hmset(keys.proposal(key), val)
@@ -73,6 +75,7 @@ export function getAll(args: getAll.ParamsType): Promise<getAll.ReturnType> {
         }
         return proposals;
     }
+    debugger;
     return db.sort(keys.proposalsIdSet(args.proposal), 'by', 'nosort', 
         'GET', keys.proposalsNoSortField(args, 'id'),
         'GET', keys.proposalsNoSortField(args, 'changes'),

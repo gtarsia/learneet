@@ -16,6 +16,7 @@ var ArticleGui = (function (_super) {
         _super.call(this);
         this.id = "-1";
         this.addProposalBtn = this.propertize("button#addProposal");
+        this.viewProposalsBtn = this.propertize("button#viewProposals");
         var _self = this;
         $(document).ready(function () {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
@@ -48,6 +49,9 @@ var ArticleGui = (function (_super) {
             });
             _self.addProposalBtn.jq.click(function () {
                 _self.redirect(url.proposals.add(_self.id));
+            });
+            _self.viewProposalsBtn.jq.click(function () {
+                _self.redirect(url.proposals.getAll(_self.id));
             });
         });
     }

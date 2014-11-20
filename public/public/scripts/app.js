@@ -77,6 +77,7 @@ var ArticleGui = (function (_super) {
         _super.call(this);
         this.id = "-1";
         this.addProposalBtn = this.propertize("button#addProposal");
+        this.viewProposalsBtn = this.propertize("button#viewProposals");
         var _self = this;
         $(document).ready(function () {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
@@ -109,6 +110,9 @@ var ArticleGui = (function (_super) {
             });
             _self.addProposalBtn.jq.click(function () {
                 _self.redirect(url.proposals.add(_self.id));
+            });
+            _self.viewProposalsBtn.jq.click(function () {
+                _self.redirect(url.proposals.getAll(_self.id));
             });
         });
     }
@@ -198,6 +202,12 @@ var article = exports.article;
         return exports.buildAjax(baseAddProp.url(), baseAddProp.type(), params);
     }
     proposal.add = add;
+
+    var baseGetAll = baseAjax.proposal.getAll;
+    function getAll(params) {
+        return exports.buildAjax(baseGetAll.url(), baseGetAll.type(), params);
+    }
+    proposal.getAll = getAll;
 })(exports.proposal || (exports.proposal = {}));
 var proposal = exports.proposal;
 
@@ -644,12 +654,36 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var clientAjax = require("./client-ajax");
+
 var Gui = require("./gui");
+var url = require("./../common/url");
 
 var ProposalsGui = (function (_super) {
     __extends(ProposalsGui, _super);
     function ProposalsGui() {
-        _super.apply(this, arguments);
+        _super.call(this);
+        this.id = "-1";
+        this.proposalsTemplate = this.propertize("#proposals-template");
+        var _self = this;
+        $(document).ready(function () {
+            _self.id = $("[type=hidden]#article-id").val();
+            clientAjax.proposal.getAll({
+                proposal: {
+                    article: { id: _self.id }
+                }
+            }).done(function (res) {
+                var proposals = res.result.proposals;
+                var length = proposals.length;
+                for (var i = 0; i < length; i++) {
+                    proposals[i].url = url.article.get(proposals[i].id);
+                }
+                var template = _self.proposalsTemplate.jq.html();
+                Mustache.parse(template);
+                var rendered = Mustache.render(template, { props: proposals });
+                _self.proposalsTemplate.jq.after(rendered);
+            });
+        });
     }
     return ProposalsGui;
 })(Gui);
@@ -660,7 +694,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./gui":6}],12:[function(require,module,exports){
+},{"./../common/url":17,"./client-ajax":3,"./gui":6}],12:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
