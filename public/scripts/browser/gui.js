@@ -4,6 +4,10 @@ clientAjax = ClientAjax;
 
 var Gui = (function () {
     function Gui() {
+        $(document).ready(function () {
+            $('#main').find('button').velocity({ opacity: 0 }, { duration: 0 });
+            $('#main').find('button').velocity({ opacity: 1 }, { duration: 500 });
+        });
     }
     Gui.prototype.redirect = function (view) {
         window.location.href = view;

@@ -39,7 +39,9 @@ function set(app) {
         var id = req.params.id;
         db.hget('article:' + id, 'title').then(function (title) {
             res.render('add_proposal', {
-                url: url.article.edit(id), id: id, title: title + ' - Learneet'
+                url: url.article.edit(id),
+                id: id,
+                title: title + ' - Learneet'
             });
         });
     });

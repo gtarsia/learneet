@@ -1,8 +1,15 @@
+ 
 var ClientAjax = require('./client-ajax');
 declare var clientAjax;
-clientAjax = ClientAjax;
+clientAjax = ClientAjax; 
 
 class Gui {
+    constructor() { 
+        $(document).ready(() => { 
+            $('#main').find('button').velocity({opacity: 0}, {duration: 0});
+            $('#main').find('button').velocity({opacity: 1}, {duration: 500});    
+        }) 
+    }
     redirect(view: string) {
         window.location.href = view;
     }
@@ -19,7 +26,7 @@ class Gui {
             set: function(val) {
                 obj.jq[valFnName](val);
             }    
-        });
+        }); 
         return obj;
     }
 }

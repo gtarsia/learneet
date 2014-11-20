@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":18,"./client-ajax":3,"./gui":6,"./templates/previewable-article":14}],2:[function(require,module,exports){
+},{"./../common/validate":19,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -128,7 +128,10 @@ if (guiName == 'ArticleGui') {
 }
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":17,"./client-ajax":3,"./gui":6,"./templates/rendered-article":15}],3:[function(require,module,exports){
+},{"./../common/url":18,"./client-ajax":4,"./gui":7,"./templates/rendered-article":16}],3:[function(require,module,exports){
+//# sourceMappingURL=browse-gui.js.map
+
+},{}],4:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
@@ -227,7 +230,7 @@ var proposal = exports.proposal;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":16}],4:[function(require,module,exports){
+},{"./../common/base-ajax":17}],5:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -274,7 +277,7 @@ if (guiName == 'CreateArticleGui') {
 }
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":17,"./client-ajax":3,"./gui":6,"./templates/previewable-article":14}],5:[function(require,module,exports){
+},{"./../common/url":18,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],6:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -429,13 +432,17 @@ if (guiName == 'EditArticleGui') {
 }
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":16,"./../common/url":17,"./../common/validate":18,"./client-ajax":3,"./gui":6,"./templates/previewable-article":14}],6:[function(require,module,exports){
+},{"./../common/base-ajax":17,"./../common/url":18,"./../common/validate":19,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],7:[function(require,module,exports){
 var ClientAjax = require('./client-ajax');
 
 clientAjax = ClientAjax;
 
 var Gui = (function () {
     function Gui() {
+        $(document).ready(function () {
+            $('#main').find('button').velocity({ opacity: 0 }, { duration: 0 });
+            $('#main').find('button').velocity({ opacity: 1 }, { duration: 500 });
+        });
     }
     Gui.prototype.redirect = function (view) {
         window.location.href = view;
@@ -466,7 +473,7 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{"./client-ajax":3}],7:[function(require,module,exports){
+},{"./client-ajax":4}],8:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -527,7 +534,7 @@ if (guiName == 'IndexGui') {
 }
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":17,"./client-ajax":3,"./gui":6}],8:[function(require,module,exports){
+},{"./../common/url":18,"./client-ajax":4,"./gui":7}],9:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -571,7 +578,7 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":10}],9:[function(require,module,exports){
+},{"./parser":11}],10:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -618,7 +625,7 @@ if (guiName == 'LogInGui') {
 }
 //# sourceMappingURL=login-gui.js.map
 
-},{"./client-ajax":3,"./gui":6}],10:[function(require,module,exports){
+},{"./client-ajax":4,"./gui":7}],11:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -647,7 +654,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -694,7 +701,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":17,"./client-ajax":3,"./gui":6}],12:[function(require,module,exports){
+},{"./../common/url":18,"./client-ajax":4,"./gui":7}],13:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -748,7 +755,7 @@ if (guiName == 'RegisterGui') {
 }
 //# sourceMappingURL=register-gui.js.map
 
-},{"./client-ajax":3,"./gui":6}],13:[function(require,module,exports){
+},{"./client-ajax":4,"./gui":7}],14:[function(require,module,exports){
 var EditableArticle = (function () {
     function EditableArticle() {
         var _self = this;
@@ -788,7 +795,7 @@ var EditableArticle = (function () {
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
@@ -900,7 +907,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":3,"./editable-article":13,"./rendered-article":15}],15:[function(require,module,exports){
+},{".././client-ajax":4,"./editable-article":14,"./rendered-article":16}],16:[function(require,module,exports){
 var RenderedArticle = (function () {
     function RenderedArticle() {
         var _self = this;
@@ -941,7 +948,7 @@ var RenderedArticle = (function () {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -1122,7 +1129,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -1163,7 +1170,7 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -1203,7 +1210,7 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validate.js.map
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -1243,4 +1250,4 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,16,17,18,19]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20]);

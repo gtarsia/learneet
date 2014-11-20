@@ -44,7 +44,9 @@ export function set(app) {
         db.hget('article:' + id, 'title')
         .then(title => {
             res.render('add_proposal', { 
-                url: url.article.edit(id), id: id, title: title + ' - Learneet'
+                url: url.article.edit(id), 
+                id: id, 
+                title: title + ' - Learneet'
             });
         }); 
     })
