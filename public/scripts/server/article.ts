@@ -182,11 +182,7 @@ export module TitleSearch {
 				var title = article.shift();
 				articles.push({id: id, title: title});
 			}
-			return {
-				ok: true,
-				why: '',
-				result: articles
-			}
+			return okObj(articles)
 		})
 	}
 }
@@ -198,12 +194,7 @@ export function addDependency(args: addDependency.ParamsType)
 	var dependency = args.dependency;
 	return db.sadd(keys.dependency(args))
 	.then((res: string) => {
-		debugger;
-		return {
-			ok: true,
-			why: '',
-			result: (res == '1')
-		}
+		return okObj<Boolean>(res == '1');
 	});
 }
 
@@ -219,11 +210,7 @@ export function getDependencies(args: getDependencies.ParamsType)
 			var title = array.shift();
 			articles.push({ id: id, title: title});
 		}
-		return {
-			ok: true,
-			why: '',
-			result: articles
-		};
+		return okObj<TitleWithId[]>(articles);
 	});
 }
 
@@ -233,10 +220,6 @@ export function remDependency(args: remDeps.ParamsType)
 	var dependency = args.dependency;
 	return db.srem(keys.dependency(args))
 	.then(res => {
-		return {
-			ok: true,
-			why: '',
-			result: res == '1'
-		}	
+		return okObj(res == '1');
 	})
 }

@@ -180,11 +180,7 @@ exports.getAll = getAll;
                 var title = article.shift();
                 articles.push({ id: id, title: title });
             }
-            return {
-                ok: true,
-                why: '',
-                result: articles
-            };
+            return exports.okObj(articles);
         });
     }
     TitleSearch.query = query;
@@ -195,12 +191,7 @@ function addDependency(args) {
     var dependent = args.dependent;
     var dependency = args.dependency;
     return db.sadd(keys.dependency(args)).then(function (res) {
-        debugger;
-        return {
-            ok: true,
-            why: '',
-            result: (res == '1')
-        };
+        return exports.okObj(res == '1');
     });
 }
 exports.addDependency = addDependency;
@@ -214,11 +205,7 @@ function getDependencies(args) {
             var title = array.shift();
             articles.push({ id: id, title: title });
         }
-        return {
-            ok: true,
-            why: '',
-            result: articles
-        };
+        return exports.okObj(articles);
     });
 }
 exports.getDependencies = getDependencies;
@@ -227,11 +214,7 @@ function remDependency(args) {
     var dependent = args.dependent;
     var dependency = args.dependency;
     return db.srem(keys.dependency(args)).then(function (res) {
-        return {
-            ok: true,
-            why: '',
-            result: res == '1'
-        };
+        return exports.okObj(res == '1');
     });
 }
 exports.remDependency = remDependency;
