@@ -19,7 +19,7 @@ function set(app) {
         var id = req.params.id;
         db.hget('article:' + id, 'title').then(function (title) {
             res.render('article', {
-                editUrl: url.article.edit(id),
+                onClickAddProposal: "location.href = '" + url.proposals.add(id) + "';",
                 viewProposalsUrl: url.proposals.getAll(id),
                 id: id,
                 title: title + ' - Learneet'

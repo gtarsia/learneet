@@ -22,7 +22,7 @@ export function set(app) {
         db.hget('article:' + id, 'title')
         .then(title => {
             res.render('article', { 
-                editUrl: url.article.edit(id),
+                onClickAddProposal: "location.href = '" + url.proposals.add(id) + "';",
                 viewProposalsUrl: url.proposals.getAll(id),
                 id: id,
                 title: title + ' - Learneet'

@@ -46,15 +46,6 @@ export class ArticleGui extends Gui {
                     { deps: deps});
                 _self.dependenciesTemplate.jq.after(rendered);
             });
-            _self.getEditBtn().click(() => {
-                _self.redirect(url.article.edit(_self.id))
-            });
-            _self.addProposalBtn.jq.click(() => {
-                _self.redirect(url.proposals.add(_self.id));
-            });
-            _self.viewProposalsBtn.jq.click(() => {
-                _self.redirect(url.proposals.getAll(_self.id));
-            })
         });
     }
 } 

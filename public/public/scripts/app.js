@@ -105,15 +105,6 @@ var ArticleGui = (function (_super) {
                 var rendered = Mustache.render(template, { deps: deps });
                 _self.dependenciesTemplate.jq.after(rendered);
             });
-            _self.getEditBtn().click(function () {
-                _self.redirect(url.article.edit(_self.id));
-            });
-            _self.addProposalBtn.jq.click(function () {
-                _self.redirect(url.proposals.add(_self.id));
-            });
-            _self.viewProposalsBtn.jq.click(function () {
-                _self.redirect(url.proposals.getAll(_self.id));
-            });
         });
     }
     ArticleGui.prototype.getEditBtn = function () {
