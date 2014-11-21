@@ -8,6 +8,8 @@ declare function marked(s);
 export class ProposalsGui extends Gui {
     id: string = "-1";
     proposalsTemplate = this.propertize("#proposals-template")
+    acceptBtns = this.propertize(".acceptBtn");
+    rejectBtns = this.propertize(".rejeectBtn");
     constructor() {
         super();
         var _self = this;
@@ -28,6 +30,12 @@ export class ProposalsGui extends Gui {
                 var rendered = Mustache.render(template, 
                     { props: proposals});
                 _self.proposalsTemplate.jq.after(rendered);
+            });
+            _self.acceptBtns.jq.click(() => {
+                console.log("rejected");
+            });
+            _self.rejectBtns.jq.click(() => {
+                console.log("accepted");
             });
         })
     }

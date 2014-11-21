@@ -672,6 +672,8 @@ var ProposalsGui = (function (_super) {
         _super.call(this);
         this.id = "-1";
         this.proposalsTemplate = this.propertize("#proposals-template");
+        this.acceptBtns = this.propertize(".acceptBtn");
+        this.rejectBtns = this.propertize(".rejeectBtn");
         var _self = this;
         $(document).ready(function () {
             _self.id = $("[type=hidden]#article-id").val();
@@ -689,6 +691,12 @@ var ProposalsGui = (function (_super) {
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, { props: proposals });
                 _self.proposalsTemplate.jq.after(rendered);
+            });
+            _self.acceptBtns.jq.click(function () {
+                console.log("rejected");
+            });
+            _self.rejectBtns.jq.click(function () {
+                console.log("accepted");
             });
         });
     }
