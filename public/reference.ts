@@ -19,6 +19,7 @@
 /// <reference path="scripts/browser/templates/editable-article.ts" />
 /// <reference path="scripts/browser/templates/previewable-article.ts" />
 /// <reference path="scripts/browser/templates/rendered-article.ts" />
+/// <reference path="scripts/browser/utils/score-arrow.ts" />
 /// <reference path="scripts/common/base-ajax.ts" />
 /// <reference path="scripts/common/url.ts" />
 /// <reference path="scripts/common/validate.ts" />

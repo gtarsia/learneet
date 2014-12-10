@@ -14,6 +14,8 @@ export class ArticleGui extends Gui {
     addProposalBtn = this.propertize("button#addProposal");
     viewProposalsBtn = this.propertize("button#viewProposals");
     article: RenderedArticle;
+    upScoreBtn = this.propertize("input#up-score-arrow");
+    downScoreBtn = this.propertize("input#down-score-arrow");
     constructor() {
         super();        
         var _self = this;
@@ -31,6 +33,10 @@ export class ArticleGui extends Gui {
                 _self.article.title.val = result.title;
                 _self.article.content.val = marked(result.content);
             });
+            _self.upScoreBtn.jq.click(() => {
+                this.attr('src', 'srcImage.jpg');
+            })
+            return;
             clientAjax.article.getDependencies({
                 article: { id: _self.id }
             })

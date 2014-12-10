@@ -17,8 +17,11 @@ var ArticleGui = (function (_super) {
         this.id = "-1";
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
+        this.upScoreBtn = this.propertize("input#up-score-arrow");
+        this.downScoreBtn = this.propertize("input#down-score-arrow");
         var _self = this;
         $(document).ready(function () {
+            var _this = this;
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
@@ -31,6 +34,10 @@ var ArticleGui = (function (_super) {
                 _self.article.title.val = result.title;
                 _self.article.content.val = marked(result.content);
             });
+            _self.upScoreBtn.jq.click(function () {
+                _this.attr('src', 'srcImage.jpg');
+            });
+            return;
             clientAjax.article.getDependencies({
                 article: { id: _self.id }
             }).done(function (res) {

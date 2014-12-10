@@ -7,6 +7,13 @@ prepend scripts
 append styles
   link(rel='stylesheet', href='/stylesheets/article.css')
 
-block main
+block main-left
+  input.score-arrow#up-score-button(type="image" src="/images/up-score.png")
+  #article-score
+    | 3
+  input.score-arrow#down-score-button(type="image" src="/images/down-score.png")
+
+
+block main-center
   input#article-id(type="hidden" value= id)
   include templates/viewable-article
