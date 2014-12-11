@@ -10,6 +10,7 @@ import update = baseArticle.update;
 import addDependency = baseArticle.addDependency;
 import getDependencies = baseArticle.getDependencies;
 import remDeps = baseArticle.remDependency;
+import getScore = baseArticle.getScore;
 import getAll = baseArticle.getAll;
 import redis = require("redis");
 import queryTitle = baseArticle.queryTitle;
@@ -221,5 +222,13 @@ export function remDependency(args: remDeps.ParamsType)
 	return db.srem(keys.dependency(args))
 	.then(res => {
 		return okObj(res == '1');
+	})
+}
+
+export function getScore(args: getScore.ParamsType)
+: Promise<getScore.ReturnType> {
+	return db.scard(keys.articleScore(args))
+	.then(res => {
+		return okObj({article: {score: res} });
 	})
 }

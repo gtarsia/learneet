@@ -115,6 +115,10 @@ export function sadd(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.sadd.bind(client), args]);
 }
 
+export function scard(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.scard.bind(client), args]);
+}
+
 export function srem(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.srem.bind(client), args]);
 }

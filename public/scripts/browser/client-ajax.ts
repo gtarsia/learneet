@@ -62,6 +62,12 @@ export module article {
     : JQueryXHR<baseRemDep.ReturnType> {
         return buildAjax(baseRemDep.url(), baseRemDep.type(), params);
     }
+
+    import baseGetScore = baseAjax.article.getScore;
+    export function getScore(params: baseGetScore.ParamsType)
+    : JQueryXHR<baseGetScore.ReturnType> {
+        return buildAjax(baseGetScore.url(), baseGetScore.type(), params);
+    }    
 }
 
 export module proposal {

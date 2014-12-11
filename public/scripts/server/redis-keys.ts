@@ -22,6 +22,10 @@ export function articlesIdSet() {
     return j([baseArticles(), "idSet"]);
 }
 
+export function articleScore(args: ArticleWithId) {
+    return j([baseArticles(), args.article.id, 'score'])
+}
+
 //Proposals
 
 export function baseProposals(args: ArticleWithId) {
@@ -53,6 +57,8 @@ export function dependenciesIdCounter(args: ArticleWithId) {
 export function dependenciesIdSet(args: ArticleWithId) {
     return j([baseDependencies(args), "idSet"]);
 }
+
+
 
 //Version
 /*

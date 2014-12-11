@@ -3,6 +3,7 @@ import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
 import Gui = require("./gui");
 import url = require("./../common/url");
+import Arrows = require('./utils/score-arrow');
 declare function marked(s);
 
 export class ArticleGui extends Gui {
@@ -14,8 +15,7 @@ export class ArticleGui extends Gui {
     addProposalBtn = this.propertize("button#addProposal");
     viewProposalsBtn = this.propertize("button#viewProposals");
     article: RenderedArticle;
-    upScoreBtn = this.propertize("input#up-score-arrow");
-    downScoreBtn = this.propertize("input#down-score-arrow");
+    articleScore;
     constructor() {
         super();        
         var _self = this;
@@ -23,6 +23,10 @@ export class ArticleGui extends Gui {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
+            _self.articleScore = new Arrows.ArticleScore(
+                {up: 'input#up-score', down: 'input#down-score',
+                score: 'div#article-score'}, {id: _self.id}
+            );
             clientAjax.article.get({article: { id: _self.id }})
             .done(function(res) {
                 if (!res.ok) {
@@ -33,9 +37,9 @@ export class ArticleGui extends Gui {
                 _self.article.title.val = result.title;
                 _self.article.content.val = marked(result.content);
             });
-            _self.upScoreBtn.jq.click(() => {
+            /*_self.upScoreBtn.jq.click(() => {
                 this.attr('src', 'srcImage.jpg');
-            })
+            })*/
             return;
             clientAjax.article.getDependencies({
                 article: { id: _self.id }

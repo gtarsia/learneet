@@ -81,6 +81,18 @@
     })(_article.queryTitle || (_article.queryTitle = {}));
     var queryTitle = _article.queryTitle;
 
+    (function (getScore) {
+        function url() {
+            return '/api/get_article_score';
+        }
+        getScore.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        getScore.type = type;
+    })(_article.getScore || (_article.getScore = {}));
+    var getScore = _article.getScore;
+
     (function (addDependency) {
         function url() {
             return '/api/adddependency';

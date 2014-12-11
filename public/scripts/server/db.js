@@ -124,6 +124,15 @@ function sadd() {
 }
 exports.sadd = sadd;
 
+function scard() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.scard.bind(exports.client), args]);
+}
+exports.scard = scard;
+
 function srem() {
     var args = [];
     for (var _i = 0; _i < (arguments.length - 0); _i++) {

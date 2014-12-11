@@ -62,6 +62,12 @@ exports.buildAjax = buildAjax;
         return exports.buildAjax(baseRemDep.url(), baseRemDep.type(), params);
     }
     _article.remDependency = remDependency;
+
+    var baseGetScore = baseAjax.article.getScore;
+    function getScore(params) {
+        return exports.buildAjax(baseGetScore.url(), baseGetScore.type(), params);
+    }
+    _article.getScore = getScore;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 

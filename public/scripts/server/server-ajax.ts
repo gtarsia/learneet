@@ -16,6 +16,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.addDependency(),
         article.getDependencies(),
         article.remDependency(),
+        article.getScore(),
         proposal.add(),
         proposal.getAll(),
         user.register()
@@ -90,6 +91,12 @@ export module article {
         return restCb(baseGetDeps.url(), baseGetDeps.type(), 
             dbArticle.getDependencies);
     }
+
+    import baseGetScore = baseAjax.article.getScore;
+    export function getScore() {
+        return restCb(baseGetScore.url(), baseGetScore.type(), 
+            dbArticle.getScore);
+    }    
 
     import baseRemDep = baseAjax.article.remDependency;
     export function remDependency() {

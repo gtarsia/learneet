@@ -15,6 +15,7 @@ function getServerAjaxList() {
         article.addDependency(),
         article.getDependencies(),
         article.remDependency(),
+        article.getScore(),
         proposal.add(),
         proposal.getAll(),
         user.register()
@@ -92,6 +93,12 @@ exports.restCb = restCb;
         return exports.restCb(baseGetDeps.url(), baseGetDeps.type(), dbArticle.getDependencies);
     }
     article.getDependencies = getDependencies;
+
+    var baseGetScore = baseAjax.article.getScore;
+    function getScore() {
+        return exports.restCb(baseGetScore.url(), baseGetScore.type(), dbArticle.getScore);
+    }
+    article.getScore = getScore;
 
     var baseRemDep = baseAjax.article.remDependency;
     function remDependency() {

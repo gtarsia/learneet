@@ -76,6 +76,13 @@ export module article {
         export interface ReturnType extends JsonReturn<TitleWithId[]> { }
     }
 
+    export module getScore {
+        export function url(): string { return '/api/get_article_score'}
+        export function type(): string { return AjaxType.GET }
+        export interface ParamsType { article: {id: string} }
+        export interface ReturnType extends JsonReturn<{article: {score: Number}}> {}
+    }
+
     export module addDependency {
         export function url(): string { return '/api/adddependency'}
         export function type(): string { return AjaxType.POST }

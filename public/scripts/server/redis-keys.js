@@ -20,6 +20,11 @@ function articlesIdSet() {
 }
 exports.articlesIdSet = articlesIdSet;
 
+function articleScore(args) {
+    return exports.j([exports.baseArticles(), args.article.id, 'score']);
+}
+exports.articleScore = articleScore;
+
 function baseProposals(args) {
     return exports.j([exports.article(args), "proposals"]);
 }

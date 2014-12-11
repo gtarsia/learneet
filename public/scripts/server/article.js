@@ -218,4 +218,11 @@ function remDependency(args) {
     });
 }
 exports.remDependency = remDependency;
+
+function getScore(args) {
+    return db.scard(keys.articleScore(args)).then(function (res) {
+        return exports.okObj({ article: { score: res } });
+    });
+}
+exports.getScore = getScore;
 //# sourceMappingURL=article.js.map

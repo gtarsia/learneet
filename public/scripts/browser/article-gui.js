@@ -9,6 +9,7 @@ var clientAjax = require("./client-ajax");
 var RenderedArticle = require('./templates/rendered-article');
 var Gui = require("./gui");
 var url = require("./../common/url");
+var Arrows = require('./utils/score-arrow');
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
@@ -17,14 +18,14 @@ var ArticleGui = (function (_super) {
         this.id = "-1";
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
-        this.upScoreBtn = this.propertize("input#up-score-arrow");
-        this.downScoreBtn = this.propertize("input#down-score-arrow");
         var _self = this;
         $(document).ready(function () {
-            var _this = this;
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
+            _self.articleScore = new Arrows.ArticleScore({
+                up: 'input#up-score', down: 'input#down-score',
+                score: 'div#article-score' }, { id: _self.id });
             clientAjax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -34,9 +35,7 @@ var ArticleGui = (function (_super) {
                 _self.article.title.val = result.title;
                 _self.article.content.val = marked(result.content);
             });
-            _self.upScoreBtn.jq.click(function () {
-                _this.attr('src', 'srcImage.jpg');
-            });
+
             return;
             clientAjax.article.getDependencies({
                 article: { id: _self.id }

@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":19,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],2:[function(require,module,exports){
+},{"./../common/validate":20,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -70,6 +70,7 @@ var clientAjax = require("./client-ajax");
 var RenderedArticle = require('./templates/rendered-article');
 var Gui = require("./gui");
 var url = require("./../common/url");
+var Arrows = require('./utils/score-arrow');
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
@@ -78,14 +79,14 @@ var ArticleGui = (function (_super) {
         this.id = "-1";
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
-        this.upScoreBtn = this.propertize("input#up-score-arrow");
-        this.downScoreBtn = this.propertize("input#down-score-arrow");
         var _self = this;
         $(document).ready(function () {
-            var _this = this;
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
+            _self.articleScore = new Arrows.ArticleScore({
+                up: 'input#up-score', down: 'input#down-score',
+                score: 'div#article-score' }, { id: _self.id });
             clientAjax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -95,9 +96,7 @@ var ArticleGui = (function (_super) {
                 _self.article.title.val = result.title;
                 _self.article.content.val = marked(result.content);
             });
-            _self.upScoreBtn.jq.click(function () {
-                _this.attr('src', 'srcImage.jpg');
-            });
+
             return;
             clientAjax.article.getDependencies({
                 article: { id: _self.id }
@@ -126,7 +125,7 @@ if (guiName == 'ArticleGui') {
 }
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":18,"./client-ajax":4,"./gui":7,"./templates/rendered-article":16}],3:[function(require,module,exports){
+},{"./../common/url":19,"./client-ajax":4,"./gui":7,"./templates/rendered-article":16,"./utils/score-arrow":17}],3:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],4:[function(require,module,exports){
@@ -194,6 +193,12 @@ exports.buildAjax = buildAjax;
         return exports.buildAjax(baseRemDep.url(), baseRemDep.type(), params);
     }
     _article.remDependency = remDependency;
+
+    var baseGetScore = baseAjax.article.getScore;
+    function getScore(params) {
+        return exports.buildAjax(baseGetScore.url(), baseGetScore.type(), params);
+    }
+    _article.getScore = getScore;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
@@ -228,7 +233,7 @@ var proposal = exports.proposal;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":17}],5:[function(require,module,exports){
+},{"./../common/base-ajax":18}],5:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -275,7 +280,7 @@ if (guiName == 'CreateArticleGui') {
 }
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":18,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],6:[function(require,module,exports){
+},{"./../common/url":19,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],6:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -430,7 +435,7 @@ if (guiName == 'EditArticleGui') {
 }
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":17,"./../common/url":18,"./../common/validate":19,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],7:[function(require,module,exports){
+},{"./../common/base-ajax":18,"./../common/url":19,"./../common/validate":20,"./client-ajax":4,"./gui":7,"./templates/previewable-article":15}],7:[function(require,module,exports){
 var ClientAjax = require('./client-ajax');
 
 clientAjax = ClientAjax;
@@ -532,7 +537,7 @@ if (guiName == 'IndexGui') {
 }
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":18,"./client-ajax":4,"./gui":7}],9:[function(require,module,exports){
+},{"./../common/url":19,"./client-ajax":4,"./gui":7}],9:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -707,7 +712,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":18,"./client-ajax":4,"./gui":7}],13:[function(require,module,exports){
+},{"./../common/url":19,"./client-ajax":4,"./gui":7}],13:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -955,6 +960,106 @@ module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
 },{}],17:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Gui = require('./../gui');
+var clientAjax = require('./../client-ajax');
+
+var ScoreArrow = (function (_super) {
+    __extends(ScoreArrow, _super);
+    function ScoreArrow(arrowSelector, offImageUrl, onImageUrl) {
+        _super.call(this);
+        this.isTurnedOn = false;
+        this.arrow = this.propertize(arrowSelector);
+        this.offImageUrl = offImageUrl;
+        this.onImageUrl = onImageUrl;
+    }
+    ScoreArrow.prototype.changeImage = function (url) {
+        var _self = this;
+        _self.arrow.jq.attr('src', url);
+    };
+    ScoreArrow.prototype.toggle = function () {
+        if (this.isTurnedOn)
+            this.turnOff();
+        else
+            this.turnOn();
+    };
+    ScoreArrow.prototype.turnOff = function () {
+        this.isTurnedOn = false;
+        this.changeImage(this.offImageUrl);
+    };
+    ScoreArrow.prototype.turnOn = function () {
+        this.isTurnedOn = true;
+        this.changeImage(this.onImageUrl);
+    };
+    return ScoreArrow;
+})(Gui);
+exports.ScoreArrow = ScoreArrow;
+
+var UpScoreArrow = (function (_super) {
+    __extends(UpScoreArrow, _super);
+    function UpScoreArrow(arrowSelector) {
+        _super.call(this, arrowSelector, '/images/up-score.png', '/images/up-score-hover.png');
+    }
+    return UpScoreArrow;
+})(ScoreArrow);
+exports.UpScoreArrow = UpScoreArrow;
+
+var DownScoreArrow = (function (_super) {
+    __extends(DownScoreArrow, _super);
+    function DownScoreArrow(arrowSelector) {
+        _super.call(this, arrowSelector, '/images/down-score.png', '/images/down-score-hover.png');
+    }
+    return DownScoreArrow;
+})(ScoreArrow);
+exports.DownScoreArrow = DownScoreArrow;
+
+var Score = (function (_super) {
+    __extends(Score, _super);
+    function Score(selector) {
+        _super.call(this);
+        this.score = this.propertize(selector, 'html');
+    }
+    Score.prototype.set = function (args) {
+        this.score.val = args.article.score;
+    };
+    return Score;
+})(Gui);
+exports.Score = Score;
+
+var ArticleScore = (function () {
+    function ArticleScore(selectors, article) {
+        var _self = this;
+        this.article = article;
+        this.upScoreArrow = new UpScoreArrow(selectors.up);
+        this.downScoreArrow = new DownScoreArrow(selectors.down);
+        this.score = new Score(selectors.score);
+        this.upScoreArrow.arrow.jq.click(function () {
+            if (_self.downScoreArrow.isTurnedOn && !_self.upScoreArrow.isTurnedOn)
+                _self.downScoreArrow.turnOff();
+            _self.upScoreArrow.toggle();
+        });
+        this.downScoreArrow.arrow.jq.click(function () {
+            if (_self.upScoreArrow.isTurnedOn && !_self.downScoreArrow.isTurnedOn)
+                _self.upScoreArrow.turnOff();
+            _self.downScoreArrow.toggle();
+        });
+        clientAjax.article.getScore({
+            article: { id: _self.article.id }
+        }).done(function (res) {
+            _self.score.set(res.result);
+        });
+    }
+    return ArticleScore;
+})();
+exports.ArticleScore = ArticleScore;
+//# sourceMappingURL=score-arrow.js.map
+
+},{"./../client-ajax":4,"./../gui":7}],18:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -1037,6 +1142,18 @@ exports.AjaxType = {
         queryTitle.type = type;
     })(_article.queryTitle || (_article.queryTitle = {}));
     var queryTitle = _article.queryTitle;
+
+    (function (getScore) {
+        function url() {
+            return '/api/get_article_score';
+        }
+        getScore.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        getScore.type = type;
+    })(_article.getScore || (_article.getScore = {}));
+    var getScore = _article.getScore;
 
     (function (addDependency) {
         function url() {
@@ -1135,7 +1252,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -1176,7 +1293,7 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -1216,7 +1333,7 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validate.js.map
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -1256,4 +1373,4 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,18,19,20,21]);
