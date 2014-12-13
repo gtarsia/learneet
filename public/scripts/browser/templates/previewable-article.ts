@@ -80,7 +80,7 @@ class PreviewableArticle {
             outputContent.val = marked(content);
         });
     }
-    fetchDBArticle(args: {id: string}): JQueryPromise<baseAjax.article.get.ReturnType> {
+    fetchDBArticle(args: {id: string}): JQueryPromise<baseAjax.article.get.Return> {
         var _self = this;
         return clientAjax.article.get({article: args})
         .then(function(res) {

@@ -10,14 +10,18 @@
     _article.WrapFieldWithId = WrapFieldWithId;
 
     (function (create) {
-        function url() {
-            return '/api/create_article';
-        }
-        create.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        create.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/create_article';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        create.Ajax = Ajax;
     })(_article.create || (_article.create = {}));
     var create = _article.create;
 
@@ -92,6 +96,42 @@
         getScore.type = type;
     })(_article.getScore || (_article.getScore = {}));
     var getScore = _article.getScore;
+
+    (function (getScoreByUser) {
+        function url() {
+            return '/api/get_score_by_user';
+        }
+        getScoreByUser.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        getScoreByUser.type = type;
+    })(_article.getScoreByUser || (_article.getScoreByUser = {}));
+    var getScoreByUser = _article.getScoreByUser;
+
+    (function (upScore) {
+        function url() {
+            return '/api/up_score_article';
+        }
+        upScore.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        upScore.type = type;
+    })(_article.upScore || (_article.upScore = {}));
+    var upScore = _article.upScore;
+
+    (function (downScore) {
+        function url() {
+            return '/api/down_score_article';
+        }
+        downScore.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        downScore.type = type;
+    })(_article.downScore || (_article.downScore = {}));
+    var downScore = _article.downScore;
 
     (function (addDependency) {
         function url() {

@@ -145,88 +145,111 @@ function buildAjax(url, type, params) {
 }
 exports.buildAjax = buildAjax;
 
-(function (_article) {
-    var baseGet = baseAjax.article.get;
+function buildIAjax(ajax, params) {
+    return exports.buildAjax(ajax.url(), ajax.type(), params);
+}
+exports.buildIAjax = buildIAjax;
+
+(function (article) {
+    var _get = baseAjax.article.get;
     function get(params) {
-        return exports.buildAjax(baseGet.url(), baseGet.type(), params);
+        return exports.buildAjax(_get.url(), _get.type(), params);
     }
-    _article.get = get;
+    article.get = get;
 
-    var baseCreate = baseAjax.article.create;
+    var _create = baseAjax.article.create;
     function create(params) {
-        return exports.buildAjax(baseCreate.url(), baseCreate.type(), params);
+        return exports.buildIAjax(new _create.Ajax(), params);
     }
-    _article.create = create;
+    article.create = create;
 
-    var baseGetAll = baseAjax.article.getAll;
+    var _getAll = baseAjax.article.getAll;
     function getAll(params) {
-        return exports.buildAjax(baseGetAll.url(), baseGetAll.type(), params);
+        return exports.buildAjax(_getAll.url(), _getAll.type(), params);
     }
-    _article.getAll = getAll;
+    article.getAll = getAll;
 
-    var baseUpdate = baseAjax.article.update;
+    var _update = baseAjax.article.update;
     function update(params) {
-        return exports.buildAjax(baseUpdate.url(), baseUpdate.type(), params);
+        return exports.buildAjax(_update.url(), _update.type(), params);
     }
-    _article.update = update;
+    article.update = update;
 
-    var baseQuery = baseAjax.article.queryTitle;
+    var _query = baseAjax.article.queryTitle;
     function query(params) {
-        return exports.buildAjax(baseQuery.url(), baseQuery.type(), params);
+        return exports.buildAjax(_query.url(), _query.type(), params);
     }
-    _article.query = query;
+    article.query = query;
 
-    var baseAddDep = baseAjax.article.addDependency;
+    var _addDep = baseAjax.article.addDependency;
     function addDependency(params) {
-        return exports.buildAjax(baseAddDep.url(), baseAddDep.type(), params);
+        return exports.buildAjax(_addDep.url(), _addDep.type(), params);
     }
-    _article.addDependency = addDependency;
+    article.addDependency = addDependency;
 
-    var baseGetDeps = baseAjax.article.getDependencies;
+    var _getDeps = baseAjax.article.getDependencies;
     function getDependencies(params) {
-        return exports.buildAjax(baseGetDeps.url(), baseGetDeps.type(), params);
+        return exports.buildAjax(_getDeps.url(), _getDeps.type(), params);
     }
-    _article.getDependencies = getDependencies;
+    article.getDependencies = getDependencies;
 
-    var baseRemDep = baseAjax.article.remDependency;
+    var _RemDep = baseAjax.article.remDependency;
     function remDependency(params) {
-        return exports.buildAjax(baseRemDep.url(), baseRemDep.type(), params);
+        return exports.buildAjax(_RemDep.url(), _RemDep.type(), params);
     }
-    _article.remDependency = remDependency;
+    article.remDependency = remDependency;
 
-    var baseGetScore = baseAjax.article.getScore;
+    var _getScore = baseAjax.article.getScore;
     function getScore(params) {
-        return exports.buildAjax(baseGetScore.url(), baseGetScore.type(), params);
+        return exports.buildAjax(_getScore.url(), _getScore.type(), params);
     }
-    _article.getScore = getScore;
+    article.getScore = getScore;
+
+    var _getScoreByUser = baseAjax.article.getScoreByUser;
+    function getScoreByUser(params) {
+        return exports.buildAjax(_getScoreByUser.url(), _getScoreByUser.type(), params);
+    }
+    article.getScoreByUser = getScoreByUser;
+
+    var _UpScore = baseAjax.article.upScore;
+    function upScore(params) {
+        return exports.buildAjax(_UpScore.url(), _UpScore.type(), params);
+    }
+    article.upScore = upScore;
+
+    var _DownScore = baseAjax.article.downScore;
+    function downScore(params) {
+        return exports.buildAjax(_DownScore.url(), _DownScore.type(), params);
+    }
+    article.downScore = downScore;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
 (function (proposal) {
-    var baseAddProp = baseAjax.proposal.add;
+    var _AddProp = baseAjax.proposal.add;
     function add(params) {
-        return exports.buildAjax(baseAddProp.url(), baseAddProp.type(), params);
+        return exports.buildAjax(_AddProp.url(), _AddProp.type(), params);
     }
     proposal.add = add;
 
-    var baseGetAll = baseAjax.proposal.getAll;
+    var _getAll = baseAjax.proposal.getAll;
     function getAll(params) {
-        return exports.buildAjax(baseGetAll.url(), baseGetAll.type(), params);
+        return exports.buildAjax(_getAll.url(), _getAll.type(), params);
     }
     proposal.getAll = getAll;
 })(exports.proposal || (exports.proposal = {}));
 var proposal = exports.proposal;
 
 (function (user) {
-    var baseRegister = baseAjax.user.register;
+    var _Register = baseAjax.user.register;
     function register(params) {
-        return exports.buildAjax(baseRegister.url(), baseRegister.type(), params);
+        return exports.buildAjax(_Register.url(), _Register.type(), params);
     }
     user.register = register;
 
-    var baseAuth = baseAjax.user.auth;
+    var _Auth = baseAjax.user.auth;
     function auth(params) {
-        return exports.buildAjax(baseAuth.url(), baseAuth.type(), params);
+        return exports.buildAjax(_Auth.url(), _Auth.type(), params);
     }
     user.auth = auth;
 })(exports.user || (exports.user = {}));
@@ -1000,23 +1023,23 @@ var ScoreArrow = (function (_super) {
 })(Gui);
 exports.ScoreArrow = ScoreArrow;
 
-var UpScoreArrow = (function (_super) {
-    __extends(UpScoreArrow, _super);
-    function UpScoreArrow(arrowSelector) {
+var upScore = (function (_super) {
+    __extends(upScore, _super);
+    function upScore(arrowSelector) {
         _super.call(this, arrowSelector, '/images/up-score.png', '/images/up-score-hover.png');
     }
-    return UpScoreArrow;
+    return upScore;
 })(ScoreArrow);
-exports.UpScoreArrow = UpScoreArrow;
+exports.upScore = upScore;
 
-var DownScoreArrow = (function (_super) {
-    __extends(DownScoreArrow, _super);
-    function DownScoreArrow(arrowSelector) {
+var downScore = (function (_super) {
+    __extends(downScore, _super);
+    function downScore(arrowSelector) {
         _super.call(this, arrowSelector, '/images/down-score.png', '/images/down-score-hover.png');
     }
-    return DownScoreArrow;
+    return downScore;
 })(ScoreArrow);
-exports.DownScoreArrow = DownScoreArrow;
+exports.downScore = downScore;
 
 var Score = (function (_super) {
     __extends(Score, _super);
@@ -1035,23 +1058,35 @@ var ArticleScore = (function () {
     function ArticleScore(selectors, article) {
         var _self = this;
         this.article = article;
-        this.upScoreArrow = new UpScoreArrow(selectors.up);
-        this.downScoreArrow = new DownScoreArrow(selectors.down);
+        this.upScore = new upScore(selectors.up);
+        this.downScore = new downScore(selectors.down);
         this.score = new Score(selectors.score);
-        this.upScoreArrow.arrow.jq.click(function () {
-            if (_self.downScoreArrow.isTurnedOn && !_self.upScoreArrow.isTurnedOn)
-                _self.downScoreArrow.turnOff();
-            _self.upScoreArrow.toggle();
+        this.upScore.arrow.jq.click(function () {
+            if (_self.downScore.isTurnedOn && !_self.upScore.isTurnedOn)
+                _self.downScore.turnOff();
+            _self.upScore.toggle();
         });
-        this.downScoreArrow.arrow.jq.click(function () {
-            if (_self.upScoreArrow.isTurnedOn && !_self.downScoreArrow.isTurnedOn)
-                _self.upScoreArrow.turnOff();
-            _self.downScoreArrow.toggle();
+        this.downScore.arrow.jq.click(function () {
+            if (_self.upScore.isTurnedOn && !_self.downScore.isTurnedOn)
+                _self.upScore.turnOff();
+            _self.downScore.toggle();
         });
         clientAjax.article.getScore({
             article: { id: _self.article.id }
         }).done(function (res) {
             _self.score.set(res.result);
+        });
+        $(document).ready(function () {
+            clientAjax.article.getScoreByUser({
+                article: { id: _self.article.id },
+                user: { id: '1' }
+            }).then(function (res) {
+                var article = res.result.article;
+                if (article.score == 1)
+                    _self.upScore.turnOn();
+                else if (article.score == -1)
+                    _self.downScore.turnOn();
+            });
         });
     }
     return ArticleScore;
@@ -1072,14 +1107,18 @@ exports.AjaxType = {
     _article.WrapFieldWithId = WrapFieldWithId;
 
     (function (create) {
-        function url() {
-            return '/api/create_article';
-        }
-        create.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        create.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/create_article';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        create.Ajax = Ajax;
     })(_article.create || (_article.create = {}));
     var create = _article.create;
 
@@ -1154,6 +1193,42 @@ exports.AjaxType = {
         getScore.type = type;
     })(_article.getScore || (_article.getScore = {}));
     var getScore = _article.getScore;
+
+    (function (getScoreByUser) {
+        function url() {
+            return '/api/get_score_by_user';
+        }
+        getScoreByUser.url = url;
+        function type() {
+            return exports.AjaxType.GET;
+        }
+        getScoreByUser.type = type;
+    })(_article.getScoreByUser || (_article.getScoreByUser = {}));
+    var getScoreByUser = _article.getScoreByUser;
+
+    (function (upScore) {
+        function url() {
+            return '/api/up_score_article';
+        }
+        upScore.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        upScore.type = type;
+    })(_article.upScore || (_article.upScore = {}));
+    var upScore = _article.upScore;
+
+    (function (downScore) {
+        function url() {
+            return '/api/down_score_article';
+        }
+        downScore.url = url;
+        function type() {
+            return exports.AjaxType.POST;
+        }
+        downScore.type = type;
+    })(_article.downScore || (_article.downScore = {}));
+    var downScore = _article.downScore;
 
     (function (addDependency) {
         function url() {

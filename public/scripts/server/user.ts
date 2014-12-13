@@ -13,7 +13,7 @@ export function hash(password: string) : Promise<string> {
     });
 }
 
-export function register(params: register.ParamsType) : Promise<register.ReturnType> {
+export function register(params: register.Params) : Promise<register.Return> {
     var id;
     var hashed;
     return hash(params.password)
@@ -40,7 +40,7 @@ export function get(username: string): Promise<baseUser.UserFields> {
     return db.hgetall("user:" + username);
 }
 
-export function auth(params: baseAuth.ParamsType): Promise<baseAuth.ReturnType> {
+export function auth(params: baseAuth.Params): Promise<baseAuth.Return> {
     var user;
     return db.hgetall("user:" + params.username)
     .then((_user) => {

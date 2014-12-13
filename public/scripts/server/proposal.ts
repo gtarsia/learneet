@@ -23,7 +23,7 @@ export function okObj<T>(obj: T): any {
     }
 }
 
-export function add(args: add.ParamsType): Promise<add.ReturnType> {
+export function add(args: add.Params): Promise<add.Return> {
     var proposal = args.proposal;
     var article = proposal.article;
     var changes;
@@ -61,7 +61,7 @@ export function add(args: add.ParamsType): Promise<add.ReturnType> {
 }
 
 export interface Proposal { id: string; changes: string; description: string }
-export function getAll(args: getAll.ParamsType): Promise<getAll.ReturnType> {
+export function getAll(args: getAll.Params): Promise<getAll.Return> {
     var proposal = args.proposal;
     function arrayToProposals(array: string[]) : Proposal[] {
         var proposals : Proposal[] = [];
@@ -80,11 +80,11 @@ export function getAll(args: getAll.ParamsType): Promise<getAll.ReturnType> {
         'GET', keys.proposalsNoSortField(args, 'id'),
         'GET', keys.proposalsNoSortField(args, 'changes'),
         'GET', keys.proposalsNoSortField(args, 'description'))
-    .then<getAll.ReturnType>((result: any) => {
+    .then<getAll.Return>((result: any) => {
         debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get articles' : '');
-        var r : getAll.ReturnType = {
+        var r : getAll.Return = {
             ok: ok,
             why: why,
             result: { proposals: arrayToProposals(result) }

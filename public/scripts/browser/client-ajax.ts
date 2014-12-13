@@ -1,10 +1,11 @@
 ﻿import utils = require('./Utils');
 import baseAjax = require('./../common/base-ajax');
 import AjaxType = baseAjax.AjaxType;
+import IAjax = baseAjax.IAjax;
 
 
-export function buildAjax<ArgType, ReturnType>
-(url: string, type: string, params: ArgType) {
+export function buildAjax<ArgType, Return>
+(url: string, type: string, params: ArgType) : JQueryXHR<Return> {
     var obj = {p: JSON.stringify(params)};
     switch (type) {
     case AjaxType.GET:
@@ -14,87 +15,110 @@ export function buildAjax<ArgType, ReturnType>
     }
 }
 
+export function buildIAjax<ArgType, Return>
+(ajax: IAjax, params: ArgType) : JQueryXHR<Return> {
+    return buildAjax(ajax.url(), ajax.type(), params);
+}
+
 export module article {
-    import baseGet = baseAjax.article.get;
-    export function get(params: baseGet.ParamsType) 
-    : JQueryXHR<baseGet.ReturnType> {
-        return buildAjax(baseGet.url(), baseGet.type(), params);
+    import _get = baseAjax.article.get;
+    export function get(params: _get.Params) {
+        return buildAjax<_get.Params, _get.Return>
+        (_get.url(), _get.type(), params);
     }
 
-    import baseCreate = baseAjax.article.create;
-    export function create(params: baseCreate.ParamsType) 
-    : JQueryXHR<baseCreate.ReturnType> {
-        return buildAjax(baseCreate.url(), baseCreate.type(), params);
+    import _create = baseAjax.article.create;
+    export function create(params: _create.Params)  {
+        return buildIAjax<_create.Params, _create.Return>
+        (new _create.Ajax(), params);
     }
 
-    import baseGetAll = baseAjax.article.getAll;
-    export function getAll(params: baseGetAll.ParamsType) 
-    : JQueryXHR<baseGetAll.ReturnType> {
-        return buildAjax(baseGetAll.url(), baseGetAll.type(), params);
+    import _getAll = baseAjax.article.getAll;
+    export function getAll(params) {
+        return buildAjax<_getAll.Params, _getAll.Return>
+        (_getAll.url(), _getAll.type(), params);
     }
 
-    import baseUpdate = baseAjax.article.update;
-    export function update(params: { article: {title: string; content: string; id: string}}) 
-    : JQueryXHR<baseUpdate.ReturnType> {
-        return buildAjax(baseUpdate.url(), baseUpdate.type(), params);
+    import _update = baseAjax.article.update;
+    export function update(params) {
+        return buildAjax<_update.Params, _update.Return>
+        (_update.url(), _update.type(), params);
     }
 
-    import baseQuery = baseAjax.article.queryTitle;
-    export function query(params: baseQuery.ParamsType)
-    : JQueryXHR<baseQuery.ReturnType> {
-        return buildAjax(baseQuery.url(), baseQuery.type(), params);
+    import _query = baseAjax.article.queryTitle;
+    export function query(params: _query.Params) {
+        return buildAjax<_query.Params, _query.Return>
+        (_query.url(), _query.type(), params);
     }
 
-    import baseAddDep = baseAjax.article.addDependency;
-    export function addDependency(params: baseAddDep.ParamsType)
-    : JQueryXHR<baseQuery.ReturnType> {
-        return buildAjax(baseAddDep.url(), baseAddDep.type(), params);
+    import _addDep = baseAjax.article.addDependency;
+    export function addDependency(params: _addDep.Params){
+        return buildAjax<_addDep.Params, _addDep.Return>
+        (_addDep.url(), _addDep.type(), params);
     }
 
-    import baseGetDeps = baseAjax.article.getDependencies;
-    export function getDependencies(params: baseGetDeps.ParamsType)
-    : JQueryXHR<baseGetDeps.ReturnType> {
-        return buildAjax(baseGetDeps.url(), baseGetDeps.type(), params)
+    import _getDeps = baseAjax.article.getDependencies;
+    export function getDependencies(params: _getDeps.Params) {
+        return buildAjax<_getDeps.Params, _getDeps.Return>
+        (_getDeps.url(), _getDeps.type(), params)
     }
 
-    import baseRemDep = baseAjax.article.remDependency;
-    export function remDependency(params: baseRemDep.ParamsType)
-    : JQueryXHR<baseRemDep.ReturnType> {
-        return buildAjax(baseRemDep.url(), baseRemDep.type(), params);
+    import _RemDep = baseAjax.article.remDependency;
+    export function remDependency(params: _RemDep.Params) {
+        return buildAjax<_RemDep.Params, _RemDep.Return>
+        (_RemDep.url(), _RemDep.type(), params);
     }
 
-    import baseGetScore = baseAjax.article.getScore;
-    export function getScore(params: baseGetScore.ParamsType)
-    : JQueryXHR<baseGetScore.ReturnType> {
-        return buildAjax(baseGetScore.url(), baseGetScore.type(), params);
-    }    
+    import _getScore = baseAjax.article.getScore;
+    export function getScore(params: _getScore.Params) {
+        return buildAjax<_getScore.Params, _getScore.Return>
+        (_getScore.url(), _getScore.type(), params);
+    }
+
+    import _getScoreByUser = baseAjax.article.getScoreByUser;
+    export function getScoreByUser(params: _getScoreByUser.Params) {
+        return buildAjax<_getScoreByUser.Params, _getScoreByUser.Return>
+        (_getScoreByUser.url(), _getScoreByUser.type(), params);
+    }
+
+    import _UpScore = baseAjax.article.upScore;
+    export function upScore(params: _UpScore.Params) {
+        return buildAjax<_UpScore.Params, _UpScore.Return>
+        (_UpScore.url(), _UpScore.type(), params);
+    } 
+
+    import _DownScore = baseAjax.article.downScore;
+    export function downScore(params: _DownScore.Params) {
+        return buildAjax<_DownScore.Params, _DownScore.Return>
+        (_DownScore.url(), _DownScore.type(), params);
+    } 
 }
 
 export module proposal {
-    import baseAddProp = baseAjax.proposal.add;
-    export function add(params: baseAddProp.ParamsType)
-    : JQueryXHR<baseAddProp.ReturnType> {
-        return buildAjax(baseAddProp.url(), baseAddProp.type(), params);
+    import _AddProp = baseAjax.proposal.add;
+    export function add(params: _AddProp.Params) {
+        return buildAjax<_AddProp.Params, _AddProp.Return>
+        (_AddProp.url(), _AddProp.type(), params);
     }
 
-    import baseGetAll = baseAjax.proposal.getAll;
-    export function getAll(params: baseGetAll.ParamsType)
-    : JQueryXHR<baseGetAll.ReturnType> {
-        return buildAjax(baseGetAll.url(), baseGetAll.type(), params);
+    import _getAll = baseAjax.proposal.getAll;
+    export function getAll(params: _getAll.Params) {
+        return buildAjax<_getAll.Params, _getAll.Return>
+        (_getAll.url(), _getAll.type(), params);
     }
 }
 
 export module user {
-    import baseRegister = baseAjax.user.register;
-    export function register(params: baseRegister.ParamsType) 
-    : JQueryXHR<baseRegister.ReturnType> {
-        return buildAjax(baseRegister.url(), baseRegister.type(), params);
+    import _Register = baseAjax.user.register;
+    export function register(params: _Register.Params) {
+        return buildAjax<_Register.Params, _Register.Return>
+        (_Register.url(), _Register.type(), params);
     }
 
-    import baseAuth = baseAjax.user.auth;
-    export function auth(params: baseAuth.ParamsType) 
-    : JQueryXHR<baseAuth.ReturnType> {
-        return buildAjax(baseAuth.url(), baseAuth.type(), params);
+    import _Auth = baseAjax.user.auth;
+    export function auth(params: _Auth.Params) {
+        return buildAjax<_Auth.Params, _Auth.Return>
+        (_Auth.url(), _Auth.type(), params);
     }
 }
 

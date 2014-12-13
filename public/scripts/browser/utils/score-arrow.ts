@@ -68,7 +68,6 @@ export class ArticleScore {
         this.downScore = new downScore(selectors.down);
         this.score = new Score(selectors.score)
         this.upScore.arrow.jq.click(() => {
-            
             if (_self.downScore.isTurnedOn && 
                 !_self.upScore.isTurnedOn)
                 _self.downScore.turnOff();

@@ -10,6 +10,11 @@ export interface JsonReturn<T> {
     result: T;
 }
 
+export interface IAjax {
+    url(): string;
+    type(): string;
+}
+
 export interface Title {
     title: string; 
 }
@@ -35,73 +40,96 @@ export module article {
     }
 
     export module create {
-        export function url(): string { return '/api/create_article' }
-        export function type(): string { return AjaxType.POST }
-        export interface ParamsType { article: Fields}
-        export interface ReturnType extends JsonReturn<Id> { }
+        export class Ajax implements IAjax{
+            url(): string { return '/api/create_article' }
+            type(): string { return AjaxType.POST }
+        }
+        export interface Params { article: Fields}
+        export interface Return extends JsonReturn<Id> { }
     }
 
     export module get {
         export function url(): string { return '/api/get' }
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType { article: Id }
-        export interface ReturnType extends JsonReturn<FieldsWithId> {}
+        export interface Params { article: Id }
+        export interface Return extends JsonReturn<FieldsWithId> {}
     }
 
     export module getTitleWithId {
         export function url(): string { return '/api/gettitleandid' }
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType { article: Id }
-        export interface ReturnType extends JsonReturn<TitleWithId> { }
+        export interface Params { article: Id }
+        export interface Return extends JsonReturn<TitleWithId> { }
     }
 
     export module getAll {
         export function url(): string { return '/api/getall' }
         export function type(): string { return AjaxType.GET}
-        export interface ParamsType {} 
-        export interface ReturnType extends JsonReturn<FieldsWithId[]> {}
+        export interface Params {} 
+        export interface Return extends JsonReturn<FieldsWithId[]> {}
     }
 
     export module update {
         export function url(): string { return '/api/update' }
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType { article: FieldsWithId; }
-        export interface ReturnType extends JsonReturn<Id> { }
+        export interface Params { article: FieldsWithId; }
+        export interface Return extends JsonReturn<Id> { }
     }
 
     export module queryTitle {
         export function url(): string { return '/api/querytitle'}
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType { query: string }
-        export interface ReturnType extends JsonReturn<TitleWithId[]> { }
+        export interface Params { query: string }
+        export interface Return extends JsonReturn<TitleWithId[]> { }
     }
 
     export module getScore {
         export function url(): string { return '/api/get_article_score'}
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType { article: {id: string} }
-        export interface ReturnType extends JsonReturn<{article: {score: Number}}> {}
+        export interface Params { article: {id: string} }
+        export interface Return extends JsonReturn<{article: {score: Number}}> {}
+    }
+
+    export module getScoreByUser {
+        export function url(): string { return '/api/get_score_by_user'}
+        export function type(): string { return AjaxType.GET }
+        export interface Params { article: {id: string}; user: {id: string} }
+        export interface Return extends JsonReturn<{ article: {score: Number}}> {}
+    }
+
+    export module upScore {
+        export function url(): string { return '/api/up_score_article'}
+        export function type(): string { return AjaxType.POST }
+        export interface Params { article: {id: string}; user: {id: string} }
+        export interface Return extends JsonReturn<boolean> {}
+    }
+
+    export module downScore {
+        export function url(): string { return '/api/down_score_article'}
+        export function type(): string { return AjaxType.POST }
+        export interface Params { article: {id: string}; user: {id: string} }
+        export interface Return extends JsonReturn<boolean> {}
     }
 
     export module addDependency {
         export function url(): string { return '/api/adddependency'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType { dependent: Id; dependency: Id; }
-        export interface ReturnType extends JsonReturn<boolean> {}
+        export interface Params { dependent: Id; dependency: Id; }
+        export interface Return extends JsonReturn<boolean> {}
     }
 
     export module getDependencies {
         export function url(): string { return '/api/getdependencies' }
         export function type(): string { return AjaxType.GET }
-        export interface ParamsType { article: Id }
-        export interface ReturnType extends JsonReturn<TitleWithId[]> {}
+        export interface Params { article: Id }
+        export interface Return extends JsonReturn<TitleWithId[]> {}
     }
 
     export module remDependency {
         export function url(): string { return '/api/remdependency'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType { dependent: Id; dependency: Id; }
-        export interface ReturnType extends JsonReturn<boolean> {}
+        export interface Params { dependent: Id; dependency: Id; }
+        export interface Return extends JsonReturn<boolean> {}
     }
 }
 
@@ -114,22 +142,22 @@ export module proposal {
     export module add {
         export function url(): string { return '/api/add_proposal'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType {
+        export interface Params {
             proposal: AddType
         }
-        export interface ReturnType extends JsonReturn<void> {}
+        export interface Return extends JsonReturn<void> {}
     }
 
     export module getAll {
         export function url(): string { return '/api/get_all'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType {
+        export interface Params {
             proposal: {article: {id: string} }
         }
         export interface ProposalWithId {
             id: string; changes: string; description: string;
         }
-        export interface ReturnType extends JsonReturn<{ proposals: ProposalWithId[]}> {}
+        export interface Return extends JsonReturn<{ proposals: ProposalWithId[]}> {}
     }
 }
 
@@ -147,8 +175,8 @@ export module user {
     export module register {
         export function url(): string { return '/api/register'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType extends RegisterFields {}
-        export interface ReturnType extends JsonReturn<Boolean> {}
+        export interface Params extends RegisterFields {}
+        export interface Return extends JsonReturn<Boolean> {}
     }
 
     export interface AuthFields {
@@ -157,8 +185,8 @@ export module user {
     export module auth {
         export function url(): string { return '/api/auth'}
         export function type(): string { return AjaxType.POST }
-        export interface ParamsType extends AuthFields {};
-        export interface ReturnType extends JsonReturn<{username: string; id: string;}> {} 
+        export interface Params extends AuthFields {};
+        export interface Return extends JsonReturn<{username: string; id: string;}> {} 
     }
 }
 
@@ -186,7 +214,7 @@ export module Article {
         export function url(): string {
             return '/api/create_article';
         }
-        export interface ReturnType {
+        export interface Return {
 
         }
         export interface ArgsType {
@@ -196,15 +224,15 @@ export module Article {
 }
 */
     /*
-    export class BaseAjax<ArgsType, ReturnType> {
-        ajax: IAjax<ArgsType, ReturnType>;
-        constructor(ajax: IAjax<ArgsType, ReturnType>) {
+    export class BaseAjax<ArgsType, Return> {
+        ajax: IAjax<ArgsType, Return>;
+        constructor(ajax: IAjax<ArgsType, Return>) {
             this.ajax = ajax;
         }
         url(): string {
             throw new Error('Implement in child class');
         }
-        run(param: ArgsType) : JQueryGenericPromise<ReturnType> {
+        run(param: ArgsType) : JQueryGenericPromise<Return> {
             this.ajax.run(this.url(), param);
         }
     }

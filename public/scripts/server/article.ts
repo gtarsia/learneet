@@ -35,7 +35,7 @@ export function okObj<T>(obj: T): any {
 	}
 }
 
-export function create(args: create.ParamsType) : Promise<create.ReturnType> {
+export function create(args: create.Params) : Promise<create.Return> {
 	var id;
 	var article = args.article;
 	if (!article.title || !article.content) {
@@ -56,7 +56,7 @@ export function create(args: create.ParamsType) : Promise<create.ReturnType> {
 	})
 }
 
-export function update(args: update.ParamsType) : Promise<update.ReturnType> {
+export function update(args: update.Params) : Promise<update.Return> {
     debugger;
 	var oldTitle;
 	var article = args.article;
@@ -82,13 +82,13 @@ export function update(args: update.ParamsType) : Promise<update.ReturnType> {
 	})
 }
 
-export function get(args: get.ParamsType) : Promise<get.ReturnType> {
+export function get(args: get.Params) : Promise<get.Return> {
 	var article = args.article;
 	return db.hgetall(keys.article(args))
-	.then<get.ReturnType>((result: any) => {
+	.then<get.Return>((result: any) => {
 		var ok = result != null;
 		var why = (result == null ? 'Article with id ' + article.id + ' not found' : '');
-		var r : get.ReturnType = {
+		var r : get.Return = {
 			ok: ok,
 			why: why,
 			result: result
@@ -97,13 +97,13 @@ export function get(args: get.ParamsType) : Promise<get.ReturnType> {
 	})
 }
 
-export function getTitleAndId(args: getTitleWithId.ParamsType)
-: Promise<getTitleWithId.ReturnType> {
+export function getTitleAndId(args: getTitleWithId.Params)
+: Promise<getTitleWithId.Return> {
 	var article = args.article;
 	return db.hmget(keys.article(args), "id", "title")
 }
 
-export function getAll() : Promise<getAll.ReturnType> {
+export function getAll() : Promise<getAll.Return> {
 	function arrayToArticles(array: string[]) : FieldsWithId[] {
 		var articles : FieldsWithId[] = [];
 		var length = array.length;
@@ -117,11 +117,11 @@ export function getAll() : Promise<getAll.ReturnType> {
 	}
 	return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'articles:*->id',
 	    'GET', 'articles:*->title', 'GET', 'articles:*->content')
-	.then<getAll.ReturnType>((result: any) => {
+	.then<getAll.Return>((result: any) => {
 		debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Couldn\'t get articles' : '');
-		var r : getAll.ReturnType = {
+		var r : getAll.Return = {
 			ok: ok,
 			why: why,
 			result: arrayToArticles(result)
@@ -156,7 +156,7 @@ export module TitleSearch {
 		multi.exec();
 	}
 
-	export function query(args: queryTitle.ParamsType) : Promise<queryTitle.ReturnType> {
+	export function query(args: queryTitle.Params) : Promise<queryTitle.Return> {
 		var words = args.query.split(' ');
 		var length = words.length;
 		for (var i = 0; i < length; i++) {
@@ -189,8 +189,8 @@ export module TitleSearch {
 }
 
 
-export function addDependency(args: addDependency.ParamsType)
-: Promise<addDependency.ReturnType> {
+export function addDependency(args: addDependency.Params)
+: Promise<addDependency.Return> {
 	var dependent = args.dependent;
 	var dependency = args.dependency;
 	return db.sadd(keys.dependency(args))
@@ -199,8 +199,8 @@ export function addDependency(args: addDependency.ParamsType)
 	});
 }
 
-export function getDependencies(args: getDependencies.ParamsType)
-: Promise<getDependencies.ReturnType> {
+export function getDependencies(args: getDependencies.Params)
+: Promise<getDependencies.Return> {
 	var article = args.article;
 	return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id',
 	    'GET', 'articles:*->title')
@@ -215,8 +215,8 @@ export function getDependencies(args: getDependencies.ParamsType)
 	});
 }
 
-export function remDependency(args: remDeps.ParamsType)
-: Promise<remDeps.ReturnType> {
+export function remDependency(args: remDeps.Params)
+: Promise<remDeps.Return> {
 	var dependent = args.dependent;
 	var dependency = args.dependency;
 	return db.srem(keys.dependency(args))
@@ -225,8 +225,8 @@ export function remDependency(args: remDeps.ParamsType)
 	})
 }
 
-export function getScore(args: getScore.ParamsType)
-: Promise<getScore.ReturnType> {
+export function getScore(args: getScore.Params)
+: Promise<getScore.Return> {
 	return db.scard(keys.articleScore(args))
 	.then(res => {
 		return okObj({article: {score: res} });
