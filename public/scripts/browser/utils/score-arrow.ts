@@ -32,13 +32,13 @@ export class ScoreArrow extends Gui {
     }
 }
 
-export class UpScoreArrow extends ScoreArrow {
+export class upScore extends ScoreArrow {
     constructor(arrowSelector: string) {
         super(arrowSelector, '/images/up-score.png', '/images/up-score-hover.png')
     } 
 }
 
-export class DownScoreArrow extends ScoreArrow {
+export class downScore extends ScoreArrow {
     constructor(arrowSelector: string) {
         super(arrowSelector, '/images/down-score.png', '/images/down-score-hover.png');
     }
@@ -57,26 +57,27 @@ export class Score extends Gui {
 
 export class ArticleScore {
     article : {id: string};
-    upScoreArrow;
-    downScoreArrow;
+    upScore;
+    downScore;
     score;
     constructor(selectors: {up: string; down: string; score: string },
         article: {id: string}) {
         var _self = this;
         this.article = article;
-        this.upScoreArrow = new UpScoreArrow(selectors.up);
-        this.downScoreArrow = new DownScoreArrow(selectors.down);
+        this.upScore = new upScore(selectors.up);
+        this.downScore = new downScore(selectors.down);
         this.score = new Score(selectors.score)
-        this.upScoreArrow.arrow.jq.click(() => {
-            if (_self.downScoreArrow.isTurnedOn && 
-                !_self.upScoreArrow.isTurnedOn)
-                _self.downScoreArrow.turnOff();
-            _self.upScoreArrow.toggle();
+        this.upScore.arrow.jq.click(() => {
+            
+            if (_self.downScore.isTurnedOn && 
+                !_self.upScore.isTurnedOn)
+                _self.downScore.turnOff();
+            _self.upScore.toggle();
         });
-        this.downScoreArrow.arrow.jq.click(() => {
-            if (_self.upScoreArrow.isTurnedOn && !_self.downScoreArrow.isTurnedOn)
-                _self.upScoreArrow.turnOff();
-            _self.downScoreArrow.toggle();
+        this.downScore.arrow.jq.click(() => {
+            if (_self.upScore.isTurnedOn && !_self.downScore.isTurnedOn)
+                _self.upScore.turnOff();
+            _self.downScore.toggle();
         });
         clientAjax.article.getScore({
             article: {id: _self.article.id}
@@ -84,5 +85,16 @@ export class ArticleScore {
         .done((res : baseAjax.JsonReturn<{article: {score: Number}}>) => {
             _self.score.set(res.result)
         })
+        $(document).ready(() => {
+            clientAjax.article.getScoreByUser({
+                article: {id: _self.article.id},
+                user: {id: '1'}
+            })
+            .then((res) => {
+                var article = res.result.article;
+                if (article.score == 1) _self.upScore.turnOn();
+                else if (article.score == -1) _self.downScore.turnOn();
+            });
+        });
     }
 }

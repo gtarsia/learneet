@@ -38,23 +38,23 @@ var ScoreArrow = (function (_super) {
 })(Gui);
 exports.ScoreArrow = ScoreArrow;
 
-var UpScoreArrow = (function (_super) {
-    __extends(UpScoreArrow, _super);
-    function UpScoreArrow(arrowSelector) {
+var upScore = (function (_super) {
+    __extends(upScore, _super);
+    function upScore(arrowSelector) {
         _super.call(this, arrowSelector, '/images/up-score.png', '/images/up-score-hover.png');
     }
-    return UpScoreArrow;
+    return upScore;
 })(ScoreArrow);
-exports.UpScoreArrow = UpScoreArrow;
+exports.upScore = upScore;
 
-var DownScoreArrow = (function (_super) {
-    __extends(DownScoreArrow, _super);
-    function DownScoreArrow(arrowSelector) {
+var downScore = (function (_super) {
+    __extends(downScore, _super);
+    function downScore(arrowSelector) {
         _super.call(this, arrowSelector, '/images/down-score.png', '/images/down-score-hover.png');
     }
-    return DownScoreArrow;
+    return downScore;
 })(ScoreArrow);
-exports.DownScoreArrow = DownScoreArrow;
+exports.downScore = downScore;
 
 var Score = (function (_super) {
     __extends(Score, _super);
@@ -73,23 +73,35 @@ var ArticleScore = (function () {
     function ArticleScore(selectors, article) {
         var _self = this;
         this.article = article;
-        this.upScoreArrow = new UpScoreArrow(selectors.up);
-        this.downScoreArrow = new DownScoreArrow(selectors.down);
+        this.upScore = new upScore(selectors.up);
+        this.downScore = new downScore(selectors.down);
         this.score = new Score(selectors.score);
-        this.upScoreArrow.arrow.jq.click(function () {
-            if (_self.downScoreArrow.isTurnedOn && !_self.upScoreArrow.isTurnedOn)
-                _self.downScoreArrow.turnOff();
-            _self.upScoreArrow.toggle();
+        this.upScore.arrow.jq.click(function () {
+            if (_self.downScore.isTurnedOn && !_self.upScore.isTurnedOn)
+                _self.downScore.turnOff();
+            _self.upScore.toggle();
         });
-        this.downScoreArrow.arrow.jq.click(function () {
-            if (_self.upScoreArrow.isTurnedOn && !_self.downScoreArrow.isTurnedOn)
-                _self.upScoreArrow.turnOff();
-            _self.downScoreArrow.toggle();
+        this.downScore.arrow.jq.click(function () {
+            if (_self.upScore.isTurnedOn && !_self.downScore.isTurnedOn)
+                _self.upScore.turnOff();
+            _self.downScore.toggle();
         });
         clientAjax.article.getScore({
             article: { id: _self.article.id }
         }).done(function (res) {
             _self.score.set(res.result);
+        });
+        $(document).ready(function () {
+            clientAjax.article.getScoreByUser({
+                article: { id: _self.article.id },
+                user: { id: '1' }
+            }).then(function (res) {
+                var article = res.result.article;
+                if (article.score == 1)
+                    _self.upScore.turnOn();
+                else if (article.score == -1)
+                    _self.downScore.turnOn();
+            });
         });
     }
     return ArticleScore;
