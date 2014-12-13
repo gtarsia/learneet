@@ -187,38 +187,6 @@ exports.getAll = getAll;
 })(exports.TitleSearch || (exports.TitleSearch = {}));
 var TitleSearch = exports.TitleSearch;
 
-function addDependency(args) {
-    var dependent = args.dependent;
-    var dependency = args.dependency;
-    return db.sadd(keys.dependency(args)).then(function (res) {
-        return exports.okObj(res == '1');
-    });
-}
-exports.addDependency = addDependency;
-
-function getDependencies(args) {
-    var article = args.article;
-    return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'articles:*->title').then(function (array) {
-        var articles = [];
-        while (array.length > 0) {
-            var id = array.shift();
-            var title = array.shift();
-            articles.push({ id: id, title: title });
-        }
-        return exports.okObj(articles);
-    });
-}
-exports.getDependencies = getDependencies;
-
-function remDependency(args) {
-    var dependent = args.dependent;
-    var dependency = args.dependency;
-    return db.srem(keys.dependency(args)).then(function (res) {
-        return exports.okObj(res == '1');
-    });
-}
-exports.remDependency = remDependency;
-
 function getScore(args) {
     return db.scard(keys.articleScore(args)).then(function (res) {
         return exports.okObj({ article: { score: res } });

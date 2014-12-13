@@ -1,4 +1,4 @@
-﻿import clientAjax = require("./client-ajax");
+﻿import ajax = require("./client-ajax");
 import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
 import Gui = require("./gui");
@@ -27,7 +27,7 @@ export class ArticleGui extends Gui {
                 {up: 'input#up-score', down: 'input#down-score',
                 score: 'div#article-score'}, {id: _self.id}
             );
-            clientAjax.article.get({article: { id: _self.id }})
+            ajax.article.get({article: { id: _self.id }})
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -41,7 +41,7 @@ export class ArticleGui extends Gui {
                 this.attr('src', 'srcImage.jpg');
             })*/
             return;
-            clientAjax.article.getDependencies({
+            ajax.dependencies.get({
                 article: { id: _self.id }
             })
             .done(function(res) {

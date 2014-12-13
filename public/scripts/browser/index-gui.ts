@@ -11,7 +11,7 @@ class IndexGui extends Gui {
     setThumbs(html: string) {
         //$(".childContainer").append(html);
     }
-    buildArticleThumbsTemplate(articles: baseArticle.Fields[]) {
+    buildArticleThumbsTemplate(articles: baseAjax.Fields[]) {
         return articles.toString();
     }
     constructor() {

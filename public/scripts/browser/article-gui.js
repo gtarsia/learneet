@@ -4,7 +4,7 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var clientAjax = require("./client-ajax");
+var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 var Gui = require("./gui");
@@ -26,7 +26,7 @@ var ArticleGui = (function (_super) {
             _self.articleScore = new Arrows.ArticleScore({
                 up: 'input#up-score', down: 'input#down-score',
                 score: 'div#article-score' }, { id: _self.id });
-            clientAjax.article.get({ article: { id: _self.id } }).done(function (res) {
+            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -37,7 +37,7 @@ var ArticleGui = (function (_super) {
             });
 
             return;
-            clientAjax.article.getDependencies({
+            ajax.dependencies.get({
                 article: { id: _self.id }
             }).done(function (res) {
                 var deps = res.result;

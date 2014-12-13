@@ -65,7 +65,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var clientAjax = require("./client-ajax");
+var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 var Gui = require("./gui");
@@ -87,7 +87,7 @@ var ArticleGui = (function (_super) {
             _self.articleScore = new Arrows.ArticleScore({
                 up: 'input#up-score', down: 'input#down-score',
                 score: 'div#article-score' }, { id: _self.id });
-            clientAjax.article.get({ article: { id: _self.id } }).done(function (res) {
+            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -98,7 +98,7 @@ var ArticleGui = (function (_super) {
             });
 
             return;
-            clientAjax.article.getDependencies({
+            ajax.dependencies.get({
                 article: { id: _self.id }
             }).done(function (res) {
                 var deps = res.result;
@@ -153,7 +153,7 @@ exports.buildIAjax = buildIAjax;
 (function (article) {
     var _get = baseAjax.article.get;
     function get(params) {
-        return exports.buildAjax(_get.url(), _get.type(), params);
+        return exports.buildIAjax(new _get.Ajax(), params);
     }
     article.get = get;
 
@@ -165,91 +165,97 @@ exports.buildIAjax = buildIAjax;
 
     var _getAll = baseAjax.article.getAll;
     function getAll(params) {
-        return exports.buildAjax(_getAll.url(), _getAll.type(), params);
+        return exports.buildIAjax(new _getAll.Ajax(), params);
     }
     article.getAll = getAll;
 
     var _update = baseAjax.article.update;
     function update(params) {
-        return exports.buildAjax(_update.url(), _update.type(), params);
+        return exports.buildIAjax(new _update.Ajax(), params);
     }
     article.update = update;
 
     var _query = baseAjax.article.queryTitle;
     function query(params) {
-        return exports.buildAjax(_query.url(), _query.type(), params);
+        return exports.buildIAjax(new _query.Ajax(), params);
     }
     article.query = query;
-
-    var _addDep = baseAjax.article.addDependency;
-    function addDependency(params) {
-        return exports.buildAjax(_addDep.url(), _addDep.type(), params);
-    }
-    article.addDependency = addDependency;
-
-    var _getDeps = baseAjax.article.getDependencies;
-    function getDependencies(params) {
-        return exports.buildAjax(_getDeps.url(), _getDeps.type(), params);
-    }
-    article.getDependencies = getDependencies;
-
-    var _RemDep = baseAjax.article.remDependency;
-    function remDependency(params) {
-        return exports.buildAjax(_RemDep.url(), _RemDep.type(), params);
-    }
-    article.remDependency = remDependency;
-
-    var _getScore = baseAjax.article.getScore;
-    function getScore(params) {
-        return exports.buildAjax(_getScore.url(), _getScore.type(), params);
-    }
-    article.getScore = getScore;
-
-    var _getScoreByUser = baseAjax.article.getScoreByUser;
-    function getScoreByUser(params) {
-        return exports.buildAjax(_getScoreByUser.url(), _getScoreByUser.type(), params);
-    }
-    article.getScoreByUser = getScoreByUser;
-
-    var _UpScore = baseAjax.article.upScore;
-    function upScore(params) {
-        return exports.buildAjax(_UpScore.url(), _UpScore.type(), params);
-    }
-    article.upScore = upScore;
-
-    var _DownScore = baseAjax.article.downScore;
-    function downScore(params) {
-        return exports.buildAjax(_DownScore.url(), _DownScore.type(), params);
-    }
-    article.downScore = downScore;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
-(function (proposal) {
-    var _AddProp = baseAjax.proposal.add;
+(function (score) {
+    var _get = baseAjax.article.getScore;
+    function get(params) {
+        return exports.buildIAjax(new _get.Ajax(), params);
+    }
+    score.get = get;
+
+    var _getByUser = baseAjax.article.getScoreByUser;
+    function getByUser(params) {
+        return exports.buildIAjax(new _getByUser.Ajax(), params);
+    }
+    score.getByUser = getByUser;
+
+    var _up = baseAjax.article.upScore;
+    function upVote(params) {
+        return exports.buildIAjax(new _up.Ajax(), params);
+    }
+    score.upVote = upVote;
+
+    var _down = baseAjax.article.downScore;
+    function downVote(params) {
+        return exports.buildIAjax(new _down.Ajax(), params);
+    }
+    score.downVote = downVote;
+})(exports.score || (exports.score = {}));
+var score = exports.score;
+
+(function (dependencies) {
+    var _add = baseAjax.dependencies.add;
     function add(params) {
-        return exports.buildAjax(_AddProp.url(), _AddProp.type(), params);
+        return exports.buildIAjax(new _add.Ajax(), params);
+    }
+    dependencies.add = add;
+
+    var _get = baseAjax.dependencies.get;
+    function get(params) {
+        return exports.buildIAjax(new _get.Ajax(), params);
+    }
+    dependencies.get = get;
+
+    var _remove = baseAjax.dependencies.remove;
+    function remove(params) {
+        return exports.buildIAjax(new _remove.Ajax(), params);
+    }
+    dependencies.remove = remove;
+})(exports.dependencies || (exports.dependencies = {}));
+var dependencies = exports.dependencies;
+
+(function (proposal) {
+    var _add = baseAjax.proposal.add;
+    function add(params) {
+        return exports.buildIAjax(new _add.Ajax(), params);
     }
     proposal.add = add;
 
     var _getAll = baseAjax.proposal.getAll;
     function getAll(params) {
-        return exports.buildAjax(_getAll.url(), _getAll.type(), params);
+        return exports.buildIAjax(new _getAll.Ajax(), params);
     }
     proposal.getAll = getAll;
 })(exports.proposal || (exports.proposal = {}));
 var proposal = exports.proposal;
 
 (function (user) {
-    var _Register = baseAjax.user.register;
+    var _register = baseAjax.user.register;
     function register(params) {
-        return exports.buildAjax(_Register.url(), _Register.type(), params);
+        return exports.buildIAjax(new _register.Ajax(), params);
     }
     user.register = register;
 
-    var _Auth = baseAjax.user.auth;
+    var _auth = baseAjax.user.auth;
     function auth(params) {
-        return exports.buildAjax(_Auth.url(), _Auth.type(), params);
+        return exports.buildIAjax(new _auth.Ajax(), params);
     }
     user.auth = auth;
 })(exports.user || (exports.user = {}));
@@ -310,7 +316,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var clientAjax = require("./client-ajax");
+var ajax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
 var Gui = require("./gui");
 var url = require("./../common/url");
@@ -347,7 +353,7 @@ var EditArticleGui = (function (_super) {
                 load: function (query, callback) {
                     if (!query.length)
                         return callback();
-                    clientAjax.article.query({ query: query }).then(function (res) {
+                    ajax.article.query({ query: query }).then(function (res) {
                         callback(res.result);
                     });
                 },
@@ -358,7 +364,7 @@ var EditArticleGui = (function (_super) {
                 }
             });
             $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            clientAjax.article.get({ article: { id: _self.id } }).done(function (res) {
+            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -369,7 +375,7 @@ var EditArticleGui = (function (_super) {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
-            clientAjax.article.getDependencies({ article: { id: _self.id } }).done(function (res) {
+            ajax.dependencies.get({ article: { id: _self.id } }).done(function (res) {
                 var deps = res.result;
                 var length = deps.length;
                 for (var i = 0; i < length; i++) {
@@ -393,7 +399,7 @@ var EditArticleGui = (function (_super) {
             _self.addDependencyBtn.jq.click(function () {
                 var id = _self.dependencyFound.jq.val();
                 if (id != "") {
-                    clientAjax.article.addDependency({
+                    ajax.dependencies.add({
                         dependent: { id: _self.id },
                         dependency: { id: id }
                     }).then(function (res) {
@@ -418,7 +424,7 @@ var EditArticleGui = (function (_super) {
     EditArticleGui.prototype.removeDependency = function (jq) {
         var _this = this;
         var id = $(jq).siblings(this.dependencyIds.jq).val();
-        clientAjax.article.remDependency({
+        ajax.dependencies.remove({
             dependent: { id: this.id },
             dependency: { id: id }
         }).then(function (res) {
@@ -441,7 +447,7 @@ var EditArticleGui = (function (_super) {
             setTimeout(api.qtip.bind(api, 'destroy'), 5000);
         }
         var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
-        clientAjax.article.update(article).done(function (res) {
+        ajax.article.update(article).done(function (res) {
             if (!res.ok)
                 console.log(res.why);
             else
@@ -990,7 +996,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./../gui');
-var clientAjax = require('./../client-ajax');
+var ajax = require('./../client-ajax');
 
 var ScoreArrow = (function (_super) {
     __extends(ScoreArrow, _super);
@@ -1071,13 +1077,13 @@ var ArticleScore = (function () {
                 _self.upScore.turnOff();
             _self.downScore.toggle();
         });
-        clientAjax.article.getScore({
+        ajax.score.get({
             article: { id: _self.article.id }
         }).done(function (res) {
             _self.score.set(res.result);
         });
         $(document).ready(function () {
-            clientAjax.article.getScoreByUser({
+            ajax.score.getByUser({
                 article: { id: _self.article.id },
                 user: { id: '1' }
             }).then(function (res) {
@@ -1123,173 +1129,232 @@ exports.AjaxType = {
     var create = _article.create;
 
     (function (get) {
-        function url() {
-            return '/api/get';
-        }
-        get.url = url;
-        function type() {
-            return exports.AjaxType.GET;
-        }
-        get.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        get.Ajax = Ajax;
     })(_article.get || (_article.get = {}));
     var get = _article.get;
 
     (function (getTitleWithId) {
-        function url() {
-            return '/api/gettitleandid';
-        }
-        getTitleWithId.url = url;
-        function type() {
-            return exports.AjaxType.GET;
-        }
-        getTitleWithId.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/gettitleandid';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getTitleWithId.Ajax = Ajax;
     })(_article.getTitleWithId || (_article.getTitleWithId = {}));
     var getTitleWithId = _article.getTitleWithId;
 
     (function (getAll) {
-        function url() {
-            return '/api/getall';
-        }
-        getAll.url = url;
-        function type() {
-            return exports.AjaxType.GET;
-        }
-        getAll.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getall';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getAll.Ajax = Ajax;
     })(_article.getAll || (_article.getAll = {}));
     var getAll = _article.getAll;
 
     (function (update) {
-        function url() {
-            return '/api/update';
-        }
-        update.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        update.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/update';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        update.Ajax = Ajax;
     })(_article.update || (_article.update = {}));
     var update = _article.update;
 
     (function (queryTitle) {
-        function url() {
-            return '/api/querytitle';
-        }
-        queryTitle.url = url;
-        function type() {
-            return exports.AjaxType.GET;
-        }
-        queryTitle.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/querytitle';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        queryTitle.Ajax = Ajax;
     })(_article.queryTitle || (_article.queryTitle = {}));
     var queryTitle = _article.queryTitle;
 
     (function (getScore) {
-        function url() {
-            return '/api/get_article_score';
-        }
-        getScore.url = url;
-        function type() {
-            return exports.AjaxType.GET;
-        }
-        getScore.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get_article_score';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getScore.Ajax = Ajax;
     })(_article.getScore || (_article.getScore = {}));
     var getScore = _article.getScore;
 
     (function (getScoreByUser) {
-        function url() {
-            return '/api/get_score_by_user';
-        }
-        getScoreByUser.url = url;
-        function type() {
-            return exports.AjaxType.GET;
-        }
-        getScoreByUser.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get_score_by_user';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getScoreByUser.Ajax = Ajax;
     })(_article.getScoreByUser || (_article.getScoreByUser = {}));
     var getScoreByUser = _article.getScoreByUser;
 
     (function (upScore) {
-        function url() {
-            return '/api/up_score_article';
-        }
-        upScore.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        upScore.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/up_score_article';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        upScore.Ajax = Ajax;
     })(_article.upScore || (_article.upScore = {}));
     var upScore = _article.upScore;
 
     (function (downScore) {
-        function url() {
-            return '/api/down_score_article';
-        }
-        downScore.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        downScore.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/down_score_article';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        downScore.Ajax = Ajax;
     })(_article.downScore || (_article.downScore = {}));
     var downScore = _article.downScore;
-
-    (function (addDependency) {
-        function url() {
-            return '/api/adddependency';
-        }
-        addDependency.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        addDependency.type = type;
-    })(_article.addDependency || (_article.addDependency = {}));
-    var addDependency = _article.addDependency;
-
-    (function (getDependencies) {
-        function url() {
-            return '/api/getdependencies';
-        }
-        getDependencies.url = url;
-        function type() {
-            return exports.AjaxType.GET;
-        }
-        getDependencies.type = type;
-    })(_article.getDependencies || (_article.getDependencies = {}));
-    var getDependencies = _article.getDependencies;
-
-    (function (remDependency) {
-        function url() {
-            return '/api/remdependency';
-        }
-        remDependency.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        remDependency.type = type;
-    })(_article.remDependency || (_article.remDependency = {}));
-    var remDependency = _article.remDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
+(function (dependencies) {
+    (function (add) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/adddependency';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        add.Ajax = Ajax;
+    })(dependencies.add || (dependencies.add = {}));
+    var add = dependencies.add;
+
+    (function (get) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getdependencies';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        get.Ajax = Ajax;
+    })(dependencies.get || (dependencies.get = {}));
+    var get = dependencies.get;
+
+    (function (remove) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/remdependency';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        remove.Ajax = Ajax;
+    })(dependencies.remove || (dependencies.remove = {}));
+    var remove = dependencies.remove;
+})(exports.dependencies || (exports.dependencies = {}));
+var dependencies = exports.dependencies;
+
 (function (proposal) {
     (function (add) {
-        function url() {
-            return '/api/add_proposal';
-        }
-        add.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        add.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/add_proposal';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        add.Ajax = Ajax;
     })(proposal.add || (proposal.add = {}));
     var add = proposal.add;
 
     (function (getAll) {
-        function url() {
-            return '/api/get_all';
-        }
-        getAll.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        getAll.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get_all';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        getAll.Ajax = Ajax;
     })(proposal.getAll || (proposal.getAll = {}));
     var getAll = proposal.getAll;
 })(exports.proposal || (exports.proposal = {}));
@@ -1297,18 +1362,34 @@ var proposal = exports.proposal;
 
 (function (user) {
     (function (register) {
-        function url() {
-            return '/api/register';
-        }
-        register.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        register.type = type;
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/register';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        register.Ajax = Ajax;
     })(user.register || (user.register = {}));
     var register = user.register;
 
     (function (auth) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/gettitleandid';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        auth.Ajax = Ajax;
         function url() {
             return '/api/auth';
         }

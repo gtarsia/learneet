@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./../gui');
-var clientAjax = require('./../client-ajax');
+var ajax = require('./../client-ajax');
 
 var ScoreArrow = (function (_super) {
     __extends(ScoreArrow, _super);
@@ -86,13 +86,13 @@ var ArticleScore = (function () {
                 _self.upScore.turnOff();
             _self.downScore.toggle();
         });
-        clientAjax.article.getScore({
+        ajax.score.get({
             article: { id: _self.article.id }
         }).done(function (res) {
             _self.score.set(res.result);
         });
         $(document).ready(function () {
-            clientAjax.article.getScoreByUser({
+            ajax.score.getByUser({
                 article: { id: _self.article.id },
                 user: { id: '1' }
             }).then(function (res) {

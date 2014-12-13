@@ -1,4 +1,4 @@
-﻿import clientAjax = require("./client-ajax");
+﻿import ajax = require("./client-ajax");
 import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
@@ -24,7 +24,7 @@ export class EditArticleGui extends Gui {
     }
     removeDependency(jq) {
         var id = $(jq).siblings(this.dependencyIds.jq).val();
-        clientAjax.article.remDependency({
+        ajax.dependencies.remove({
             dependent: { id: this.id},
             dependency: { id: id}
         })
@@ -57,7 +57,7 @@ export class EditArticleGui extends Gui {
             setTimeout(api.qtip.bind(api, 'destroy'), 5000)
         }
         var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
-        clientAjax.article.update(article)
+        ajax.article.update(article)
         .done(function(res) {
             if (!res.ok) console.log(res.why);
             else console.log('Se actualizo el articulo');
@@ -84,7 +84,7 @@ export class EditArticleGui extends Gui {
                 searchField: 'title',
                 load: function(query, callback) {
                     if (!query.length) return callback();
-                    clientAjax.article.query({query: query})
+                    ajax.article.query({query: query})
                     .then(res => {
                         callback(res.result);
                     })
@@ -101,7 +101,7 @@ export class EditArticleGui extends Gui {
                 }
             });
             $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            clientAjax.article.get({ article: { id: _self.id }})
+            ajax.article.get({ article: { id: _self.id }})
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
@@ -113,7 +113,7 @@ export class EditArticleGui extends Gui {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
-            clientAjax.article.getDependencies({ article: { id: _self.id}})
+            ajax.dependencies.get({ article: { id: _self.id}})
             .done(res => {
                 var deps: any = res.result;
                 var length = deps.length;
@@ -139,7 +139,7 @@ export class EditArticleGui extends Gui {
             _self.addDependencyBtn.jq.click(() => {
                 var id = _self.dependencyFound.jq.val();
                 if (id != "") {
-                    clientAjax.article.addDependency({
+                    ajax.dependencies.add({
                         dependent: {id: _self.id},
                         dependency: {id: id}
                     })

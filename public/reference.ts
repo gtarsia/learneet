@@ -26,6 +26,7 @@
 /// <reference path="scripts/server/article.ts" />
 /// <reference path="scripts/server/bcrypt.ts" />
 /// <reference path="scripts/server/db.ts" />
+/// <reference path="scripts/server/dependencies.ts" />
 /// <reference path="scripts/server/proposal.ts" />
 /// <reference path="scripts/server/redis-keys.ts" />
 /// <reference path="scripts/server/server-ajax.ts" />

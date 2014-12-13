@@ -1,5 +1,5 @@
 import Gui = require('./../gui')
-import clientAjax = require('./../client-ajax')
+import ajax = require('./../client-ajax')
 import baseAjax = require('./../../common/base-ajax')
 
 export class ScoreArrow extends Gui {
@@ -78,14 +78,14 @@ export class ArticleScore {
                 _self.upScore.turnOff();
             _self.downScore.toggle();
         });
-        clientAjax.article.getScore({
+        ajax.score.get({
             article: {id: _self.article.id}
         })
         .done((res : baseAjax.JsonReturn<{article: {score: Number}}>) => {
             _self.score.set(res.result)
         })
         $(document).ready(() => {
-            clientAjax.article.getScoreByUser({
+            ajax.score.getByUser({
                 article: {id: _self.article.id},
                 user: {id: '1'}
             })

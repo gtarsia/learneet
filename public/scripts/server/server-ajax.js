@@ -2,6 +2,7 @@ var baseAjax = require('./../common/base-ajax');
 
 var AjaxType = baseAjax.AjaxType;
 var dbArticle = require('./article');
+var dbDependencies = require('./dependencies');
 var dbUser = require('./user');
 var dbProposal = require('./proposal');
 
@@ -12,9 +13,9 @@ function getServerAjaxList() {
         article.getAll(),
         article.update(),
         article.query(),
-        article.addDependency(),
-        article.getDependencies(),
-        article.remDependency(),
+        dependencies.add(),
+        dependencies.get(),
+        dependencies.remove(),
         article.getScore(),
         proposal.add(),
         proposal.getAll(),
@@ -65,73 +66,76 @@ exports.restCbAjax = restCbAjax;
 
     var _get = baseAjax.article.get;
     function get() {
-        return exports.restCb(_get.url(), _get.type(), dbArticle.get);
+        return exports.restCbAjax(new _get.Ajax(), dbArticle.get);
     }
     article.get = get;
 
     var _getAll = baseAjax.article.getAll;
     function getAll() {
-        return exports.restCb(_getAll.url(), _getAll.type(), dbArticle.getAll);
+        return exports.restCbAjax(new _getAll.Ajax(), dbArticle.getAll);
     }
     article.getAll = getAll;
 
-    var _Update = baseAjax.article.update;
+    var _update = baseAjax.article.update;
     function update() {
-        return exports.restCb(_Update.url(), _Update.type(), dbArticle.update);
+        return exports.restCbAjax(new _update.Ajax(), dbArticle.update);
     }
     article.update = update;
 
-    var _Query = baseAjax.article.queryTitle;
+    var _query = baseAjax.article.queryTitle;
     function query() {
-        return exports.restCb(_Query.url(), _Query.type(), dbArticle.TitleSearch.query);
+        return exports.restCbAjax(new _query.Ajax(), dbArticle.TitleSearch.query);
     }
     article.query = query;
 
-    var _AddDependency = baseAjax.article.addDependency;
-    function addDependency() {
-        return exports.restCb(_AddDependency.url(), _AddDependency.type(), dbArticle.addDependency);
-    }
-    article.addDependency = addDependency;
-
-    var _getDeps = baseAjax.article.getDependencies;
-    function getDependencies() {
-        return exports.restCb(_getDeps.url(), _getDeps.type(), dbArticle.getDependencies);
-    }
-    article.getDependencies = getDependencies;
-
     var _getScore = baseAjax.article.getScore;
     function getScore() {
-        return exports.restCb(_getScore.url(), _getScore.type(), dbArticle.getScore);
+        return exports.restCbAjax(new _getScore.Ajax(), dbArticle.getScore);
     }
     article.getScore = getScore;
-
-    var _RemDep = baseAjax.article.remDependency;
-    function remDependency() {
-        return exports.restCb(_RemDep.url(), _RemDep.type(), dbArticle.remDependency);
-    }
-    article.remDependency = remDependency;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
 
-(function (proposal) {
-    var _Add = baseAjax.proposal.add;
+(function (dependencies) {
+    var _add = baseAjax.dependencies.add;
     function add() {
-        return exports.restCb(_Add.url(), _Add.type(), dbProposal.add);
+        return exports.restCbAjax(new _add.Ajax(), dbDependencies.add);
+    }
+    dependencies.add = add;
+
+    var _get = baseAjax.dependencies.get;
+    function get() {
+        return exports.restCbAjax(new _get.Ajax(), dbDependencies.get);
+    }
+    dependencies.get = get;
+
+    var _remove = baseAjax.dependencies.remove;
+    function remove() {
+        return exports.restCbAjax(new _remove.Ajax(), dbDependencies.remove);
+    }
+    dependencies.remove = remove;
+})(exports.dependencies || (exports.dependencies = {}));
+var dependencies = exports.dependencies;
+
+(function (proposal) {
+    var _add = baseAjax.proposal.add;
+    function add() {
+        return exports.restCbAjax(new _add.Ajax(), dbProposal.add);
     }
     proposal.add = add;
 
     var _getAll = baseAjax.proposal.getAll;
     function getAll() {
-        return exports.restCb(_getAll.url(), _getAll.type(), dbProposal.getAll);
+        return exports.restCbAjax(new _getAll.Ajax(), dbProposal.getAll);
     }
     proposal.getAll = getAll;
 })(exports.proposal || (exports.proposal = {}));
 var proposal = exports.proposal;
 
 (function (user) {
-    var _Register = baseAjax.user.register;
+    var _register = baseAjax.user.register;
     function register() {
-        return exports.restCb(_Register.url(), _Register.type(), dbUser.register);
+        return exports.restCbAjax(new _register.Ajax(), dbUser.register);
     }
     user.register = register;
 })(exports.user || (exports.user = {}));

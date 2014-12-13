@@ -1,15 +1,12 @@
 import baseAjax = require('./../common/base-ajax');
 import Promise = require('bluebird');
 import baseArticle = baseAjax.article;
-import FieldsWithId = baseArticle.FieldsWithId;
-import TitleWithId = baseArticle.TitleWithId;
+import FieldsWithId = baseAjax.FieldsWithId;
+import TitleWithId = baseAjax.TitleWithId;
 import create = baseArticle.create;
 import get = baseArticle.get;
 import getTitleWithId = baseArticle.getTitleWithId;
 import update = baseArticle.update;
-import addDependency = baseArticle.addDependency;
-import getDependencies = baseArticle.getDependencies;
-import remDeps = baseArticle.remDependency;
 import getScore = baseArticle.getScore;
 import getAll = baseArticle.getAll;
 import redis = require("redis");
@@ -176,7 +173,7 @@ export module TitleSearch {
 		.then((result: any[]) => {
 			debugger;
 			var length = result.length;
-			var articles: baseArticle.TitleWithId[] = [];
+			var articles: TitleWithId[] = [];
 			for(var i = 0; i < length; i++) {
                 var article: string[] = result.shift();
 				var id = article.shift();
@@ -186,43 +183,6 @@ export module TitleSearch {
 			return okObj(articles)
 		})
 	}
-}
-
-
-export function addDependency(args: addDependency.Params)
-: Promise<addDependency.Return> {
-	var dependent = args.dependent;
-	var dependency = args.dependency;
-	return db.sadd(keys.dependency(args))
-	.then((res: string) => {
-		return okObj<Boolean>(res == '1');
-	});
-}
-
-export function getDependencies(args: getDependencies.Params)
-: Promise<getDependencies.Return> {
-	var article = args.article;
-	return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id',
-	    'GET', 'articles:*->title')
-	.then((array: string[]) => {
-		var articles : TitleWithId[] = [];
-		while (array.length > 0) {
-			var id = array.shift();
-			var title = array.shift();
-			articles.push({ id: id, title: title});
-		}
-		return okObj<TitleWithId[]>(articles);
-	});
-}
-
-export function remDependency(args: remDeps.Params)
-: Promise<remDeps.Return> {
-	var dependent = args.dependent;
-	var dependency = args.dependency;
-	return db.srem(keys.dependency(args))
-	.then(res => {
-		return okObj(res == '1');
-	})
 }
 
 export function getScore(args: getScore.Params)

@@ -3,6 +3,7 @@ import IAjax = baseAjax.IAjax;
 import express = require('express');
 import AjaxType = baseAjax.AjaxType;
 import dbArticle = require('./article');
+import dbDependencies = require('./dependencies');
 import dbUser = require('./user');
 import dbProposal = require('./proposal');
 
@@ -14,9 +15,9 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.getAll(),
         article.update(),
         article.query(),
-        article.addDependency(),
-        article.getDependencies(),
-        article.remDependency(),
+        dependencies.add(),
+        dependencies.get(),
+        dependencies.remove(),
         article.getScore(),
         proposal.add(),
         proposal.getAll(),
@@ -62,71 +63,62 @@ export module article {
 
     import _get = baseAjax.article.get;
     export function get() {
-        return restCb(_get.url(), _get.type(), 
-            dbArticle.get);
+        return restCbAjax(new _get.Ajax(), dbArticle.get);
     }
 
     import _getAll = baseAjax.article.getAll;
     export function getAll() {
-        return restCb(_getAll.url(), _getAll.type(),
-            dbArticle.getAll);
+        return restCbAjax(new _getAll.Ajax(), dbArticle.getAll);
     }
 
-    import _Update = baseAjax.article.update;
+    import _update = baseAjax.article.update;
     export function update() {
-        return restCb(_Update.url(), _Update.type(),
-            dbArticle.update);
+        return restCbAjax(new _update.Ajax(), dbArticle.update);
     }
 
-    import _Query = baseAjax.article.queryTitle;
+    import _query = baseAjax.article.queryTitle;
     export function query() {
-        return restCb(_Query.url(), _Query.type(), 
-            dbArticle.TitleSearch.query);
-    }
-
-    import _AddDependency = baseAjax.article.addDependency;
-    export function addDependency() {
-        return restCb(_AddDependency.url(), _AddDependency.type(),
-            dbArticle.addDependency);
-    }
-
-    import _getDeps = baseAjax.article.getDependencies;
-    export function getDependencies() {
-        return restCb(_getDeps.url(), _getDeps.type(), 
-            dbArticle.getDependencies);
+        return restCbAjax(new _query.Ajax(), dbArticle.TitleSearch.query);
     }
 
     import _getScore = baseAjax.article.getScore;
     export function getScore() {
-        return restCb(_getScore.url(), _getScore.type(), 
-            dbArticle.getScore);
-    }    
+        return restCbAjax(new _getScore.Ajax(), dbArticle.getScore);
+    }
+}
 
-    import _RemDep = baseAjax.article.remDependency;
-    export function remDependency() {
-        return restCb(_RemDep.url(), _RemDep.type(),
-            dbArticle.remDependency);
+export module dependencies {    
+    import _add = baseAjax.dependencies.add;
+    export function add() {
+        return restCbAjax(new _add.Ajax(), dbDependencies.add);
+    }
+
+    import _get = baseAjax.dependencies.get;
+    export function get() {
+        return restCbAjax(new _get.Ajax(), dbDependencies.get);
+    }
+    
+    import _remove = baseAjax.dependencies.remove;
+    export function remove() {
+        return restCbAjax(new _remove.Ajax(), dbDependencies.remove);
     }
 }
 
 export module proposal {
-    import _Add = baseAjax.proposal.add;
+    import _add = baseAjax.proposal.add;
     export function add() {
-        return restCb(_Add.url(), _Add.type(),
-            dbProposal.add);
+        return restCbAjax(new _add.Ajax(), dbProposal.add);
     }
 
     import _getAll = baseAjax.proposal.getAll;
     export function getAll() {
-        return restCb(_getAll.url(), _getAll.type(),
-            dbProposal.getAll);
+        return restCbAjax(new _getAll.Ajax(), dbProposal.getAll);
     }
 }
 
 export module user {
-    import _Register = baseAjax.user.register;
+    import _register = baseAjax.user.register;
     export function register() {
-        return restCb(_Register.url(), _Register.type(),
-            dbUser.register);
+        return restCbAjax(new _register.Ajax(), dbUser.register);
     }
 }
