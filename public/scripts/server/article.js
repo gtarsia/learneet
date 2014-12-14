@@ -186,11 +186,4 @@ exports.getAll = getAll;
     TitleSearch.query = query;
 })(exports.TitleSearch || (exports.TitleSearch = {}));
 var TitleSearch = exports.TitleSearch;
-
-function getScore(args) {
-    return db.scard(keys.articleScore(args)).then(function (res) {
-        return exports.okObj({ article: { score: res } });
-    });
-}
-exports.getScore = getScore;
 //# sourceMappingURL=article.js.map

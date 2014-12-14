@@ -4,6 +4,7 @@ import express = require('express');
 import AjaxType = baseAjax.AjaxType;
 import dbArticle = require('./article');
 import dbDependencies = require('./dependencies');
+import dbScore = require('./score');
 import dbUser = require('./user');
 import dbProposal = require('./proposal');
 
@@ -18,7 +19,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         dependencies.add(),
         dependencies.get(),
         dependencies.remove(),
-        article.getScore(),
+        score.get(),
         proposal.add(),
         proposal.getAll(),
         user.register()
@@ -80,10 +81,12 @@ export module article {
     export function query() {
         return restCbAjax(new _query.Ajax(), dbArticle.TitleSearch.query);
     }
+}
 
-    import _getScore = baseAjax.article.getScore;
-    export function getScore() {
-        return restCbAjax(new _getScore.Ajax(), dbArticle.getScore);
+export module score {
+    import _get = baseAjax.score.get;
+    export function get() {
+        return restCbAjax(new _get.Ajax(), dbScore.get);
     }
 }
 

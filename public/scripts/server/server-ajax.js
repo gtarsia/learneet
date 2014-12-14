@@ -3,6 +3,7 @@ var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 var dbArticle = require('./article');
 var dbDependencies = require('./dependencies');
+var dbScore = require('./score');
 var dbUser = require('./user');
 var dbProposal = require('./proposal');
 
@@ -16,7 +17,7 @@ function getServerAjaxList() {
         dependencies.add(),
         dependencies.get(),
         dependencies.remove(),
-        article.getScore(),
+        score.get(),
         proposal.add(),
         proposal.getAll(),
         user.register()
@@ -87,14 +88,17 @@ exports.restCbAjax = restCbAjax;
         return exports.restCbAjax(new _query.Ajax(), dbArticle.TitleSearch.query);
     }
     article.query = query;
-
-    var _getScore = baseAjax.article.getScore;
-    function getScore() {
-        return exports.restCbAjax(new _getScore.Ajax(), dbArticle.getScore);
-    }
-    article.getScore = getScore;
 })(exports.article || (exports.article = {}));
 var article = exports.article;
+
+(function (score) {
+    var _get = baseAjax.score.get;
+    function get() {
+        return exports.restCbAjax(new _get.Ajax(), dbScore.get);
+    }
+    score.get = get;
+})(exports.score || (exports.score = {}));
+var score = exports.score;
 
 (function (dependencies) {
     var _add = baseAjax.dependencies.add;

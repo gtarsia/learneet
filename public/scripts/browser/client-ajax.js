@@ -53,25 +53,25 @@ exports.buildIAjax = buildIAjax;
 var article = exports.article;
 
 (function (score) {
-    var _get = baseAjax.article.getScore;
+    var _get = baseAjax.score.get;
     function get(params) {
         return exports.buildIAjax(new _get.Ajax(), params);
     }
     score.get = get;
 
-    var _getByUser = baseAjax.article.getScoreByUser;
+    var _getByUser = baseAjax.score.getByUser;
     function getByUser(params) {
         return exports.buildIAjax(new _getByUser.Ajax(), params);
     }
     score.getByUser = getByUser;
 
-    var _up = baseAjax.article.upScore;
+    var _up = baseAjax.score.up;
     function upVote(params) {
         return exports.buildIAjax(new _up.Ajax(), params);
     }
     score.upVote = upVote;
 
-    var _down = baseAjax.article.downScore;
+    var _down = baseAjax.score.down;
     function downVote(params) {
         return exports.buildIAjax(new _down.Ajax(), params);
     }

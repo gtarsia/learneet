@@ -184,25 +184,25 @@ exports.buildIAjax = buildIAjax;
 var article = exports.article;
 
 (function (score) {
-    var _get = baseAjax.article.getScore;
+    var _get = baseAjax.score.get;
     function get(params) {
         return exports.buildIAjax(new _get.Ajax(), params);
     }
     score.get = get;
 
-    var _getByUser = baseAjax.article.getScoreByUser;
+    var _getByUser = baseAjax.score.getByUser;
     function getByUser(params) {
         return exports.buildIAjax(new _getByUser.Ajax(), params);
     }
     score.getByUser = getByUser;
 
-    var _up = baseAjax.article.upScore;
+    var _up = baseAjax.score.up;
     function upVote(params) {
         return exports.buildIAjax(new _up.Ajax(), params);
     }
     score.upVote = upVote;
 
-    var _down = baseAjax.article.downScore;
+    var _down = baseAjax.score.down;
     function downVote(params) {
         return exports.buildIAjax(new _down.Ajax(), params);
     }
@@ -1207,8 +1207,11 @@ exports.AjaxType = {
         queryTitle.Ajax = Ajax;
     })(_article.queryTitle || (_article.queryTitle = {}));
     var queryTitle = _article.queryTitle;
+})(exports.article || (exports.article = {}));
+var article = exports.article;
 
-    (function (getScore) {
+(function (score) {
+    (function (get) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -1220,11 +1223,11 @@ exports.AjaxType = {
             };
             return Ajax;
         })();
-        getScore.Ajax = Ajax;
-    })(_article.getScore || (_article.getScore = {}));
-    var getScore = _article.getScore;
+        get.Ajax = Ajax;
+    })(score.get || (score.get = {}));
+    var get = score.get;
 
-    (function (getScoreByUser) {
+    (function (getByUser) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -1236,11 +1239,10 @@ exports.AjaxType = {
             };
             return Ajax;
         })();
-        getScoreByUser.Ajax = Ajax;
-    })(_article.getScoreByUser || (_article.getScoreByUser = {}));
-    var getScoreByUser = _article.getScoreByUser;
-
-    (function (upScore) {
+        getByUser.Ajax = Ajax;
+    })(score.getByUser || (score.getByUser = {}));
+    var getByUser = score.getByUser;
+    (function (up) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -1252,11 +1254,11 @@ exports.AjaxType = {
             };
             return Ajax;
         })();
-        upScore.Ajax = Ajax;
-    })(_article.upScore || (_article.upScore = {}));
-    var upScore = _article.upScore;
+        up.Ajax = Ajax;
+    })(score.up || (score.up = {}));
+    var up = score.up;
 
-    (function (downScore) {
+    (function (down) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -1268,11 +1270,11 @@ exports.AjaxType = {
             };
             return Ajax;
         })();
-        downScore.Ajax = Ajax;
-    })(_article.downScore || (_article.downScore = {}));
-    var downScore = _article.downScore;
-})(exports.article || (exports.article = {}));
-var article = exports.article;
+        down.Ajax = Ajax;
+    })(score.down || (score.down = {}));
+    var down = score.down;
+})(exports.score || (exports.score = {}));
+var score = exports.score;
 
 (function (dependencies) {
     (function (add) {

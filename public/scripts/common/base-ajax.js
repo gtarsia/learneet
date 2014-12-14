@@ -104,8 +104,11 @@
         queryTitle.Ajax = Ajax;
     })(_article.queryTitle || (_article.queryTitle = {}));
     var queryTitle = _article.queryTitle;
+})(exports.article || (exports.article = {}));
+var article = exports.article;
 
-    (function (getScore) {
+(function (score) {
+    (function (get) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -117,11 +120,11 @@
             };
             return Ajax;
         })();
-        getScore.Ajax = Ajax;
-    })(_article.getScore || (_article.getScore = {}));
-    var getScore = _article.getScore;
+        get.Ajax = Ajax;
+    })(score.get || (score.get = {}));
+    var get = score.get;
 
-    (function (getScoreByUser) {
+    (function (getByUser) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -133,11 +136,10 @@
             };
             return Ajax;
         })();
-        getScoreByUser.Ajax = Ajax;
-    })(_article.getScoreByUser || (_article.getScoreByUser = {}));
-    var getScoreByUser = _article.getScoreByUser;
-
-    (function (upScore) {
+        getByUser.Ajax = Ajax;
+    })(score.getByUser || (score.getByUser = {}));
+    var getByUser = score.getByUser;
+    (function (up) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -149,11 +151,11 @@
             };
             return Ajax;
         })();
-        upScore.Ajax = Ajax;
-    })(_article.upScore || (_article.upScore = {}));
-    var upScore = _article.upScore;
+        up.Ajax = Ajax;
+    })(score.up || (score.up = {}));
+    var up = score.up;
 
-    (function (downScore) {
+    (function (down) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -165,11 +167,11 @@
             };
             return Ajax;
         })();
-        downScore.Ajax = Ajax;
-    })(_article.downScore || (_article.downScore = {}));
-    var downScore = _article.downScore;
-})(exports.article || (exports.article = {}));
-var article = exports.article;
+        down.Ajax = Ajax;
+    })(score.down || (score.down = {}));
+    var down = score.down;
+})(exports.score || (exports.score = {}));
+var score = exports.score;
 
 (function (dependencies) {
     (function (add) {

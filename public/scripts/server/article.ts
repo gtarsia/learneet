@@ -7,7 +7,6 @@ import create = baseArticle.create;
 import get = baseArticle.get;
 import getTitleWithId = baseArticle.getTitleWithId;
 import update = baseArticle.update;
-import getScore = baseArticle.getScore;
 import getAll = baseArticle.getAll;
 import redis = require("redis");
 import queryTitle = baseArticle.queryTitle;
@@ -183,12 +182,4 @@ export module TitleSearch {
 			return okObj(articles)
 		})
 	}
-}
-
-export function getScore(args: getScore.Params)
-: Promise<getScore.Return> {
-	return db.scard(keys.articleScore(args))
-	.then(res => {
-		return okObj({article: {score: res} });
-	})
 }

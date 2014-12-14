@@ -92,8 +92,10 @@ export module article {
         export interface Params { query: string }
         export interface Return extends JsonReturn<TitleWithId[]> { }
     }
+}
 
-    export module getScore {
+export module score {
+    export module get {
         export class Ajax implements IAjax{
             url(): string { return '/api/get_article_score' }
             type(): string { return AjaxType.GET }
@@ -102,7 +104,7 @@ export module article {
         export interface Return extends JsonReturn<{article: {score: Number}}> {}
     }
 
-    export module getScoreByUser {
+    export module getByUser {
         export class Ajax implements IAjax{
             url(): string { return '/api/get_score_by_user' }
             type(): string { return AjaxType.GET }
@@ -110,8 +112,7 @@ export module article {
         export interface Params { article: {id: string}; user: {id: string} }
         export interface Return extends JsonReturn<{ article: {score: Number}}> {}
     }
-
-    export module upScore {
+    export module up {
         export class Ajax implements IAjax{
             url(): string { return '/api/up_score_article' }
             type(): string { return AjaxType.POST }
@@ -120,7 +121,7 @@ export module article {
         export interface Return extends JsonReturn<boolean> {}
     }
 
-    export module downScore {
+    export module down {
         export class Ajax implements IAjax{
             url(): string { return '/api/down_score_article' }
             type(): string { return AjaxType.POST }

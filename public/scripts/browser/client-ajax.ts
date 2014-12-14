@@ -53,25 +53,25 @@ export module article {
 }
 
 export module score {
-    import _get = baseAjax.article.getScore;
+    import _get = baseAjax.score.get;
     export function get(params) {
         return buildIAjax<_get.Params, _get.Return>
         (new _get.Ajax(), params);
     }
 
-    import _getByUser = baseAjax.article.getScoreByUser;
+    import _getByUser = baseAjax.score.getByUser;
     export function getByUser(params) {
         return buildIAjax<_getByUser.Params, _getByUser.Return>
         (new _getByUser.Ajax(), params);
     }
 
-    import _up = baseAjax.article.upScore;
+    import _up = baseAjax.score.up;
     export function upVote(params) {
         return buildIAjax<_up.Params, _up.Return>
         (new _up.Ajax(), params);
     } 
 
-    import _down = baseAjax.article.downScore;
+    import _down = baseAjax.score.down;
     export function downVote(params) {
         return buildIAjax<_down.Params, _down.Return>
         (new _down.Ajax(), params);

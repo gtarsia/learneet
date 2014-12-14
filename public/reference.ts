@@ -29,6 +29,7 @@
 /// <reference path="scripts/server/dependencies.ts" />
 /// <reference path="scripts/server/proposal.ts" />
 /// <reference path="scripts/server/redis-keys.ts" />
+/// <reference path="scripts/server/score.ts" />
 /// <reference path="scripts/server/server-ajax.ts" />
 /// <reference path="scripts/server/user.ts" />
 /// <reference path="scripts/server/version.ts" />
