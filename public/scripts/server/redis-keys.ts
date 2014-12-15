@@ -22,8 +22,11 @@ export function articlesIdSet() {
     return j([baseArticles(), "idSet"]);
 }
 
-export function articleScore(args: ArticleWithId) {
-    return j([baseArticles(), args.article.id, 'score'])
+export function articleUpScore(args: ArticleWithId) {
+    return j([baseArticles(), args.article.id, 'score', 'up'])
+}
+export function articleDownScore(args: ArticleWithId) {
+    return j([baseArticles(), args.article.id, 'score', 'down'])
 }
 
 //Proposals

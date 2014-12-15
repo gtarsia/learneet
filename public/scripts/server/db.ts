@@ -127,6 +127,10 @@ export function sinter(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.sinter.bind(client), args]);
 }
 
+export function sismember(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.sismember.bind(client), args]);
+}
+
 export function sort(...args: string[]) : Promise<any> {
 	return new Promise<string>(
 	function(resolve: (result: string) => any,

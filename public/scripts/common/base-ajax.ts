@@ -117,7 +117,15 @@ export module score {
             url(): string { return '/api/up_score_article' }
             type(): string { return AjaxType.POST }
         }
-        export interface Params { article: {id: string}; user: {id: string} }
+        export interface Params { article: {id: string} }
+        export interface Return extends JsonReturn<boolean> {}
+    }
+    export module removeUp {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/remove_up_score_article' }
+            type(): string { return AjaxType.POST }
+        }
+        export interface Params { article: {id: string} }
         export interface Return extends JsonReturn<boolean> {}
     }
 

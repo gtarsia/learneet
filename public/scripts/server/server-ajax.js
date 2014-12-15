@@ -19,6 +19,8 @@ function getServerAjaxList() {
         dependencies.remove(),
         score.get(),
         score.up(),
+        score.removeUp(),
+        score.getByUser(),
         proposal.add(),
         proposal.getAll(),
         user.register()
@@ -104,6 +106,18 @@ var article = exports.article;
         return exports.restCbAjax(new _up.Ajax(), dbScore.up);
     }
     score.up = up;
+
+    var _removeUp = baseAjax.score.removeUp;
+    function removeUp() {
+        return exports.restCbAjax(new _removeUp.Ajax(), dbScore.removeUp);
+    }
+    score.removeUp = removeUp;
+
+    var _getByUser = baseAjax.score.getByUser;
+    function getByUser() {
+        return exports.restCbAjax(new _getByUser.Ajax(), dbScore.getByUser);
+    }
+    score.getByUser = getByUser;
 })(exports.score || (exports.score = {}));
 var score = exports.score;
 

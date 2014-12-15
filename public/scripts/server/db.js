@@ -151,6 +151,15 @@ function sinter() {
 }
 exports.sinter = sinter;
 
+function sismember() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.sismember.bind(exports.client), args]);
+}
+exports.sismember = sismember;
+
 function sort() {
     var args = [];
     for (var _i = 0; _i < (arguments.length - 0); _i++) {

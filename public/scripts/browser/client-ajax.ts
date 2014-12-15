@@ -69,13 +69,26 @@ export module score {
     export function upVote(params) {
         return buildIAjax<_up.Params, _up.Return>
         (new _up.Ajax(), params);
-    } 
+    }
+
+    import _removeUp = baseAjax.score.removeUp;
+    export function removeUpVote(params) {
+        return buildIAjax<_removeUp.Params, _removeUp.Return>
+        (new _removeUp.Ajax(), params);
+    }
 
     import _down = baseAjax.score.down;
     export function downVote(params) {
         return buildIAjax<_down.Params, _down.Return>
         (new _down.Ajax(), params);
     } 
+/*
+    import _removeUp = baseAjax.score.removeUp;
+    export function removeUpVote(params) {
+        return buildIAjax<_removeUp.Params, _removeUp.Return>
+        (new _removeUp.Ajax(), params);
+    }
+    */
 }
 
 export module dependencies {

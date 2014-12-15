@@ -77,29 +77,17 @@ var ArticleScore = (function () {
         this.downScore = new downScore(selectors.down);
         this.score = new Score(selectors.score);
         this.upScore.arrow.jq.click(function () {
-            if (_self.downScore.isTurnedOn && !_self.upScore.isTurnedOn)
-                _self.downScore.turnOff();
-            _self.upScore.toggle();
-            if (_self.upScore.isTurnedOn)
-                ajax.score.upVote(_self.article);
+            _self.upScoreClick();
         });
         this.downScore.arrow.jq.click(function () {
-            if (_self.upScore.isTurnedOn && !_self.downScore.isTurnedOn)
-                _self.upScore.turnOff();
-            _self.downScore.toggle();
-            if (_self.downScore.isTurnedOn)
-                ajax.score.downVote(_self.article);
+            _self.downScoreClick();
         });
-        ajax.score.get({
-            article: { id: _self.article.id }
-        }).done(function (res) {
-            _self.score.set(res.result);
-        });
+        _self.fetchScore();
         $(document).ready(function () {
             ajax.score.getByUser({
                 article: { id: _self.article.id },
                 user: { id: '1' }
-            }).then(function (res) {
+            }).done(function (res) {
                 var article = res.result.article;
                 if (article.score == 1)
                     _self.upScore.turnOn();
@@ -108,6 +96,36 @@ var ArticleScore = (function () {
             });
         });
     }
+    ArticleScore.prototype.fetchScore = function () {
+        var _this = this;
+        ajax.score.get({
+            article: { id: this.article.id }
+        }).done(function (res) {
+            _this.score.set(res.result);
+        });
+    };
+    ArticleScore.prototype.upScoreClick = function () {
+        var _this = this;
+        if (this.downScore.isTurnedOn && !this.upScore.isTurnedOn)
+            this.downScore.turnOff();
+        this.upScore.toggle();
+        var p;
+        if (this.upScore.isTurnedOn)
+            p = ajax.score.upVote({ article: this.article });
+        else
+            p = ajax.score.removeUpVote({ article: this.article });
+        p.done(function () {
+            _this.fetchScore();
+        });
+    };
+    ArticleScore.prototype.downScoreClick = function () {
+        if (this.upScore.isTurnedOn && !this.downScore.isTurnedOn)
+            this.upScore.turnOff();
+        this.downScore.toggle();
+        if (this.downScore.isTurnedOn)
+            ajax.score.downVote({ article: this.article });
+        this.fetchScore();
+    };
     return ArticleScore;
 })();
 exports.ArticleScore = ArticleScore;

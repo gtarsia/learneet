@@ -60,6 +60,35 @@ export class ArticleScore {
     upScore;
     downScore;
     score;
+    fetchScore() {
+        ajax.score.get({
+            article: {id: this.article.id}
+        })
+        .done((res : baseAjax.JsonReturn<{article: {score: Number}}>) => {
+            this.score.set(res.result)
+        })
+    }
+    upScoreClick() {
+        if (this.downScore.isTurnedOn && 
+            !this.upScore.isTurnedOn)
+            this.downScore.turnOff();
+        this.upScore.toggle();
+        var p;
+        if (this.upScore.isTurnedOn)
+            p = ajax.score.upVote({article: this.article});
+        else p = ajax.score.removeUpVote({article: this.article});
+        p.done(() => {
+            this.fetchScore();
+        })
+    }
+    downScoreClick() {
+        if (this.upScore.isTurnedOn && !this.downScore.isTurnedOn)
+            this.upScore.turnOff();
+        this.downScore.toggle();
+        if (this.downScore.isTurnedOn)
+            ajax.score.downVote({article: this.article});
+        this.fetchScore();
+    }
     constructor(selectors: {up: string; down: string; score: string },
         article: {id: string}) {
         var _self = this;
@@ -68,32 +97,18 @@ export class ArticleScore {
         this.downScore = new downScore(selectors.down);
         this.score = new Score(selectors.score)
         this.upScore.arrow.jq.click(() => {
-            if (_self.downScore.isTurnedOn && 
-                !_self.upScore.isTurnedOn)
-                _self.downScore.turnOff();
-            _self.upScore.toggle();
-            if (_self.upScore.isTurnedOn)
-                ajax.score.upVote(_self.article);
+            _self.upScoreClick();
         });
         this.downScore.arrow.jq.click(() => {
-            if (_self.upScore.isTurnedOn && !_self.downScore.isTurnedOn)
-                _self.upScore.turnOff();
-            _self.downScore.toggle();
-            if (_self.downScore.isTurnedOn)
-                ajax.score.downVote(_self.article);
+            _self.downScoreClick();
         });
-        ajax.score.get({
-            article: {id: _self.article.id}
-        })
-        .done((res : baseAjax.JsonReturn<{article: {score: Number}}>) => {
-            _self.score.set(res.result)
-        })
+        _self.fetchScore();
         $(document).ready(() => {
             ajax.score.getByUser({
                 article: {id: _self.article.id},
                 user: {id: '1'}
             })
-            .then((res) => {
+            .done((res) => {
                 var article = res.result.article;
                 if (article.score == 1) _self.upScore.turnOn();
                 else if (article.score == -1) _self.downScore.turnOn();
