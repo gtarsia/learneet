@@ -20,6 +20,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         dependencies.get(),
         dependencies.remove(),
         score.get(),
+        score.up(),
         proposal.add(),
         proposal.getAll(),
         user.register()
@@ -87,6 +88,11 @@ export module score {
     import _get = baseAjax.score.get;
     export function get() {
         return restCbAjax(new _get.Ajax(), dbScore.get);
+    }
+
+    import _up = baseAjax.score.up;
+    export function up() {
+        return restCbAjax(new _up.Ajax(), dbScore.up);
     }
 }
 

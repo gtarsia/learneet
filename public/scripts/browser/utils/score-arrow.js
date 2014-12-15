@@ -80,11 +80,15 @@ var ArticleScore = (function () {
             if (_self.downScore.isTurnedOn && !_self.upScore.isTurnedOn)
                 _self.downScore.turnOff();
             _self.upScore.toggle();
+            if (_self.upScore.isTurnedOn)
+                ajax.score.upVote(_self.article);
         });
         this.downScore.arrow.jq.click(function () {
             if (_self.upScore.isTurnedOn && !_self.downScore.isTurnedOn)
                 _self.upScore.turnOff();
             _self.downScore.toggle();
+            if (_self.downScore.isTurnedOn)
+                ajax.score.downVote(_self.article);
         });
         ajax.score.get({
             article: { id: _self.article.id }
