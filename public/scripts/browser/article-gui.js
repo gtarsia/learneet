@@ -23,9 +23,7 @@ var ArticleGui = (function (_super) {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
-            _self.articleScore = new Arrows.ArticleScore({
-                up: 'input#up-score', down: 'input#down-score',
-                score: 'div#article-score' }, { id: _self.id });
+            _self.articleScore = new Arrows.ArticleScore({ id: _self.id });
             ajax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);

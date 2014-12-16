@@ -185,6 +185,21 @@ var article = exports.article;
         down.Ajax = Ajax;
     })(score.down || (score.down = {}));
     var down = score.down;
+    (function (removeDown) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/remove_down_score_article';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        removeDown.Ajax = Ajax;
+    })(score.removeDown || (score.removeDown = {}));
+    var removeDown = score.removeDown;
 })(exports.score || (exports.score = {}));
 var score = exports.score;
 

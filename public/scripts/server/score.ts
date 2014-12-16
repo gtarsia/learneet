@@ -36,7 +36,7 @@ export function get(args: get.Params)
         return db.scard(keys.articleDownScore(args))
     })
     .then(down => {
-        return okObj({article: {score: up} });
+        return okObj({article: {score: up - down} });
     })
 }
 
@@ -61,7 +61,7 @@ export function removeUp(args: removeUp.Params)
 
 export function down(args: down.Params)
 : Promise<down.Return> {
-    return db.sadd(keys.articledownScore(args), "1")
+    return db.sadd(keys.articleDownScore(args), "1")
     .then(res => {
         return db.srem(keys.articleUpScore(args), "1")
     })

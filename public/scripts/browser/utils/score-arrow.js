@@ -9,17 +9,13 @@ var ajax = require('./../client-ajax');
 
 var ScoreArrow = (function (_super) {
     __extends(ScoreArrow, _super);
-    function ScoreArrow(arrowSelector, offImageUrl, onImageUrl) {
+    function ScoreArrow(classImageSelector, offImageSelector, onImageSelector) {
         _super.call(this);
         this.isTurnedOn = false;
-        this.arrow = this.propertize(arrowSelector);
-        this.offImageUrl = offImageUrl;
-        this.onImageUrl = onImageUrl;
+        this.bothImages = this.propertize(classImageSelector);
+        this.offImage = this.propertize(offImageSelector);
+        this.onImage = this.propertize(onImageSelector);
     }
-    ScoreArrow.prototype.changeImage = function (url) {
-        var _self = this;
-        _self.arrow.jq.attr('src', url);
-    };
     ScoreArrow.prototype.toggle = function () {
         if (this.isTurnedOn)
             this.turnOff();
@@ -28,39 +24,41 @@ var ScoreArrow = (function (_super) {
     };
     ScoreArrow.prototype.turnOff = function () {
         this.isTurnedOn = false;
-        this.changeImage(this.offImageUrl);
+        this.onImage.jq.hide();
+        this.offImage.jq.show();
     };
     ScoreArrow.prototype.turnOn = function () {
         this.isTurnedOn = true;
-        this.changeImage(this.onImageUrl);
+        this.onImage.jq.show();
+        this.offImage.jq.hide();
     };
     return ScoreArrow;
 })(Gui);
 exports.ScoreArrow = ScoreArrow;
 
-var upScore = (function (_super) {
-    __extends(upScore, _super);
-    function upScore(arrowSelector) {
-        _super.call(this, arrowSelector, '/images/up-score.png', '/images/up-score-hover.png');
+var UpScore = (function (_super) {
+    __extends(UpScore, _super);
+    function UpScore() {
+        _super.call(this, '.up-score', '#up-score-off', '#up-score-on');
     }
-    return upScore;
+    return UpScore;
 })(ScoreArrow);
-exports.upScore = upScore;
+exports.UpScore = UpScore;
 
-var downScore = (function (_super) {
-    __extends(downScore, _super);
-    function downScore(arrowSelector) {
-        _super.call(this, arrowSelector, '/images/down-score.png', '/images/down-score-hover.png');
+var DownScore = (function (_super) {
+    __extends(DownScore, _super);
+    function DownScore() {
+        _super.call(this, '.down-score', '#down-score-off', '#down-score-on');
     }
-    return downScore;
+    return DownScore;
 })(ScoreArrow);
-exports.downScore = downScore;
+exports.DownScore = DownScore;
 
 var Score = (function (_super) {
     __extends(Score, _super);
-    function Score(selector) {
+    function Score() {
         _super.call(this);
-        this.score = this.propertize(selector, 'html');
+        this.score = this.propertize('#article-score', 'html');
     }
     Score.prototype.set = function (args) {
         this.score.val = args.article.score;
@@ -70,16 +68,16 @@ var Score = (function (_super) {
 exports.Score = Score;
 
 var ArticleScore = (function () {
-    function ArticleScore(selectors, article) {
+    function ArticleScore(article) {
         var _self = this;
         this.article = article;
-        this.upScore = new upScore(selectors.up);
-        this.downScore = new downScore(selectors.down);
-        this.score = new Score(selectors.score);
-        this.upScore.arrow.jq.click(function () {
+        this.upScore = new UpScore();
+        this.downScore = new DownScore();
+        this.score = new Score();
+        this.upScore.bothImages.jq.click(function () {
             _self.upScoreClick();
         });
-        this.downScore.arrow.jq.click(function () {
+        this.downScore.bothImages.jq.click(function () {
             _self.downScoreClick();
         });
         _self.fetchScore();
@@ -106,9 +104,12 @@ var ArticleScore = (function () {
     };
     ArticleScore.prototype.upScoreClick = function () {
         var _this = this;
-        if (this.downScore.isTurnedOn && !this.upScore.isTurnedOn)
+        if (this.upScore.isTurnedOn) {
+            this.upScore.turnOff();
+        } else {
+            this.upScore.turnOn();
             this.downScore.turnOff();
-        this.upScore.toggle();
+        }
         var p;
         if (this.upScore.isTurnedOn)
             p = ajax.score.upVote({ article: this.article });
@@ -119,12 +120,21 @@ var ArticleScore = (function () {
         });
     };
     ArticleScore.prototype.downScoreClick = function () {
-        if (this.upScore.isTurnedOn && !this.downScore.isTurnedOn)
+        var _this = this;
+        if (this.downScore.isTurnedOn) {
+            this.downScore.turnOff();
+        } else {
+            this.downScore.turnOn();
             this.upScore.turnOff();
-        this.downScore.toggle();
+        }
+        var p;
         if (this.downScore.isTurnedOn)
-            ajax.score.downVote({ article: this.article });
-        this.fetchScore();
+            p = ajax.score.downVote({ article: this.article });
+        else
+            p = ajax.score.removeDownVote({ article: this.article });
+        p.done(function () {
+            _this.fetchScore();
+        });
     };
     return ArticleScore;
 })();

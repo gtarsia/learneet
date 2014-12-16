@@ -82,6 +82,12 @@ export module score {
         return buildIAjax<_down.Params, _down.Return>
         (new _down.Ajax(), params);
     } 
+
+    import _removeDown = baseAjax.score.removeDown;
+    export function removeDownVote(params) {
+        return buildIAjax<_removeDown.Params, _removeDown.Return>
+        (new _removeDown.Ajax(), params);
+    }
 /*
     import _removeUp = baseAjax.score.removeUp;
     export function removeUpVote(params) {

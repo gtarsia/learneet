@@ -20,6 +20,8 @@ function getServerAjaxList() {
         score.get(),
         score.up(),
         score.removeUp(),
+        score.down(),
+        score.removeDown(),
         score.getByUser(),
         proposal.add(),
         proposal.getAll(),
@@ -112,6 +114,18 @@ var article = exports.article;
         return exports.restCbAjax(new _removeUp.Ajax(), dbScore.removeUp);
     }
     score.removeUp = removeUp;
+
+    var _down = baseAjax.score.down;
+    function down() {
+        return exports.restCbAjax(new _down.Ajax(), dbScore.down);
+    }
+    score.down = down;
+
+    var _removeDown = baseAjax.score.removeDown;
+    function removeDown() {
+        return exports.restCbAjax(new _removeDown.Ajax(), dbScore.removeDown);
+    }
+    score.removeDown = removeDown;
 
     var _getByUser = baseAjax.score.getByUser;
     function getByUser() {

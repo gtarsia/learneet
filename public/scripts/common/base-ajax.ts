@@ -137,6 +137,14 @@ export module score {
         export interface Params { article: {id: string}; user: {id: string} }
         export interface Return extends JsonReturn<boolean> {}
     }
+    export module removeDown {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/remove_down_score_article' }
+            type(): string { return AjaxType.POST }
+        }
+        export interface Params { article: {id: string} }
+        export interface Return extends JsonReturn<boolean> {}
+    }
 }
 
 export module dependencies {

@@ -82,6 +82,12 @@ var article = exports.article;
         return exports.buildIAjax(new _down.Ajax(), params);
     }
     score.downVote = downVote;
+
+    var _removeDown = baseAjax.score.removeDown;
+    function removeDownVote(params) {
+        return exports.buildIAjax(new _removeDown.Ajax(), params);
+    }
+    score.removeDownVote = removeDownVote;
 })(exports.score || (exports.score = {}));
 var score = exports.score;
 

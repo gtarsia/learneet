@@ -3,20 +3,16 @@ import ajax = require('./../client-ajax')
 import baseAjax = require('./../../common/base-ajax')
 
 export class ScoreArrow extends Gui {
-    arrow;
-    offImageUrl;
-    onImageUrl;
+    bothImages;
+    offImage;
+    onImage;
     isTurnedOn;
-    constructor(arrowSelector: string, offImageUrl: string, onImageUrl: string) {
+    constructor(classImageSelector: string, offImageSelector: string, onImageSelector: string) {
         super();
         this.isTurnedOn = false;
-        this.arrow = this.propertize(arrowSelector)
-        this.offImageUrl = offImageUrl;
-        this.onImageUrl = onImageUrl;
-    }
-    changeImage(url: string) {
-        var _self = this;
-        _self.arrow.jq.attr('src', url);
+        this.bothImages = this.propertize(classImageSelector);
+        this.offImage = this.propertize(offImageSelector);
+        this.onImage = this.propertize(onImageSelector);
     }
     toggle() {
         if (this.isTurnedOn) this.turnOff();
@@ -24,31 +20,33 @@ export class ScoreArrow extends Gui {
     }
     turnOff() {
         this.isTurnedOn = false;
-        this.changeImage(this.offImageUrl);
+        this.onImage.jq.hide();
+        this.offImage.jq.show();
     }
     turnOn() {
         this.isTurnedOn = true;
-        this.changeImage(this.onImageUrl);
+        this.onImage.jq.show();
+        this.offImage.jq.hide();
     }
 }
 
-export class upScore extends ScoreArrow {
-    constructor(arrowSelector: string) {
-        super(arrowSelector, '/images/up-score.png', '/images/up-score-hover.png')
+export class UpScore extends ScoreArrow {
+    constructor() {
+        super('.up-score', '#up-score-off', '#up-score-on')
     } 
 }
 
-export class downScore extends ScoreArrow {
-    constructor(arrowSelector: string) {
-        super(arrowSelector, '/images/down-score.png', '/images/down-score-hover.png');
+export class DownScore extends ScoreArrow {
+    constructor() {
+        super('.down-score', '#down-score-off', '#down-score-on');
     }
 }
 
 export class Score extends Gui {
     score;
-    constructor(selector: string) {
+    constructor() {
         super();
-        this.score = this.propertize(selector, 'html');
+        this.score = this.propertize('#article-score', 'html');
     }
     set(args: {article: {score: Number}}) {
         this.score.val = args.article.score;
@@ -57,8 +55,8 @@ export class Score extends Gui {
 
 export class ArticleScore {
     article : {id: string};
-    upScore;
-    downScore;
+    upScore : UpScore;
+    downScore : DownScore;
     score;
     fetchScore() {
         ajax.score.get({
@@ -69,10 +67,13 @@ export class ArticleScore {
         })
     }
     upScoreClick() {
-        if (this.downScore.isTurnedOn && 
-            !this.upScore.isTurnedOn)
+        if (this.upScore.isTurnedOn) {
+            this.upScore.turnOff();
+        }
+        else {
+            this.upScore.turnOn();
             this.downScore.turnOff();
-        this.upScore.toggle();
+        }
         var p;
         if (this.upScore.isTurnedOn)
             p = ajax.score.upVote({article: this.article});
@@ -82,24 +83,31 @@ export class ArticleScore {
         })
     }
     downScoreClick() {
-        if (this.upScore.isTurnedOn && !this.downScore.isTurnedOn)
+        if (this.downScore.isTurnedOn) {
+            this.downScore.turnOff();
+        }
+        else {
+            this.downScore.turnOn();
             this.upScore.turnOff();
-        this.downScore.toggle();
+        }
+        var p;
         if (this.downScore.isTurnedOn)
-            ajax.score.downVote({article: this.article});
-        this.fetchScore();
+            p = ajax.score.downVote({article: this.article});
+        else p = ajax.score.removeDownVote({article: this.article});
+        p.done(() => {
+            this.fetchScore();
+        })
     }
-    constructor(selectors: {up: string; down: string; score: string },
-        article: {id: string}) {
+    constructor(article: {id: string}) {
         var _self = this;
         this.article = article;
-        this.upScore = new upScore(selectors.up);
-        this.downScore = new downScore(selectors.down);
-        this.score = new Score(selectors.score)
-        this.upScore.arrow.jq.click(() => {
+        this.upScore = new UpScore();
+        this.downScore = new DownScore();
+        this.score = new Score()
+        this.upScore.bothImages.jq.click(() => {
             _self.upScoreClick();
         });
-        this.downScore.arrow.jq.click(() => {
+        this.downScore.bothImages.jq.click(() => {
             _self.downScoreClick();
         });
         _self.fetchScore();

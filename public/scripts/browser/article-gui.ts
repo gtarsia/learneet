@@ -24,8 +24,7 @@ export class ArticleGui extends Gui {
             _self.article = new RenderedArticle();
             _self.id = $("[type=hidden]#article-id").val();
             _self.articleScore = new Arrows.ArticleScore(
-                {up: 'input#up-score', down: 'input#down-score',
-                score: 'div#article-score'}, {id: _self.id}
+               {id: _self.id}
             );
             ajax.article.get({article: { id: _self.id }})
             .done(function(res) {

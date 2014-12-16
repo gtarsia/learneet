@@ -32,7 +32,7 @@ function get(args) {
         up = _up;
         return db.scard(keys.articleDownScore(args));
     }).then(function (down) {
-        return exports.okObj({ article: { score: up } });
+        return exports.okObj({ article: { score: up - down } });
     });
 }
 exports.get = get;
@@ -54,7 +54,7 @@ function removeUp(args) {
 exports.removeUp = removeUp;
 
 function down(args) {
-    return db.sadd(keys.articledownScore(args), "1").then(function (res) {
+    return db.sadd(keys.articleDownScore(args), "1").then(function (res) {
         return db.srem(keys.articleUpScore(args), "1");
     }).then(function (res) {
         return exports.okObj(true);
