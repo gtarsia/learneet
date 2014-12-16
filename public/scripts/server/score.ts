@@ -4,6 +4,8 @@ import get = baseScore.get;
 import getByUser = baseScore.getByUser;
 import up = baseScore.up;
 import removeUp = baseScore.removeUp;
+import down = baseScore.down;
+import removeDown = baseScore.removeDown;
 import Promise = require('bluebird');
 import db = require('./db');
 import keys = require('./redis-keys');
@@ -52,6 +54,25 @@ export function up(args: up.Params)
 export function removeUp(args: removeUp.Params)
 : Promise<removeUp.Return> {
     return db.srem(keys.articleUpScore(args), "1")
+    .then(res => {
+        return okObj(true);
+    })
+}
+
+export function down(args: down.Params)
+: Promise<down.Return> {
+    return db.sadd(keys.articledownScore(args), "1")
+    .then(res => {
+        return db.srem(keys.articleUpScore(args), "1")
+    })
+    .then(res => {
+        return okObj(true);
+    })
+}
+
+export function removeDown(args: removeDown.Params)
+: Promise<removeDown.Return> {
+    return db.srem(keys.articleDownScore(args), "1")
     .then(res => {
         return okObj(true);
     })

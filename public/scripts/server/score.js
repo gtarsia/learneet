@@ -53,6 +53,22 @@ function removeUp(args) {
 }
 exports.removeUp = removeUp;
 
+function down(args) {
+    return db.sadd(keys.articledownScore(args), "1").then(function (res) {
+        return db.srem(keys.articleUpScore(args), "1");
+    }).then(function (res) {
+        return exports.okObj(true);
+    });
+}
+exports.down = down;
+
+function removeDown(args) {
+    return db.srem(keys.articleDownScore(args), "1").then(function (res) {
+        return exports.okObj(true);
+    });
+}
+exports.removeDown = removeDown;
+
 function getByUser(args) {
     var isUpScoreMember;
     return db.sismember(keys.articleUpScore(args), "1").then(function (isMember) {
