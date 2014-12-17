@@ -4,6 +4,7 @@
 /// <reference path="scripts/browser/Utils.d.ts" />
 /// <reference path="scripts/browser/add-proposal-gui.ts" />
 /// <reference path="scripts/browser/article-gui.ts" />
+/// <reference path="scripts/browser/base-article-gui.ts" />
 /// <reference path="scripts/browser/browse-gui.ts" />
 /// <reference path="scripts/browser/client-ajax.ts" />
 /// <reference path="scripts/browser/create-article-gui.ts" />

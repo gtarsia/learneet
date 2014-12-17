@@ -56,8 +56,4 @@ var ArticleGui = (function (_super) {
     return ArticleGui;
 })(Gui);
 exports.ArticleGui = ArticleGui;
-
-if (guiName == 'ArticleGui') {
-    gui = new ArticleGui();
-}
 //# sourceMappingURL=article-gui.js.map

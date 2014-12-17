@@ -58,10 +58,3 @@ export class ArticleGui extends Gui {
         });
     }
 } 
-
-declare var guiName;
-declare var gui;
-
-if (guiName == 'ArticleGui') {
-    gui = new ArticleGui();
-}

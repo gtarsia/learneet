@@ -1,0 +1,15 @@
+.partial.edit-article-partial(style='display:none')
+  #main-left
+
+  #main-center
+    input#article-id(type="hidden" value= id)
+    include templates/previewable-article
+    #second-floor
+      #save-frame.rectangular-frame
+        h1 Changes description
+          div
+            input#changesDescription.selectize-input(type="text" placeholder="Write changes done to the article...")
+          #buttons
+            button#save Save
+            button#cancel Cancel
+      include templates/editable-dependencies
