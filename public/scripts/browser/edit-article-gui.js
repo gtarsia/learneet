@@ -13,7 +13,7 @@ var baseAjax = require("./../common/base-ajax");
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
-    function EditArticleGui() {
+    function EditArticleGui(parent) {
         _super.call(this);
         this.id = "-1";
         this.saveBtn = { get jq() {
@@ -22,6 +22,7 @@ var EditArticleGui = (function (_super) {
         this.cancelBtn = { get jq() {
                 return $('button#cancel');
             } };
+        this.parent = parent;
         var _self = this;
         $(document).ready(function () {
             _self.dependencyFound = _self.propertize("select#dependencyFound", 'val');
@@ -145,9 +146,6 @@ var EditArticleGui = (function (_super) {
     };
     return EditArticleGui;
 })(Gui);
-exports.EditArticleGui = EditArticleGui;
 
-if (guiName == 'EditArticleGui') {
-    gui = new EditArticleGui();
-}
+module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map

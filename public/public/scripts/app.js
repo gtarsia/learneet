@@ -74,11 +74,13 @@ var Arrows = require('./utils/score-arrow');
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
-    function ArticleGui() {
+    function ArticleGui(parent) {
         _super.call(this);
         this.id = "-1";
+        this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
+        this.parent = parent;
         var _self = this;
         $(document).ready(function () {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
@@ -95,6 +97,12 @@ var ArticleGui = (function (_super) {
                 _self.article.content.val = marked(result.content);
             });
 
+            _self.editArticleBtn.jq.click(function (e) {
+                var href = $(this).attr('href');
+                history.pushState({}, '', href);
+                _self.parent.check();
+                e.preventDefault();
+            });
             return;
             ajax.dependencies.get({
                 article: { id: _self.id }
@@ -116,7 +124,8 @@ var ArticleGui = (function (_super) {
     };
     return ArticleGui;
 })(Gui);
-exports.ArticleGui = ArticleGui;
+
+module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
 
 },{"./../common/url":20,"./client-ajax":5,"./gui":8,"./templates/rendered-article":17,"./utils/score-arrow":18}],3:[function(require,module,exports){
@@ -128,24 +137,46 @@ var __extends = this.__extends || function (d, b) {
 };
 var url = require("./../common/url");
 var Gui = require("./gui");
+var ArticleGui = require("./article-gui");
+var EditArticleGui = require("./edit-article-gui");
 
 var BaseArticleGui = (function (_super) {
     __extends(BaseArticleGui, _super);
     function BaseArticleGui() {
         _super.call(this);
-        function check() {
-            var partials = [
-                { re: url.article.get('\\d+'), partial: 'article-partial' },
-                { re: url.article.edit('\\d+'), partial: 'edit-article-partial' }
-            ];
-            partials.forEach(function (partial) {
-                debugger;
-                var what = location.pathname.match(partial.re);
+        var _self = this;
+        $.get(url.article.partials()).done(function (res) {
+            $(document).ready(function () {
+                $("#main").append(res);
             });
-        }
-        debugger;
-        check();
+        });
+        $(document).ready(function () {
+            _self.check();
+        });
     }
+    BaseArticleGui.prototype.check = function () {
+        var _self = this;
+        var partials = [
+            {
+                re: url.article.get('\\d+'), gui: function () {
+                    return new ArticleGui(_self);
+                },
+                sel: '.article-partial' },
+            {
+                re: url.article.edit('\\d+'), gui: function () {
+                    return new EditArticleGui(_self);
+                },
+                sel: '.edit-article-partial' }
+        ];
+        partials.forEach(function (partial) {
+            var match = location.pathname.match(partial.re);
+            if (match) {
+                _self.subGui = partial.gui();
+                $(".partial").hide();
+                $(partial.sel).show();
+            }
+        });
+    };
     return BaseArticleGui;
 })(Gui);
 exports.BaseArticleGui = BaseArticleGui;
@@ -155,7 +186,7 @@ if (guiName == 'BaseArticleGui') {
 }
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":20,"./gui":8}],4:[function(require,module,exports){
+},{"./../common/url":20,"./article-gui":2,"./edit-article-gui":7,"./gui":8}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -367,7 +398,7 @@ var baseAjax = require("./../common/base-ajax");
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
-    function EditArticleGui() {
+    function EditArticleGui(parent) {
         _super.call(this);
         this.id = "-1";
         this.saveBtn = { get jq() {
@@ -376,6 +407,7 @@ var EditArticleGui = (function (_super) {
         this.cancelBtn = { get jq() {
                 return $('button#cancel');
             } };
+        this.parent = parent;
         var _self = this;
         $(document).ready(function () {
             _self.dependencyFound = _self.propertize("select#dependencyFound", 'val');
@@ -499,11 +531,8 @@ var EditArticleGui = (function (_super) {
     };
     return EditArticleGui;
 })(Gui);
-exports.EditArticleGui = EditArticleGui;
 
-if (guiName == 'EditArticleGui') {
-    gui = new EditArticleGui();
-}
+module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
 },{"./../common/base-ajax":19,"./../common/url":20,"./../common/validate":21,"./client-ajax":5,"./gui":8,"./templates/previewable-article":16}],8:[function(require,module,exports){
@@ -1530,6 +1559,10 @@ var url;
             return (id != null ? "/edit_article/" + id : "/edit_article/:id");
         }
         article.edit = edit;
+        function partials() {
+            return "/partials-article";
+        }
+        article.partials = partials;
     })(url.article || (url.article = {}));
     var article = url.article;
     (function (proposals) {

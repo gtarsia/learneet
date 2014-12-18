@@ -13,11 +13,13 @@ var Arrows = require('./utils/score-arrow');
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
-    function ArticleGui() {
+    function ArticleGui(parent) {
         _super.call(this);
         this.id = "-1";
+        this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
+        this.parent = parent;
         var _self = this;
         $(document).ready(function () {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
@@ -34,6 +36,12 @@ var ArticleGui = (function (_super) {
                 _self.article.content.val = marked(result.content);
             });
 
+            _self.editArticleBtn.jq.click(function (e) {
+                var href = $(this).attr('href');
+                history.pushState({}, '', href);
+                _self.parent.check();
+                e.preventDefault();
+            });
             return;
             ajax.dependencies.get({
                 article: { id: _self.id }
@@ -55,5 +63,6 @@ var ArticleGui = (function (_super) {
     };
     return ArticleGui;
 })(Gui);
-exports.ArticleGui = ArticleGui;
+
+module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map

@@ -6,18 +6,21 @@ import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 declare function marked(s);
 
-export class ArticleGui extends Gui {
+class ArticleGui extends Gui {
     id: string = "-1";
+    parent;
     dependenciesTemplate;
     getEditBtn() {
         return $("#editBtn");
     }
+    editArticleBtn = this.propertize("a#editArticle");
     addProposalBtn = this.propertize("button#addProposal");
     viewProposalsBtn = this.propertize("button#viewProposals");
     article: RenderedArticle;
     articleScore;
-    constructor() {
-        super();        
+    constructor(parent) {
+        super();
+        this.parent = parent;
         var _self = this;
         $(document).ready(function() {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
@@ -39,6 +42,12 @@ export class ArticleGui extends Gui {
             /*_self.upScoreBtn.jq.click(() => {
                 this.attr('src', 'srcImage.jpg');
             })*/
+            _self.editArticleBtn.jq.click(function (e) {
+                var href = $(this).attr('href');
+                history.pushState({}, '', href);
+                _self.parent.check();
+                e.preventDefault();
+            });
             return;
             ajax.dependencies.get({
                 article: { id: _self.id }
@@ -58,3 +67,5 @@ export class ArticleGui extends Gui {
         });
     }
 } 
+
+export = ArticleGui;

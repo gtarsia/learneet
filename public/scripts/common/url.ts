@@ -8,6 +8,7 @@ module url {
         export function edit(id?: string) { 
             return (id != null ? "/edit_article/" + id : "/edit_article/:id");
         }
+        export function partials() { return "/partials-article" }
     }
     export module proposals {
         export function add(id?: string) { 

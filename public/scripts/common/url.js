@@ -13,6 +13,10 @@ var url;
             return (id != null ? "/edit_article/" + id : "/edit_article/:id");
         }
         article.edit = edit;
+        function partials() {
+            return "/partials-article";
+        }
+        article.partials = partials;
     })(url.article || (url.article = {}));
     var article = url.article;
     (function (proposals) {

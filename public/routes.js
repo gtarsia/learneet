@@ -22,7 +22,8 @@ function set(app) {
                 onClickAddProposal: "location.href = '" + url.proposals.add(id) + "';",
                 viewProposalsUrl: url.proposals.getAll(id),
                 id: id,
-                title: title + ' - Learneet'
+                title: title + ' - Learneet',
+                edit_url: url.article.edit(id)
             });
         });
     });
@@ -35,6 +36,7 @@ function set(app) {
             });
         });
     });
+    app.get(url.article.partials(), renderCb('partials/partials-article', ''));
     app.get(url.proposals.add(), function (req, res) {
         var id = req.params.id;
         db.hget('article:' + id, 'title').then(function (title) {
