@@ -1,7 +1,10 @@
  
 var ClientAjax = require('./client-ajax');
+import BaseArticleGui = require('./base-article-gui');
 declare var clientAjax;
 clientAjax = ClientAjax; 
+
+declare var gui: BaseArticleGui;
 
 class Gui {
     constructor() { 
@@ -13,10 +16,18 @@ class Gui {
     redirect(view: string) {
         window.location.href = view;
     }
-    propertize(selector: string, valFnName?: string): {jq: JQuery; val?: string;} {
+    propertize(selector: string, valFnName?: string): 
+    {jq: JQuery; val?: string; transitionURL: (url: string) => void} {
         var obj = {
             get jq() { return $(selector); },
-            get selector() { return selector; }
+            get selector() { return selector; },
+            transitionURL: function(url: string) { 
+                this.jq.attr('href', url);
+                this.jq.click(e => {
+                    gui.viewTransition(url);    
+                    e.preventDefault();
+                })
+            }
         }
         if (valFnName != '') 
         Object.defineProperty(obj, "val", {

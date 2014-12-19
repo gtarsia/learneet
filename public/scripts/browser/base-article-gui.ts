@@ -7,8 +7,10 @@ import EditArticleGui = require("./edit-article-gui");
 declare var subGui;
 
 class BaseArticleGui extends Gui {
-    subGui: Partial;
     viewTransition(urlToGo: string, isBack?: boolean) {
+        var before = performance.now();
+        $("#main *").unbind();
+        console.log(performance.now() - before);
         var _self = this;
         if (!isBack) history.pushState({}, '', urlToGo);
         $(".partial").hide();
@@ -23,7 +25,7 @@ class BaseArticleGui extends Gui {
         partials.forEach(function(partial:any) {
             var match = location.pathname.match(partial.re);
             if (match) {
-                _self.subGui = partial.gui();
+                subGui = partial.gui();
                 $(partial.sel).show();
             }
         });
@@ -31,7 +33,6 @@ class BaseArticleGui extends Gui {
     constructor() {
         super();
         var _self = this;
-        this.subGui = subGui;
         window.onpopstate = () => {
             console.log('pop state');
             _self.viewTransition(location.pathname, true);
@@ -40,7 +41,7 @@ class BaseArticleGui extends Gui {
         .done(res => {
             $(document).ready(() => {
                 $("#main").append(res);
-                _self.subGui.main.jq[1].remove();
+                subGui.main.jq[1].remove();
             });
         });
 

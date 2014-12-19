@@ -78,27 +78,19 @@ var ArticleGui = (function (_super) {
     function ArticleGui(args) {
         _super.call(this, '.article-partial');
         this.id = "-1";
+        this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
+        this.articleCrumb = this.propertize("#article-crumb");
+        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
         var _self = this;
         $(document).ready(function () {
-            if (args.id) {
+            if (args.id)
                 _self.id = args.id;
-                _self.editArticleBtn.jq.attr('href', url.article.edit(args.id));
-            } else
-                _self.id = $("[type=hidden]#article-id").val();
-        });
-        this.init();
-    }
-    ArticleGui.prototype.getEditBtn = function () {
-        return $("#editBtn");
-    };
-
-    ArticleGui.prototype.init = function () {
-        var _self = this;
-        $(document).ready(function () {
-            _self.dependenciesTemplate = _self.propertize("#dependencies-template");
+            else
+                _self.id = _self.articleHiddenId.val;
+            _self.setCrumb();
             _self.article = new RenderedArticle();
             _self.articleScore = new Arrows.ArticleScore({ id: _self.id });
             ajax.article.get({ article: { id: _self.id } }).done(function (res) {
@@ -111,11 +103,7 @@ var ArticleGui = (function (_super) {
                 _self.article.content.val = marked(result.content);
             });
 
-            _self.editArticleBtn.jq.click(function (e) {
-                var href = $(this).attr('href');
-                gui.viewTransition(href);
-                e.preventDefault();
-            });
+            _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
             return;
             ajax.dependencies.get({
                 article: { id: _self.id }
@@ -131,6 +119,13 @@ var ArticleGui = (function (_super) {
                 _self.dependenciesTemplate.jq.after(rendered);
             });
         });
+    }
+    ArticleGui.prototype.getEditBtn = function () {
+        return $("#editBtn");
+    };
+
+    ArticleGui.prototype.setCrumb = function () {
+        this.articleCrumb.transitionURL(location.pathname);
     };
     return ArticleGui;
 })(Partial);
@@ -160,7 +155,6 @@ var BaseArticleGui = (function (_super) {
     function BaseArticleGui() {
         _super.call(this);
         var _self = this;
-        this.subGui = subGui;
         window.onpopstate = function () {
             console.log('pop state');
             _self.viewTransition(location.pathname, true);
@@ -168,11 +162,14 @@ var BaseArticleGui = (function (_super) {
         $.get(url.article.partials()).done(function (res) {
             $(document).ready(function () {
                 $("#main").append(res);
-                _self.subGui.main.jq[1].remove();
+                subGui.main.jq[1].remove();
             });
         });
     }
     BaseArticleGui.prototype.viewTransition = function (urlToGo, isBack) {
+        var before = performance.now();
+        $("#main *").unbind();
+        console.log(performance.now() - before);
         var _self = this;
         if (!isBack)
             history.pushState({}, '', urlToGo);
@@ -194,7 +191,7 @@ var BaseArticleGui = (function (_super) {
         partials.forEach(function (partial) {
             var match = location.pathname.match(partial.re);
             if (match) {
-                _self.subGui = partial.gui();
+                subGui = partial.gui();
                 $(partial.sel).show();
             }
         });
@@ -414,15 +411,16 @@ var __extends = this.__extends || function (d, b) {
 };
 var ajax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-var Gui = require("./gui");
+
 var url = require("./../common/url");
+var Partial = require("./partial");
 var validate = require("./../common/validate");
 var baseAjax = require("./../common/base-ajax");
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
-    function EditArticleGui(parent) {
-        _super.call(this);
+    function EditArticleGui(args) {
+        _super.call(this, '.edit-article-partial');
         this.id = "-1";
         this.saveBtn = { get jq() {
                 return $('button#save');
@@ -430,18 +428,25 @@ var EditArticleGui = (function (_super) {
         this.cancelBtn = { get jq() {
                 return $('button#cancel');
             } };
-        this.parent = parent;
+        this.articleCrumb = this.propertize(".edit-article-partial #article-crumb");
+        this.editArticleCrumb = this.propertize("#edit-article-crumb");
+        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
+        this.dependency = this.propertize(".dependency");
+        this.dependencyFound = this.propertize("select#dependencyFound", 'val');
+        this.addDependencyBtn = this.propertize("button#add");
+        this.dependenciesTemplate = this.propertize("#dependencies-template");
+        this.removeDependencyBtns = this.propertize(".removeDependency");
+        this.dependencyIds = this.propertize(".dependencyId");
+        this.changesDescription = this.propertize("#changesDescription", "val");
         var _self = this;
         $(document).ready(function () {
-            _self.dependencyFound = _self.propertize("select#dependencyFound", 'val');
-            _self.addDependencyBtn = _self.propertize("button#add");
-            _self.dependenciesTemplate = _self.propertize("#dependencies-template");
-            _self.removeDependencyBtns = _self.propertize(".removeDependency");
-            _self.dependencyIds = _self.propertize(".dependencyId");
-            _self.dependency = _self.propertize(".dependency");
-            _self.changesDescription = _self.propertize("#changesDescription", "val");
+            if (args.id)
+                _self.id = args.id;
+            else
+                _self.id = _self.articleHiddenId.val;
+            _self.articleCrumb.transitionURL(url.article.get(_self.id));
+            _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
-            _self.id = $("[type=hidden]#article-id").val();
             _self.dependencyFound.jq.selectize({
                 create: false,
                 valueField: 'id',
@@ -553,12 +558,16 @@ var EditArticleGui = (function (_super) {
         });
     };
     return EditArticleGui;
-})(Gui);
+})(Partial);
+
+if (subGuiName == 'EditArticleGui') {
+    subGui = new EditArticleGui({});
+}
 
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":20,"./../common/url":21,"./../common/validate":22,"./client-ajax":5,"./gui":8,"./templates/previewable-article":17}],8:[function(require,module,exports){
+},{"./../common/base-ajax":20,"./../common/url":21,"./../common/validate":22,"./client-ajax":5,"./partial":13,"./templates/previewable-article":17}],8:[function(require,module,exports){
 var ClientAjax = require('./client-ajax');
 
 clientAjax = ClientAjax;
@@ -580,6 +589,13 @@ var Gui = (function () {
             },
             get selector() {
                 return selector;
+            },
+            transitionURL: function (url) {
+                this.jq.attr('href', url);
+                this.jq.click(function (e) {
+                    gui.viewTransition(url);
+                    e.preventDefault();
+                });
             }
         };
         if (valFnName != '')

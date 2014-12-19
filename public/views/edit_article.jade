@@ -1,4 +1,10 @@
 ﻿extends base-article
 
+prepend scripts
+  script.
+    subGuiName = 'EditArticleGui'
+
 block main
-  include partials/article
+  input#article-id(type="hidden" value= id)
+  input#edit-url(type="hidden" value= edit_url)
+  include partials/edit_article

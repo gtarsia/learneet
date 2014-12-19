@@ -6,15 +6,16 @@
 };
 var ajax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-var Gui = require("./gui");
+
 var url = require("./../common/url");
+var Partial = require("./partial");
 var validate = require("./../common/validate");
 var baseAjax = require("./../common/base-ajax");
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
-    function EditArticleGui(parent) {
-        _super.call(this);
+    function EditArticleGui(args) {
+        _super.call(this, '.edit-article-partial');
         this.id = "-1";
         this.saveBtn = { get jq() {
                 return $('button#save');
@@ -22,18 +23,25 @@ var EditArticleGui = (function (_super) {
         this.cancelBtn = { get jq() {
                 return $('button#cancel');
             } };
-        this.parent = parent;
+        this.articleCrumb = this.propertize(".edit-article-partial #article-crumb");
+        this.editArticleCrumb = this.propertize("#edit-article-crumb");
+        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
+        this.dependency = this.propertize(".dependency");
+        this.dependencyFound = this.propertize("select#dependencyFound", 'val');
+        this.addDependencyBtn = this.propertize("button#add");
+        this.dependenciesTemplate = this.propertize("#dependencies-template");
+        this.removeDependencyBtns = this.propertize(".removeDependency");
+        this.dependencyIds = this.propertize(".dependencyId");
+        this.changesDescription = this.propertize("#changesDescription", "val");
         var _self = this;
         $(document).ready(function () {
-            _self.dependencyFound = _self.propertize("select#dependencyFound", 'val');
-            _self.addDependencyBtn = _self.propertize("button#add");
-            _self.dependenciesTemplate = _self.propertize("#dependencies-template");
-            _self.removeDependencyBtns = _self.propertize(".removeDependency");
-            _self.dependencyIds = _self.propertize(".dependencyId");
-            _self.dependency = _self.propertize(".dependency");
-            _self.changesDescription = _self.propertize("#changesDescription", "val");
+            if (args.id)
+                _self.id = args.id;
+            else
+                _self.id = _self.articleHiddenId.val;
+            _self.articleCrumb.transitionURL(url.article.get(_self.id));
+            _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
-            _self.id = $("[type=hidden]#article-id").val();
             _self.dependencyFound.jq.selectize({
                 create: false,
                 valueField: 'id',
@@ -145,7 +153,11 @@ var EditArticleGui = (function (_super) {
         });
     };
     return EditArticleGui;
-})(Gui);
+})(Partial);
+
+if (subGuiName == 'EditArticleGui') {
+    subGui = new EditArticleGui({});
+}
 
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map

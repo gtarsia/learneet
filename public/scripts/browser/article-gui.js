@@ -17,27 +17,19 @@ var ArticleGui = (function (_super) {
     function ArticleGui(args) {
         _super.call(this, '.article-partial');
         this.id = "-1";
+        this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
+        this.articleCrumb = this.propertize("#article-crumb");
+        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
         var _self = this;
         $(document).ready(function () {
-            if (args.id) {
+            if (args.id)
                 _self.id = args.id;
-                _self.editArticleBtn.jq.attr('href', url.article.edit(args.id));
-            } else
-                _self.id = $("[type=hidden]#article-id").val();
-        });
-        this.init();
-    }
-    ArticleGui.prototype.getEditBtn = function () {
-        return $("#editBtn");
-    };
-
-    ArticleGui.prototype.init = function () {
-        var _self = this;
-        $(document).ready(function () {
-            _self.dependenciesTemplate = _self.propertize("#dependencies-template");
+            else
+                _self.id = _self.articleHiddenId.val;
+            _self.setCrumb();
             _self.article = new RenderedArticle();
             _self.articleScore = new Arrows.ArticleScore({ id: _self.id });
             ajax.article.get({ article: { id: _self.id } }).done(function (res) {
@@ -50,11 +42,7 @@ var ArticleGui = (function (_super) {
                 _self.article.content.val = marked(result.content);
             });
 
-            _self.editArticleBtn.jq.click(function (e) {
-                var href = $(this).attr('href');
-                gui.viewTransition(href);
-                e.preventDefault();
-            });
+            _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
             return;
             ajax.dependencies.get({
                 article: { id: _self.id }
@@ -70,6 +58,13 @@ var ArticleGui = (function (_super) {
                 _self.dependenciesTemplate.jq.after(rendered);
             });
         });
+    }
+    ArticleGui.prototype.getEditBtn = function () {
+        return $("#editBtn");
+    };
+
+    ArticleGui.prototype.setCrumb = function () {
+        this.articleCrumb.transitionURL(location.pathname);
     };
     return ArticleGui;
 })(Partial);

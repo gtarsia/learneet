@@ -2,12 +2,13 @@
 import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
+import Partial = require("./partial");
 import validate = require("./../common/validate");
 import baseAjax = require("./../common/base-ajax");
 
 declare function marked(c: string);
 
-class EditArticleGui extends Gui {
+class EditArticleGui extends Partial {
     id: string = "-1";
     parent;
     contentPreviewExample() {
@@ -37,14 +38,17 @@ class EditArticleGui extends Gui {
     }
     saveBtn = { get jq() { return $('button#save') } };
     cancelBtn = { get jq() { return $('button#cancel') } };
-    dependency;
-    dependencyFound;
-    addDependencyBtn;
-    removeDependencyBtns;
-    dependencyIds;
+    articleCrumb = this.propertize(".edit-article-partial #article-crumb");
+    editArticleCrumb = this.propertize("#edit-article-crumb");
+    articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
+    dependency: any = this.propertize(".dependency");
+    dependencyFound: any = this.propertize("select#dependencyFound", 'val');
+    addDependencyBtn = this.propertize("button#add");
+    dependenciesTemplate = this.propertize("#dependencies-template");
+    removeDependencyBtns = this.propertize(".removeDependency");
+    dependencyIds: any = this.propertize(".dependencyId");
+    changesDescription = this.propertize("#changesDescription", "val")
     article: PreviewableArticle;
-    dependenciesTemplate;
-    changesDescription;
     saveArticle() {
         var description = this.changesDescription.val;
         var its = validate.version.changesDescription(description);
@@ -65,20 +69,15 @@ class EditArticleGui extends Gui {
             this.redirect(url.article.get(this.id)); 
         });
     }
-    constructor(parent) {
-        super();
-        this.parent = parent;
+    constructor(args: {id?: string}) {
+        super('.edit-article-partial');
         var _self = this;
         $(document).ready(function() {
-            _self.dependencyFound = _self.propertize("select#dependencyFound", 'val');
-            _self.addDependencyBtn = _self.propertize("button#add");
-            _self.dependenciesTemplate = _self.propertize("#dependencies-template");
-            _self.removeDependencyBtns = _self.propertize(".removeDependency");
-            _self.dependencyIds = _self.propertize(".dependencyId");
-            _self.dependency = _self.propertize(".dependency")
-            _self.changesDescription = _self.propertize("#changesDescription", "val")
+            if (args.id) _self.id = args.id;
+            else _self.id = _self.articleHiddenId.val;
+            _self.articleCrumb.transitionURL(url.article.get(_self.id))
+            _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
-            _self.id = $("[type=hidden]#article-id").val();
             _self.dependencyFound.jq.selectize({
                 create: false,
                 valueField: 'id',
@@ -152,6 +151,13 @@ class EditArticleGui extends Gui {
             });
         });
     }
+}
+
+declare var subGuiName;
+declare var subGui;
+
+if (subGuiName == 'EditArticleGui') {
+    subGui = new EditArticleGui({});
 }
 
 export = EditArticleGui

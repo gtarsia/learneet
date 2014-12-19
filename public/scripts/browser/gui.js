@@ -19,6 +19,13 @@ var Gui = (function () {
             },
             get selector() {
                 return selector;
+            },
+            transitionURL: function (url) {
+                this.jq.attr('href', url);
+                this.jq.click(function (e) {
+                    gui.viewTransition(url);
+                    e.preventDefault();
+                });
             }
         };
         if (valFnName != '')

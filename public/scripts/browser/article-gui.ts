@@ -13,32 +13,27 @@ declare var gui: BaseArticleGui;
 class ArticleGui extends Partial {
     id: string = "-1";
     main: string;
-    dependenciesTemplate;
+    dependenciesTemplate = this.propertize("#dependencies-template");
     getEditBtn() {
         return $("#editBtn");
     }
     editArticleBtn = this.propertize("a#editArticle");
     addProposalBtn = this.propertize("button#addProposal");
     viewProposalsBtn = this.propertize("button#viewProposals");
+    articleCrumb = this.propertize("#article-crumb");
+    articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
     article: RenderedArticle;
     articleScore;
+    setCrumb() {
+        this.articleCrumb.transitionURL(location.pathname)
+    }
     constructor(args: {id?: string}) {
         super('.article-partial');
         var _self = this;
         $(document).ready(() => {
-            if (args.id) {
-                _self.id = args.id;
-                _self.editArticleBtn.jq.attr('href', url.article.edit(args.id));
-            }
-            else
-                _self.id = $("[type=hidden]#article-id").val();
-        });
-        this.init();
-    }
-    init() {
-        var _self = this;
-        $(document).ready(function() {
-            _self.dependenciesTemplate = _self.propertize("#dependencies-template");
+            if (args.id) _self.id = args.id;
+            else _self.id = _self.articleHiddenId.val;
+            _self.setCrumb();
             _self.article = new RenderedArticle();
             _self.articleScore = new Arrows.ArticleScore(
                {id: _self.id}
@@ -56,11 +51,7 @@ class ArticleGui extends Partial {
             /*_self.upScoreBtn.jq.click(() => {
                 this.attr('src', 'srcImage.jpg');
             })*/
-            _self.editArticleBtn.jq.click(function (e) {
-                var href = $(this).attr('href');
-                gui.viewTransition(href);
-                e.preventDefault();
-            });
+            _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
             return;
             ajax.dependencies.get({
                 article: { id: _self.id }

@@ -15,7 +15,6 @@ var BaseArticleGui = (function (_super) {
     function BaseArticleGui() {
         _super.call(this);
         var _self = this;
-        this.subGui = subGui;
         window.onpopstate = function () {
             console.log('pop state');
             _self.viewTransition(location.pathname, true);
@@ -23,11 +22,14 @@ var BaseArticleGui = (function (_super) {
         $.get(url.article.partials()).done(function (res) {
             $(document).ready(function () {
                 $("#main").append(res);
-                _self.subGui.main.jq[1].remove();
+                subGui.main.jq[1].remove();
             });
         });
     }
     BaseArticleGui.prototype.viewTransition = function (urlToGo, isBack) {
+        var before = performance.now();
+        $("#main *").unbind();
+        console.log(performance.now() - before);
         var _self = this;
         if (!isBack)
             history.pushState({}, '', urlToGo);
@@ -49,7 +51,7 @@ var BaseArticleGui = (function (_super) {
         partials.forEach(function (partial) {
             var match = location.pathname.match(partial.re);
             if (match) {
-                _self.subGui = partial.gui();
+                subGui = partial.gui();
                 $(partial.sel).show();
             }
         });
