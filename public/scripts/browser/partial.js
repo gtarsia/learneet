@@ -14,6 +14,8 @@ var Partial = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.main.jq.show();
+            _self.main.jq.velocity({ opacity: 0 }, { duration: 0 });
+            _self.main.jq.velocity({ opacity: 1 }, { duration: 500 });
         });
     }
     return Partial;

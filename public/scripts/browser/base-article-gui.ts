@@ -13,6 +13,7 @@ class BaseArticleGui extends Gui {
         console.log(performance.now() - before);
         var _self = this;
         if (!isBack) history.pushState({}, '', urlToGo);
+        
         $(".partial").hide();
         var partials = [
             {re: url.article.get('\\d+'), 
@@ -26,7 +27,6 @@ class BaseArticleGui extends Gui {
             var match = location.pathname.match(partial.re);
             if (match) {
                 subGui = partial.gui();
-                $(partial.sel).show();
             }
         });
     }

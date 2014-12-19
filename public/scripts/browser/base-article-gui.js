@@ -33,6 +33,7 @@ var BaseArticleGui = (function (_super) {
         var _self = this;
         if (!isBack)
             history.pushState({}, '', urlToGo);
+
         $(".partial").hide();
         var partials = [
             {
@@ -52,7 +53,6 @@ var BaseArticleGui = (function (_super) {
             var match = location.pathname.match(partial.re);
             if (match) {
                 subGui = partial.gui();
-                $(partial.sel).show();
             }
         });
     };

@@ -173,6 +173,7 @@ var BaseArticleGui = (function (_super) {
         var _self = this;
         if (!isBack)
             history.pushState({}, '', urlToGo);
+
         $(".partial").hide();
         var partials = [
             {
@@ -192,7 +193,6 @@ var BaseArticleGui = (function (_super) {
             var match = location.pathname.match(partial.re);
             if (match) {
                 subGui = partial.gui();
-                $(partial.sel).show();
             }
         });
     };
@@ -813,6 +813,8 @@ var Partial = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.main.jq.show();
+            _self.main.jq.velocity({ opacity: 0 }, { duration: 0 });
+            _self.main.jq.velocity({ opacity: 1 }, { duration: 500 });
         });
     }
     return Partial;
