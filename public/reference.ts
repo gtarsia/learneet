@@ -15,6 +15,7 @@
 /// <reference path="scripts/browser/live-parser.ts" />
 /// <reference path="scripts/browser/login-gui.ts" />
 /// <reference path="scripts/browser/parser.ts" />
+/// <reference path="scripts/browser/partial.ts" />
 /// <reference path="scripts/browser/proposals-gui.ts" />
 /// <reference path="scripts/browser/register-gui.ts" />
 /// <reference path="scripts/browser/templates/editable-article.ts" />

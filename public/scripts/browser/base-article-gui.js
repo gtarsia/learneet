@@ -6,6 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var url = require("./../common/url");
 var Gui = require("./gui");
+
 var ArticleGui = require("./article-gui");
 var EditArticleGui = require("./edit-article-gui");
 
@@ -14,26 +15,34 @@ var BaseArticleGui = (function (_super) {
     function BaseArticleGui() {
         _super.call(this);
         var _self = this;
+        this.subGui = subGui;
+        window.onpopstate = function () {
+            console.log('pop state');
+            _self.viewTransition(location.pathname, true);
+        };
         $.get(url.article.partials()).done(function (res) {
             $(document).ready(function () {
                 $("#main").append(res);
+                _self.subGui.main.jq[1].remove();
             });
         });
-        $(document).ready(function () {
-            _self.check();
-        });
     }
-    BaseArticleGui.prototype.check = function () {
+    BaseArticleGui.prototype.viewTransition = function (urlToGo, isBack) {
         var _self = this;
+        if (!isBack)
+            history.pushState({}, '', urlToGo);
+        $(".partial").hide();
         var partials = [
             {
-                re: url.article.get('\\d+'), gui: function () {
-                    return new ArticleGui(_self);
+                re: url.article.get('\\d+'),
+                gui: function () {
+                    return new ArticleGui({});
                 },
                 sel: '.article-partial' },
             {
-                re: url.article.edit('\\d+'), gui: function () {
-                    return new EditArticleGui(_self);
+                re: url.article.edit('\\d+'),
+                gui: function () {
+                    return new EditArticleGui({});
                 },
                 sel: '.edit-article-partial' }
         ];
@@ -41,16 +50,16 @@ var BaseArticleGui = (function (_super) {
             var match = location.pathname.match(partial.re);
             if (match) {
                 _self.subGui = partial.gui();
-                $(".partial").hide();
                 $(partial.sel).show();
             }
         });
     };
     return BaseArticleGui;
 })(Gui);
-exports.BaseArticleGui = BaseArticleGui;
 
 if (guiName == 'BaseArticleGui') {
     gui = new BaseArticleGui();
 }
+
+module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map

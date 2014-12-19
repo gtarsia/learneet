@@ -7,24 +7,38 @@
 var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
-var Gui = require("./gui");
+
+var Partial = require("./partial");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
-    function ArticleGui(parent) {
-        _super.call(this);
+    function ArticleGui(args) {
+        _super.call(this, '.article-partial');
         this.id = "-1";
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
-        this.parent = parent;
+        var _self = this;
+        $(document).ready(function () {
+            if (args.id) {
+                _self.id = args.id;
+                _self.editArticleBtn.jq.attr('href', url.article.edit(args.id));
+            } else
+                _self.id = $("[type=hidden]#article-id").val();
+        });
+        this.init();
+    }
+    ArticleGui.prototype.getEditBtn = function () {
+        return $("#editBtn");
+    };
+
+    ArticleGui.prototype.init = function () {
         var _self = this;
         $(document).ready(function () {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
-            _self.id = $("[type=hidden]#article-id").val();
             _self.articleScore = new Arrows.ArticleScore({ id: _self.id });
             ajax.article.get({ article: { id: _self.id } }).done(function (res) {
                 if (!res.ok) {
@@ -38,8 +52,7 @@ var ArticleGui = (function (_super) {
 
             _self.editArticleBtn.jq.click(function (e) {
                 var href = $(this).attr('href');
-                history.pushState({}, '', href);
-                _self.parent.check();
+                gui.viewTransition(href);
                 e.preventDefault();
             });
             return;
@@ -57,12 +70,13 @@ var ArticleGui = (function (_super) {
                 _self.dependenciesTemplate.jq.after(rendered);
             });
         });
-    }
-    ArticleGui.prototype.getEditBtn = function () {
-        return $("#editBtn");
     };
     return ArticleGui;
-})(Gui);
+})(Partial);
+
+if (subGuiName == 'ArticleGui') {
+    subGui = new ArticleGui({});
+}
 
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map

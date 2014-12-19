@@ -1,5 +1,5 @@
 .partial.article-partial(style='display:none')
-  #main-left
+  .main-left
     input.score-arrow.up-score#up-score-on(type="image" src="/images/up-score-on.png" style="display:none")
     input.score-arrow.up-score#up-score-off(type="image" src="/images/up-score-off.png")
     #article-score
@@ -7,7 +7,6 @@
     input.score-arrow.down-score#down-score-on(type="image" src="/images/down-score-on.png" style="display:none")
     input.score-arrow.down-score#down-score-off(type="image" src="/images/down-score-off.png")
 
-  #main-center
-    input#article-id(type="hidden" value= id)
+  .main-center
     include ../templates/viewable-article
     a#editArticle(href= edit_url) Edit

@@ -1,14 +1,18 @@
 ﻿import ajax = require("./client-ajax");
 import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
+import BaseArticleGui = require('./base-article-gui');
 import Gui = require("./gui");
+import Partial = require("./partial");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 declare function marked(s);
 
-class ArticleGui extends Gui {
+declare var gui: BaseArticleGui;
+
+class ArticleGui extends Partial {
     id: string = "-1";
-    parent;
+    main: string;
     dependenciesTemplate;
     getEditBtn() {
         return $("#editBtn");
@@ -18,14 +22,24 @@ class ArticleGui extends Gui {
     viewProposalsBtn = this.propertize("button#viewProposals");
     article: RenderedArticle;
     articleScore;
-    constructor(parent) {
-        super();
-        this.parent = parent;
+    constructor(args: {id?: string}) {
+        super('.article-partial');
+        var _self = this;
+        $(document).ready(() => {
+            if (args.id) {
+                _self.id = args.id;
+                _self.editArticleBtn.jq.attr('href', url.article.edit(args.id));
+            }
+            else
+                _self.id = $("[type=hidden]#article-id").val();
+        });
+        this.init();
+    }
+    init() {
         var _self = this;
         $(document).ready(function() {
             _self.dependenciesTemplate = _self.propertize("#dependencies-template");
             _self.article = new RenderedArticle();
-            _self.id = $("[type=hidden]#article-id").val();
             _self.articleScore = new Arrows.ArticleScore(
                {id: _self.id}
             );
@@ -44,8 +58,7 @@ class ArticleGui extends Gui {
             })*/
             _self.editArticleBtn.jq.click(function (e) {
                 var href = $(this).attr('href');
-                history.pushState({}, '', href);
-                _self.parent.check();
+                gui.viewTransition(href);
                 e.preventDefault();
             });
             return;
@@ -67,5 +80,12 @@ class ArticleGui extends Gui {
         });
     }
 } 
+
+declare var subGuiName;
+declare var subGui;
+
+if (subGuiName == 'ArticleGui') {
+    subGui = new ArticleGui({});
+}
 
 export = ArticleGui;
