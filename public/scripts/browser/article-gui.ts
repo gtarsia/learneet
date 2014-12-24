@@ -2,6 +2,7 @@
 import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
 import BaseArticleGui = require('./base-article-gui');
+import ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
 import Gui = require("./gui");
 import Partial = require("./partial");
 import url = require("./../common/url");
@@ -23,6 +24,7 @@ class ArticleGui extends Partial {
     articleCrumb = this.propertize("#article-crumb");
     articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
     article: RenderedArticle;
+    articleChanges: ArticleChangePreviewTemplate;
     articleScore;
     setCrumb() {
         this.articleCrumb.transitionURL(location.pathname)
@@ -33,6 +35,7 @@ class ArticleGui extends Partial {
         $(document).ready(() => {
             if (args.id) _self.id = args.id;
             else _self.id = _self.articleHiddenId.val;
+            _self.articleChanges = new ArticleChangePreviewTemplate({id: _self.id});
             _self.setCrumb();
             _self.article = new RenderedArticle();
             _self.articleScore = new Arrows.ArticleScore(
@@ -48,9 +51,6 @@ class ArticleGui extends Partial {
                 _self.article.title.val = result.title;
                 _self.article.content.val = marked(result.content);
             });
-            /*_self.upScoreBtn.jq.click(() => {
-                this.attr('src', 'srcImage.jpg');
-            })*/
             _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
             return;
             ajax.dependencies.get({

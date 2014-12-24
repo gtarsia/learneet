@@ -18,6 +18,7 @@
 /// <reference path="scripts/browser/partial.ts" />
 /// <reference path="scripts/browser/proposals-gui.ts" />
 /// <reference path="scripts/browser/register-gui.ts" />
+/// <reference path="scripts/browser/templates/article-change-preview-template.ts" />
 /// <reference path="scripts/browser/templates/editable-article.ts" />
 /// <reference path="scripts/browser/templates/previewable-article.ts" />
 /// <reference path="scripts/browser/templates/rendered-article.ts" />

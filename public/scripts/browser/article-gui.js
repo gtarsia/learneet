@@ -8,6 +8,8 @@ var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 
+var ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
+
 var Partial = require("./partial");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
@@ -29,6 +31,7 @@ var ArticleGui = (function (_super) {
                 _self.id = args.id;
             else
                 _self.id = _self.articleHiddenId.val;
+            _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.id });
             _self.setCrumb();
             _self.article = new RenderedArticle();
             _self.articleScore = new Arrows.ArticleScore({ id: _self.id });
@@ -41,7 +44,6 @@ var ArticleGui = (function (_super) {
                 _self.article.title.val = result.title;
                 _self.article.content.val = marked(result.content);
             });
-
             _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
             return;
             ajax.dependencies.get({

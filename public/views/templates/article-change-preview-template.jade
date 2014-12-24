@@ -1,1 +1,11 @@
-Description, Author and avatar, Date, Score, Icon specifying state
+script#changes-template(type="x-tmpl-mustache")
+  | {{#changes}}
+  .icon 
+    img(src="{{icon}}")
+  .score {{score}}
+  .description 
+    a(href="{{url}}") {{description}}
+  .avatar 
+    img(src="{{avatar}}")
+  .date {{date}}
+  | {{/changes}}
