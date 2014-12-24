@@ -961,6 +961,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
                 score: 13,
                 description: 'doing some changes',
                 url: '/articles/1/changes/1',
+                octicon: 'octicon-issue-opened',
                 date: 'Dec 24th, 22:20'
             });
             changes.push({
@@ -970,6 +971,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
                 score: '5',
                 description: 'did some changes',
                 url: '/articles/1/changes/2',
+                octicon: 'octicon-issue-closed',
                 date: 'Dec 21, 20:21'
             });
             var template = _self.changesTemplate.val;
