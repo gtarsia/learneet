@@ -4,9 +4,9 @@ import express = require('express');
 import AjaxType = baseAjax.AjaxType;
 import dbArticle = require('./article');
 import dbDependencies = require('./dependencies');
+import dbChanges = require('./changes');
 import dbScore = require('./score');
 import dbUser = require('./user');
-import dbProposal = require('./proposal');
 
 //FUNCION DEFINITIVA
 export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => void}[] {
@@ -25,8 +25,6 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         score.down(),
         score.removeDown(),
         score.getByUser(),
-        proposal.add(),
-        proposal.getAll(),
         user.register()
     ];
 }
@@ -120,6 +118,13 @@ export module score {
     }
 }
 
+export module changes {
+    import _getAll = baseAjax.changes.getAll;
+    export function add() {
+        return restCbAjax(new _getAll.Ajax(), dbChanges.getAll);
+    }
+}
+
 export module dependencies {    
     import _add = baseAjax.dependencies.add;
     export function add() {
@@ -134,18 +139,6 @@ export module dependencies {
     import _remove = baseAjax.dependencies.remove;
     export function remove() {
         return restCbAjax(new _remove.Ajax(), dbDependencies.remove);
-    }
-}
-
-export module proposal {
-    import _add = baseAjax.proposal.add;
-    export function add() {
-        return restCbAjax(new _add.Ajax(), dbProposal.add);
-    }
-
-    import _getAll = baseAjax.proposal.getAll;
-    export function getAll() {
-        return restCbAjax(new _getAll.Ajax(), dbProposal.getAll);
     }
 }
 

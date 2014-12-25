@@ -176,31 +176,25 @@ export module dependencies {
     }
 }
 
-export module proposal {
-    export interface AddType {
-        article: Id;
+export module changes {
+    export var ChangeState = {
+        open: 'open', closed: 'closed'
+    }
+    export interface ChangeFields {
+        id: string;
+        state: string;
         description: string;
-        modifiedContent: string;
+        changes: string;
+        date: string;
+        author: string;
     }
-    export module add {
-        export class Ajax implements IAjax{
-            url(): string { return '/api/add_proposal' }
-            type(): string { return AjaxType.POST }
-        }
-        export interface Params { proposal: AddType }
-        export interface Return extends JsonReturn<void> {}
-    }
-
     export module getAll {
-        export interface ProposalWithId {
-            id: string; changes: string; description: string;
-        }
         export class Ajax implements IAjax{
-            url(): string { return '/api/get_all' }
-            type(): string { return AjaxType.POST }
+            url(): string { return '/api/getallchanges' }
+            type(): string { return AjaxType.GET }
         }
-        export interface Params { proposal: {article: {id: string} } }
-        export interface Return extends JsonReturn<{ proposals: ProposalWithId[]}> {}
+        export interface Params { article: Id }
+        export interface Return extends JsonReturn<ChangeFields[]> {}
     }
 }
 

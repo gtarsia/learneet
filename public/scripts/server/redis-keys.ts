@@ -4,6 +4,9 @@ export interface Id {
 export interface ArticleWithId {
     article: {id: string};
 }
+export interface ArticleChangeWithId extends ArticleWithId {
+    change: {id: string};
+}
 
 export function j(array: any[]) {
     return array.join(":");
@@ -29,23 +32,23 @@ export function articleDownScore(args: ArticleWithId) {
     return j([baseArticles(), args.article.id, 'score', 'down'])
 }
 
-//Proposals
-
-export function baseProposals(args: ArticleWithId) {
-    return j([article(args), "proposals"]);
+export function changesBase(args: ArticleWithId) {
+    return j([article(args), 'changes'])
 }
-export function proposal(args: {article: Id; proposal: Id}) {
-    return j([baseProposals(args), args.proposal.id])
+export function change(args: ArticleChangeWithId) {
+    return j([changesBase(args), args.change.id])
 }
-export function proposalsIdCounter(args: ArticleWithId) {
-    return j([baseProposals(args), "idCounter"]);
+export function openedChangesSet(args: ArticleWithId) {
+    return j([changesBase(args), 'openedIdSet'])
 }
-export function proposalsIdSet(args: ArticleWithId) {
-    return j([baseProposals(args), "idSet"]);
+export function closedChangesSet(args: ArticleWithId) {
+    return j([changesBase(args), 'closedIdSet']);
 }
-export function proposalsNoSortField(args: 
-    { proposal: { article: {id: string}}; }, field: string ) {
-    return j([baseProposals(args.proposal), '*->' + field]);
+export function changesIdSet(args: ArticleWithId) {
+    return j([changesBase(args), 'idSet']);
+}
+export function changesIdCounter(args: ArticleWithId) {
+    return j([changesBase(args), 'idCounter']);
 }
 
 export function baseDependencies(args: ArticleWithId) {

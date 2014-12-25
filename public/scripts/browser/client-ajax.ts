@@ -117,6 +117,14 @@ export module dependencies {
     }
 }
 
+export module changes {
+    import _getAll = baseAjax.changes.getAll;
+    export function get(params) {
+        return buildIAjax<_getAll.Params, _getAll.Return>
+        (new _getAll.Ajax(), params)
+    }
+}
+/*
 export module proposal {
     import _add = baseAjax.proposal.add;
     export function add(params) {
@@ -130,7 +138,7 @@ export module proposal {
         (new _getAll.Ajax(), params);
     }
 }
-
+*/
 export module user {
     import _register = baseAjax.user.register;
     export function register(params) {

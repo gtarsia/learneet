@@ -1,3 +1,4 @@
+/*
 import clientAjax = require("./client-ajax");
 //import parser = require('./parser');
 //import RenderedArticle = require('./templates/rendered-article');
@@ -47,3 +48,4 @@ declare var gui;
 if (guiName == 'ProposalsGui') {
     gui = new ProposalsGui();
 }
+*/

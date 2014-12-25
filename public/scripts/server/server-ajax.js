@@ -3,9 +3,9 @@ var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 var dbArticle = require('./article');
 var dbDependencies = require('./dependencies');
+var dbChanges = require('./changes');
 var dbScore = require('./score');
 var dbUser = require('./user');
-var dbProposal = require('./proposal');
 
 function getServerAjaxList() {
     return [
@@ -23,8 +23,6 @@ function getServerAjaxList() {
         score.down(),
         score.removeDown(),
         score.getByUser(),
-        proposal.add(),
-        proposal.getAll(),
         user.register()
     ];
 }
@@ -135,6 +133,15 @@ var article = exports.article;
 })(exports.score || (exports.score = {}));
 var score = exports.score;
 
+(function (changes) {
+    var _getAll = baseAjax.changes.getAll;
+    function add() {
+        return exports.restCbAjax(new _getAll.Ajax(), dbChanges.getAll);
+    }
+    changes.add = add;
+})(exports.changes || (exports.changes = {}));
+var changes = exports.changes;
+
 (function (dependencies) {
     var _add = baseAjax.dependencies.add;
     function add() {
@@ -155,21 +162,6 @@ var score = exports.score;
     dependencies.remove = remove;
 })(exports.dependencies || (exports.dependencies = {}));
 var dependencies = exports.dependencies;
-
-(function (proposal) {
-    var _add = baseAjax.proposal.add;
-    function add() {
-        return exports.restCbAjax(new _add.Ajax(), dbProposal.add);
-    }
-    proposal.add = add;
-
-    var _getAll = baseAjax.proposal.getAll;
-    function getAll() {
-        return exports.restCbAjax(new _getAll.Ajax(), dbProposal.getAll);
-    }
-    proposal.getAll = getAll;
-})(exports.proposal || (exports.proposal = {}));
-var proposal = exports.proposal;
 
 (function (user) {
     var _register = baseAjax.user.register;

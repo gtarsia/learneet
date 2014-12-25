@@ -254,40 +254,28 @@ var score = exports.score;
 })(exports.dependencies || (exports.dependencies = {}));
 var dependencies = exports.dependencies;
 
-(function (proposal) {
-    (function (add) {
-        var Ajax = (function () {
-            function Ajax() {
-            }
-            Ajax.prototype.url = function () {
-                return '/api/add_proposal';
-            };
-            Ajax.prototype.type = function () {
-                return exports.AjaxType.POST;
-            };
-            return Ajax;
-        })();
-        add.Ajax = Ajax;
-    })(proposal.add || (proposal.add = {}));
-    var add = proposal.add;
+(function (changes) {
+    changes.ChangeState = {
+        open: 'open', closed: 'closed'
+    };
 
     (function (getAll) {
         var Ajax = (function () {
             function Ajax() {
             }
             Ajax.prototype.url = function () {
-                return '/api/get_all';
+                return '/api/getallchanges';
             };
             Ajax.prototype.type = function () {
-                return exports.AjaxType.POST;
+                return exports.AjaxType.GET;
             };
             return Ajax;
         })();
         getAll.Ajax = Ajax;
-    })(proposal.getAll || (proposal.getAll = {}));
-    var getAll = proposal.getAll;
-})(exports.proposal || (exports.proposal = {}));
-var proposal = exports.proposal;
+    })(changes.getAll || (changes.getAll = {}));
+    var getAll = changes.getAll;
+})(exports.changes || (exports.changes = {}));
+var changes = exports.changes;
 
 (function (user) {
     (function (register) {

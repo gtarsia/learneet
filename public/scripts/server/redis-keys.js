@@ -29,26 +29,30 @@ function articleDownScore(args) {
 }
 exports.articleDownScore = articleDownScore;
 
-function baseProposals(args) {
-    return exports.j([exports.article(args), "proposals"]);
+function changesBase(args) {
+    return exports.j([exports.article(args), 'changes']);
 }
-exports.baseProposals = baseProposals;
-function proposal(args) {
-    return exports.j([exports.baseProposals(args), args.proposal.id]);
+exports.changesBase = changesBase;
+function change(args) {
+    return exports.j([exports.changesBase(args), args.change.id]);
 }
-exports.proposal = proposal;
-function proposalsIdCounter(args) {
-    return exports.j([exports.baseProposals(args), "idCounter"]);
+exports.change = change;
+function openedChangesSet(args) {
+    return exports.j([exports.changesBase(args), 'openedIdSet']);
 }
-exports.proposalsIdCounter = proposalsIdCounter;
-function proposalsIdSet(args) {
-    return exports.j([exports.baseProposals(args), "idSet"]);
+exports.openedChangesSet = openedChangesSet;
+function closedChangesSet(args) {
+    return exports.j([exports.changesBase(args), 'closedIdSet']);
 }
-exports.proposalsIdSet = proposalsIdSet;
-function proposalsNoSortField(args, field) {
-    return exports.j([exports.baseProposals(args.proposal), '*->' + field]);
+exports.closedChangesSet = closedChangesSet;
+function changesIdSet(args) {
+    return exports.j([exports.changesBase(args), 'idSet']);
 }
-exports.proposalsNoSortField = proposalsNoSortField;
+exports.changesIdSet = changesIdSet;
+function changesIdCounter(args) {
+    return exports.j([exports.changesBase(args), 'idCounter']);
+}
+exports.changesIdCounter = changesIdCounter;
 
 function baseDependencies(args) {
     return exports.j([exports.article(args), 'dependencies']);

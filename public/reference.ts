@@ -28,6 +28,7 @@
 /// <reference path="scripts/common/validate.ts" />
 /// <reference path="scripts/server/article.ts" />
 /// <reference path="scripts/server/bcrypt.ts" />
+/// <reference path="scripts/server/changes.ts" />
 /// <reference path="scripts/server/db.ts" />
 /// <reference path="scripts/server/dependencies.ts" />
 /// <reference path="scripts/server/proposal.ts" />

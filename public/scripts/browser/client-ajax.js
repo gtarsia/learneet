@@ -112,20 +112,14 @@ var score = exports.score;
 })(exports.dependencies || (exports.dependencies = {}));
 var dependencies = exports.dependencies;
 
-(function (proposal) {
-    var _add = baseAjax.proposal.add;
-    function add(params) {
-        return exports.buildIAjax(new _add.Ajax(), params);
-    }
-    proposal.add = add;
-
-    var _getAll = baseAjax.proposal.getAll;
-    function getAll(params) {
+(function (changes) {
+    var _getAll = baseAjax.changes.getAll;
+    function get(params) {
         return exports.buildIAjax(new _getAll.Ajax(), params);
     }
-    proposal.getAll = getAll;
-})(exports.proposal || (exports.proposal = {}));
-var proposal = exports.proposal;
+    changes.get = get;
+})(exports.changes || (exports.changes = {}));
+var changes = exports.changes;
 
 (function (user) {
     var _register = baseAjax.user.register;

@@ -1,3 +1,4 @@
+/*
 import clientAjax = require("./client-ajax");
 import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
@@ -55,3 +56,4 @@ declare var gui;
 if (guiName == 'AddProposalGui') {
     gui = new AddProposalGui();
 }
+*/

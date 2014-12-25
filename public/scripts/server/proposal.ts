@@ -1,3 +1,4 @@
+/*
 import baseAjax = require('./../common/base-ajax');
 import Promise = require('bluebird');
 import add = baseAjax.proposal.add;
@@ -91,4 +92,4 @@ export function getAll(args: getAll.Params): Promise<getAll.Return> {
         }
         return r;
     })
-}
+}*/
