@@ -1,11 +1,12 @@
 script#changes-template(type="x-tmpl-mustache")
   | {{#changes}}
   .change-preview
-    .octicon(class="{{octicon}}")
-    .score {{score}}
-    .description 
-      a(href="{{url}}") {{description}}
-    .avatar 
+    .octicon.left(class="{{octicon}}")
+    .left
+      .change-score.left {{score}}
+      .change-description.left
+        a(href="{{url}}") {{description}}
+    .change-avatar.right
       img(src="{{avatar}}")
-    .date {{date}}
+    .change-date.clear {{date}}
   | {{/changes}}
