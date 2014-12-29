@@ -25,6 +25,7 @@ export function okObj<T>(obj: T): any {
 
 export function getAll(args: getAll.Params) : Promise<getAll.Return> {
     function arrayToChanges(array: string[]) : ChangeFields[] {
+        debugger;
         var changes : ChangeFields[] = [];
         var length = array.length;
         while (length > 0) {
@@ -32,21 +33,23 @@ export function getAll(args: getAll.Params) : Promise<getAll.Return> {
             var state = array.shift(); var description = array.shift();
             var _changes = array.shift(); var date = array.shift();
             var author = array.shift();
-            length -= 6;
+            var score = array.shift();
+            length -= 7;
             changes.push({ id: id, state: state, description: description,
-                changes: _changes, date: date, author: author
+                changes: _changes, date: date, author: author, score: score
             });
         }
         return changes;
     }
-    var baseKey = keys.changesBase(args) + '*->';
+    var baseKey = keys.changesBase(args) + ':*->';
     return db.sort(keys.changesIdSet(args), 'by', 'nosort', 
         'GET', baseKey + 'id',
         'GET', baseKey + 'state',
         'GET', baseKey + 'description',
         'GET', baseKey + 'changes', 
         'GET', baseKey + 'date',
-        'GET', baseKey + 'author')
+        'GET', baseKey + 'author',
+        'GET', baseKey + 'score')
     .then<getAll.Return>((result: any) => {
         debugger;
         var ok = result != null;

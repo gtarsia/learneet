@@ -328,10 +328,10 @@ var dependencies = exports.dependencies;
 
 (function (changes) {
     var _getAll = baseAjax.changes.getAll;
-    function get(params) {
+    function getAll(params) {
         return exports.buildIAjax(new _getAll.Ajax(), params);
     }
-    changes.get = get;
+    changes.getAll = getAll;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 
@@ -935,43 +935,37 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var ajax = require("./../client-ajax");
+
 var Gui = require("./../gui");
 
 var ArticleChangePreviewTemplate = (function (_super) {
     __extends(ArticleChangePreviewTemplate, _super);
-    function ArticleChangePreviewTemplate(args) {
+    function ArticleChangePreviewTemplate(article) {
         _super.call(this);
         this.id = "-1";
         this.changesTemplate = this.propertize("#changes-template", 'html');
         this.changesFrame = this.propertize("#changes-frame");
-        this.id = args.id;
+        this.id = article.id;
         var _self = this;
         $(document).ready(function () {
-            var changes = [];
-            changes.push({
-                author: 'erandros',
-                icon: 'open',
-                avatar: '/images/avatar.png',
-                score: 13,
-                description: 'doing some changes',
-                url: '/articles/1/changes/1',
-                octicon: 'octicon-issue-opened',
-                date: 'Dec 24th, 22:20'
+            ajax.changes.getAll({ article: article }).done(function (res) {
+                debugger;
+                var changes = res.result;
+                changes.forEach(function (change) {
+                    var octi = '';
+                    if (change.state == 'open')
+                        octi = 'octicon-issue-opened';
+                    else if (change.state == 'closed')
+                        octi = 'octicon-issue-closed';
+                    change.octicon = octi;
+                    change.avatar = '/images/avatar.png';
+                });
+                var template = _self.changesTemplate.val;
+                Mustache.parse(template);
+                var rendered = Mustache.render(template, { changes: changes });
+                _self.changesFrame.jq.append(rendered);
             });
-            changes.push({
-                author: 'erandros',
-                icon: 'closed',
-                avatar: '/images/avatar.png',
-                score: '5',
-                description: 'did some changes',
-                url: '/articles/1/changes/2',
-                octicon: 'octicon-issue-closed',
-                date: 'Dec 21, 20:21'
-            });
-            var template = _self.changesTemplate.val;
-            Mustache.parse(template);
-            var rendered = Mustache.render(template, { changes: changes });
-            _self.changesFrame.jq.append(rendered);
         });
     }
     return ArticleChangePreviewTemplate;
@@ -980,7 +974,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
 module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
-},{"./../gui":8}],17:[function(require,module,exports){
+},{"./../client-ajax":5,"./../gui":8}],17:[function(require,module,exports){
 var EditableArticle = (function () {
     function EditableArticle() {
         var _self = this;

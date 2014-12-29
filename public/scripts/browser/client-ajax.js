@@ -114,10 +114,10 @@ var dependencies = exports.dependencies;
 
 (function (changes) {
     var _getAll = baseAjax.changes.getAll;
-    function get(params) {
+    function getAll(params) {
         return exports.buildIAjax(new _getAll.Ajax(), params);
     }
-    changes.get = get;
+    changes.getAll = getAll;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

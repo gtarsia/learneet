@@ -119,7 +119,7 @@ export module dependencies {
 
 export module changes {
     import _getAll = baseAjax.changes.getAll;
-    export function get(params) {
+    export function getAll(params) {
         return buildIAjax<_getAll.Params, _getAll.Return>
         (new _getAll.Ajax(), params)
     }

@@ -19,6 +19,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         dependencies.add(),
         dependencies.get(),
         dependencies.remove(),
+        changes.getAll(),
         score.get(),
         score.up(),
         score.removeUp(),
@@ -120,7 +121,7 @@ export module score {
 
 export module changes {
     import _getAll = baseAjax.changes.getAll;
-    export function add() {
+    export function getAll() {
         return restCbAjax(new _getAll.Ajax(), dbChanges.getAll);
     }
 }
