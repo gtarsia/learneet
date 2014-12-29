@@ -37,6 +37,7 @@ function set(app) {
         });
     });
     app.get(url.article.partials(), renderCb('partials/partials-article', ''));
+    app.get(url.change.get(), renderCb('article-change-view', ''));
     app.get(url.proposals.add(), function (req, res) {
         var id = req.params.id;
         db.hget('article:' + id, 'title').then(function (title) {

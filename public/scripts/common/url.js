@@ -19,6 +19,13 @@ var url;
         article.partials = partials;
     })(url.article || (url.article = {}));
     var article = url.article;
+    (function (change) {
+        function get(articleId, changeId) {
+            return (changeId != null ? "/articles/:article_id/changes/:changes_id" : "/articles/" + articleId + "/changes/" + changeId);
+        }
+        change.get = get;
+    })(url.change || (url.change = {}));
+    var change = url.change;
     (function (proposals) {
         function add(id) {
             return (id != null ? "/add_proposal/" + id : "/add_proposal/:id");

@@ -10,6 +10,13 @@ module url {
         }
         export function partials() { return "/partials-article" }
     }
+    export module change {
+        export function get(articleId?: string, changeId?: string) { 
+            return (changeId != null
+                ? "/articles/:article_id/changes/:changes_id"
+                : "/articles/" + articleId +"/changes/" + changeId);
+        }
+    }
     export module proposals {
         export function add(id?: string) { 
             return (id != null ? "/add_proposal/" + id : "/add_proposal/:id");
