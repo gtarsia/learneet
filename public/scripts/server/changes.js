@@ -41,7 +41,6 @@ function getAll(args) {
     }
     var baseKey = keys.changesBase(args) + ':*->';
     return db.sort(keys.changesIdSet(args), 'by', 'nosort', 'GET', baseKey + 'id', 'GET', baseKey + 'state', 'GET', baseKey + 'description', 'GET', baseKey + 'changes', 'GET', baseKey + 'date', 'GET', baseKey + 'author', 'GET', baseKey + 'score').then(function (result) {
-        debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get changes' : '');
         var r = {
@@ -53,4 +52,16 @@ function getAll(args) {
     });
 }
 exports.getAll = getAll;
+
+function get(args) {
+    return db.hgetall(keys.change(args)).then(function (result) {
+        var ok = result != null;
+        var why = (result == null ? 'Couldn\'t get the change' : '');
+        var r = {
+            ok: ok, why: why, result: result
+        };
+        return r;
+    });
+}
+exports.get = get;
 //# sourceMappingURL=changes.js.map

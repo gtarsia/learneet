@@ -21,7 +21,7 @@ var url;
     var article = url.article;
     (function (change) {
         function get(articleId, changeId) {
-            return (changeId != null ? "/articles/:article_id/changes/:changes_id" : "/articles/" + articleId + "/changes/" + changeId);
+            return (changeId == null || articleId == null ? "/articles/:article_id/changes/:changes_id" : "/articles/" + articleId + "/changes/" + changeId);
         }
         change.get = get;
     })(url.change || (url.change = {}));

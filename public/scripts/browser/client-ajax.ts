@@ -123,6 +123,12 @@ export module changes {
         return buildIAjax<_getAll.Params, _getAll.Return>
         (new _getAll.Ajax(), params)
     }
+
+    import _get = baseAjax.changes.get;
+    export function get(params) {
+        return buildIAjax<_get.Params, _get.Return>
+        (new _get.Ajax(), params)
+    }
 }
 /*
 export module proposal {

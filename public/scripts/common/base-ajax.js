@@ -274,6 +274,22 @@ var dependencies = exports.dependencies;
         getAll.Ajax = Ajax;
     })(changes.getAll || (changes.getAll = {}));
     var getAll = changes.getAll;
+
+    (function (get) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getchange';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        get.Ajax = Ajax;
+    })(changes.get || (changes.get = {}));
+    var get = changes.get;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

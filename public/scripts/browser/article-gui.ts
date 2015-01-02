@@ -11,7 +11,7 @@ declare function marked(s);
 
 declare var gui: BaseArticleGui;
 
-class ArticleGui extends Partial {
+class ArticleGui extends Partial { 
     id: string = "-1";
     main: string;
     dependenciesTemplate = this.propertize("#dependencies-template");
@@ -30,7 +30,7 @@ class ArticleGui extends Partial {
         this.articleCrumb.transitionURL(location.pathname)
     }
     constructor(args: {id?: string}) {
-        super('.article-partial');
+        super('.article.partial');
         var _self = this;
         $(document).ready(() => {
             if (args.id) _self.id = args.id;

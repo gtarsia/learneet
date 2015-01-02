@@ -1,6 +1,7 @@
 import baseAjax = require('./../common/base-ajax');
 import Promise = require('bluebird');
 import getAll = baseAjax.changes.getAll;
+import get = baseAjax.changes.get;
 import ChangeFields = baseAjax.changes.ChangeFields;
 import db = require('./db');
 import keys = require('./redis-keys')
@@ -51,7 +52,6 @@ export function getAll(args: getAll.Params) : Promise<getAll.Return> {
         'GET', baseKey + 'author',
         'GET', baseKey + 'score')
     .then<getAll.Return>((result: any) => {
-        debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get changes' : '');
         var r : getAll.Return = {
@@ -61,4 +61,16 @@ export function getAll(args: getAll.Params) : Promise<getAll.Return> {
         }
         return r;
     })
+}
+
+export function get(args: get.Params) : Promise<get.Return> {
+    return db.hgetall(keys.change(args))
+    .then<get.Return>(result => {
+        var ok = result != null;
+        var why = (result == null ? 'Couldn\'t get the change': '');
+        var r : get.Return = {
+            ok: ok, why: why, result: result
+        }
+        return r;
+    });
 }

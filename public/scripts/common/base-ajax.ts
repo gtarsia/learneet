@@ -196,6 +196,15 @@ export module changes {
         export interface Params { article: Id }
         export interface Return extends JsonReturn<ChangeFields[]> {}
     }
+
+    export module get {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/getchange' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { article: Id; change: Id; }
+        export interface Return extends JsonReturn<ChangeFields> {}
+    }
 }
 
 export module user {

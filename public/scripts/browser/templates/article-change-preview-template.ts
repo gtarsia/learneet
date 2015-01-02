@@ -18,7 +18,6 @@ class ArticleChangePreviewTemplate extends Gui {
         $(document).ready(() => {
             ajax.changes.getAll({article: article})
             .done(res => {
-                debugger;
                 var changes: any = res.result;
                 changes.forEach(function(change) {
                     var octi = '';
@@ -28,6 +27,7 @@ class ArticleChangePreviewTemplate extends Gui {
                         octi = 'octicon-issue-closed';
                     change.octicon = octi;
                     change.avatar = '/images/avatar.png';
+                    change.url = url.change.get(_self.id, change.id);
                 })
                 var template = _self.changesTemplate.val;
                 Mustache.parse(template);

@@ -6,6 +6,7 @@
 /// <reference path="scripts/browser/article-gui.ts" />
 /// <reference path="scripts/browser/base-article-gui.ts" />
 /// <reference path="scripts/browser/browse-gui.ts" />
+/// <reference path="scripts/browser/change-gui.ts" />
 /// <reference path="scripts/browser/client-ajax.ts" />
 /// <reference path="scripts/browser/create-article-gui.ts" />
 /// <reference path="scripts/browser/edit-article-gui.ts" />

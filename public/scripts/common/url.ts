@@ -12,7 +12,7 @@ module url {
     }
     export module change {
         export function get(articleId?: string, changeId?: string) { 
-            return (changeId != null
+            return (changeId == null || articleId == null
                 ? "/articles/:article_id/changes/:changes_id"
                 : "/articles/" + articleId +"/changes/" + changeId);
         }

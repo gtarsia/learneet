@@ -41,7 +41,7 @@ export function set(app) {
         }); 
     });
     app.get(url.article.partials(), renderCb('partials/partials-article', ''))
-    app.get(url.change.get(), renderCb('article-change-view', ''));
+    app.get(url.change.get(), renderCb('change', ''));
     app.get(url.proposals.add(), (req, res) => {
         var id = req.params.id;
         db.hget('article:' + id, 'title')

@@ -7,6 +7,7 @@ var __extends = this.__extends || function (d, b) {
 var ajax = require("./../client-ajax");
 
 var Gui = require("./../gui");
+var url = require("./../../common/url");
 
 var ArticleChangePreviewTemplate = (function (_super) {
     __extends(ArticleChangePreviewTemplate, _super);
@@ -19,7 +20,6 @@ var ArticleChangePreviewTemplate = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             ajax.changes.getAll({ article: article }).done(function (res) {
-                debugger;
                 var changes = res.result;
                 changes.forEach(function (change) {
                     var octi = '';
@@ -29,6 +29,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
                         octi = 'octicon-issue-closed';
                     change.octicon = octi;
                     change.avatar = '/images/avatar.png';
+                    change.url = url.change.get(_self.id, change.id);
                 });
                 var template = _self.changesTemplate.val;
                 Mustache.parse(template);

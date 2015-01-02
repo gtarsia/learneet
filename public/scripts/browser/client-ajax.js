@@ -118,6 +118,12 @@ var dependencies = exports.dependencies;
         return exports.buildIAjax(new _getAll.Ajax(), params);
     }
     changes.getAll = getAll;
+
+    var _get = baseAjax.changes.get;
+    function get(params) {
+        return exports.buildIAjax(new _get.Ajax(), params);
+    }
+    changes.get = get;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

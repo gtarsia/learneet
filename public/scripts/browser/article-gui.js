@@ -17,7 +17,7 @@ var Arrows = require('./utils/score-arrow');
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
-        _super.call(this, '.article-partial');
+        _super.call(this, '.article.partial');
         this.id = "-1";
         this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");

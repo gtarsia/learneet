@@ -18,6 +18,7 @@ function getServerAjaxList() {
         dependencies.get(),
         dependencies.remove(),
         changes.getAll(),
+        changes.get(),
         score.get(),
         score.up(),
         score.removeUp(),
@@ -140,6 +141,12 @@ var score = exports.score;
         return exports.restCbAjax(new _getAll.Ajax(), dbChanges.getAll);
     }
     changes.getAll = getAll;
+
+    var _get = baseAjax.changes.get;
+    function get() {
+        return exports.restCbAjax(new _get.Ajax(), dbChanges.get);
+    }
+    changes.get = get;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 
