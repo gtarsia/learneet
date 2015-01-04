@@ -129,6 +129,18 @@ export module changes {
         return buildIAjax<_get.Params, _get.Return>
         (new _get.Ajax(), params)
     }
+
+    import _getScore = baseAjax.changes.getScore;
+    export function getScore(params) {
+        return buildIAjax<_getScore.Params, _getScore.Return>
+        (new _getScore.Ajax(), params)
+    }
+
+    import _getScoreByUser = baseAjax.changes.getScoreByUser;
+    export function getScoreByUser(params) {
+        return buildIAjax<_getScoreByUser.Params, _getScoreByUser.Return>
+        (new _getScoreByUser.Ajax(), params)
+    }
 }
 /*
 export module proposal {

@@ -124,6 +124,18 @@ var dependencies = exports.dependencies;
         return exports.buildIAjax(new _get.Ajax(), params);
     }
     changes.get = get;
+
+    var _getScore = baseAjax.changes.getScore;
+    function getScore(params) {
+        return exports.buildIAjax(new _getScore.Ajax(), params);
+    }
+    changes.getScore = getScore;
+
+    var _getScoreByUser = baseAjax.changes.getScoreByUser;
+    function getScoreByUser(params) {
+        return exports.buildIAjax(new _getScoreByUser.Ajax(), params);
+    }
+    changes.getScoreByUser = getScoreByUser;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

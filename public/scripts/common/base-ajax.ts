@@ -189,6 +189,9 @@ export module changes {
         author: string;
         score: string;
     }
+    export interface ChangeScore {
+        change: {score: String};
+    }
     export module getAll {
         export class Ajax implements IAjax{
             url(): string { return '/api/getallchanges' }
@@ -205,6 +208,24 @@ export module changes {
         }
         export interface Params { article: Id; change: Id; }
         export interface Return extends JsonReturn<ChangeFields> {}
+    }
+
+    export module getScore {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/getchangescore' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { article: Id; change: Id; }
+        export interface Return extends JsonReturn<ChangeScore> {}
+    }
+
+    export module getScoreByUser {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/getchangescorebyuser' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { article: Id; change: Id; }
+        export interface Return extends JsonReturn<ChangeScore> {}
     }
 }
 

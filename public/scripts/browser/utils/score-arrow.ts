@@ -48,22 +48,23 @@ export class Score extends Gui {
         super();
         this.score = this.propertize('#article-score', 'html');
     }
-    set(args: {article: {score: Number}}) {
-        this.score.val = args.article.score;
+    set(score) {
+        this.score.val = score;
     }
 }
 
 export class UpScore {
-    article : {id: string};
     upScore : UpScoreArrow;
     score;
-    fetchScore(): any {
-        throw new Error('Abstract method');
-    }
+    _abstract(): any { throw new Error('Abstract method' ) }
+    fetchScore(): any { return this._abstract() }
+    fetchScoreByUser(): any { return this._abstract() }
+    upVote() : any { return this._abstract() }
+    removeUpVote() : any { return this._abstract() }
     updateScore() {
         this.fetchScore()
-        .done((res : baseAjax.JsonReturn<{article: {score: Number}}>) => {
-            this.score.set(res.result)
+        .done(score => {
+            this.score.set(score)
         })
     }
     upScoreClick() {
@@ -75,15 +76,14 @@ export class UpScore {
         }
         var p;
         if (this.upScore.isTurnedOn)
-            p = ajax.score.upVote({article: this.article});
-        else p = ajax.score.removeUpVote({article: this.article});
+            p = this.upVote();
+        else p = this.removeUpVote();
         p.done(() => {
             this.updateScore();
         })
     }
-    constructor(article: {id: string}) {
+    constructor() {
         var _self = this;
-        this.article = article;
         this.upScore = new UpScoreArrow();
         this.score = new Score()
         this.upScore.bothImages.jq.click(() => {
@@ -91,25 +91,30 @@ export class UpScore {
         });
         _self.updateScore();
         $(document).ready(() => {
-            ajax.score.getByUser({
-                article: {id: _self.article.id},
-                user: {id: '1'}
-            })
-            .done((res) => {
-                var article = res.result.article;
-                if (article.score == 1) _self.upScore.turnOn();
+            _self.fetchScoreByUser()
+            .done(score => {
+                if (score == 1) _self.upScore.turnOn();
                 //else if (article.score == -1) _self.downScore.turnOn();
             });
         });
     }
 }
 
-export class ArticleScore extends UpScore {
+export class UpDownScore {
+    upScore : UpScoreArrow;
     downScore : DownScoreArrow;
     score;
-    fetchScore() {
-        return ajax.score.get({
-            article: {id: this.article.id}
+    _abstract() { throw new Error('Abstract method'); }
+    fetchScore(): any { this._abstract(); }
+    fetchScoreByUser(): any { this._abstract(); }
+    upVote(): any { this._abstract(); }
+    removeUpVote(): any { this._abstract(); }
+    downVote(): any { this._abstract(); }
+    removeDownVote(): any { this._abstract(); }
+    updateScore() {
+        this.fetchScore()
+        .done(score => {
+            this.score.set(score)
         })
     }
     upScoreClick() {
@@ -122,10 +127,10 @@ export class ArticleScore extends UpScore {
         }
         var p;
         if (this.upScore.isTurnedOn)
-            p = ajax.score.upVote({article: this.article});
-        else p = ajax.score.removeUpVote({article: this.article});
+            p = this.upVote();
+        else p = this.removeUpVote();
         p.done(() => {
-            this.fetchScore();
+            this.updateScore();
         })
     }
     downScoreClick() {
@@ -138,35 +143,101 @@ export class ArticleScore extends UpScore {
         }
         var p;
         if (this.downScore.isTurnedOn)
-            p = ajax.score.downVote({article: this.article});
-        else p = ajax.score.removeDownVote({article: this.article});
+            p = this.downVote();
+        else p = this.removeDownVote();
         p.done(() => {
-            this.fetchScore();
+            this.updateScore();
         })
     }
-    constructor(article: {id: string}) {
-        super(article);
-        this.upScore.bothImages.jq.unbind('click');
+    constructor() {
         var _self = this;
-        this.article = article;
+        this.upScore = new UpScoreArrow();
         this.downScore = new DownScoreArrow();
+        this.score = new Score()
+        this.upScore.bothImages.jq.click(() => {
+            _self.upScoreClick();
+        });
         this.downScore.bothImages.jq.click(() => {
             _self.downScoreClick();
         });
+        _self.updateScore();
         $(document).ready(() => {
-            ajax.score.getByUser({
-                article: {id: _self.article.id},
-                user: {id: '1'}
-            })
-            .done((res) => {
-                var article = res.result.article;
-                if (article.score == 1) _self.upScore.turnOn();
-                else if (article.score == -1) _self.downScore.turnOn();
+            _self.fetchScoreByUser()
+            .done(score => {
+                if (score == 1) _self.upScore.turnOn();
+                else if (score == -1) _self.downScore.turnOn();
             });
         });
     }
 }
 
-export class ChangeScore extends UpScore {
+export class ArticleScore extends UpDownScore {
+    article: {id: string};
+    constructor(article: {id: string}) {
+        this.article = article;
+        super();
+    }
+    fetchScore(): any {
+        var _self = this;
+        return ajax.score.get({
+            article: {id: _self.article.id}
+        })
+        .then(res => {
+            return res.result.article.score
+        });
+    }
+    fetchScoreByUser(): any {
+        return ajax.score.getByUser({
+            article: {id: this.article.id}
+        })
+        .then(res => {
+            return res.result.article.score
+        });
+    }
+    upVote(): any { 
+        return ajax.score.upVote({article: this.article});
+    }
+    removeUpVote(): any { 
+        return ajax.score.removeUpVote({article: this.article}); 
+    }
+    downVote(): any { 
+        return ajax.score.downVote({article: this.article}); 
+    }
+    removeDownVote(): any { 
+        return ajax.score.removeDownVote({article: this.article}); 
+    }
+}
 
+export class ChangeScore extends UpScore {
+    article: {id: string};
+    change: {id: string};
+    constructor(article: {id: string}, change: {id: string}) {
+        this.article = article;
+        this.change = change;
+        super();
+    }
+    fetchScore(): any {
+        return ajax.changes.getScore({
+            article: {id: this.article.id},
+            score: {id: this.change.id}
+        })
+        .then(res => {
+            return res.result.change.score
+        });
+    }
+    fetchScoreByUser(): any { 
+        return ajax.changes.getScoreByUser({
+            article: {id: this.article.id},
+            score: {id: this.change.id}
+        })
+        .then(res => {
+            return res.result.change.score
+        });
+    }
+    upVote() : any { 
+        return this._abstract() 
+    }
+    removeUpVote() : any { 
+        return this._abstract() 
+    }
 }

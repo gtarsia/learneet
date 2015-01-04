@@ -290,6 +290,38 @@ var dependencies = exports.dependencies;
         get.Ajax = Ajax;
     })(changes.get || (changes.get = {}));
     var get = changes.get;
+
+    (function (getScore) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getchangescore';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getScore.Ajax = Ajax;
+    })(changes.getScore || (changes.getScore = {}));
+    var getScore = changes.getScore;
+
+    (function (getScoreByUser) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getchangescorebyuser';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getScoreByUser.Ajax = Ajax;
+    })(changes.getScoreByUser || (changes.getScoreByUser = {}));
+    var getScoreByUser = changes.getScoreByUser;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

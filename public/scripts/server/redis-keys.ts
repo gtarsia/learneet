@@ -38,6 +38,9 @@ export function changesBase(args: ArticleWithId) {
 export function change(args: ArticleChangeWithId) {
     return j([changesBase(args), args.change.id])
 }
+export function changeUpScore(args: ArticleChangeWithId) {
+    return j([change(args), 'score', 'up'])
+}
 export function openedChangesSet(args: ArticleWithId) {
     return j([changesBase(args), 'openedIdSet'])
 }

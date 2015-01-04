@@ -37,6 +37,10 @@ function change(args) {
     return exports.j([exports.changesBase(args), args.change.id]);
 }
 exports.change = change;
+function changeUpScore(args) {
+    return exports.j([exports.change(args), 'score', 'up']);
+}
+exports.changeUpScore = changeUpScore;
 function openedChangesSet(args) {
     return exports.j([exports.changesBase(args), 'openedIdSet']);
 }

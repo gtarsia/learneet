@@ -21,6 +21,8 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         dependencies.remove(),
         changes.getAll(),
         changes.get(),
+        changes.getScore(),
+        changes.getScoreByUser(),
         score.get(),
         score.up(),
         score.removeUp(),
@@ -129,6 +131,16 @@ export module changes {
     import _get = baseAjax.changes.get;
     export function get() {
         return restCbAjax(new _get.Ajax(), dbChanges.get);
+    }
+
+    import _getScore = baseAjax.changes.getScore;
+    export function getScore() {
+        return restCbAjax(new _getScore.Ajax(), dbChanges.getScore);
+    }
+
+    import _getScoreByUser = baseAjax.changes.getScoreByUser;
+    export function getScoreByUser() {
+        return restCbAjax(new _getScoreByUser.Ajax(), dbChanges.getScoreByUser);
     }
 }
 

@@ -64,4 +64,18 @@ function get(args) {
     });
 }
 exports.get = get;
+
+function getScore(args) {
+    return db.hget(keys.change(args), 'score').then(function (result) {
+        return (result == null ? exports.notOkObj('Couldn\'t retrieve the score of the change') : exports.okObj({ article: { score: result } }));
+    });
+}
+exports.getScore = getScore;
+
+function getScoreByUser(args) {
+    return db.hget(keys.change(args), 'score').then(function (result) {
+        return (result == null ? exports.notOkObj('Couldn\'t retrieve the score of the change') : exports.okObj({ article: { score: result } }));
+    });
+}
+exports.getScoreByUser = getScoreByUser;
 //# sourceMappingURL=changes.js.map

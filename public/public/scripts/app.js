@@ -414,6 +414,18 @@ var dependencies = exports.dependencies;
         return exports.buildIAjax(new _get.Ajax(), params);
     }
     changes.get = get;
+
+    var _getScore = baseAjax.changes.getScore;
+    function getScore(params) {
+        return exports.buildIAjax(new _getScore.Ajax(), params);
+    }
+    changes.getScore = getScore;
+
+    var _getScoreByUser = baseAjax.changes.getScoreByUser;
+    function getScoreByUser(params) {
+        return exports.buildIAjax(new _getScoreByUser.Ajax(), params);
+    }
+    changes.getScoreByUser = getScoreByUser;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 
@@ -1311,17 +1323,16 @@ var Score = (function (_super) {
         _super.call(this);
         this.score = this.propertize('#article-score', 'html');
     }
-    Score.prototype.set = function (args) {
-        this.score.val = args.article.score;
+    Score.prototype.set = function (score) {
+        this.score.val = score;
     };
     return Score;
 })(Gui);
 exports.Score = Score;
 
 var UpScore = (function () {
-    function UpScore(article) {
+    function UpScore() {
         var _self = this;
-        this.article = article;
         this.upScore = new UpScoreArrow();
         this.score = new Score();
         this.upScore.bothImages.jq.click(function () {
@@ -1329,23 +1340,31 @@ var UpScore = (function () {
         });
         _self.updateScore();
         $(document).ready(function () {
-            ajax.score.getByUser({
-                article: { id: _self.article.id },
-                user: { id: '1' }
-            }).done(function (res) {
-                var article = res.result.article;
-                if (article.score == 1)
+            _self.fetchScoreByUser().done(function (score) {
+                if (score == 1)
                     _self.upScore.turnOn();
             });
         });
     }
-    UpScore.prototype.fetchScore = function () {
+    UpScore.prototype._abstract = function () {
         throw new Error('Abstract method');
+    };
+    UpScore.prototype.fetchScore = function () {
+        return this._abstract();
+    };
+    UpScore.prototype.fetchScoreByUser = function () {
+        return this._abstract();
+    };
+    UpScore.prototype.upVote = function () {
+        return this._abstract();
+    };
+    UpScore.prototype.removeUpVote = function () {
+        return this._abstract();
     };
     UpScore.prototype.updateScore = function () {
         var _this = this;
-        this.fetchScore().done(function (res) {
-            _this.score.set(res.result);
+        this.fetchScore().done(function (score) {
+            _this.score.set(score);
         });
     };
     UpScore.prototype.upScoreClick = function () {
@@ -1357,9 +1376,9 @@ var UpScore = (function () {
         }
         var p;
         if (this.upScore.isTurnedOn)
-            p = ajax.score.upVote({ article: this.article });
+            p = this.upVote();
         else
-            p = ajax.score.removeUpVote({ article: this.article });
+            p = this.removeUpVote();
         p.done(function () {
             _this.updateScore();
         });
@@ -1368,36 +1387,56 @@ var UpScore = (function () {
 })();
 exports.UpScore = UpScore;
 
-var ArticleScore = (function (_super) {
-    __extends(ArticleScore, _super);
-    function ArticleScore(article) {
-        _super.call(this, article);
-        this.upScore.bothImages.jq.unbind('click');
+var UpDownScore = (function () {
+    function UpDownScore() {
         var _self = this;
-        this.article = article;
+        this.upScore = new UpScoreArrow();
         this.downScore = new DownScoreArrow();
+        this.score = new Score();
+        this.upScore.bothImages.jq.click(function () {
+            _self.upScoreClick();
+        });
         this.downScore.bothImages.jq.click(function () {
             _self.downScoreClick();
         });
+        _self.updateScore();
         $(document).ready(function () {
-            ajax.score.getByUser({
-                article: { id: _self.article.id },
-                user: { id: '1' }
-            }).done(function (res) {
-                var article = res.result.article;
-                if (article.score == 1)
+            _self.fetchScoreByUser().done(function (score) {
+                if (score == 1)
                     _self.upScore.turnOn();
-                else if (article.score == -1)
+                else if (score == -1)
                     _self.downScore.turnOn();
             });
         });
     }
-    ArticleScore.prototype.fetchScore = function () {
-        return ajax.score.get({
-            article: { id: this.article.id }
+    UpDownScore.prototype._abstract = function () {
+        throw new Error('Abstract method');
+    };
+    UpDownScore.prototype.fetchScore = function () {
+        this._abstract();
+    };
+    UpDownScore.prototype.fetchScoreByUser = function () {
+        this._abstract();
+    };
+    UpDownScore.prototype.upVote = function () {
+        this._abstract();
+    };
+    UpDownScore.prototype.removeUpVote = function () {
+        this._abstract();
+    };
+    UpDownScore.prototype.downVote = function () {
+        this._abstract();
+    };
+    UpDownScore.prototype.removeDownVote = function () {
+        this._abstract();
+    };
+    UpDownScore.prototype.updateScore = function () {
+        var _this = this;
+        this.fetchScore().done(function (score) {
+            _this.score.set(score);
         });
     };
-    ArticleScore.prototype.upScoreClick = function () {
+    UpDownScore.prototype.upScoreClick = function () {
         var _this = this;
         if (this.upScore.isTurnedOn) {
             this.upScore.turnOff();
@@ -1407,14 +1446,14 @@ var ArticleScore = (function (_super) {
         }
         var p;
         if (this.upScore.isTurnedOn)
-            p = ajax.score.upVote({ article: this.article });
+            p = this.upVote();
         else
-            p = ajax.score.removeUpVote({ article: this.article });
+            p = this.removeUpVote();
         p.done(function () {
-            _this.fetchScore();
+            _this.updateScore();
         });
     };
-    ArticleScore.prototype.downScoreClick = function () {
+    UpDownScore.prototype.downScoreClick = function () {
         var _this = this;
         if (this.downScore.isTurnedOn) {
             this.downScore.turnOff();
@@ -1424,22 +1463,83 @@ var ArticleScore = (function (_super) {
         }
         var p;
         if (this.downScore.isTurnedOn)
-            p = ajax.score.downVote({ article: this.article });
+            p = this.downVote();
         else
-            p = ajax.score.removeDownVote({ article: this.article });
+            p = this.removeDownVote();
         p.done(function () {
-            _this.fetchScore();
+            _this.updateScore();
         });
     };
+    return UpDownScore;
+})();
+exports.UpDownScore = UpDownScore;
+
+var ArticleScore = (function (_super) {
+    __extends(ArticleScore, _super);
+    function ArticleScore(article) {
+        this.article = article;
+        _super.call(this);
+    }
+    ArticleScore.prototype.fetchScore = function () {
+        var _self = this;
+        return ajax.score.get({
+            article: { id: _self.article.id }
+        }).then(function (res) {
+            return res.result.article.score;
+        });
+    };
+    ArticleScore.prototype.fetchScoreByUser = function () {
+        return ajax.score.getByUser({
+            article: { id: this.article.id }
+        }).then(function (res) {
+            return res.result.article.score;
+        });
+    };
+    ArticleScore.prototype.upVote = function () {
+        return ajax.score.upVote({ article: this.article });
+    };
+    ArticleScore.prototype.removeUpVote = function () {
+        return ajax.score.removeUpVote({ article: this.article });
+    };
+    ArticleScore.prototype.downVote = function () {
+        return ajax.score.downVote({ article: this.article });
+    };
+    ArticleScore.prototype.removeDownVote = function () {
+        return ajax.score.removeDownVote({ article: this.article });
+    };
     return ArticleScore;
-})(UpScore);
+})(UpDownScore);
 exports.ArticleScore = ArticleScore;
 
 var ChangeScore = (function (_super) {
     __extends(ChangeScore, _super);
-    function ChangeScore() {
-        _super.apply(this, arguments);
+    function ChangeScore(article, change) {
+        this.article = article;
+        this.change = change;
+        _super.call(this);
     }
+    ChangeScore.prototype.fetchScore = function () {
+        return ajax.changes.getScore({
+            article: { id: this.article.id },
+            score: { id: this.change.id }
+        }).then(function (res) {
+            return res.result.change.score;
+        });
+    };
+    ChangeScore.prototype.fetchScoreByUser = function () {
+        return ajax.changes.getScoreByUser({
+            article: { id: this.article.id },
+            score: { id: this.change.id }
+        }).then(function (res) {
+            return res.result.change.score;
+        });
+    };
+    ChangeScore.prototype.upVote = function () {
+        return this._abstract();
+    };
+    ChangeScore.prototype.removeUpVote = function () {
+        return this._abstract();
+    };
     return ChangeScore;
 })(UpScore);
 exports.ChangeScore = ChangeScore;
@@ -1738,6 +1838,38 @@ var dependencies = exports.dependencies;
         get.Ajax = Ajax;
     })(changes.get || (changes.get = {}));
     var get = changes.get;
+
+    (function (getScore) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getchangescore';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getScore.Ajax = Ajax;
+    })(changes.getScore || (changes.getScore = {}));
+    var getScore = changes.getScore;
+
+    (function (getScoreByUser) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getchangescorebyuser';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getScoreByUser.Ajax = Ajax;
+    })(changes.getScoreByUser || (changes.getScoreByUser = {}));
+    var getScoreByUser = changes.getScoreByUser;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

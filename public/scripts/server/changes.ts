@@ -2,6 +2,8 @@ import baseAjax = require('./../common/base-ajax');
 import Promise = require('bluebird');
 import getAll = baseAjax.changes.getAll;
 import get = baseAjax.changes.get;
+import getScore = baseAjax.changes.getScore;
+import getScoreByUser = baseAjax.changes.getScoreByUser;
 import ChangeFields = baseAjax.changes.ChangeFields;
 import db = require('./db');
 import keys = require('./redis-keys')
@@ -73,4 +75,23 @@ export function get(args: get.Params) : Promise<get.Return> {
         }
         return r;
     });
+}
+
+export function getScore(args: getScore.Params) : Promise<getScore.Return> {
+    return db.hget(keys.change(args), 'score')
+    .then<getScore.Return>(result => {
+        return (result == null 
+            ? notOkObj('Couldn\'t retrieve the score of the change')
+            : okObj({article: {score: result}}));
+    })
+}
+
+export function getScoreByUser(args: getScoreByUser.Params) 
+: Promise<getScoreByUser.Return> {
+    return db.hget(keys.change(args), 'score')
+    .then<getScoreByUser.Return>(result => {
+        return (result == null 
+            ? notOkObj('Couldn\'t retrieve the score of the change')
+            : okObj({article: {score: result}}));
+    })
 }
