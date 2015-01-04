@@ -20,7 +20,6 @@ class CreateArticleGui extends Gui {
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             $("#create").click(() => {
-                debugger;
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.article;
                 console.log(article);

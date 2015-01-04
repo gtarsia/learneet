@@ -10,12 +10,14 @@ var RenderedArticle = require('./templates/rendered-article');
 
 var Partial = require("./partial");
 var url = require("./../common/url");
+var Arrows = require('./utils/score-arrow');
 
 var base = ".partial.change ";
 
 var ChangeGui = (function (_super) {
     __extends(ChangeGui, _super);
     function ChangeGui() {
+        var _this = this;
         _super.call(this, '.change.partial');
         this.title = this.propertize(base + '.title', 'html');
         this.description = this.propertize(base + '.description', 'html');
@@ -30,6 +32,7 @@ var ChangeGui = (function (_super) {
         this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(function () {
+            _self.changeScore = new Arrows.ChangeScore(_this.article, _this.change);
             changeCb.done(function (res) {
                 var change = res.result;
                 _self.description.val = change.description;
@@ -41,7 +44,6 @@ var ChangeGui = (function (_super) {
                 if (change.state == 'close')
                     state = 'octicon-issue-closed';
                 _self.state.jq.addClass(state);
-                debugger;
             });
             articleCb.done(function (res) {
                 var article = res.result;
@@ -56,7 +58,6 @@ var ChangeGui = (function (_super) {
     ChangeGui.prototype.setCrumb = function () {
     };
     ChangeGui.prototype.parseURL = function () {
-        debugger;
         var re = url.change.get('(\\d+)', '(\\d+)');
         var regex = new RegExp(re);
         var matches = regex.exec(location.pathname);

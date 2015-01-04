@@ -4,6 +4,8 @@ import getAll = baseAjax.changes.getAll;
 import get = baseAjax.changes.get;
 import getScore = baseAjax.changes.getScore;
 import getScoreByUser = baseAjax.changes.getScoreByUser;
+import upVote = baseAjax.changes.upVote;
+import removeUpVote = baseAjax.changes.removeUpVote;
 import ChangeFields = baseAjax.changes.ChangeFields;
 import db = require('./db');
 import keys = require('./redis-keys')
@@ -36,10 +38,9 @@ export function getAll(args: getAll.Params) : Promise<getAll.Return> {
             var state = array.shift(); var description = array.shift();
             var _changes = array.shift(); var date = array.shift();
             var author = array.shift();
-            var score = array.shift();
-            length -= 7;
+            length -= 6;
             changes.push({ id: id, state: state, description: description,
-                changes: _changes, date: date, author: author, score: score
+                changes: _changes, date: date, author: author
             });
         }
         return changes;
@@ -51,8 +52,7 @@ export function getAll(args: getAll.Params) : Promise<getAll.Return> {
         'GET', baseKey + 'description',
         'GET', baseKey + 'changes', 
         'GET', baseKey + 'date',
-        'GET', baseKey + 'author',
-        'GET', baseKey + 'score')
+        'GET', baseKey + 'author')
     .then<getAll.Return>((result: any) => {
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get changes' : '');
@@ -78,20 +78,38 @@ export function get(args: get.Params) : Promise<get.Return> {
 }
 
 export function getScore(args: getScore.Params) : Promise<getScore.Return> {
-    return db.hget(keys.change(args), 'score')
+    return db.scard(keys.changeUpScore(args))
     .then<getScore.Return>(result => {
         return (result == null 
             ? notOkObj('Couldn\'t retrieve the score of the change')
-            : okObj({article: {score: result}}));
+            : okObj({change: {score: result}}));
     })
 }
 
 export function getScoreByUser(args: getScoreByUser.Params) 
 : Promise<getScoreByUser.Return> {
-    return db.hget(keys.change(args), 'score')
-    .then<getScoreByUser.Return>(result => {
+    return db.sismember(keys.changeUpScore(args), "1")
+    .then<getScoreByUser.Return>(isMember => {
+        if (isMember) return okObj(true);
+        else return okObj(false);
+    })
+}
+
+export function upVote(args: upVote.Params) : Promise<upVote.Return> {
+    return db.sadd(keys.changeUpScore(args), "1")
+    .then<upVote.Return>(result => {
         return (result == null 
-            ? notOkObj('Couldn\'t retrieve the score of the change')
-            : okObj({article: {score: result}}));
+            ? notOkObj('Couldn\'t up vote the change')
+            : okObj(true));
+    })
+}
+
+export function removeUpVote(args: removeUpVote.Params) 
+: Promise<removeUpVote.Return> {
+    return db.srem(keys.changeUpScore(args), "1")
+    .then<removeUpVote.Return>(result => {
+        return (result == null 
+            ? notOkObj('Couldn\'t remove the change up vote')
+            : okObj(true));
     })
 }

@@ -7,6 +7,7 @@ import Gui = require("./gui");
 import Partial = require("./partial");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
+
 declare function marked(s);
 
 declare var gui: BaseArticleGui;
@@ -22,13 +23,13 @@ class ChangeGui extends Partial {
     article: {id: string} = {id: "-1"};
     change: {id: string} = {id: "-1"};
     data: {}
+    changeScore;
     getEditBtn() {
         return $("#editBtn");
     }
     setCrumb() {
     }
     parseURL() {
-        debugger;
         var re = url.change.get('(\\d+)', '(\\d+)')
         var regex = new RegExp(re);
         var matches = regex.exec(location.pathname);
@@ -43,6 +44,7 @@ class ChangeGui extends Partial {
         this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(() => {
+            _self.changeScore = new Arrows.ChangeScore(this.article, this.change);
             changeCb.done(res => {
                 var change = res.result;
                 _self.description.val = change.description;
@@ -52,7 +54,6 @@ class ChangeGui extends Partial {
                 if (change.state == 'open') state = 'octicon-issue-opened'
                 if (change.state == 'close') state = 'octicon-issue-closed'
                 _self.state.jq.addClass(state);
-                debugger;
             })
             articleCb.done(res => {
                 var article = res.result;

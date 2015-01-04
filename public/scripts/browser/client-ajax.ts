@@ -141,6 +141,18 @@ export module changes {
         return buildIAjax<_getScoreByUser.Params, _getScoreByUser.Return>
         (new _getScoreByUser.Ajax(), params)
     }
+
+    import _upVote = baseAjax.changes.upVote;
+    export function upVote(params) {
+        return buildIAjax<_upVote.Params, _upVote.Return>
+        (new _upVote.Ajax(), params)
+    }
+
+    import _removeUpVote = baseAjax.changes.removeUpVote;
+    export function removeUpVote(params) {
+        return buildIAjax<_removeUpVote.Params, _removeUpVote.Return>
+        (new _removeUpVote.Ajax(), params)
+    }
 }
 /*
 export module proposal {

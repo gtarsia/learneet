@@ -77,8 +77,8 @@ var UpScore = (function () {
         });
         _self.updateScore();
         $(document).ready(function () {
-            _self.fetchScoreByUser().done(function (score) {
-                if (score == 1)
+            _self.fetchScoreByUser().done(function (isUpScore) {
+                if (isUpScore)
                     _self.upScore.turnOn();
             });
         });
@@ -258,7 +258,7 @@ var ChangeScore = (function (_super) {
     ChangeScore.prototype.fetchScore = function () {
         return ajax.changes.getScore({
             article: { id: this.article.id },
-            score: { id: this.change.id }
+            change: { id: this.change.id }
         }).then(function (res) {
             return res.result.change.score;
         });
@@ -266,16 +266,20 @@ var ChangeScore = (function (_super) {
     ChangeScore.prototype.fetchScoreByUser = function () {
         return ajax.changes.getScoreByUser({
             article: { id: this.article.id },
-            score: { id: this.change.id }
+            change: { id: this.change.id }
         }).then(function (res) {
-            return res.result.change.score;
+            return res.result;
         });
     };
     ChangeScore.prototype.upVote = function () {
-        return this._abstract();
+        return ajax.changes.upVote({
+            article: this.article, change: this.change
+        });
     };
     ChangeScore.prototype.removeUpVote = function () {
-        return this._abstract();
+        return ajax.changes.removeUpVote({
+            article: this.article, change: this.change
+        });
     };
     return ChangeScore;
 })(UpScore);

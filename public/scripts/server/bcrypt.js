@@ -26,7 +26,6 @@ var bcrypt;
     }
     bcrypt.genSalt = genSalt;
     function hash(s, salt) {
-        debugger;
         return promisify(bcryptjs.hash.bind(bcryptjs, s, salt));
     }
     bcrypt.hash = hash;

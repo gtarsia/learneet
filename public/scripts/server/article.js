@@ -53,14 +53,12 @@ function create(args) {
 exports.create = create;
 
 function update(args) {
-    debugger;
     var oldTitle;
     var article = args.article;
     if (!article.title && !article.content) {
         return exports.notOkObj('Title or content was null or empty');
     }
     return exports.get(args).then(function (res) {
-        debugger;
         if (!res.ok) {
             return exports.notOkObj('Can\'t upload article, because we couldn\'t find it');
         } else {
@@ -112,7 +110,6 @@ function getAll() {
         return articles;
     }
     return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'articles:*->id', 'GET', 'articles:*->title', 'GET', 'articles:*->content').then(function (result) {
-        debugger;
         var ok = result != null;
         var why = (result == null ? 'Couldn\'t get articles' : '');
         var r = {
@@ -171,7 +168,6 @@ exports.getAll = getAll;
             var promise = Promise.promisify(multi.exec, multi);
             return promise();
         }).then(function (result) {
-            debugger;
             var length = result.length;
             var articles = [];
             for (var i = 0; i < length; i++) {

@@ -187,7 +187,6 @@ export module changes {
         changes: string;
         date: string;
         author: string;
-        score: string;
     }
     export interface ChangeScore {
         change: {score: String};
@@ -225,7 +224,25 @@ export module changes {
             type(): string { return AjaxType.GET }
         }
         export interface Params { article: Id; change: Id; }
-        export interface Return extends JsonReturn<ChangeScore> {}
+        export interface Return extends JsonReturn<boolean> {}
+    }
+
+    export module upVote {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/upvotechange' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { article: Id; change: Id; }
+        export interface Return extends JsonReturn<boolean> {}
+    }
+
+    export module removeUpVote {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/removechangeupvote' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { article: Id; change: Id; }
+        export interface Return extends JsonReturn<boolean> {}
     }
 }
 

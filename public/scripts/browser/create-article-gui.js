@@ -19,7 +19,6 @@ var CreateArticleGui = (function (_super) {
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             $("#create").click(function () {
-                debugger;
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.article;
                 console.log(article);

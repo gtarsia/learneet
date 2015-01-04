@@ -224,12 +224,14 @@ var RenderedArticle = require('./templates/rendered-article');
 
 var Partial = require("./partial");
 var url = require("./../common/url");
+var Arrows = require('./utils/score-arrow');
 
 var base = ".partial.change ";
 
 var ChangeGui = (function (_super) {
     __extends(ChangeGui, _super);
     function ChangeGui() {
+        var _this = this;
         _super.call(this, '.change.partial');
         this.title = this.propertize(base + '.title', 'html');
         this.description = this.propertize(base + '.description', 'html');
@@ -244,6 +246,7 @@ var ChangeGui = (function (_super) {
         this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(function () {
+            _self.changeScore = new Arrows.ChangeScore(_this.article, _this.change);
             changeCb.done(function (res) {
                 var change = res.result;
                 _self.description.val = change.description;
@@ -255,7 +258,6 @@ var ChangeGui = (function (_super) {
                 if (change.state == 'close')
                     state = 'octicon-issue-closed';
                 _self.state.jq.addClass(state);
-                debugger;
             });
             articleCb.done(function (res) {
                 var article = res.result;
@@ -270,7 +272,6 @@ var ChangeGui = (function (_super) {
     ChangeGui.prototype.setCrumb = function () {
     };
     ChangeGui.prototype.parseURL = function () {
-        debugger;
         var re = url.change.get('(\\d+)', '(\\d+)');
         var regex = new RegExp(re);
         var matches = regex.exec(location.pathname);
@@ -287,7 +288,7 @@ if (subGuiName == 'ChangeGui') {
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map
 
-},{"./../common/url":23,"./client-ajax":6,"./partial":14,"./templates/rendered-article":20}],6:[function(require,module,exports){
+},{"./../common/url":23,"./client-ajax":6,"./partial":14,"./templates/rendered-article":20,"./utils/score-arrow":21}],6:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
@@ -426,6 +427,18 @@ var dependencies = exports.dependencies;
         return exports.buildIAjax(new _getScoreByUser.Ajax(), params);
     }
     changes.getScoreByUser = getScoreByUser;
+
+    var _upVote = baseAjax.changes.upVote;
+    function upVote(params) {
+        return exports.buildIAjax(new _upVote.Ajax(), params);
+    }
+    changes.upVote = upVote;
+
+    var _removeUpVote = baseAjax.changes.removeUpVote;
+    function removeUpVote(params) {
+        return exports.buildIAjax(new _removeUpVote.Ajax(), params);
+    }
+    changes.removeUpVote = removeUpVote;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 
@@ -467,7 +480,6 @@ var CreateArticleGui = (function (_super) {
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             $("#create").click(function () {
-                debugger;
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.article;
                 console.log(article);
@@ -1340,8 +1352,8 @@ var UpScore = (function () {
         });
         _self.updateScore();
         $(document).ready(function () {
-            _self.fetchScoreByUser().done(function (score) {
-                if (score == 1)
+            _self.fetchScoreByUser().done(function (isUpScore) {
+                if (isUpScore)
                     _self.upScore.turnOn();
             });
         });
@@ -1521,7 +1533,7 @@ var ChangeScore = (function (_super) {
     ChangeScore.prototype.fetchScore = function () {
         return ajax.changes.getScore({
             article: { id: this.article.id },
-            score: { id: this.change.id }
+            change: { id: this.change.id }
         }).then(function (res) {
             return res.result.change.score;
         });
@@ -1529,16 +1541,20 @@ var ChangeScore = (function (_super) {
     ChangeScore.prototype.fetchScoreByUser = function () {
         return ajax.changes.getScoreByUser({
             article: { id: this.article.id },
-            score: { id: this.change.id }
+            change: { id: this.change.id }
         }).then(function (res) {
-            return res.result.change.score;
+            return res.result;
         });
     };
     ChangeScore.prototype.upVote = function () {
-        return this._abstract();
+        return ajax.changes.upVote({
+            article: this.article, change: this.change
+        });
     };
     ChangeScore.prototype.removeUpVote = function () {
-        return this._abstract();
+        return ajax.changes.removeUpVote({
+            article: this.article, change: this.change
+        });
     };
     return ChangeScore;
 })(UpScore);
@@ -1870,6 +1886,38 @@ var dependencies = exports.dependencies;
         getScoreByUser.Ajax = Ajax;
     })(changes.getScoreByUser || (changes.getScoreByUser = {}));
     var getScoreByUser = changes.getScoreByUser;
+
+    (function (upVote) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/upvotechange';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        upVote.Ajax = Ajax;
+    })(changes.upVote || (changes.upVote = {}));
+    var upVote = changes.upVote;
+
+    (function (removeUpVote) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/removechangeupvote';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        removeUpVote.Ajax = Ajax;
+    })(changes.removeUpVote || (changes.removeUpVote = {}));
+    var removeUpVote = changes.removeUpVote;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

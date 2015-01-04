@@ -19,7 +19,6 @@ module bcrypt {
         return promisify<string>(bcryptjs.genSalt.bind(bcryptjs, size))
     }
     export function hash(s: string, salt: string): Promise<string> {
-        debugger;
         return promisify<string>(bcryptjs.hash.bind(bcryptjs, s, salt));
     }
     export function compare(key: string, hash: string): Promise<Boolean> {

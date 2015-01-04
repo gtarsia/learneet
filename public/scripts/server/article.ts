@@ -53,7 +53,6 @@ export function create(args: create.Params) : Promise<create.Return> {
 }
 
 export function update(args: update.Params) : Promise<update.Return> {
-    debugger;
 	var oldTitle;
 	var article = args.article;
 	if (!article.title && !article.content) {
@@ -61,7 +60,6 @@ export function update(args: update.Params) : Promise<update.Return> {
 	}
 	return get(args)
 	.then((res) => {
-    	debugger;
 		if (!res.ok) {
 			return notOkObj('Can\'t upload article, because we couldn\'t find it');
 		}
@@ -114,7 +112,6 @@ export function getAll() : Promise<getAll.Return> {
 	return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', 'articles:*->id',
 	    'GET', 'articles:*->title', 'GET', 'articles:*->content')
 	.then<getAll.Return>((result: any) => {
-		debugger;
 		var ok = result != null;
 		var why = (result == null ? 'Couldn\'t get articles' : '');
 		var r : getAll.Return = {
@@ -170,7 +167,6 @@ export module TitleSearch {
 			return promise();
 		})
 		.then((result: any[]) => {
-			debugger;
 			var length = result.length;
 			var articles: TitleWithId[] = [];
 			for(var i = 0; i < length; i++) {

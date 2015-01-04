@@ -92,8 +92,8 @@ export class UpScore {
         _self.updateScore();
         $(document).ready(() => {
             _self.fetchScoreByUser()
-            .done(score => {
-                if (score == 1) _self.upScore.turnOn();
+            .done(isUpScore => {
+                if (isUpScore) _self.upScore.turnOn();
                 //else if (article.score == -1) _self.downScore.turnOn();
             });
         });
@@ -219,7 +219,7 @@ export class ChangeScore extends UpScore {
     fetchScore(): any {
         return ajax.changes.getScore({
             article: {id: this.article.id},
-            score: {id: this.change.id}
+            change: {id: this.change.id}
         })
         .then(res => {
             return res.result.change.score
@@ -228,16 +228,20 @@ export class ChangeScore extends UpScore {
     fetchScoreByUser(): any { 
         return ajax.changes.getScoreByUser({
             article: {id: this.article.id},
-            score: {id: this.change.id}
+            change: {id: this.change.id}
         })
         .then(res => {
-            return res.result.change.score
+            return res.result
         });
     }
     upVote() : any { 
-        return this._abstract() 
+        return ajax.changes.upVote({
+            article: this.article, change: this.change
+        })
     }
     removeUpVote() : any { 
-        return this._abstract() 
+        return ajax.changes.removeUpVote({
+            article: this.article, change: this.change
+        })
     }
 }

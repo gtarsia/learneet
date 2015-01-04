@@ -136,6 +136,18 @@ var dependencies = exports.dependencies;
         return exports.buildIAjax(new _getScoreByUser.Ajax(), params);
     }
     changes.getScoreByUser = getScoreByUser;
+
+    var _upVote = baseAjax.changes.upVote;
+    function upVote(params) {
+        return exports.buildIAjax(new _upVote.Ajax(), params);
+    }
+    changes.upVote = upVote;
+
+    var _removeUpVote = baseAjax.changes.removeUpVote;
+    function removeUpVote(params) {
+        return exports.buildIAjax(new _removeUpVote.Ajax(), params);
+    }
+    changes.removeUpVote = removeUpVote;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 

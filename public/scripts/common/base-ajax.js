@@ -322,6 +322,38 @@ var dependencies = exports.dependencies;
         getScoreByUser.Ajax = Ajax;
     })(changes.getScoreByUser || (changes.getScoreByUser = {}));
     var getScoreByUser = changes.getScoreByUser;
+
+    (function (upVote) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/upvotechange';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        upVote.Ajax = Ajax;
+    })(changes.upVote || (changes.upVote = {}));
+    var upVote = changes.upVote;
+
+    (function (removeUpVote) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/removechangeupvote';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        removeUpVote.Ajax = Ajax;
+    })(changes.removeUpVote || (changes.removeUpVote = {}));
+    var removeUpVote = changes.removeUpVote;
 })(exports.changes || (exports.changes = {}));
 var changes = exports.changes;
 
