@@ -187,6 +187,7 @@ export module changes {
         changes: string;
         date: string;
         author: string;
+        score: string;
     }
     export module getAll {
         export class Ajax implements IAjax{

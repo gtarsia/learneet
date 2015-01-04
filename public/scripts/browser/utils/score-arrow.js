@@ -36,23 +36,23 @@ var ScoreArrow = (function (_super) {
 })(Gui);
 exports.ScoreArrow = ScoreArrow;
 
-var UpScore = (function (_super) {
-    __extends(UpScore, _super);
-    function UpScore() {
+var UpScoreArrow = (function (_super) {
+    __extends(UpScoreArrow, _super);
+    function UpScoreArrow() {
         _super.call(this, '.up-score', '#up-score-off', '#up-score-on');
     }
-    return UpScore;
+    return UpScoreArrow;
 })(ScoreArrow);
-exports.UpScore = UpScore;
+exports.UpScoreArrow = UpScoreArrow;
 
-var DownScore = (function (_super) {
-    __extends(DownScore, _super);
-    function DownScore() {
+var DownScoreArrow = (function (_super) {
+    __extends(DownScoreArrow, _super);
+    function DownScoreArrow() {
         _super.call(this, '.down-score', '#down-score-off', '#down-score-on');
     }
-    return DownScore;
+    return DownScoreArrow;
 })(ScoreArrow);
-exports.DownScore = DownScore;
+exports.DownScoreArrow = DownScoreArrow;
 
 var Score = (function (_super) {
     __extends(Score, _super);
@@ -67,20 +67,67 @@ var Score = (function (_super) {
 })(Gui);
 exports.Score = Score;
 
-var ArticleScore = (function () {
-    function ArticleScore(article) {
+var UpScore = (function () {
+    function UpScore(article) {
         var _self = this;
         this.article = article;
-        this.upScore = new UpScore();
-        this.downScore = new DownScore();
+        this.upScore = new UpScoreArrow();
         this.score = new Score();
         this.upScore.bothImages.jq.click(function () {
             _self.upScoreClick();
         });
+        _self.updateScore();
+        $(document).ready(function () {
+            ajax.score.getByUser({
+                article: { id: _self.article.id },
+                user: { id: '1' }
+            }).done(function (res) {
+                var article = res.result.article;
+                if (article.score == 1)
+                    _self.upScore.turnOn();
+            });
+        });
+    }
+    UpScore.prototype.fetchScore = function () {
+        throw new Error('Abstract method');
+    };
+    UpScore.prototype.updateScore = function () {
+        var _this = this;
+        this.fetchScore().done(function (res) {
+            _this.score.set(res.result);
+        });
+    };
+    UpScore.prototype.upScoreClick = function () {
+        var _this = this;
+        if (this.upScore.isTurnedOn) {
+            this.upScore.turnOff();
+        } else {
+            this.upScore.turnOn();
+        }
+        var p;
+        if (this.upScore.isTurnedOn)
+            p = ajax.score.upVote({ article: this.article });
+        else
+            p = ajax.score.removeUpVote({ article: this.article });
+        p.done(function () {
+            _this.updateScore();
+        });
+    };
+    return UpScore;
+})();
+exports.UpScore = UpScore;
+
+var ArticleScore = (function (_super) {
+    __extends(ArticleScore, _super);
+    function ArticleScore(article) {
+        _super.call(this, article);
+        this.upScore.bothImages.jq.unbind('click');
+        var _self = this;
+        this.article = article;
+        this.downScore = new DownScoreArrow();
         this.downScore.bothImages.jq.click(function () {
             _self.downScoreClick();
         });
-        _self.fetchScore();
         $(document).ready(function () {
             ajax.score.getByUser({
                 article: { id: _self.article.id },
@@ -95,11 +142,8 @@ var ArticleScore = (function () {
         });
     }
     ArticleScore.prototype.fetchScore = function () {
-        var _this = this;
-        ajax.score.get({
+        return ajax.score.get({
             article: { id: this.article.id }
-        }).done(function (res) {
-            _this.score.set(res.result);
         });
     };
     ArticleScore.prototype.upScoreClick = function () {
@@ -137,6 +181,15 @@ var ArticleScore = (function () {
         });
     };
     return ArticleScore;
-})();
+})(UpScore);
 exports.ArticleScore = ArticleScore;
+
+var ChangeScore = (function (_super) {
+    __extends(ChangeScore, _super);
+    function ChangeScore() {
+        _super.apply(this, arguments);
+    }
+    return ChangeScore;
+})(UpScore);
+exports.ChangeScore = ChangeScore;
 //# sourceMappingURL=score-arrow.js.map

@@ -1,19 +1,16 @@
+import Gui = require('./../gui')
 
-class RenderedArticle {
+declare function marked(s);
+
+class RenderedArticle extends Gui {
     content;
     title;
-    constructor() {
+    constructor(parent?) {
+        super();
         var _self = this;
-        this.content = { 
-            get jq() { return $("div.article-content"); },
-            get val() { return _self.content.jq.html(); },
-            set val(val) { _self.content.jq.html(val); }
-        };
-        this.title = {
-            get jq() { return $("h1.article-title"); },
-            get val() { return _self.title.jq.html(); },
-            set val(val) { _self.title.jq.html(val); } 
-        }
+        if (!parent) parent = '';
+        this.content = this.propertize(parent + ' div.article-content', 'html');
+        this.title = this.propertize(parent + ' h1.article-title', 'html')
     }
     scroll(line: number) {
         var outputLine = $(".line" + line);
@@ -24,6 +21,12 @@ class RenderedArticle {
                 (this.content.jq.scrollTop() - this.content.jq.offset().top)
                 + outputLine.offset().top - this.content.jq.height()/2);
         }
+    }
+    setTitle(title) {
+        this.title.val = title
+    }
+    setContent(content) {
+        this.content.val = marked(content);
     }
 }
  

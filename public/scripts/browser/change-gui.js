@@ -6,21 +6,47 @@ var __extends = this.__extends || function (d, b) {
 };
 var ajax = require("./client-ajax");
 
+var RenderedArticle = require('./templates/rendered-article');
+
 var Partial = require("./partial");
 var url = require("./../common/url");
+
+var base = ".partial.change ";
 
 var ChangeGui = (function (_super) {
     __extends(ChangeGui, _super);
     function ChangeGui() {
         _super.call(this, '.change.partial');
+        this.title = this.propertize(base + '.title', 'html');
+        this.description = this.propertize(base + '.description', 'html');
+        this.state = this.propertize(base + '.state.octicon');
+        this.date = this.propertize(base + '.date', 'html');
+        this.acceptBtn = this.propertize(base + 'button.accept');
         this.article = { id: "-1" };
         this.change = { id: "-1" };
         this.parseURL();
-        var cb = ajax.changes.get({ article: this.article, change: this.change });
+        var changeCb = ajax.changes.get({ article: this.article, change: this.change });
+        var articleCb = ajax.article.get({ article: this.article });
+        this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(function () {
-            cb.done(function (res) {
+            changeCb.done(function (res) {
+                var change = res.result;
+                _self.description.val = change.description;
+
+                _self.date.val = change.date;
+                var state = '';
+                if (change.state == 'open')
+                    state = 'octicon-issue-opened';
+                if (change.state == 'close')
+                    state = 'octicon-issue-closed';
+                _self.state.jq.addClass(state);
                 debugger;
+            });
+            articleCb.done(function (res) {
+                var article = res.result;
+                _self.renderedArticle.setContent(article.content);
+                _self.renderedArticle.setTitle(article.title);
             });
         });
     }

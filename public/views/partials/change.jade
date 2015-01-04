@@ -1,7 +1,15 @@
 .partial.change(style='display:none')
-  .title
-  .description
-  .octicon.left
-  .score
-  .date
-  button.accept
+  .main-left
+    include ../templates/up-score
+  .main-center
+    .crumb
+      a#article-crumb Article 
+      | > 
+      a#change-crumb Change
+    .title
+    .description
+    .state.octicon.left
+    .score
+    .date
+    button.accept Accept change
+    include ../templates/rendered-article
