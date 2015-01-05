@@ -66,14 +66,17 @@ export function getAll(args: getAll.Params) : Promise<getAll.Return> {
 }
 
 export function get(args: get.Params) : Promise<get.Return> {
+    var change;
     return db.hgetall(keys.change(args))
-    .then<get.Return>(result => {
-        var ok = result != null;
-        var why = (result == null ? 'Couldn\'t get the change': '');
-        var r : get.Return = {
-            ok: ok, why: why, result: result
-        }
-        return r;
+    .then(_change => {
+        change = _change;
+        return dbArticle.get(args)
+    })
+    .then<get.Return>(res => {
+        if (change == null || !res.ok)
+            return notOkObj('Couldn\'t get the change or the article');
+        else
+            return okObj({article: res.result, change: change});
     });
 }
 

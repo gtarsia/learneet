@@ -28,13 +28,13 @@ var ChangeGui = (function (_super) {
         this.change = { id: "-1" };
         this.parseURL();
         var changeCb = ajax.changes.get({ article: this.article, change: this.change });
-        var articleCb = ajax.article.get({ article: this.article });
         this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(function () {
             _self.changeScore = new Arrows.ChangeScore(_this.article, _this.change);
             changeCb.done(function (res) {
-                var change = res.result;
+                var change = res.result.change;
+                var article = res.result.article;
                 _self.description.val = change.description;
 
                 _self.date.val = change.date;
@@ -44,10 +44,16 @@ var ChangeGui = (function (_super) {
                 if (change.state == 'close')
                     state = 'octicon-issue-closed';
                 _self.state.jq.addClass(state);
-            });
-            articleCb.done(function (res) {
-                var article = res.result;
-                _self.renderedArticle.setContent(article.content);
+
+                var changed = JsDiff.applyPatch(article.content, change.changes);
+                var diff = JsDiff.diffChars(article.content, changed);
+
+                var diffed = '';
+                diff.forEach(function (part) {
+                    var cls = part.added ? 'diff added' : part.removed ? 'diff removed' : null;
+                    diffed += cls ? "<span class='" + cls + "'>" + part.value + '</span>' : part.value;
+                });
+                _self.renderedArticle.setContent(diffed);
                 _self.renderedArticle.setTitle(article.title);
             });
         });

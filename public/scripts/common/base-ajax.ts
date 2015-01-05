@@ -206,7 +206,7 @@ export module changes {
             type(): string { return AjaxType.GET }
         }
         export interface Params { article: Id; change: Id; }
-        export interface Return extends JsonReturn<ChangeFields> {}
+        export interface Return extends JsonReturn<{change: ChangeFields; article: Fields}> {}
     }
 
     export module getScore {

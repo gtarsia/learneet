@@ -1,6 +1,8 @@
 var db = require('./db');
 var keys = require('./redis-keys');
 
+var dbArticle = require('./article');
+
 function notOkObj(reason) {
     return {
         ok: false,
@@ -53,13 +55,15 @@ function getAll(args) {
 exports.getAll = getAll;
 
 function get(args) {
-    return db.hgetall(keys.change(args)).then(function (result) {
-        var ok = result != null;
-        var why = (result == null ? 'Couldn\'t get the change' : '');
-        var r = {
-            ok: ok, why: why, result: result
-        };
-        return r;
+    var change;
+    return db.hgetall(keys.change(args)).then(function (_change) {
+        change = _change;
+        return dbArticle.get(args);
+    }).then(function (res) {
+        if (change == null || !res.ok)
+            return exports.notOkObj('Couldn\'t get the change or the article');
+        else
+            return exports.okObj({ article: res.result, change: change });
     });
 }
 exports.get = get;

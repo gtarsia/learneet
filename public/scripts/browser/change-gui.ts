@@ -9,6 +9,7 @@ import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 
 declare function marked(s);
+declare var JsDiff: any;
 
 declare var gui: BaseArticleGui;
 var base = ".partial.change ";
@@ -40,13 +41,13 @@ class ChangeGui extends Partial {
         super('.change.partial');
         this.parseURL();
         var changeCb = ajax.changes.get({article: this.article, change: this.change})
-        var articleCb = ajax.article.get({article: this.article});
         this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(() => {
             _self.changeScore = new Arrows.ChangeScore(this.article, this.change);
             changeCb.done(res => {
-                var change = res.result;
+                var change = res.result.change;
+                var article = res.result.article;
                 _self.description.val = change.description;
                 //_self.score.val = change.score;
                 _self.date.val = change.date;
@@ -54,10 +55,20 @@ class ChangeGui extends Partial {
                 if (change.state == 'open') state = 'octicon-issue-opened'
                 if (change.state == 'close') state = 'octicon-issue-closed'
                 _self.state.jq.addClass(state);
-            })
-            articleCb.done(res => {
-                var article = res.result;
-                _self.renderedArticle.setContent(article.content);
+
+                var changed = JsDiff.applyPatch(article.content, change.changes)
+                var diff = JsDiff.diffChars(article.content, changed);
+                
+                var diffed = '';
+                diff.forEach(function(part){
+                  // green for additions, red for deletions
+                  // grey for common parts
+                    var cls = part.added ? 'diff added' :
+                    part.removed ? 'diff removed' : null;
+                    diffed += cls ? "<span class='" + cls + "'>" + part.value + '</span>' 
+                        : part.value;
+                });
+                _self.renderedArticle.setContent(diffed);
                 _self.renderedArticle.setTitle(article.title);
             })
         });
