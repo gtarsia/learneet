@@ -18,36 +18,32 @@ var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
         _super.call(this, '.article.partial');
-        this.id = "-1";
+        this.article = { id: null, rendered: null };
         this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
-        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
+        this.parseURL();
         var _self = this;
         $(document).ready(function () {
-            if (args.id)
-                _self.id = args.id;
-            else
-                _self.id = _self.articleHiddenId.val;
-            _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.id });
+            _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
             _self.setCrumb();
-            _self.article = new RenderedArticle();
-            _self.articleScore = new Arrows.ArticleScore({ id: _self.id });
-            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
+            _self.article.rendered = new RenderedArticle();
+            _self.articleScore = new Arrows.ArticleScore(_self.article);
+            ajax.article.get({ article: { id: _self.article.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result;
-                _self.article.title.val = result.title;
-                _self.article.content.val = marked(result.content);
+                _self.article.rendered.title.val = result.title;
+                _self.article.rendered.content.val = marked(result.content);
             });
-            _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
+            _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             return;
             ajax.dependencies.get({
-                article: { id: _self.id }
+                article: _self.article
             }).done(function (res) {
                 var deps = res.result;
                 var length = deps.length;
@@ -67,6 +63,12 @@ var ArticleGui = (function (_super) {
 
     ArticleGui.prototype.setCrumb = function () {
         this.articleCrumb.transitionURL(location.pathname);
+    };
+    ArticleGui.prototype.parseURL = function () {
+        var re = url.article.get('(\\d+)');
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.article.id = matches[1];
     };
     return ArticleGui;
 })(Partial);

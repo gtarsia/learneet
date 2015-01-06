@@ -21,7 +21,10 @@ var Gui = (function () {
                 return selector;
             },
             transitionURL: function (url) {
-                this.jq.attr('href', url);
+                if (url)
+                    this.jq.prop('href', url);
+                else
+                    url = this.jq.prop('href');
                 this.jq.click(function (e) {
                     gui.viewTransition(url);
                     e.preventDefault();

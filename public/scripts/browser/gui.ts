@@ -22,7 +22,8 @@ class Gui {
             get jq() { return $(selector); },
             get selector() { return selector; },
             transitionURL: function(url: string) { 
-                this.jq.attr('href', url);
+                if (url) this.jq.prop('href', url);
+                else url = this.jq.prop('href');
                 this.jq.click(e => {
                     gui.viewTransition(url);    
                     e.preventDefault();

@@ -79,36 +79,32 @@ var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
         _super.call(this, '.article.partial');
-        this.id = "-1";
+        this.article = { id: null, rendered: null };
         this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
-        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
+        this.parseURL();
         var _self = this;
         $(document).ready(function () {
-            if (args.id)
-                _self.id = args.id;
-            else
-                _self.id = _self.articleHiddenId.val;
-            _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.id });
+            _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
             _self.setCrumb();
-            _self.article = new RenderedArticle();
-            _self.articleScore = new Arrows.ArticleScore({ id: _self.id });
-            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
+            _self.article.rendered = new RenderedArticle();
+            _self.articleScore = new Arrows.ArticleScore(_self.article);
+            ajax.article.get({ article: { id: _self.article.id } }).done(function (res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result;
-                _self.article.title.val = result.title;
-                _self.article.content.val = marked(result.content);
+                _self.article.rendered.title.val = result.title;
+                _self.article.rendered.content.val = marked(result.content);
             });
-            _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
+            _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             return;
             ajax.dependencies.get({
-                article: { id: _self.id }
+                article: _self.article
             }).done(function (res) {
                 var deps = res.result;
                 var length = deps.length;
@@ -128,6 +124,12 @@ var ArticleGui = (function (_super) {
 
     ArticleGui.prototype.setCrumb = function () {
         this.articleCrumb.transitionURL(location.pathname);
+    };
+    ArticleGui.prototype.parseURL = function () {
+        var re = url.article.get('(\\d+)');
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.article.id = matches[1];
     };
     return ArticleGui;
 })(Partial);
@@ -151,6 +153,7 @@ var Gui = require("./gui");
 
 var ArticleGui = require("./article-gui");
 var EditArticleGui = require("./edit-article-gui");
+var ChangeGui = require("./change-gui");
 
 var BaseArticleGui = (function (_super) {
     __extends(BaseArticleGui, _super);
@@ -164,6 +167,7 @@ var BaseArticleGui = (function (_super) {
         $.get(url.article.partials()).done(function (res) {
             $(document).ready(function () {
                 $("#main").append(res);
+
                 subGui.main.jq[1].remove();
             });
         });
@@ -183,16 +187,22 @@ var BaseArticleGui = (function (_super) {
                 gui: function () {
                     return new ArticleGui({});
                 },
-                sel: '.article-partial' },
+                sel: '.article.partial' },
             {
                 re: url.article.edit('\\d+'),
                 gui: function () {
                     return new EditArticleGui({});
                 },
-                sel: '.edit-article-partial' }
+                sel: '.edit-article-partial' },
+            {
+                re: url.change.get('\\d+', '\\d+'),
+                gui: function () {
+                    return new ChangeGui();
+                },
+                sel: '.change.partial' }
         ];
         partials.forEach(function (partial) {
-            var match = location.pathname.match(partial.re);
+            var match = location.pathname.match('^' + partial.re + '$');
             if (match) {
                 subGui = partial.gui();
             }
@@ -208,7 +218,7 @@ if (guiName == 'BaseArticleGui') {
 module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":23,"./article-gui":2,"./edit-article-gui":8,"./gui":9}],4:[function(require,module,exports){
+},{"./../common/url":23,"./article-gui":2,"./change-gui":5,"./edit-article-gui":8,"./gui":9}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -232,12 +242,14 @@ var ChangeGui = (function (_super) {
     __extends(ChangeGui, _super);
     function ChangeGui() {
         var _this = this;
-        _super.call(this, '.change.partial');
+        _super.call(this, base);
         this.title = this.propertize(base + '.title', 'html');
         this.description = this.propertize(base + '.description', 'html');
         this.state = this.propertize(base + '.state.octicon');
         this.date = this.propertize(base + '.date', 'html');
         this.acceptBtn = this.propertize(base + 'button.accept');
+        this.articleCrumb = this.propertize(base + '.article-crumb');
+        this.changeCrumb = this.propertize(base + '.change-crumb');
         this.article = { id: "-1" };
         this.change = { id: "-1" };
         this.parseURL();
@@ -245,6 +257,11 @@ var ChangeGui = (function (_super) {
         this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(function () {
+            _self.articleCrumb.transitionURL(url.article.get(_this.article.id));
+            _self.changeCrumb.jq.prop('href', location.pathname);
+            _self.changeCrumb.jq.click(function (e) {
+                location.reload();
+            });
             _self.changeScore = new Arrows.ChangeScore(_this.article, _this.change);
             changeCb.done(function (res) {
                 var change = res.result.change;
@@ -699,7 +716,10 @@ var Gui = (function () {
                 return selector;
             },
             transitionURL: function (url) {
-                this.jq.attr('href', url);
+                if (url)
+                    this.jq.prop('href', url);
+                else
+                    url = this.jq.prop('href');
                 this.jq.click(function (e) {
                     gui.viewTransition(url);
                     e.preventDefault();
@@ -917,6 +937,7 @@ var Partial = (function (_super) {
     __extends(Partial, _super);
     function Partial(partialSel) {
         _super.call(this);
+        this.base = partialSel;
         this.main = this.propertize(partialSel);
         var _self = this;
         $(document).ready(function () {
@@ -1059,6 +1080,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
         this.id = "-1";
         this.changesTemplate = this.propertize("#changes-template", 'html');
         this.changesFrame = this.propertize("#changes-frame");
+        this.changesLink = this.propertize(".change-description a");
         this.id = article.id;
         var _self = this;
         $(document).ready(function () {
@@ -1078,6 +1100,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, { changes: changes });
                 _self.changesFrame.jq.append(rendered);
+                _self.changesLink.transitionURL('');
             });
         });
     }

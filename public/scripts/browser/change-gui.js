@@ -18,12 +18,14 @@ var ChangeGui = (function (_super) {
     __extends(ChangeGui, _super);
     function ChangeGui() {
         var _this = this;
-        _super.call(this, '.change.partial');
+        _super.call(this, base);
         this.title = this.propertize(base + '.title', 'html');
         this.description = this.propertize(base + '.description', 'html');
         this.state = this.propertize(base + '.state.octicon');
         this.date = this.propertize(base + '.date', 'html');
         this.acceptBtn = this.propertize(base + 'button.accept');
+        this.articleCrumb = this.propertize(base + '.article-crumb');
+        this.changeCrumb = this.propertize(base + '.change-crumb');
         this.article = { id: "-1" };
         this.change = { id: "-1" };
         this.parseURL();
@@ -31,6 +33,11 @@ var ChangeGui = (function (_super) {
         this.renderedArticle = new RenderedArticle(base);
         var _self = this;
         $(document).ready(function () {
+            _self.articleCrumb.transitionURL(url.article.get(_this.article.id));
+            _self.changeCrumb.jq.prop('href', location.pathname);
+            _self.changeCrumb.jq.click(function (e) {
+                location.reload();
+            });
             _self.changeScore = new Arrows.ChangeScore(_this.article, _this.change);
             changeCb.done(function (res) {
                 var change = res.result.change;

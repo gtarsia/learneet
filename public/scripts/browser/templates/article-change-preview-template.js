@@ -16,6 +16,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
         this.id = "-1";
         this.changesTemplate = this.propertize("#changes-template", 'html');
         this.changesFrame = this.propertize("#changes-frame");
+        this.changesLink = this.propertize(".change-description a");
         this.id = article.id;
         var _self = this;
         $(document).ready(function () {
@@ -35,6 +36,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, { changes: changes });
                 _self.changesFrame.jq.append(rendered);
+                _self.changesLink.transitionURL('');
             });
         });
     }

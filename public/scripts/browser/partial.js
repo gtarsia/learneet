@@ -10,6 +10,7 @@ var Partial = (function (_super) {
     __extends(Partial, _super);
     function Partial(partialSel) {
         _super.call(this);
+        this.base = partialSel;
         this.main = this.propertize(partialSel);
         var _self = this;
         $(document).ready(function () {

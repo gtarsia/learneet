@@ -9,6 +9,7 @@ var Gui = require("./gui");
 
 var ArticleGui = require("./article-gui");
 var EditArticleGui = require("./edit-article-gui");
+var ChangeGui = require("./change-gui");
 
 var BaseArticleGui = (function (_super) {
     __extends(BaseArticleGui, _super);
@@ -22,6 +23,7 @@ var BaseArticleGui = (function (_super) {
         $.get(url.article.partials()).done(function (res) {
             $(document).ready(function () {
                 $("#main").append(res);
+
                 subGui.main.jq[1].remove();
             });
         });
@@ -41,16 +43,22 @@ var BaseArticleGui = (function (_super) {
                 gui: function () {
                     return new ArticleGui({});
                 },
-                sel: '.article-partial' },
+                sel: '.article.partial' },
             {
                 re: url.article.edit('\\d+'),
                 gui: function () {
                     return new EditArticleGui({});
                 },
-                sel: '.edit-article-partial' }
+                sel: '.edit-article-partial' },
+            {
+                re: url.change.get('\\d+', '\\d+'),
+                gui: function () {
+                    return new ChangeGui();
+                },
+                sel: '.change.partial' }
         ];
         partials.forEach(function (partial) {
-            var match = location.pathname.match(partial.re);
+            var match = location.pathname.match('^' + partial.re + '$');
             if (match) {
                 subGui = partial.gui();
             }

@@ -11,6 +11,7 @@ class ArticleChangePreviewTemplate extends Gui {
     id: string = "-1";
     changesTemplate = this.propertize("#changes-template", 'html');
     changesFrame = this.propertize("#changes-frame");
+    changesLink = this.propertize(".change-description a");
     constructor(article: {id: string}) {
         super();
         this.id = article.id;
@@ -33,6 +34,7 @@ class ArticleChangePreviewTemplate extends Gui {
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, {changes: changes});
                 _self.changesFrame.jq.append(rendered);
+                _self.changesLink.transitionURL('');
             });
         });
     }

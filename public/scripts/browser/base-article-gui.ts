@@ -3,6 +3,7 @@ import Gui = require("./gui");
 import Partial = require("./partial");
 import ArticleGui = require("./article-gui");
 import EditArticleGui = require("./edit-article-gui");
+import ChangeGui = require("./change-gui");
 
 declare var subGui;
 
@@ -18,13 +19,16 @@ class BaseArticleGui extends Gui {
         var partials = [
             {re: url.article.get('\\d+'), 
             gui: function() {return new ArticleGui({})},
-            sel: '.article-partial' }, 
+            sel: '.article.partial' }, 
             {re: url.article.edit('\\d+'), 
             gui: function() { return new EditArticleGui({})},
-            sel: '.edit-article-partial'}
+            sel: '.edit-article-partial'},
+            {re: url.change.get('\\d+', '\\d+'), 
+            gui: function() { return new ChangeGui()},
+            sel: '.change.partial'}
         ];
         partials.forEach(function(partial:any) {
-            var match = location.pathname.match(partial.re);
+            var match = location.pathname.match('^' + partial.re + '$');
             if (match) {
                 subGui = partial.gui();
             }
@@ -41,6 +45,7 @@ class BaseArticleGui extends Gui {
         .done(res => {
             $(document).ready(() => {
                 $("#main").append(res);
+                //Remove the second of the partials so you never get duplicates
                 subGui.main.jq[1].remove();
             });
         });

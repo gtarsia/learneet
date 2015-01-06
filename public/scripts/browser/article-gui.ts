@@ -12,7 +12,7 @@ declare function marked(s);
 declare var gui: BaseArticleGui;
 
 class ArticleGui extends Partial { 
-    id: string = "-1";
+    article: {id: string; rendered: RenderedArticle} = {id: null, rendered: null};
     main: string;
     dependenciesTemplate = this.propertize("#dependencies-template");
     getEditBtn() {
@@ -22,39 +22,42 @@ class ArticleGui extends Partial {
     addProposalBtn = this.propertize("button#addProposal");
     viewProposalsBtn = this.propertize("button#viewProposals");
     articleCrumb = this.propertize("#article-crumb");
-    articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
-    article: RenderedArticle;
     articleChanges: ArticleChangePreviewTemplate;
     articleScore;
     setCrumb() {
         this.articleCrumb.transitionURL(location.pathname)
     }
+    parseURL() {
+        var re = url.article.get('(\\d+)')
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.article.id = matches[1];
+    }
     constructor(args: {id?: string}) {
         super('.article.partial');
+        this.parseURL();
         var _self = this;
         $(document).ready(() => {
-            if (args.id) _self.id = args.id;
-            else _self.id = _self.articleHiddenId.val;
-            _self.articleChanges = new ArticleChangePreviewTemplate({id: _self.id});
+            _self.articleChanges = new ArticleChangePreviewTemplate({id: _self.article.id});
             _self.setCrumb();
-            _self.article = new RenderedArticle();
+            _self.article.rendered = new RenderedArticle();
             _self.articleScore = new Arrows.ArticleScore(
-               {id: _self.id}
+               _self.article
             );
-            ajax.article.get({article: { id: _self.id }})
+            ajax.article.get({article: {id: _self.article.id}})
             .done(function(res) {
                 if (!res.ok) {
                     console.log(res.why);
                     return;
                 }
                 var result = res.result
-                _self.article.title.val = result.title;
-                _self.article.content.val = marked(result.content);
+                _self.article.rendered.title.val = result.title;
+                _self.article.rendered.content.val = marked(result.content);
             });
-            _self.editArticleBtn.transitionURL(url.article.edit(_self.id));
+            _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             return;
             ajax.dependencies.get({
-                article: { id: _self.id }
+                article: _self.article
             })
             .done(function(res) {
                 var deps: any = res.result;
