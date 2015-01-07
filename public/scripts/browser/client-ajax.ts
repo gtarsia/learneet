@@ -1,5 +1,4 @@
-﻿import utils = require('./Utils');
-import baseAjax = require('./../common/base-ajax');
+﻿import baseAjax = require('./../common/base-ajax');
 import AjaxType = baseAjax.AjaxType;
 import IAjax = baseAjax.IAjax;
 

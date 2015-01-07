@@ -8,7 +8,7 @@ var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 
-var Partial = require("./partial");
+var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
 
@@ -78,11 +78,7 @@ var ChangeGui = (function (_super) {
         this.change.id = matches[2];
     };
     return ChangeGui;
-})(Partial);
-
-if (subGuiName == 'ChangeGui') {
-    subGui = new ChangeGui();
-}
+})(SinglePageGui);
 
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map

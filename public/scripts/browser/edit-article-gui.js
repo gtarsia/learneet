@@ -8,7 +8,7 @@ var ajax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
 
 var url = require("./../common/url");
-var Partial = require("./partial");
+var SinglePageGui = require("./single-page-gui");
 var validate = require("./../common/validate");
 var baseAjax = require("./../common/base-ajax");
 
@@ -153,11 +153,7 @@ var EditArticleGui = (function (_super) {
         });
     };
     return EditArticleGui;
-})(Partial);
-
-if (subGuiName == 'EditArticleGui') {
-    subGui = new EditArticleGui({});
-}
+})(SinglePageGui);
 
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map

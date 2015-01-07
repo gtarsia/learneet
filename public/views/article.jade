@@ -1,8 +1,10 @@
-extends base-article
+.partial.article(style='display:none')
+  .main-left
+    include templates/score
 
-prepend scripts
-  script.
-    subGuiName = 'ArticleGui'
-
-block main
-  include partials/article
+  .main-center
+    .crumb
+      a#article-crumb Article
+    include templates/viewable-article
+    a#editArticle(href= edit_url) Edit
+    include templates/article-change-preview-template

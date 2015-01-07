@@ -1,11 +1,8 @@
 import ajax = require("./../client-ajax");
-import BaseArticleGui = require('./../base-article-gui');
 import Gui = require("./../gui");
 import url = require("./../../common/url");
 import Arrows = require('./../utils/score-arrow');
 declare function marked(s);
-
-declare var gui: BaseArticleGui;
 
 class ArticleChangePreviewTemplate extends Gui {
     id: string = "-1";

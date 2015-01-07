@@ -1,17 +1,14 @@
 ﻿import ajax = require("./client-ajax");
 import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
-import BaseArticleGui = require('./base-article-gui');
 import ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
 import Gui = require("./gui");
-import Partial = require("./partial");
+import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 declare function marked(s);
 
-declare var gui: BaseArticleGui;
-
-class ArticleGui extends Partial { 
+class ArticleGui extends SinglePageGui { 
     article: {id: string; rendered: RenderedArticle} = {id: null, rendered: null};
     main: string;
     dependenciesTemplate = this.propertize("#dependencies-template");
@@ -74,12 +71,5 @@ class ArticleGui extends Partial {
         });
     }
 } 
-
-declare var subGuiName;
-declare var subGui;
-
-if (subGuiName == 'ArticleGui') {
-    subGui = new ArticleGui({});
-}
 
 export = ArticleGui;

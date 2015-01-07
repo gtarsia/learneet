@@ -1,10 +1,6 @@
- 
-var ClientAjax = require('./client-ajax');
-import BaseArticleGui = require('./base-article-gui');
-declare var clientAjax;
-clientAjax = ClientAjax; 
-
-declare var gui: BaseArticleGui;
+import clientAjax = require('./client-ajax');
+import SinglePageApp = require('./single-page-app');
+import _propertize = require('./utils/propertize')
 
 class Gui {
     constructor() { 
@@ -18,28 +14,7 @@ class Gui {
     }
     propertize(selector: string, valFnName?: string): 
     {jq: JQuery; val?: string; transitionURL: (url: string) => void} {
-        var obj = {
-            get jq() { return $(selector); },
-            get selector() { return selector; },
-            transitionURL: function(url: string) { 
-                if (url) this.jq.prop('href', url);
-                else url = this.jq.prop('href');
-                this.jq.click(e => {
-                    gui.viewTransition(url);    
-                    e.preventDefault();
-                })
-            }
-        }
-        if (valFnName != '') 
-        Object.defineProperty(obj, "val", {
-            get: function() {
-                return obj.jq[valFnName]();
-            },
-            set: function(val) {
-                obj.jq[valFnName](val);
-            }    
-        }); 
-        return obj;
+        return _propertize(selector, valFnName);
     }
 }
 

@@ -1,10 +1,9 @@
-﻿extends base-article
+.partial.edit-article-partial(style='display:none')
+  .main-left
 
-prepend scripts
-  script.
-    subGuiName = 'EditArticleGui'
-
-block main
-  input#article-id(type="hidden" value= id)
-  input#edit-url(type="hidden" value= edit_url)
-  include partials/edit_article
+  .main-center
+    .crumb
+      a#article-crumb Article 
+      | > 
+      a#edit-article-crumb Edit article 
+    include templates/previewable-article

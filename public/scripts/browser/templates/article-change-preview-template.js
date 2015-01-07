@@ -5,7 +5,6 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var ajax = require("./../client-ajax");
-
 var Gui = require("./../gui");
 var url = require("./../../common/url");
 

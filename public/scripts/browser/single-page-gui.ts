@@ -1,13 +1,12 @@
 import Gui = require('./gui')
 
-class Partial extends Gui {
+class SinglePageGui extends Gui {
     main;
     base;
-
-    constructor(partialSel: string) {
+    constructor(componentSel: string) {
         super();
-        this.base = partialSel;
-        this.main = this.propertize(partialSel);
+        this.base = componentSel;
+        this.main = this.propertize(componentSel);
         var _self = this;
         $(document).ready(() => {
             _self.main.jq.show();
@@ -17,4 +16,4 @@ class Partial extends Gui {
     }
 }
 
-export = Partial;
+export = SinglePageGui

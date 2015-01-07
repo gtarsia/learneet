@@ -7,10 +7,9 @@
 var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
-
 var ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
 
-var Partial = require("./partial");
+var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
 
@@ -71,11 +70,7 @@ var ArticleGui = (function (_super) {
         this.article.id = matches[1];
     };
     return ArticleGui;
-})(Partial);
-
-if (subGuiName == 'ArticleGui') {
-    subGui = new ArticleGui({});
-}
+})(SinglePageGui);
 
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map

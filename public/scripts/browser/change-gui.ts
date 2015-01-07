@@ -1,20 +1,18 @@
 import ajax = require("./client-ajax");
 import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
-import BaseArticleGui = require('./base-article-gui');
 import ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
 import Gui = require("./gui");
-import Partial = require("./partial");
+import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 
 declare function marked(s);
 declare var JsDiff: any;
 
-declare var gui: BaseArticleGui;
 var base = ".partial.change ";
 
-class ChangeGui extends Partial {
+class ChangeGui extends SinglePageGui {
     title = this.propertize(base + '.title', 'html');
     description = this.propertize(base + '.description', 'html');
     state = this.propertize(base + '.state.octicon');
@@ -79,12 +77,5 @@ class ChangeGui extends Partial {
         });
     }
 } 
-
-declare var subGuiName;
-declare var subGui;
-
-if (subGuiName == 'ChangeGui') {
-    subGui = new ChangeGui();
-}
 
 export = ChangeGui;

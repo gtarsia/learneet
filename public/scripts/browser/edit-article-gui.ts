@@ -2,13 +2,13 @@
 import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
-import Partial = require("./partial");
+import SinglePageGui = require("./single-page-gui");
 import validate = require("./../common/validate");
 import baseAjax = require("./../common/base-ajax");
 
 declare function marked(c: string);
 
-class EditArticleGui extends Partial {
+class EditArticleGui extends SinglePageGui {
     id: string = "-1";
     parent;
     contentPreviewExample() {
@@ -151,13 +151,6 @@ class EditArticleGui extends Partial {
             });
         });
     }
-}
-
-declare var subGuiName;
-declare var subGui;
-
-if (subGuiName == 'EditArticleGui') {
-    subGui = new EditArticleGui({});
 }
 
 export = EditArticleGui
