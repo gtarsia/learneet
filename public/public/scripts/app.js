@@ -1131,14 +1131,17 @@ var ajax = require("./../client-ajax");
 var Gui = require("./../gui");
 var url = require("./../../common/url");
 
+var base = '.changes.rectangular-frame ';
+
 var ArticleChangePreviewTemplate = (function (_super) {
     __extends(ArticleChangePreviewTemplate, _super);
     function ArticleChangePreviewTemplate(article) {
         _super.call(this);
         this.id = "-1";
-        this.changesTemplate = this.propertize("#changes-template", 'html');
-        this.changesFrame = this.propertize("#changes-frame");
-        this.changesLink = this.propertize(".change-description a");
+        this.changesTemplate = this.propertize(base + ".template", 'html');
+        this.changesContainer = this.propertize(base + ".list");
+        this.changesLink = this.propertize(base + ".description a");
+        this.changesList = this.propertize(base + ".list");
         this.id = article.id;
         var _self = this;
         $(document).ready(function () {
@@ -1157,7 +1160,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
                 var template = _self.changesTemplate.val;
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, { changes: changes });
-                _self.changesFrame.jq.append(rendered);
+                _self.changesList.jq.html(rendered);
                 _self.changesLink.transitionURL('');
             });
         });

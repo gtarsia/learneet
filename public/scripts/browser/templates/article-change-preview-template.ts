@@ -4,11 +4,14 @@ import url = require("./../../common/url");
 import Arrows = require('./../utils/score-arrow');
 declare function marked(s);
 
+var base = '.changes.rectangular-frame '
+
 class ArticleChangePreviewTemplate extends Gui {
     id: string = "-1";
-    changesTemplate = this.propertize("#changes-template", 'html');
-    changesFrame = this.propertize("#changes-frame");
-    changesLink = this.propertize(".change-description a");
+    changesTemplate = this.propertize(base + ".template", 'html');
+    changesContainer = this.propertize(base + ".list")
+    changesLink = this.propertize(base + ".description a");
+    changesList = this.propertize(base + ".list")
     constructor(article: {id: string}) {
         super();
         this.id = article.id;
@@ -30,7 +33,7 @@ class ArticleChangePreviewTemplate extends Gui {
                 var template = _self.changesTemplate.val;
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, {changes: changes});
-                _self.changesFrame.jq.append(rendered);
+                _self.changesList.jq.html(rendered);
                 _self.changesLink.transitionURL('');
             });
         });
