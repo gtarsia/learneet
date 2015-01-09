@@ -24,6 +24,12 @@ class EditArticleGui extends SinglePageGui {
     query(s: string) {
         
     }
+    parseURL() {
+        var re = url.article.edit('(\\d+)')
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.id = matches[1];
+    }
     removeDependency(jq) {
         var id = $(jq).siblings(this.dependencyIds.jq).val();
         ajax.dependencies.remove({
@@ -71,10 +77,9 @@ class EditArticleGui extends SinglePageGui {
     }
     constructor(args: {id?: string}) {
         super('.edit-article-partial');
+        this.parseURL();
         var _self = this;
         $(document).ready(function() {
-            if (args.id) _self.id = args.id;
-            else _self.id = _self.articleHiddenId.val;
             _self.articleCrumb.transitionURL(url.article.get(_self.id))
             _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();

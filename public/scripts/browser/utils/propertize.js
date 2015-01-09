@@ -1,5 +1,3 @@
-var SinglePageApp = require('./../single-page-app');
-
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -12,9 +10,9 @@ function propertize(selector, valFnName) {
             if (url)
                 this.jq.prop('href', url);
             else
-                url = this.jq.prop('href');
+                url = this.jq[0].pathname;
             this.jq.click(function (e) {
-                SinglePageApp.viewTransition(url);
+                singlePageApp.viewTransition(url);
                 e.preventDefault();
             });
         }

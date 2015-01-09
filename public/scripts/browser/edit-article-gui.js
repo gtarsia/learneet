@@ -33,12 +33,9 @@ var EditArticleGui = (function (_super) {
         this.removeDependencyBtns = this.propertize(".removeDependency");
         this.dependencyIds = this.propertize(".dependencyId");
         this.changesDescription = this.propertize("#changesDescription", "val");
+        this.parseURL();
         var _self = this;
         $(document).ready(function () {
-            if (args.id)
-                _self.id = args.id;
-            else
-                _self.id = _self.articleHiddenId.val;
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
             _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
@@ -117,6 +114,12 @@ var EditArticleGui = (function (_super) {
         $("h1.article-title").html(title);
     };
     EditArticleGui.prototype.query = function (s) {
+    };
+    EditArticleGui.prototype.parseURL = function () {
+        var re = url.article.edit('(\\d+)');
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.id = matches[1];
     };
     EditArticleGui.prototype.removeDependency = function (jq) {
         var _this = this;

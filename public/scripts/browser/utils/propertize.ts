@@ -1,4 +1,5 @@
-import SinglePageApp = require('./../single-page-app');
+
+declare var singlePageApp;
 
 function propertize(selector: string, valFnName?: string): 
     {jq: JQuery; val?: string; transitionURL: (url: string) => void} {
@@ -7,9 +8,11 @@ function propertize(selector: string, valFnName?: string):
         get selector() { return selector; },
         transitionURL: function(url: string) { 
             if (url) this.jq.prop('href', url);
-            else url = this.jq.prop('href');
+            //I get the pathname because otherwise 
+            //I would get the full URL, which doesn't work for REGEX
+            else url = this.jq[0].pathname;
             this.jq.click(e => {
-                SinglePageApp.viewTransition(url);    
+                singlePageApp.viewTransition(url);    
                 e.preventDefault();
             })
         }

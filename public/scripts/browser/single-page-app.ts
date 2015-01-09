@@ -6,7 +6,8 @@ import ArticleGui = require("./article-gui");
 import EditArticleGui = require("./edit-article-gui");
 import ChangeGui = require("./change-gui");
 
-declare var gui : Gui;
+declare var gui : SinglePageGui;
+declare var singlePageApp;
 
 export function findSinglePageGui(urlToGo: string) {
     var partials = [
@@ -33,10 +34,12 @@ export function findSinglePageGui(urlToGo: string) {
 export function viewTransition(urlToGo: string, isBack?: boolean) {
     var before = performance.now();
     $(".partial.active *").unbind();
+    $('.partial.active').removeClass('active');
     console.log(performance.now() - before);
     if (!isBack) history.pushState({}, '', urlToGo);
     $(".partial").hide();
     gui = findSinglePageGui(urlToGo)();
+    gui.main.jq.addClass('active');
 }
 
 export function startSingleApp(gui: SinglePageGui) {
@@ -51,6 +54,8 @@ export function startSingleApp(gui: SinglePageGui) {
 
 var guiFound = findSinglePageGui(location.pathname);
 if (guiFound) startSingleApp(guiFound);
+
+singlePageApp.viewTransition = viewTransition;
 
 /*
 export function findGuiBuilderFromUrl() {

@@ -11,7 +11,7 @@ class SinglePageGui extends Gui {
         $(document).ready(() => {
             _self.main.jq.show();
             _self.main.jq.velocity({opacity: 0}, {duration: 0});
-            _self.main.jq.velocity({opacity: 1}, {duration: 500});
+            _self.main.jq.velocity({opacity: 1}, {duration: 300});
         })
     }
 }

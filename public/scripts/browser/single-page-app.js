@@ -39,11 +39,13 @@ exports.findSinglePageGui = findSinglePageGui;
 function viewTransition(urlToGo, isBack) {
     var before = performance.now();
     $(".partial.active *").unbind();
+    $('.partial.active').removeClass('active');
     console.log(performance.now() - before);
     if (!isBack)
         history.pushState({}, '', urlToGo);
     $(".partial").hide();
     gui = exports.findSinglePageGui(urlToGo)();
+    gui.main.jq.addClass('active');
 }
 exports.viewTransition = viewTransition;
 
@@ -61,4 +63,6 @@ exports.startSingleApp = startSingleApp;
 var guiFound = exports.findSinglePageGui(location.pathname);
 if (guiFound)
     exports.startSingleApp(guiFound);
+
+singlePageApp.viewTransition = exports.viewTransition;
 //# sourceMappingURL=single-page-app.js.map

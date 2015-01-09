@@ -554,12 +554,9 @@ var EditArticleGui = (function (_super) {
         this.removeDependencyBtns = this.propertize(".removeDependency");
         this.dependencyIds = this.propertize(".dependencyId");
         this.changesDescription = this.propertize("#changesDescription", "val");
+        this.parseURL();
         var _self = this;
         $(document).ready(function () {
-            if (args.id)
-                _self.id = args.id;
-            else
-                _self.id = _self.articleHiddenId.val;
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
             _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
@@ -638,6 +635,12 @@ var EditArticleGui = (function (_super) {
         $("h1.article-title").html(title);
     };
     EditArticleGui.prototype.query = function (s) {
+    };
+    EditArticleGui.prototype.parseURL = function () {
+        var re = url.article.edit('(\\d+)');
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.id = matches[1];
     };
     EditArticleGui.prototype.removeDependency = function (jq) {
         var _this = this;
@@ -1061,11 +1064,13 @@ exports.findSinglePageGui = findSinglePageGui;
 function viewTransition(urlToGo, isBack) {
     var before = performance.now();
     $(".partial.active *").unbind();
+    $('.partial.active').removeClass('active');
     console.log(performance.now() - before);
     if (!isBack)
         history.pushState({}, '', urlToGo);
     $(".partial").hide();
     gui = exports.findSinglePageGui(urlToGo)();
+    gui.main.jq.addClass('active');
 }
 exports.viewTransition = viewTransition;
 
@@ -1083,6 +1088,8 @@ exports.startSingleApp = startSingleApp;
 var guiFound = exports.findSinglePageGui(location.pathname);
 if (guiFound)
     exports.startSingleApp(guiFound);
+
+singlePageApp.viewTransition = exports.viewTransition;
 //# sourceMappingURL=single-page-app.js.map
 
 },{"./../common/url":26,"./article-gui":2,"./change-gui":5,"./edit-article-gui":8}],18:[function(require,module,exports){
@@ -1104,7 +1111,7 @@ var SinglePageGui = (function (_super) {
         $(document).ready(function () {
             _self.main.jq.show();
             _self.main.jq.velocity({ opacity: 0 }, { duration: 0 });
-            _self.main.jq.velocity({ opacity: 1 }, { duration: 500 });
+            _self.main.jq.velocity({ opacity: 1 }, { duration: 300 });
         });
     }
     return SinglePageGui;
@@ -1353,8 +1360,6 @@ module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
 },{"./../gui":9}],23:[function(require,module,exports){
-var SinglePageApp = require('./../single-page-app');
-
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -1367,9 +1372,9 @@ function propertize(selector, valFnName) {
             if (url)
                 this.jq.prop('href', url);
             else
-                url = this.jq.prop('href');
+                url = this.jq[0].pathname;
             this.jq.click(function (e) {
-                SinglePageApp.viewTransition(url);
+                singlePageApp.viewTransition(url);
                 e.preventDefault();
             });
         }
@@ -1389,7 +1394,7 @@ function propertize(selector, valFnName) {
 module.exports = propertize;
 //# sourceMappingURL=propertize.js.map
 
-},{"./../single-page-app":17}],24:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
