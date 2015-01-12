@@ -12,6 +12,7 @@ function getServerAjaxList() {
         article.create(),
         article.get(),
         article.getAll(),
+        article.getTitleWithId(),
         article.update(),
         article.query(),
         dependencies.add(),
@@ -85,6 +86,12 @@ exports.restCbAjax = restCbAjax;
         return exports.restCbAjax(new _getAll.Ajax(), dbArticle.getAll);
     }
     article.getAll = getAll;
+
+    var _getTitleWithId = baseAjax.article.getTitleWithId;
+    function getTitleWithId() {
+        return exports.restCbAjax(new _getTitleWithId.Ajax(), dbArticle.getTitleWithId);
+    }
+    article.getTitleWithId = getTitleWithId;
 
     var _update = baseAjax.article.update;
     function update() {

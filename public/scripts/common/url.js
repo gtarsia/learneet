@@ -26,6 +26,14 @@ var url;
         change.get = get;
     })(url.change || (url.change = {}));
     var change = url.change;
+    (function (dependencies) {
+        function get(articleId) {
+            return (articleId == null ? "/articles/:article_id/dependencies" : "/articles/" + articleId + "/dependencies");
+        }
+        dependencies.get = get;
+    })(url.dependencies || (url.dependencies = {}));
+    var dependencies = url.dependencies;
+
     (function (proposals) {
         function add(id) {
             return (id != null ? "/add_proposal/" + id : "/add_proposal/:id");

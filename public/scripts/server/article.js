@@ -90,11 +90,11 @@ function get(args) {
 }
 exports.get = get;
 
-function getTitleAndId(args) {
+function getTitleWithId(args) {
     var article = args.article;
     return db.hmget(keys.article(args), "id", "title");
 }
-exports.getTitleAndId = getTitleAndId;
+exports.getTitleWithId = getTitleWithId;
 
 function getAll() {
     function arrayToArticles(array) {

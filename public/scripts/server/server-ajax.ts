@@ -14,6 +14,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.create(),
         article.get(),
         article.getAll(),
+        article.getTitleWithId(),
         article.update(),
         article.query(),
         dependencies.add(),
@@ -79,6 +80,11 @@ export module article {
     import _getAll = baseAjax.article.getAll;
     export function getAll() {
         return restCbAjax(new _getAll.Ajax(), dbArticle.getAll);
+    }
+
+    import _getTitleWithId = baseAjax.article.getTitleWithId;
+    export function getTitleWithId() {
+        return restCbAjax(new _getTitleWithId.Ajax(), dbArticle.getTitleWithId);
     }
 
     import _update = baseAjax.article.update;

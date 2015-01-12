@@ -38,6 +38,12 @@ exports.buildIAjax = buildIAjax;
     }
     article.getAll = getAll;
 
+    var _getTitleWithId = baseAjax.article.getTitleWithId;
+    function getTitleWithId(params) {
+        return exports.buildIAjax(new _getTitleWithId.Ajax(), params);
+    }
+    article.getTitleWithId = getTitleWithId;
+
     var _update = baseAjax.article.update;
     function update(params) {
         return exports.buildIAjax(new _update.Ajax(), params);

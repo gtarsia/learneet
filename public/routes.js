@@ -18,6 +18,7 @@ function set(app) {
     app.get(url.article.get(), renderCb('single-page-app', ''));
     app.get(url.article.edit(), renderCb('single-page-app', ''));
     app.get(url.change.get(), renderCb('single-page-app', ''));
+    app.get(url.dependencies.get(), renderCb('single-page-app', ''));
     app.get(url.article.create(), renderCb('create_article', 'Create Article'));
     app.get(url.proposals.add(), function (req, res) {
         var id = req.params.id;

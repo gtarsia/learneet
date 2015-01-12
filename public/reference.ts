@@ -7,6 +7,7 @@
 /// <reference path="scripts/browser/change-gui.ts" />
 /// <reference path="scripts/browser/client-ajax.ts" />
 /// <reference path="scripts/browser/create-article-gui.ts" />
+/// <reference path="scripts/browser/dependencies-gui.ts" />
 /// <reference path="scripts/browser/edit-article-gui.ts" />
 /// <reference path="scripts/browser/gui.ts" />
 /// <reference path="scripts/browser/header/logged-header-gui.ts" />

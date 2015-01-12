@@ -91,7 +91,7 @@ export function get(args: get.Params) : Promise<get.Return> {
 	})
 }
 
-export function getTitleAndId(args: getTitleWithId.Params)
+export function getTitleWithId(args: getTitleWithId.Params)
 : Promise<getTitleWithId.Return> {
 	var article = args.article;
 	return db.hmget(keys.article(args), "id", "title")

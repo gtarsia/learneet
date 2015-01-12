@@ -2,6 +2,7 @@ var url = require("./../common/url");
 
 var ArticleGui = require("./article-gui");
 var EditArticleGui = require("./edit-article-gui");
+var DependenciesGui = require("./dependencies-gui");
 var ChangeGui = require("./change-gui");
 
 function findSinglePageGui(urlToGo) {
@@ -23,7 +24,13 @@ function findSinglePageGui(urlToGo) {
             gui: function () {
                 return new ChangeGui();
             },
-            sel: '.change.partial' }
+            sel: '.change.partial' },
+        {
+            re: url.dependencies.get('\\d+'),
+            gui: function () {
+                return new DependenciesGui();
+            },
+            sel: '.dependencies.partial' }
     ];
     var _gui;
     partials.forEach(function (partial) {

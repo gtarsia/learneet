@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":27,"./client-ajax":6,"./gui":9,"./templates/previewable-article":21}],2:[function(require,module,exports){
+},{"./../common/validate":28,"./client-ajax":6,"./gui":10,"./templates/previewable-article":22}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -136,7 +136,7 @@ var ArticleGui = (function (_super) {
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":26,"./client-ajax":6,"./single-page-gui":18,"./templates/article-change-preview-template":19,"./templates/rendered-article":22,"./utils/score-arrow":24}],3:[function(require,module,exports){
+},{"./../common/url":27,"./client-ajax":6,"./single-page-gui":19,"./templates/article-change-preview-template":20,"./templates/rendered-article":23,"./utils/score-arrow":25}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -213,7 +213,7 @@ if (guiName == 'BaseArticleGui') {
 module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":26,"./article-gui":2,"./change-gui":5,"./edit-article-gui":8,"./gui":9}],4:[function(require,module,exports){
+},{"./../common/url":27,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":10}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -302,7 +302,7 @@ var ChangeGui = (function (_super) {
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map
 
-},{"./../common/url":26,"./client-ajax":6,"./single-page-gui":18,"./templates/rendered-article":22,"./utils/score-arrow":24}],6:[function(require,module,exports){
+},{"./../common/url":27,"./client-ajax":6,"./single-page-gui":19,"./templates/rendered-article":23,"./utils/score-arrow":25}],6:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
@@ -342,6 +342,12 @@ exports.buildIAjax = buildIAjax;
         return exports.buildIAjax(new _getAll.Ajax(), params);
     }
     article.getAll = getAll;
+
+    var _getTitleWithId = baseAjax.article.getTitleWithId;
+    function getTitleWithId(params) {
+        return exports.buildIAjax(new _getTitleWithId.Ajax(), params);
+    }
+    article.getTitleWithId = getTitleWithId;
 
     var _update = baseAjax.article.update;
     function update(params) {
@@ -472,7 +478,7 @@ var changes = exports.changes;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":25}],7:[function(require,module,exports){
+},{"./../common/base-ajax":26}],7:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -518,7 +524,43 @@ if (guiName == 'CreateArticleGui') {
 }
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":26,"./client-ajax":6,"./gui":9,"./templates/previewable-article":21}],8:[function(require,module,exports){
+},{"./../common/url":27,"./client-ajax":6,"./gui":10,"./templates/previewable-article":22}],8:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var ajax = require("./client-ajax");
+var url = require("./../common/url");
+var SinglePageGui = require("./single-page-gui");
+
+var DependenciesGui = (function (_super) {
+    __extends(DependenciesGui, _super);
+    function DependenciesGui() {
+        _super.call(this, '.dependencies.partial');
+        this.parseURL();
+        var _self = this;
+        var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
+        $(document).ready(function () {
+            titleCb.done(function (res) {
+                var article = res.result;
+            });
+        });
+    }
+    DependenciesGui.prototype.parseURL = function () {
+        var re = url.dependencies.get('(\\d+)');
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.id = matches[1];
+    };
+    return DependenciesGui;
+})(SinglePageGui);
+
+module.exports = DependenciesGui;
+//# sourceMappingURL=dependencies-gui.js.map
+
+},{"./../common/url":27,"./client-ajax":6,"./single-page-gui":19}],9:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -682,7 +724,7 @@ var EditArticleGui = (function (_super) {
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":25,"./../common/url":26,"./../common/validate":27,"./client-ajax":6,"./single-page-gui":18,"./templates/previewable-article":21}],9:[function(require,module,exports){
+},{"./../common/base-ajax":26,"./../common/url":27,"./../common/validate":28,"./client-ajax":6,"./single-page-gui":19,"./templates/previewable-article":22}],10:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
@@ -704,7 +746,7 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{"./utils/propertize":23}],10:[function(require,module,exports){
+},{"./utils/propertize":24}],11:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -765,7 +807,7 @@ if (guiName == 'IndexGui') {
 }
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":26,"./client-ajax":6,"./gui":9}],11:[function(require,module,exports){
+},{"./../common/url":27,"./client-ajax":6,"./gui":10}],12:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -809,7 +851,7 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":13}],12:[function(require,module,exports){
+},{"./parser":14}],13:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -856,7 +898,7 @@ if (guiName == 'LogInGui') {
 }
 //# sourceMappingURL=login-gui.js.map
 
-},{"./client-ajax":6,"./gui":9}],13:[function(require,module,exports){
+},{"./client-ajax":6,"./gui":10}],14:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -885,7 +927,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -913,7 +955,7 @@ var Partial = (function (_super) {
 module.exports = Partial;
 //# sourceMappingURL=partial.js.map
 
-},{"./gui":9}],15:[function(require,module,exports){
+},{"./gui":10}],16:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -968,7 +1010,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":26,"./client-ajax":6,"./gui":9}],16:[function(require,module,exports){
+},{"./../common/url":27,"./client-ajax":6,"./gui":10}],17:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1022,11 +1064,12 @@ if (guiName == 'RegisterGui') {
 }
 //# sourceMappingURL=register-gui.js.map
 
-},{"./client-ajax":6,"./gui":9}],17:[function(require,module,exports){
+},{"./client-ajax":6,"./gui":10}],18:[function(require,module,exports){
 var url = require("./../common/url");
 
 var ArticleGui = require("./article-gui");
 var EditArticleGui = require("./edit-article-gui");
+var DependenciesGui = require("./dependencies-gui");
 var ChangeGui = require("./change-gui");
 
 function findSinglePageGui(urlToGo) {
@@ -1048,7 +1091,13 @@ function findSinglePageGui(urlToGo) {
             gui: function () {
                 return new ChangeGui();
             },
-            sel: '.change.partial' }
+            sel: '.change.partial' },
+        {
+            re: url.dependencies.get('\\d+'),
+            gui: function () {
+                return new DependenciesGui();
+            },
+            sel: '.dependencies.partial' }
     ];
     var _gui;
     partials.forEach(function (partial) {
@@ -1092,7 +1141,7 @@ if (guiFound)
 singlePageApp.viewTransition = exports.viewTransition;
 //# sourceMappingURL=single-page-app.js.map
 
-},{"./../common/url":26,"./article-gui":2,"./change-gui":5,"./edit-article-gui":8}],18:[function(require,module,exports){
+},{"./../common/url":27,"./article-gui":2,"./change-gui":5,"./dependencies-gui":8,"./edit-article-gui":9}],19:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1120,7 +1169,7 @@ var SinglePageGui = (function (_super) {
 module.exports = SinglePageGui;
 //# sourceMappingURL=single-page-gui.js.map
 
-},{"./gui":9}],19:[function(require,module,exports){
+},{"./gui":10}],20:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1171,7 +1220,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
 module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
-},{"./../../common/url":26,"./../client-ajax":6,"./../gui":9}],20:[function(require,module,exports){
+},{"./../../common/url":27,"./../client-ajax":6,"./../gui":10}],21:[function(require,module,exports){
 var EditableArticle = (function () {
     function EditableArticle() {
         var _self = this;
@@ -1211,7 +1260,7 @@ var EditableArticle = (function () {
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
@@ -1323,7 +1372,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":6,"./editable-article":20,"./rendered-article":22}],22:[function(require,module,exports){
+},{".././client-ajax":6,"./editable-article":21,"./rendered-article":23}],23:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1362,7 +1411,7 @@ var RenderedArticle = (function (_super) {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{"./../gui":9}],23:[function(require,module,exports){
+},{"./../gui":10}],24:[function(require,module,exports){
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -1397,7 +1446,7 @@ function propertize(selector, valFnName) {
 module.exports = propertize;
 //# sourceMappingURL=propertize.js.map
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1686,7 +1735,7 @@ var ChangeScore = (function (_super) {
 exports.ChangeScore = ChangeScore;
 //# sourceMappingURL=score-arrow.js.map
 
-},{"./../client-ajax":6,"./../gui":9}],25:[function(require,module,exports){
+},{"./../client-ajax":6,"./../gui":10}],26:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -2094,7 +2143,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -2123,6 +2172,14 @@ var url;
         change.get = get;
     })(url.change || (url.change = {}));
     var change = url.change;
+    (function (dependencies) {
+        function get(articleId) {
+            return (articleId == null ? "/articles/:article_id/dependencies" : "/articles/" + articleId + "/dependencies");
+        }
+        dependencies.get = get;
+    })(url.dependencies || (url.dependencies = {}));
+    var dependencies = url.dependencies;
+
     (function (proposals) {
         function add(id) {
             return (id != null ? "/add_proposal/" + id : "/add_proposal/:id");
@@ -2145,46 +2202,6 @@ var url;
 
 module.exports = url;
 //# sourceMappingURL=url.js.map
-
-},{}],27:[function(require,module,exports){
-function notOkBase(base) {
-    return function (reason) {
-        return { ok: false, because: base + ' ' + reason };
-    };
-}
-exports.notOkBase = notOkBase;
-
-function ok() {
-    return { ok: true, because: '' };
-}
-exports.ok = ok;
-
-(function (version) {
-    function changesDescription(changesDescription) {
-        var notOk = exports.notOkBase('Changes description should');
-        if (typeof changesDescription != 'string')
-            return notOk('be of type string');
-        if (changesDescription.length <= 15)
-            return notOk('be longer than 15 characters');
-        return exports.ok();
-    }
-    version.changesDescription = changesDescription;
-})(exports.version || (exports.version = {}));
-var version = exports.version;
-
-(function (user) {
-    function isUsernameTaken(username) {
-    }
-    user.isUsernameTaken = isUsernameTaken;
-    function isPasswordSafeEnough(password) {
-    }
-    user.isPasswordSafeEnough = isPasswordSafeEnough;
-    function isEmailTaken() {
-    }
-    user.isEmailTaken = isEmailTaken;
-})(exports.user || (exports.user = {}));
-var user = exports.user;
-//# sourceMappingURL=validate.js.map
 
 },{}],28:[function(require,module,exports){
 function notOkBase(base) {
@@ -2224,6 +2241,46 @@ var version = exports.version;
     user.isEmailTaken = isEmailTaken;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
+//# sourceMappingURL=validate.js.map
+
+},{}],29:[function(require,module,exports){
+function notOkBase(base) {
+    return function (reason) {
+        return { ok: false, because: base + ' ' + reason };
+    };
+}
+exports.notOkBase = notOkBase;
+
+function ok() {
+    return { ok: true, because: '' };
+}
+exports.ok = ok;
+
+(function (version) {
+    function changesDescription(changesDescription) {
+        var notOk = exports.notOkBase('Changes description should');
+        if (typeof changesDescription != 'string')
+            return notOk('be of type string');
+        if (changesDescription.length <= 15)
+            return notOk('be longer than 15 characters');
+        return exports.ok();
+    }
+    version.changesDescription = changesDescription;
+})(exports.version || (exports.version = {}));
+var version = exports.version;
+
+(function (user) {
+    function isUsernameTaken(username) {
+    }
+    user.isUsernameTaken = isUsernameTaken;
+    function isPasswordSafeEnough(password) {
+    }
+    user.isPasswordSafeEnough = isPasswordSafeEnough;
+    function isEmailTaken() {
+    }
+    user.isEmailTaken = isEmailTaken;
+})(exports.user || (exports.user = {}));
+var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,25,26,27,28]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,26,27,28,29]);

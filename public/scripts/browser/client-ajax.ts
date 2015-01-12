@@ -38,6 +38,12 @@ export module article {
         (new _getAll.Ajax(), params);
     }
 
+    import _getTitleWithId = baseAjax.article.getTitleWithId;
+    export function getTitleWithId(params) {
+        return buildIAjax<_getTitleWithId.Params, _getTitleWithId.Return>
+        (new _getTitleWithId.Ajax(), params);
+    }
+
     import _update = baseAjax.article.update;
     export function update(params) {
         return buildIAjax<_update.Params, _update.Return>

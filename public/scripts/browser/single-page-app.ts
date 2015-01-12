@@ -4,6 +4,7 @@ import SinglePageApp = require("./single-page-app");
 import SinglePageGui = require("./single-page-gui");
 import ArticleGui = require("./article-gui");
 import EditArticleGui = require("./edit-article-gui");
+import DependenciesGui = require("./dependencies-gui");
 import ChangeGui = require("./change-gui");
 
 declare var gui : SinglePageGui;
@@ -14,12 +15,18 @@ export function findSinglePageGui(urlToGo: string) {
         {re: url.article.get('\\d+'), 
         gui: function() {return new ArticleGui({})},
         sel: '.article.partial' }, 
+
         {re: url.article.edit('\\d+'), 
         gui: function() { return new EditArticleGui({})},
         sel: '.edit-article-partial'},
+
         {re: url.change.get('\\d+', '\\d+'), 
         gui: function() { return new ChangeGui()},
-        sel: '.change.partial'}
+        sel: '.change.partial'},
+
+        {re: url.dependencies.get('\\d+'),
+        gui: function() {return new DependenciesGui()},
+        sel: '.dependencies.partial'}
     ];
     var _gui;
     partials.forEach(function(partial:any) {

@@ -17,6 +17,14 @@ module url {
                 : "/articles/" + articleId +"/changes/" + changeId);
         }
     }
+    export module dependencies {
+        export function get(articleId?: string) {
+            return (articleId == null
+                ? "/articles/:article_id/dependencies"
+                : "/articles/" + articleId + "/dependencies");
+        }
+    }
+
     export module proposals {
         export function add(id?: string) { 
             return (id != null ? "/add_proposal/" + id : "/add_proposal/:id");
