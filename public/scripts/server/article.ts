@@ -95,6 +95,10 @@ export function getTitleWithId(args: getTitleWithId.Params)
 : Promise<getTitleWithId.Return> {
 	var article = args.article;
 	return db.hmget(keys.article(args), "id", "title")
+	.then(res => {
+		if (res == null) return notOkObj('Couldn\'t get article title');
+		return okObj({id: res[0], title: res[1]})
+	})
 }
 
 export function getAll() : Promise<getAll.Return> {

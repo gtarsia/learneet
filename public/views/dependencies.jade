@@ -5,10 +5,11 @@
       a.article.crumb Back to Article 
     .rectangular-frame 
       h1 Dependencies
-      | title
-      input.star(type='image')
-      | 3
-      input.like(type='image')
-      img.avatar(src="/images/avatar.png")
-      button dep link
-      .title article title
+      ul
+        li
+          span.mega-octicon.octicon-star
+          | 3
+          span.mega-octicon.octicon-arrow-up
+          img.avatar(src="/images/avatar.png")
+          a.deps (deps)
+          span.title article title

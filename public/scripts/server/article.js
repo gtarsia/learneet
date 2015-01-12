@@ -92,7 +92,11 @@ exports.get = get;
 
 function getTitleWithId(args) {
     var article = args.article;
-    return db.hmget(keys.article(args), "id", "title");
+    return db.hmget(keys.article(args), "id", "title").then(function (res) {
+        if (res == null)
+            return exports.notOkObj('Couldn\'t get article title');
+        return exports.okObj({ id: res[0], title: res[1] });
+    });
 }
 exports.getTitleWithId = getTitleWithId;
 

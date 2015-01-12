@@ -539,12 +539,15 @@ var DependenciesGui = (function (_super) {
     __extends(DependenciesGui, _super);
     function DependenciesGui() {
         _super.call(this, '.dependencies.partial');
+        this.articleCrumb = this.propertize('.article.crumb');
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
         $(document).ready(function () {
+            _self.setBreadcrumb();
             titleCb.done(function (res) {
                 var article = res.result;
+                _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
             });
         });
     }
@@ -553,6 +556,9 @@ var DependenciesGui = (function (_super) {
         var regex = new RegExp(re);
         var matches = regex.exec(location.pathname);
         this.id = matches[1];
+    };
+    DependenciesGui.prototype.setBreadcrumb = function () {
+        this.articleCrumb.transitionURL(url.article.get(this.id));
     };
     return DependenciesGui;
 })(SinglePageGui);
