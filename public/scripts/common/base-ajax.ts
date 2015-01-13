@@ -24,6 +24,9 @@ export interface Content {
 export interface Id {
     id: string;
 }
+export interface Score {
+    score: string;
+}
 export interface Desc {
     changesDescription: string;
 }
@@ -148,6 +151,7 @@ export module score {
 }
 
 export module dependencies {
+    export interface TitleIdScore extends TitleWithId, Score {} 
     export module add {
         export class Ajax implements IAjax{
             url(): string { return '/api/adddependency' }
@@ -157,13 +161,13 @@ export module dependencies {
         export interface Return extends JsonReturn<boolean> {}
     }
 
-    export module get {
+    export module getAll {
         export class Ajax implements IAjax{
             url(): string { return '/api/getdependencies' }
             type(): string { return AjaxType.GET }
         }
         export interface Params { article: Id }
-        export interface Return extends JsonReturn<TitleWithId[]> {}
+        export interface Return extends JsonReturn<TitleIdScore[]> {}
     }
 
     export module remove {

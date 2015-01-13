@@ -1964,7 +1964,7 @@ var score = exports.score;
     })(dependencies.add || (dependencies.add = {}));
     var add = dependencies.add;
 
-    (function (get) {
+    (function (getAll) {
         var Ajax = (function () {
             function Ajax() {
             }
@@ -1976,9 +1976,9 @@ var score = exports.score;
             };
             return Ajax;
         })();
-        get.Ajax = Ajax;
-    })(dependencies.get || (dependencies.get = {}));
-    var get = dependencies.get;
+        getAll.Ajax = Ajax;
+    })(dependencies.getAll || (dependencies.getAll = {}));
+    var getAll = dependencies.getAll;
 
     (function (remove) {
         var Ajax = (function () {
