@@ -414,6 +414,12 @@ var score = exports.score;
     }
     dependencies.getAll = getAll;
 
+    var _getCurrentUserScore = baseAjax.dependencies.getCurrentUserScore;
+    function getCurrentUserScore(params) {
+        return exports.buildIAjax(new _getCurrentUserScore.Ajax(), params);
+    }
+    dependencies.getCurrentUserScore = getCurrentUserScore;
+
     var _remove = baseAjax.dependencies.remove;
     function remove(params) {
         return exports.buildIAjax(new _remove.Ajax(), params);
@@ -548,7 +554,7 @@ var DependenciesGui = (function (_super) {
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
-        var dependenciesCb = ajax.dependencies.getAll({ article: { id: _self.id } });
+        var dependenciesCb = ajax.dependencies.getAll({ user: { id: '1' }, article: { id: _self.id } });
         $(document).ready(function () {
             _self.setBreadcrumb();
             _self.dependencies.jq.empty();
@@ -558,10 +564,21 @@ var DependenciesGui = (function (_super) {
             });
             dependenciesCb.done(function (res) {
                 var deps = res.result;
+                var none = 'display: none;';
                 deps.forEach(function (dep) {
                     dep.dependencyId = dep.id;
                     dep.dependencyUrl = url.dependencies.get(dep.id);
                     dep.articleUrl = url.article.get(dep.id);
+                    if (dep.starred == 'true') {
+                        dep.starStyle = '';
+                        dep.emptyStarStyle = none;
+                    } else {
+                        dep.starStyle = none;
+                        dep.emptyStarStyle = '';
+                    }
+
+                    dep.arrowUpStyle = none;
+                    dep.emptyArrowUpStyle = '';
                 });
                 console.log(deps);
                 var template = _self.dependenciesTemplate.val;
@@ -1999,6 +2016,22 @@ var score = exports.score;
         getAll.Ajax = Ajax;
     })(dependencies.getAll || (dependencies.getAll = {}));
     var getAll = dependencies.getAll;
+
+    (function (getCurrentUserScore) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getdependencyscoreofcurrentuser';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getCurrentUserScore.Ajax = Ajax;
+    })(dependencies.getCurrentUserScore || (dependencies.getCurrentUserScore = {}));
+    var getCurrentUserScore = dependencies.getCurrentUserScore;
 
     (function (remove) {
         var Ajax = (function () {

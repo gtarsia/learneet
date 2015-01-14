@@ -236,6 +236,22 @@ var score = exports.score;
     })(dependencies.getAll || (dependencies.getAll = {}));
     var getAll = dependencies.getAll;
 
+    (function (getCurrentUserScore) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getdependencyscoreofcurrentuser';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getCurrentUserScore.Ajax = Ajax;
+    })(dependencies.getCurrentUserScore || (dependencies.getCurrentUserScore = {}));
+    var getCurrentUserScore = dependencies.getCurrentUserScore;
+
     (function (remove) {
         var Ajax = (function () {
             function Ajax() {

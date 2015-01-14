@@ -115,6 +115,12 @@ export module dependencies {
         (new _getAll.Ajax(), params)
     }
 
+    import _getCurrentUserScore = baseAjax.dependencies.getCurrentUserScore;
+    export function getCurrentUserScore(params) {
+        return buildIAjax<_getCurrentUserScore.Params, _getCurrentUserScore.Return>
+        (new _getCurrentUserScore.Ajax(), params)
+    }
+
     import _remove = baseAjax.dependencies.remove;
     export function remove(params) {
         return buildIAjax<_remove.Params, _remove.Return>

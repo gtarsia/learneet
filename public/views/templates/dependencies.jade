@@ -3,9 +3,11 @@ script.template(type="x-tmpl-mustache")
     | {{#dependencies}}
     .dependency.template
       input.dependency-id(type='hidden' val='{{dependencyId}}')
-      span.mega-octicon.octicon-star
+      span.mega-octicon.octicon-star(style='{{starStyle}}')
+      span.mega-octicon.octicon-star.empty(style='{{emptyStarStyle}}')
       | {{score}}
-      span.mega-octicon.octicon-arrow-up
+      span.mega-octicon.octicon-arrow-up(style='{{arrowUpStyle}}')
+      span.mega-octicon.octicon-arrow-up.empty(style='{{emptyArrowUpStyle}}')
       img.avatar(src="/images/avatar.png")
       a.dependencies(href='{{dependencyUrl}}')  (deps)
       a.article(href='{{articleUrl}}')  {{title}}

@@ -60,6 +60,9 @@ export function baseDependencies(args: ArticleWithId) {
 export function dependency(args: {dependent: Id; dependency: Id}) {
     return j([baseDependencies({article: args.dependent}), args.dependency.id]);
 }
+export function dependencyScoreUserSet(args: {dependent: Id; dependency: Id}) {
+    return j([dependency(args), 'UserScoreSet']);
+}
 export function dependenciesIdCounter(args: ArticleWithId) {
     return j([baseDependencies(args), "idCounter"]);
 }

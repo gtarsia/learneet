@@ -4,6 +4,7 @@ import baseDependencies = baseAjax.dependencies;
 import baseAdd = baseDependencies.add;
 import baseGetAll = baseDependencies.getAll;
 import baseRemove = baseDependencies.remove;
+import baseGetCurrentUserScore = baseDependencies.getCurrentUserScore;
 import FieldsWithId = baseAjax.FieldsWithId;
 import TitleWithId = baseAjax.TitleWithId;
 import db = require('./db');
@@ -38,6 +39,7 @@ export function add(args: baseAdd.Params)
 
 export function getAll(args: baseGetAll.Params)
 : Promise<baseGetAll.Return> {
+    var deps : TitleWithId[] = [];
     var article = args.article;
     return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 
         'GET', keys.article({article: {id: '*->id'}}),
@@ -45,16 +47,24 @@ export function getAll(args: baseGetAll.Params)
         'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->score'}}),
         'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->starred'}}))
     .then((array: string[]) => {
-        var articles : TitleWithId[] = [];
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();
             var score = array.shift();
             var starred = array.shift();
-            articles.push({ id: id, title: title, score: score, starred: starred});
+            deps.push({ id: id, title: title, score: score, starred: starred});
         }
-        return okObj<TitleWithId[]>(articles);
+        return okObj<TitleWithId[]>(deps);
     });
+}
+
+export function getCurrentUserScore(args: baseGetCurrentUserScore.Params)
+: Promise<baseGetCurrentUserScore.Return> {
+    return db.sismember(keys.dependencyScoreUserSet(args), args.user.id)
+    .then(isMember => {
+        var found = ((isMember) ? true : false);
+        return okObj({score: found});
+    })
 }
 
 export function remove(args: baseRemove.Params)

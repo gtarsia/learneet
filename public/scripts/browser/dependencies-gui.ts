@@ -11,7 +11,7 @@ class DependenciesGui extends SinglePageGui {
     dependencies = this.propertize(base + '.dependency.list');
     dependenciesTemplate = this.propertize(base + '.template', 'html');
     dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
-    articlesLinks = this.propertize(base + '.dependency a.article')
+    articlesLinks = this.propertize(base + '.dependency a.article');
     parseURL() {
         var re = url.dependencies.get('(\\d+)')
         var regex = new RegExp(re);
@@ -26,7 +26,7 @@ class DependenciesGui extends SinglePageGui {
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({article: {id: _self.id}});
-        var dependenciesCb = ajax.dependencies.getAll({article: {id: _self.id}});
+        var dependenciesCb = ajax.dependencies.getAll({user: {id: '1'}, article: {id: _self.id}});
         $(document).ready(function() {
             _self.setBreadcrumb();
             _self.dependencies.jq.empty();
@@ -36,10 +36,18 @@ class DependenciesGui extends SinglePageGui {
             })
             dependenciesCb.done(res => {
                 var deps: any = res.result;
+                var none = 'display: none;';
                 deps.forEach(dep => {
                     dep.dependencyId = dep.id;
                     dep.dependencyUrl = url.dependencies.get(dep.id);
                     dep.articleUrl = url.article.get(dep.id);
+                    if (dep.starred == 'true')
+                    { dep.starStyle = ''; dep.emptyStarStyle = none; }
+                    else 
+                    { dep.starStyle = none; dep.emptyStarStyle = ''; }
+                    
+                    dep.arrowUpStyle = none;
+                    dep.emptyArrowUpStyle = '';
                 })
                 console.log(deps);
                 var template = _self.dependenciesTemplate.val;

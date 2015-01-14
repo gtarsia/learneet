@@ -36,6 +36,9 @@ export interface ModContent {
 export interface Starred {
     starred : boolean;
 }
+export interface UserScore {
+    userScore: string;
+}
 export interface Fields extends Title, Content {}
 export interface FieldsWithId extends Fields, Id {}
 export interface TitleWithId extends Title, Id {}
@@ -154,7 +157,8 @@ export module score {
 }
 
 export module dependencies {
-    export interface TitleIdScoreStarred extends TitleWithId, Score, Starred {} 
+    export interface TitleIdScoreStarredUserScore 
+    extends TitleWithId, Score, Starred, UserScore {} 
     export module add {
         export class Ajax implements IAjax{
             url(): string { return '/api/adddependency' }
@@ -169,8 +173,17 @@ export module dependencies {
             url(): string { return '/api/getdependencies' }
             type(): string { return AjaxType.GET }
         }
-        export interface Params { article: Id }
-        export interface Return extends JsonReturn<TitleIdScoreStarred[]> {}
+        export interface Params { user: Id; article: Id }
+        export interface Return extends JsonReturn<TitleIdScoreStarredUserScore[]> {}
+    }
+
+    export module getCurrentUserScore {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/getdependencyscoreofcurrentuser' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { user: Id; dependent: Id; dependency: Id }
+        export interface Return extends JsonReturn<Score> {}
     }
 
     export module remove {

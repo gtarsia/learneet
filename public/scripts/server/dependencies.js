@@ -35,20 +35,28 @@ function add(args) {
 exports.add = add;
 
 function getAll(args) {
+    var deps = [];
     var article = args.article;
     return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 'GET', keys.article({ article: { id: '*->id' } }), 'GET', keys.article({ article: { id: '*->title' } }), 'GET', keys.dependency({ dependent: { id: article.id }, dependency: { id: '*->score' } }), 'GET', keys.dependency({ dependent: { id: article.id }, dependency: { id: '*->starred' } })).then(function (array) {
-        var articles = [];
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();
             var score = array.shift();
             var starred = array.shift();
-            articles.push({ id: id, title: title, score: score, starred: starred });
+            deps.push({ id: id, title: title, score: score, starred: starred });
         }
-        return exports.okObj(articles);
+        return exports.okObj(deps);
     });
 }
 exports.getAll = getAll;
+
+function getCurrentUserScore(args) {
+    return db.sismember(keys.dependencyScoreUserSet(args), args.user.id).then(function (isMember) {
+        var found = ((isMember) ? true : false);
+        return exports.okObj({ score: found });
+    });
+}
+exports.getCurrentUserScore = getCurrentUserScore;
 
 function remove(args) {
     var dependent = args.dependent;

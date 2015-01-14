@@ -110,6 +110,12 @@ var score = exports.score;
     }
     dependencies.getAll = getAll;
 
+    var _getCurrentUserScore = baseAjax.dependencies.getCurrentUserScore;
+    function getCurrentUserScore(params) {
+        return exports.buildIAjax(new _getCurrentUserScore.Ajax(), params);
+    }
+    dependencies.getCurrentUserScore = getCurrentUserScore;
+
     var _remove = baseAjax.dependencies.remove;
     function remove(params) {
         return exports.buildIAjax(new _remove.Ajax(), params);
