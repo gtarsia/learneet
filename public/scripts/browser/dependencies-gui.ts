@@ -29,6 +29,7 @@ class DependenciesGui extends SinglePageGui {
         var dependenciesCb = ajax.dependencies.getAll({article: {id: _self.id}});
         $(document).ready(function() {
             _self.setBreadcrumb();
+            _self.dependencies.jq.empty();
             titleCb.done(res => {
                 var article = res.result;
                 _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
