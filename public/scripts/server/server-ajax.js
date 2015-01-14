@@ -16,7 +16,7 @@ function getServerAjaxList() {
         article.update(),
         article.query(),
         dependencies.add(),
-        dependencies.get(),
+        dependencies.getAll(),
         dependencies.remove(),
         changes.getAll(),
         changes.get(),
@@ -192,11 +192,11 @@ var changes = exports.changes;
     }
     dependencies.add = add;
 
-    var _get = baseAjax.dependencies.get;
-    function get() {
-        return exports.restCbAjax(new _get.Ajax(), dbDependencies.get);
+    var _getAll = baseAjax.dependencies.getAll;
+    function getAll() {
+        return exports.restCbAjax(new _getAll.Ajax(), dbDependencies.getAll);
     }
-    dependencies.get = get;
+    dependencies.getAll = getAll;
 
     var _remove = baseAjax.dependencies.remove;
     function remove() {

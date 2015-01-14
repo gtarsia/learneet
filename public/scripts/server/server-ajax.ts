@@ -18,7 +18,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         article.update(),
         article.query(),
         dependencies.add(),
-        dependencies.get(),
+        dependencies.getAll(),
         dependencies.remove(),
         changes.getAll(),
         changes.get(),
@@ -168,9 +168,9 @@ export module dependencies {
         return restCbAjax(new _add.Ajax(), dbDependencies.add);
     }
 
-    import _get = baseAjax.dependencies.get;
-    export function get() {
-        return restCbAjax(new _get.Ajax(), dbDependencies.get);
+    import _getAll = baseAjax.dependencies.getAll;
+    export function getAll() {
+        return restCbAjax(new _getAll.Ajax(), dbDependencies.getAll);
     }
     
     import _remove = baseAjax.dependencies.remove;

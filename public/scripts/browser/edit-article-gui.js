@@ -69,7 +69,7 @@ var EditArticleGui = (function (_super) {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
-            ajax.dependencies.get({ article: { id: _self.id } }).done(function (res) {
+            ajax.dependencies.getAll({ article: { id: _self.id } }).done(function (res) {
                 var deps = res.result;
                 var length = deps.length;
                 for (var i = 0; i < length; i++) {

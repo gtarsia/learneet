@@ -33,6 +33,9 @@ export interface Desc {
 export interface ModContent {
     modifiedContent: string;
 }
+export interface Starred {
+    starred : boolean;
+}
 export interface Fields extends Title, Content {}
 export interface FieldsWithId extends Fields, Id {}
 export interface TitleWithId extends Title, Id {}
@@ -151,7 +154,7 @@ export module score {
 }
 
 export module dependencies {
-    export interface TitleIdScore extends TitleWithId, Score {} 
+    export interface TitleIdScoreStarred extends TitleWithId, Score, Starred {} 
     export module add {
         export class Ajax implements IAjax{
             url(): string { return '/api/adddependency' }
@@ -167,7 +170,7 @@ export module dependencies {
             type(): string { return AjaxType.GET }
         }
         export interface Params { article: Id }
-        export interface Return extends JsonReturn<TitleIdScore[]> {}
+        export interface Return extends JsonReturn<TitleIdScoreStarred[]> {}
     }
 
     export module remove {

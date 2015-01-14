@@ -2,7 +2,7 @@
 import baseAjax = require('./../common/base-ajax');
 import baseDependencies = baseAjax.dependencies;
 import baseAdd = baseDependencies.add;
-import baseGet = baseDependencies.get;
+import baseGetAll = baseDependencies.getAll;
 import baseRemove = baseDependencies.remove;
 import FieldsWithId = baseAjax.FieldsWithId;
 import TitleWithId = baseAjax.TitleWithId;
@@ -36,17 +36,22 @@ export function add(args: baseAdd.Params)
     });
 }
 
-export function get(args: baseGet.Params)
-: Promise<baseGet.Return> {
+export function getAll(args: baseGetAll.Params)
+: Promise<baseGetAll.Return> {
     var article = args.article;
-    return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id',
-        'GET', 'articles:*->title')
+    return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 
+        'GET', keys.article({article: {id: '*->id'}}),
+        'GET', keys.article({article: {id: '*->title'}}), 
+        'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->score'}}),
+        'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->starred'}}))
     .then((array: string[]) => {
         var articles : TitleWithId[] = [];
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();
-            articles.push({ id: id, title: title});
+            var score = array.shift();
+            var starred = array.shift();
+            articles.push({ id: id, title: title, score: score, starred: starred});
         }
         return okObj<TitleWithId[]>(articles);
     });

@@ -41,7 +41,7 @@ var ArticleGui = (function (_super) {
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             return;
-            ajax.dependencies.get({
+            ajax.dependencies.getAll({
                 article: _self.article
             }).done(function (res) {
                 var deps = res.result;

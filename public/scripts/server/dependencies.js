@@ -34,19 +34,21 @@ function add(args) {
 }
 exports.add = add;
 
-function get(args) {
+function getAll(args) {
     var article = args.article;
-    return db.sort('article:' + article.id + ':dependencies', 'by', 'nosort', 'GET', 'article:*->id', 'GET', 'articles:*->title').then(function (array) {
+    return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 'GET', keys.article({ article: { id: '*->id' } }), 'GET', keys.article({ article: { id: '*->title' } }), 'GET', keys.dependency({ dependent: { id: article.id }, dependency: { id: '*->score' } }), 'GET', keys.dependency({ dependent: { id: article.id }, dependency: { id: '*->starred' } })).then(function (array) {
         var articles = [];
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();
-            articles.push({ id: id, title: title });
+            var score = array.shift();
+            var starred = array.shift();
+            articles.push({ id: id, title: title, score: score, starred: starred });
         }
         return exports.okObj(articles);
     });
 }
-exports.get = get;
+exports.getAll = getAll;
 
 function remove(args) {
     var dependent = args.dependent;

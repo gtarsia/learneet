@@ -119,7 +119,7 @@ class EditArticleGui extends SinglePageGui {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
-            ajax.dependencies.get({ article: { id: _self.id}})
+            ajax.dependencies.getAll({ article: { id: _self.id}})
             .done(res => {
                 var deps: any = res.result;
                 var length = deps.length;

@@ -109,10 +109,10 @@ export module dependencies {
         (new _add.Ajax(), params);
     }
 
-    import _get = baseAjax.dependencies.get;
-    export function get(params) {
-        return buildIAjax<_get.Params, _get.Return>
-        (new _get.Ajax(), params)
+    import _getAll = baseAjax.dependencies.getAll;
+    export function getAll(params) {
+        return buildIAjax<_getAll.Params, _getAll.Return>
+        (new _getAll.Ajax(), params)
     }
 
     import _remove = baseAjax.dependencies.remove;

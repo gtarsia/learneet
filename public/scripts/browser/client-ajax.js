@@ -104,11 +104,11 @@ var score = exports.score;
     }
     dependencies.add = add;
 
-    var _get = baseAjax.dependencies.get;
-    function get(params) {
-        return exports.buildIAjax(new _get.Ajax(), params);
+    var _getAll = baseAjax.dependencies.getAll;
+    function getAll(params) {
+        return exports.buildIAjax(new _getAll.Ajax(), params);
     }
-    dependencies.get = get;
+    dependencies.getAll = getAll;
 
     var _remove = baseAjax.dependencies.remove;
     function remove(params) {

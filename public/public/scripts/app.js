@@ -102,7 +102,7 @@ var ArticleGui = (function (_super) {
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             return;
-            ajax.dependencies.get({
+            ajax.dependencies.getAll({
                 article: _self.article
             }).done(function (res) {
                 var deps = res.result;
@@ -409,11 +409,11 @@ var score = exports.score;
     }
     dependencies.add = add;
 
-    var _get = baseAjax.dependencies.get;
-    function get(params) {
-        return exports.buildIAjax(new _get.Ajax(), params);
+    var _getAll = baseAjax.dependencies.getAll;
+    function getAll(params) {
+        return exports.buildIAjax(new _getAll.Ajax(), params);
     }
-    dependencies.get = get;
+    dependencies.getAll = getAll;
 
     var _remove = baseAjax.dependencies.remove;
     function remove(params) {
@@ -535,19 +535,41 @@ var ajax = require("./client-ajax");
 var url = require("./../common/url");
 var SinglePageGui = require("./single-page-gui");
 
+var base = '.partial.dependencies ';
+
 var DependenciesGui = (function (_super) {
     __extends(DependenciesGui, _super);
     function DependenciesGui() {
-        _super.call(this, '.dependencies.partial');
-        this.articleCrumb = this.propertize('.article.crumb');
+        _super.call(this, base);
+        this.articleCrumb = this.propertize(base + '.article.crumb');
+        this.dependencies = this.propertize(base + '.dependency.list');
+        this.dependenciesTemplate = this.propertize(base + '.template', 'html');
+        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
+        this.articlesLinks = this.propertize(base + '.dependency a.article');
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
+        var dependenciesCb = ajax.dependencies.getAll({ article: { id: _self.id } });
         $(document).ready(function () {
             _self.setBreadcrumb();
             titleCb.done(function (res) {
                 var article = res.result;
                 _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
+            });
+            dependenciesCb.done(function (res) {
+                var deps = res.result;
+                deps.forEach(function (dep) {
+                    dep.dependencyId = dep.id;
+                    dep.dependencyUrl = url.dependencies.get(dep.id);
+                    dep.articleUrl = url.article.get(dep.id);
+                });
+                console.log(deps);
+                var template = _self.dependenciesTemplate.val;
+                Mustache.parse(template);
+                var rendered = Mustache.render(template, { dependencies: deps });
+                _self.dependencies.jq.html(rendered);
+                _self.dependenciesLinks.transitionURL('');
+                _self.articlesLinks.transitionURL('');
             });
         });
     }
@@ -638,7 +660,7 @@ var EditArticleGui = (function (_super) {
                 _self.article.output.title.val = result.title;
                 _self.article.output.content.val = marked(result.content);
             });
-            ajax.dependencies.get({ article: { id: _self.id } }).done(function (res) {
+            ajax.dependencies.getAll({ article: { id: _self.id } }).done(function (res) {
                 var deps = res.result;
                 var length = deps.length;
                 for (var i = 0; i < length; i++) {
