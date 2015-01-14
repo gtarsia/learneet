@@ -8,6 +8,8 @@ import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 declare function marked(s);
 
+var base = '.partial.article '
+
 class ArticleGui extends SinglePageGui { 
     article: {id: string; rendered: RenderedArticle} = {id: null, rendered: null};
     main: string;
@@ -20,6 +22,7 @@ class ArticleGui extends SinglePageGui {
     viewProposalsBtn = this.propertize("button#viewProposals");
     articleCrumb = this.propertize("#article-crumb");
     articleChanges: ArticleChangePreviewTemplate;
+    dependenciesLink = this.propertize(base + 'h1 a.dependencies')
     articleScore;
     setCrumb() {
         this.articleCrumb.transitionURL(location.pathname)
@@ -52,6 +55,7 @@ class ArticleGui extends SinglePageGui {
                 _self.article.rendered.content.val = marked(result.content);
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
+            _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id))
             return;
             ajax.dependencies.getAll({
                 article: _self.article

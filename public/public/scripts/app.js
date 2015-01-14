@@ -74,6 +74,8 @@ var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
 
+var base = '.partial.article ';
+
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
@@ -84,6 +86,7 @@ var ArticleGui = (function (_super) {
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
+        this.dependenciesLink = this.propertize(base + 'h1 a.dependencies');
         this.parseURL();
         var _self = this;
         $(document).ready(function () {
@@ -101,6 +104,7 @@ var ArticleGui = (function (_super) {
                 _self.article.rendered.content.val = marked(result.content);
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
+            _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));
             return;
             ajax.dependencies.getAll({
                 article: _self.article
@@ -244,7 +248,6 @@ var ChangeGui = (function (_super) {
         this.date = this.propertize(base + '.date', 'html');
         this.acceptBtn = this.propertize(base + 'button.accept');
         this.articleCrumb = this.propertize(base + '.article-crumb');
-        this.changeCrumb = this.propertize(base + '.change-crumb');
         this.article = { id: "-1" };
         this.change = { id: "-1" };
         this.parseURL();
@@ -253,10 +256,6 @@ var ChangeGui = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_this.article.id));
-            _self.changeCrumb.jq.prop('href', location.pathname);
-            _self.changeCrumb.jq.click(function (e) {
-                location.reload();
-            });
             _self.changeScore = new Arrows.ChangeScore(_this.article, _this.change);
             changeCb.done(function (res) {
                 var change = res.result.change;
@@ -616,7 +615,6 @@ var EditArticleGui = (function (_super) {
                 return $('button#cancel');
             } };
         this.articleCrumb = this.propertize(".edit-article-partial #article-crumb");
-        this.editArticleCrumb = this.propertize("#edit-article-crumb");
         this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
         this.dependency = this.propertize(".dependency");
         this.dependencyFound = this.propertize("select#dependencyFound", 'val');
@@ -629,7 +627,6 @@ var EditArticleGui = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
-            _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
             _self.dependencyFound.jq.selectize({
                 create: false,

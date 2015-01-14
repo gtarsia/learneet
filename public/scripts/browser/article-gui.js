@@ -13,6 +13,8 @@ var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
 
+var base = '.partial.article ';
+
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
@@ -23,6 +25,7 @@ var ArticleGui = (function (_super) {
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
+        this.dependenciesLink = this.propertize(base + 'h1 a.dependencies');
         this.parseURL();
         var _self = this;
         $(document).ready(function () {
@@ -40,6 +43,7 @@ var ArticleGui = (function (_super) {
                 _self.article.rendered.content.val = marked(result.content);
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
+            _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));
             return;
             ajax.dependencies.getAll({
                 article: _self.article

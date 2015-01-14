@@ -24,7 +24,6 @@ var EditArticleGui = (function (_super) {
                 return $('button#cancel');
             } };
         this.articleCrumb = this.propertize(".edit-article-partial #article-crumb");
-        this.editArticleCrumb = this.propertize("#edit-article-crumb");
         this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
         this.dependency = this.propertize(".dependency");
         this.dependencyFound = this.propertize("select#dependencyFound", 'val');
@@ -37,7 +36,6 @@ var EditArticleGui = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
-            _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
             _self.dependencyFound.jq.selectize({
                 create: false,

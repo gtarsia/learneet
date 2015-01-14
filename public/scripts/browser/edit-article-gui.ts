@@ -45,7 +45,6 @@ class EditArticleGui extends SinglePageGui {
     saveBtn = { get jq() { return $('button#save') } };
     cancelBtn = { get jq() { return $('button#cancel') } };
     articleCrumb = this.propertize(".edit-article-partial #article-crumb");
-    editArticleCrumb = this.propertize("#edit-article-crumb");
     articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
     dependency: any = this.propertize(".dependency");
     dependencyFound: any = this.propertize("select#dependencyFound", 'val');
@@ -81,7 +80,6 @@ class EditArticleGui extends SinglePageGui {
         var _self = this;
         $(document).ready(function() {
             _self.articleCrumb.transitionURL(url.article.get(_self.id))
-            _self.editArticleCrumb.jq.attr('href', location.pathname);
             _self.article = new PreviewableArticle();
             _self.dependencyFound.jq.selectize({
                 create: false,

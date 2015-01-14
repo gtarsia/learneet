@@ -19,7 +19,6 @@ class ChangeGui extends SinglePageGui {
     date = this.propertize(base + '.date', 'html');
     acceptBtn = this.propertize(base + 'button.accept');
     articleCrumb = this.propertize(base + '.article-crumb');
-    changeCrumb = this.propertize(base + '.change-crumb');
     renderedArticle: RenderedArticle;
     article: {id: string} = {id: "-1"};
     change: {id: string} = {id: "-1"};
@@ -45,8 +44,6 @@ class ChangeGui extends SinglePageGui {
         var _self = this;
         $(document).ready(() => {
             _self.articleCrumb.transitionURL(url.article.get(this.article.id));
-            _self.changeCrumb.jq.prop('href', location.pathname);
-            _self.changeCrumb.jq.click(e => { location.reload(); })
             _self.changeScore = new Arrows.ChangeScore(this.article, this.change);
             changeCb.done(res => {
                 var change = res.result.change;
