@@ -7,13 +7,16 @@ function propertize(selector: string, valFnName?: string):
         get jq() { return $(selector); },
         get selector() { return selector; },
         transitionURL: function(url: string) { 
-            if (url) this.jq.prop('href', url);
-            //I get the pathname because otherwise 
-            //I would get the full URL, which doesn't work for REGEX
-            else url = this.jq[0].pathname;
-            this.jq.click(e => {
-                singlePageApp.viewTransition(url);    
-                e.preventDefault();
+            this.jq.each((index, el) => {
+                var _url = url;
+                if (_url) $(el).prop('href', url);
+                //I get the pathname because otherwise 
+                //I would get the full URL, which doesn't work for REGEX
+                else _url = el.pathname;
+                $(el).click(e => {
+                    singlePageApp.viewTransition(_url);    
+                    e.preventDefault();
+                })
             })
         }
     }

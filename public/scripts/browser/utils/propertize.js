@@ -7,13 +7,16 @@ function propertize(selector, valFnName) {
             return selector;
         },
         transitionURL: function (url) {
-            if (url)
-                this.jq.prop('href', url);
-            else
-                url = this.jq[0].pathname;
-            this.jq.click(function (e) {
-                singlePageApp.viewTransition(url);
-                e.preventDefault();
+            this.jq.each(function (index, el) {
+                var _url = url;
+                if (_url)
+                    $(el).prop('href', url);
+                else
+                    _url = el.pathname;
+                $(el).click(function (e) {
+                    singlePageApp.viewTransition(_url);
+                    e.preventDefault();
+                });
             });
         }
     };
