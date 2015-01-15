@@ -12,6 +12,7 @@
 /// <reference path="scripts/browser/gui.ts" />
 /// <reference path="scripts/browser/header/logged-header-gui.ts" />
 /// <reference path="scripts/browser/index-gui.ts" />
+/// <reference path="scripts/browser/layout-gui.ts" />
 /// <reference path="scripts/browser/live-parser.ts" />
 /// <reference path="scripts/browser/login-gui.ts" />
 /// <reference path="scripts/browser/parser.ts" />

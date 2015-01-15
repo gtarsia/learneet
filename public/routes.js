@@ -13,7 +13,7 @@ function renderCb(url, title, fn) {
 }
 
 function set(app) {
-    app.get('/', renderCb('index', 'Express'));
+    app.get('/', renderCb('single-page-app', ''));
     app.get('/browse', renderCb('browse', 'Browse'));
     app.get(url.article.get(), renderCb('single-page-app', ''));
     app.get(url.article.edit(), renderCb('single-page-app', ''));

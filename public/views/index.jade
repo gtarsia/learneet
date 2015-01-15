@@ -1,14 +1,9 @@
-﻿extends layout
-
-prepend scripts
-  script.
-    guiName = 'IndexGui'
-
-append styles
-  link(rel='stylesheet', href='/stylesheets/index.css')
-
-block main
-  include templates/article-thumb
-  #buttons
-    button#create Create article
+﻿.partial.index(style='display:none')
+  .main-left &nbsp;
+  .main-center
+    .article-thumbs
+    include templates/article-thumb
+    #buttons
+      button#create Create article
+  
 

@@ -2,6 +2,7 @@ import url = require("./../common/url");
 import Gui = require("./gui");
 import SinglePageApp = require("./single-page-app");
 import SinglePageGui = require("./single-page-gui");
+import IndexGui = require("./index-gui");
 import ArticleGui = require("./article-gui");
 import EditArticleGui = require("./edit-article-gui");
 import DependenciesGui = require("./dependencies-gui");
@@ -12,6 +13,10 @@ declare var singlePageApp;
 
 export function findSinglePageGui(urlToGo: string) {
     var partials = [
+        {re: '/',
+        gui: function() {return new IndexGui()},
+        sel: '.index.partial'},
+
         {re: url.article.get('\\d+'), 
         gui: function() {return new ArticleGui({})},
         sel: '.article.partial' }, 

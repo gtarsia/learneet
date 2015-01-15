@@ -1,4 +1,5 @@
 var gui;
+var layoutGui;
 var singlePageApp = {};
 
 

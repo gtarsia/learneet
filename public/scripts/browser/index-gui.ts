@@ -2,12 +2,17 @@ import clientAjax = require("./client-ajax");
 import baseAjax = require('./../common/base-ajax');
 import baseArticle = baseAjax.article;
 import url = require("./../common/url");
+import SinglePageGui = require("./single-page-gui");
 import Gui = require("./gui");
 
 //$.template('<div><img src="${url}" />${name}</div>');
+var base = '.index.partial ';
 
-class IndexGui extends Gui {
+class IndexGui extends SinglePageGui {
     createBtn;
+    articleThumbs = this.propertize(base + '.article-thumbs');
+    articleThumbTemplate = this.propertize(base + '#article-thumb-template')
+    articleThumbsLinks = this.propertize(base + '.article-thumb a');
     setThumbs(html: string) {
         //$(".childContainer").append(html);
     }
@@ -15,12 +20,14 @@ class IndexGui extends Gui {
         return articles.toString();
     }
     constructor() {
-        super();
+        super(base);
         var _self = this;
+        _self.articleThumbs.jq.empty();
         $(document).ready(function() {
             _self.createBtn = _self.propertize("#create");
             clientAjax.article.getAll({})
             .done(function(res) {
+                _self.articleThumbs.jq.empty();
                 if (!res.ok) {
                     console.log(res.why);
                     return;
@@ -35,7 +42,8 @@ class IndexGui extends Gui {
                 Mustache.parse(template);   // optional, speeds up future uses
                 var rendered = Mustache.render(template, 
                     { articles: articles});
-                $("#article-thumb-template").after(rendered);
+                _self.articleThumbs.jq.html(rendered);
+                _self.articleThumbsLinks.transitionURL('');
                 $('.article-thumb').velocity({opacity: 0}, {duration: 0});
                 $.each($('.article-thumb'), function(i, el){
                     setTimeout(function(){
@@ -54,9 +62,4 @@ class IndexGui extends Gui {
     }
 }
 
-declare var guiName;
-declare var gui;
-
-if (guiName == 'IndexGui') {
-    gui = new IndexGui();
-}
+export = IndexGui;
