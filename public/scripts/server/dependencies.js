@@ -51,12 +51,32 @@ function getAll(args) {
 exports.getAll = getAll;
 
 function getCurrentUserScore(args) {
-    return db.sismember(keys.dependencyScoreUserSet(args), args.user.id).then(function (isMember) {
+    return db.sismember(keys.dependencyScoreUserSet(args), "1").then(function (isMember) {
         var found = ((isMember) ? true : false);
         return exports.okObj({ score: found });
     });
 }
 exports.getCurrentUserScore = getCurrentUserScore;
+
+function changeStarState(args, state) {
+    var _state = (state ? 'true' : 'false');
+    return db.hmset(keys.dependency(args), { starred: _state }).then(function (res) {
+        if (!res)
+            return exports.notOkObj('Couldn\'t change the starred state');
+        else
+            return exports.okObj(res);
+    });
+}
+
+function star(args) {
+    return changeStarState(args, true);
+}
+exports.star = star;
+
+function unstar(args) {
+    return changeStarState(args, false);
+}
+exports.unstar = unstar;
 
 function remove(args) {
     var dependent = args.dependent;

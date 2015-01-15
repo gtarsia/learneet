@@ -252,6 +252,38 @@ var score = exports.score;
     })(dependencies.getCurrentUserScore || (dependencies.getCurrentUserScore = {}));
     var getCurrentUserScore = dependencies.getCurrentUserScore;
 
+    (function (star) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/stardependency';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        star.Ajax = Ajax;
+    })(dependencies.star || (dependencies.star = {}));
+    var star = dependencies.star;
+
+    (function (unstar) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/unstardependency';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        unstar.Ajax = Ajax;
+    })(dependencies.unstar || (dependencies.unstar = {}));
+    var unstar = dependencies.unstar;
+
     (function (remove) {
         var Ajax = (function () {
             function Ajax() {

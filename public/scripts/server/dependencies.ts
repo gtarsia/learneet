@@ -3,6 +3,8 @@ import baseAjax = require('./../common/base-ajax');
 import baseDependencies = baseAjax.dependencies;
 import baseAdd = baseDependencies.add;
 import baseGetAll = baseDependencies.getAll;
+import baseStar = baseDependencies.star;
+import baseUnstar = baseDependencies.unstar;
 import baseRemove = baseDependencies.remove;
 import baseGetCurrentUserScore = baseDependencies.getCurrentUserScore;
 import FieldsWithId = baseAjax.FieldsWithId;
@@ -60,11 +62,30 @@ export function getAll(args: baseGetAll.Params)
 
 export function getCurrentUserScore(args: baseGetCurrentUserScore.Params)
 : Promise<baseGetCurrentUserScore.Return> {
-    return db.sismember(keys.dependencyScoreUserSet(args), args.user.id)
+    return db.sismember(keys.dependencyScoreUserSet(args), "1")
     .then(isMember => {
         var found = ((isMember) ? true : false);
         return okObj({score: found});
     })
+}
+
+function changeStarState(args: baseStar.Params, state: boolean) {
+    var _state = (state ? 'true' : 'false')
+    return db.hmset(keys.dependency(args), {starred: _state})
+    .then(res => {
+        if (!res) return notOkObj('Couldn\'t change the starred state');
+        else return okObj(res);
+    })
+}
+
+export function star(args: baseStar.Params)
+: Promise<baseStar.Return> {
+    return changeStarState(args, true);
+}
+
+export function unstar(args: baseUnstar.Params) 
+: Promise<baseUnstar.Return> {
+    return changeStarState(args, false);
 }
 
 export function remove(args: baseRemove.Params)

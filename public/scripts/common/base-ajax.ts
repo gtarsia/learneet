@@ -182,8 +182,26 @@ export module dependencies {
             url(): string { return '/api/getdependencyscoreofcurrentuser' }
             type(): string { return AjaxType.GET }
         }
-        export interface Params { user: Id; dependent: Id; dependency: Id }
+        export interface Params { dependent: Id; dependency: Id }
         export interface Return extends JsonReturn<Score> {}
+    }
+
+    export module star {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/stardependency' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { dependent: Id; dependency: Id }
+        export interface Return extends JsonReturn<Starred> {}
+    }
+
+    export module unstar {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/unstardependency' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params { dependent: Id; dependency: Id }
+        export interface Return extends JsonReturn<Starred> {}
     }
 
     export module remove {

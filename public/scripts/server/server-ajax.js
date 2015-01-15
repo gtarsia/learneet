@@ -18,6 +18,8 @@ function getServerAjaxList() {
         dependencies.add(),
         dependencies.getAll(),
         dependencies.getCurrentUserScore(),
+        dependencies.star(),
+        dependencies.unstar(),
         dependencies.remove(),
         changes.getAll(),
         changes.get(),
@@ -204,6 +206,18 @@ var changes = exports.changes;
         return exports.restCbAjax(new _getCurrentUserScore.Ajax(), dbDependencies.getCurrentUserScore);
     }
     dependencies.getCurrentUserScore = getCurrentUserScore;
+
+    var _star = baseAjax.dependencies.star;
+    function star() {
+        return exports.restCbAjax(new _star.Ajax(), dbDependencies.star);
+    }
+    dependencies.star = star;
+
+    var _unstar = baseAjax.dependencies.unstar;
+    function unstar() {
+        return exports.restCbAjax(new _unstar.Ajax(), dbDependencies.unstar);
+    }
+    dependencies.unstar = unstar;
 
     var _remove = baseAjax.dependencies.remove;
     function remove() {
