@@ -553,6 +553,8 @@ var DependenciesGui = (function (_super) {
         this.dependenciesTemplate = this.propertize(base + '.template', 'html');
         this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
         this.articlesLinks = this.propertize(base + '.dependency a.article');
+        this.dependencySelect = this.propertize(base + 'select.dependency');
+        this.addDependencyBtn = this.propertize(base + '.add-dependency');
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
@@ -589,6 +591,40 @@ var DependenciesGui = (function (_super) {
                 _self.dependencies.jq.html(rendered);
                 _self.dependenciesLinks.transitionURL('');
                 _self.articlesLinks.transitionURL('');
+            });
+            var selectizeOpts = {
+                create: false,
+                valueField: 'id',
+                labelField: 'title',
+                searchField: 'title',
+                load: function (query, callback) {
+                    if (!query.length)
+                        return callback();
+                    ajax.article.query({ query: query }).then(function (res) {
+                        callback(res.result);
+                    });
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div>' + '<span class="dependency">' + '<span class="dependency-title">' + item.title + '</span>' + '<span class="dependency-by"></span>' + '</span>' + '</div>';
+                    }
+                }
+            };
+            var el = _self.dependencySelect.jq[0];
+            if (el)
+                if (el.selectize)
+                    el.selectize.destroy();
+            _self.dependencySelect.jq.selectize(selectizeOpts);
+            _self.addDependencyBtn.jq.click(function () {
+                var id = _self.dependencySelect.jq.val();
+                if (id != "") {
+                    ajax.dependencies.add({
+                        dependent: { id: _self.id },
+                        dependency: { id: id }
+                    }).then(function (res) {
+                        console.log(res);
+                    });
+                }
             });
         });
     }

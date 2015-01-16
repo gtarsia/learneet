@@ -173,7 +173,7 @@ export module dependencies {
             url(): string { return '/api/getdependencies' }
             type(): string { return AjaxType.GET }
         }
-        export interface Params { user: Id; article: Id }
+        export interface Params { user: Id; dependent: Id }
         export interface Return extends JsonReturn<TitleIdScoreStarredUserScore[]> {}
     }
 

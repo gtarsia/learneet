@@ -54,19 +54,19 @@ export function changesIdCounter(args: ArticleWithId) {
     return j([changesBase(args), 'idCounter']);
 }
 
-export function baseDependencies(args: ArticleWithId) {
-    return j([article(args), 'dependencies']);
+export function baseDependencies(args: {dependent: Id}) {
+    return j([article({article: {id: args.dependent.id}}), 'dependencies']);
 }
 export function dependency(args: {dependent: Id; dependency: Id}) {
-    return j([baseDependencies({article: args.dependent}), args.dependency.id]);
+    return j([baseDependencies(args), args.dependency.id]);
 }
 export function dependencyScoreUserSet(args: {dependent: Id; dependency: Id}) {
     return j([dependency(args), 'UserScoreSet']);
 }
-export function dependenciesIdCounter(args: ArticleWithId) {
+export function dependenciesIdCounter(args: {dependent: Id}) {
     return j([baseDependencies(args), "idCounter"]);
 }
-export function dependenciesIdSet(args: ArticleWithId) {
+export function dependenciesIdSet(args: {dependent: Id}) {
     return j([baseDependencies(args), "idSet"]);
 }
 

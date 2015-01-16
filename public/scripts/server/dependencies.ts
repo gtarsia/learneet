@@ -31,23 +31,37 @@ export function okObj<T>(obj: T): any {
 }
 export function add(args: baseAdd.Params)
 : Promise<baseAdd.Return> {
+    debugger;
     var dependent = args.dependent;
     var dependency = args.dependency;
-    return db.sadd(keys.dependency(args))
-    .then((res: string) => {
-        return okObj<Boolean>(res == '1');
+    return db.sadd(keys.dependenciesIdSet(args), args.dependency.id)
+    .then(res => {
+        return upScore(args);
+    })
+    .then(res => {
+        return okObj(true);
     });
+}
+
+export interface Id { id: string; }
+export function upScore(args: {dependent: Id; dependency: Id})
+: Promise<string> {
+    var user = '1';
+    return db.sadd(keys.dependencyScoreUserSet(args), user)
+    .then(res => {
+        return db.hmset(keys.dependency(args), {score: '1', starred: 'false'});
+    })
 }
 
 export function getAll(args: baseGetAll.Params)
 : Promise<baseGetAll.Return> {
     var deps : TitleWithId[] = [];
-    var article = args.article;
+    var dependent = args.dependent;
     return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 
         'GET', keys.article({article: {id: '*->id'}}),
         'GET', keys.article({article: {id: '*->title'}}), 
-        'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->score'}}),
-        'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->starred'}}))
+        'GET', keys.dependency({dependent: {id: dependent.id}, dependency: {id: '*->score'}}),
+        'GET', keys.dependency({dependent: {id: dependent.id}, dependency: {id: '*->starred'}}))
     .then((array: string[]) => {
         debugger;
         while (array.length > 0) {

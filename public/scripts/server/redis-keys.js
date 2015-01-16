@@ -59,11 +59,11 @@ function changesIdCounter(args) {
 exports.changesIdCounter = changesIdCounter;
 
 function baseDependencies(args) {
-    return exports.j([exports.article(args), 'dependencies']);
+    return exports.j([exports.article({ article: { id: args.dependent.id } }), 'dependencies']);
 }
 exports.baseDependencies = baseDependencies;
 function dependency(args) {
-    return exports.j([exports.baseDependencies({ article: args.dependent }), args.dependency.id]);
+    return exports.j([exports.baseDependencies(args), args.dependency.id]);
 }
 exports.dependency = dependency;
 function dependencyScoreUserSet(args) {
