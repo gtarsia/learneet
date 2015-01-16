@@ -492,19 +492,23 @@ var __extends = this.__extends || function (d, b) {
 };
 var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-var Gui = require("./gui");
+
+var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
+
+var base = '.partial.create-article ';
 
 var CreateArticleGui = (function (_super) {
     __extends(CreateArticleGui, _super);
     function CreateArticleGui() {
-        _super.call(this);
+        _super.call(this, base);
+        this.createBtn = this.propertize(base + "button.create");
         var _self = this;
         $(document).ready(function () {
             _self.previewArticle = new PreviewableArticle();
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
-            $("#create").click(function () {
+            _self.createBtn.jq.click(function () {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.article;
                 console.log(article);
@@ -522,14 +526,12 @@ var CreateArticleGui = (function (_super) {
         return 'How to write markdown';
     };
     return CreateArticleGui;
-})(Gui);
+})(SinglePageGui);
 
-if (guiName == 'CreateArticleGui') {
-    gui = new CreateArticleGui();
-}
+module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":28,"./client-ajax":6,"./gui":10,"./templates/previewable-article":23}],8:[function(require,module,exports){
+},{"./../common/url":28,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":23}],8:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -807,13 +809,14 @@ var IndexGui = (function (_super) {
     __extends(IndexGui, _super);
     function IndexGui() {
         _super.call(this, base);
+        this.createBtn = this.propertize(base + "button.create");
         this.articleThumbs = this.propertize(base + '.article-thumbs');
         this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
         this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {
-            _self.createBtn = _self.propertize("#create");
+            _self.createBtn.transitionURL(url.article.create());
             clientAjax.article.getAll({}).done(function (res) {
                 _self.articleThumbs.jq.empty();
                 if (!res.ok) {
@@ -823,8 +826,17 @@ var IndexGui = (function (_super) {
                 var articles = res.result;
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
-                    articles[i].url = url.article.get(articles[i].id);
-                    articles[i].content = articles[i].content.substr(0, 130) + '...';
+                    var article = articles[i];
+                    if (!article) {
+                        articles.splice(i, 1);
+                        continue;
+                    }
+                    if (!article.content) {
+                        articles.splice(i, 1);
+                        continue;
+                    }
+                    article.url = url.article.get(article.id);
+                    article.content = article.content.substr(0, 130) + '...';
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);
@@ -839,9 +851,6 @@ var IndexGui = (function (_super) {
                         }, 250);
                     }, (i * 100));
                 });
-            });
-            _self.createBtn.jq.click(function () {
-                _self.redirect(url.article.create());
             });
         });
     }
@@ -1145,6 +1154,7 @@ var url = require("./../common/url");
 
 var IndexGui = require("./index-gui");
 var ArticleGui = require("./article-gui");
+var CreateArticleGui = require("./create-article-gui");
 var EditArticleGui = require("./edit-article-gui");
 var DependenciesGui = require("./dependencies-gui");
 var ChangeGui = require("./change-gui");
@@ -1157,6 +1167,12 @@ function findSinglePageGui(urlToGo) {
                 return new IndexGui();
             },
             sel: '.index.partial' },
+        {
+            re: '/create_article',
+            gui: function () {
+                return new CreateArticleGui();
+            },
+            sel: '.create-article.partial' },
         {
             re: url.article.get('\\d+'),
             gui: function () {
@@ -1224,7 +1240,7 @@ if (guiFound)
 singlePageApp.viewTransition = exports.viewTransition;
 //# sourceMappingURL=single-page-app.js.map
 
-},{"./../common/url":28,"./article-gui":2,"./change-gui":5,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){
+},{"./../common/url":28,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1355,7 +1371,6 @@ var PreviewableArticle = (function () {
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
-        this.bindScrolls();
     }
     Object.defineProperty(PreviewableArticle.prototype, "article", {
         get: function () {

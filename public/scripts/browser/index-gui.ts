@@ -9,7 +9,7 @@ import Gui = require("./gui");
 var base = '.index.partial ';
 
 class IndexGui extends SinglePageGui {
-    createBtn;
+    createBtn = this.propertize(base + "button.create");
     articleThumbs = this.propertize(base + '.article-thumbs');
     articleThumbTemplate = this.propertize(base + '#article-thumb-template')
     articleThumbsLinks = this.propertize(base + '.article-thumb a');
@@ -24,7 +24,7 @@ class IndexGui extends SinglePageGui {
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function() {
-            _self.createBtn = _self.propertize("#create");
+            _self.createBtn.transitionURL(url.article.create());
             clientAjax.article.getAll({})
             .done(function(res) {
                 _self.articleThumbs.jq.empty();
@@ -35,8 +35,11 @@ class IndexGui extends SinglePageGui {
                 var articles: any = res.result;
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
-                    articles[i].url = url.article.get(articles[i].id);
-                    articles[i].content = articles[i].content.substr(0, 130) + '...';
+                    var article = articles[i];
+                    if (!article) {articles.splice(i, 1); continue;}
+                    if (!article.content) {articles.splice(i, 1); continue;}
+                    article.url = url.article.get(article.id);
+                    article.content = article.content.substr(0, 130) + '...';
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);   // optional, speeds up future uses
@@ -54,9 +57,6 @@ class IndexGui extends SinglePageGui {
                     
                 });
                 //$("#main .childContainer").html(rendered);
-            });
-            _self.createBtn.jq.click(() => {
-                _self.redirect(url.article.create());
             });
         });
     }

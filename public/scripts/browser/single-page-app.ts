@@ -4,6 +4,7 @@ import SinglePageApp = require("./single-page-app");
 import SinglePageGui = require("./single-page-gui");
 import IndexGui = require("./index-gui");
 import ArticleGui = require("./article-gui");
+import CreateArticleGui = require("./create-article-gui");
 import EditArticleGui = require("./edit-article-gui");
 import DependenciesGui = require("./dependencies-gui");
 import ChangeGui = require("./change-gui");
@@ -16,6 +17,10 @@ export function findSinglePageGui(urlToGo: string) {
         {re: '/',
         gui: function() {return new IndexGui()},
         sel: '.index.partial'},
+
+        {re: '/create_article',
+        gui: function() {return new CreateArticleGui()},
+        sel: '.create-article.partial'},
 
         {re: url.article.get('\\d+'), 
         gui: function() {return new ArticleGui({})},

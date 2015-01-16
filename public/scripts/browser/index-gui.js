@@ -15,13 +15,14 @@ var IndexGui = (function (_super) {
     __extends(IndexGui, _super);
     function IndexGui() {
         _super.call(this, base);
+        this.createBtn = this.propertize(base + "button.create");
         this.articleThumbs = this.propertize(base + '.article-thumbs');
         this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
         this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {
-            _self.createBtn = _self.propertize("#create");
+            _self.createBtn.transitionURL(url.article.create());
             clientAjax.article.getAll({}).done(function (res) {
                 _self.articleThumbs.jq.empty();
                 if (!res.ok) {
@@ -31,8 +32,17 @@ var IndexGui = (function (_super) {
                 var articles = res.result;
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
-                    articles[i].url = url.article.get(articles[i].id);
-                    articles[i].content = articles[i].content.substr(0, 130) + '...';
+                    var article = articles[i];
+                    if (!article) {
+                        articles.splice(i, 1);
+                        continue;
+                    }
+                    if (!article.content) {
+                        articles.splice(i, 1);
+                        continue;
+                    }
+                    article.url = url.article.get(article.id);
+                    article.content = article.content.substr(0, 130) + '...';
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);
@@ -47,9 +57,6 @@ var IndexGui = (function (_super) {
                         }, 250);
                     }, (i * 100));
                 });
-            });
-            _self.createBtn.jq.click(function () {
-                _self.redirect(url.article.create());
             });
         });
     }

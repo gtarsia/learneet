@@ -102,7 +102,7 @@ class PreviewableArticle {
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
-        this.bindScrolls();
+        //this.bindScrolls();
     }
 }
 

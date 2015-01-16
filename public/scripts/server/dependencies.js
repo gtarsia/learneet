@@ -38,6 +38,7 @@ function getAll(args) {
     var deps = [];
     var article = args.article;
     return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 'GET', keys.article({ article: { id: '*->id' } }), 'GET', keys.article({ article: { id: '*->title' } }), 'GET', keys.dependency({ dependent: { id: article.id }, dependency: { id: '*->score' } }), 'GET', keys.dependency({ dependent: { id: article.id }, dependency: { id: '*->starred' } })).then(function (array) {
+        debugger;
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();

@@ -1,15 +1,8 @@
-﻿extends layout
+﻿.partial.create-article(style='display:none')
+  .main-left &nbsp;
+  .main-center
+    include templates/previewable-article
 
-prepend scripts
-  script.
-    guiName = 'CreateArticleGui'
-
-append styles
-  link(rel='stylesheet', href='/stylesheets/edit_article.css')
-
-block main
-  include templates/previewable-article
-
-  #buttons
-    button#create Create
-    button#cancel Cancel
+    #buttons
+      button.create Create
+      button#cancel Cancel

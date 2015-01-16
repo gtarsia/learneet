@@ -9,7 +9,6 @@ var PreviewableArticle = (function () {
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
-        this.bindScrolls();
     }
     Object.defineProperty(PreviewableArticle.prototype, "article", {
         get: function () {

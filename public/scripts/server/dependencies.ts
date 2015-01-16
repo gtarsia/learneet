@@ -49,6 +49,7 @@ export function getAll(args: baseGetAll.Params)
         'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->score'}}),
         'GET', keys.dependency({dependent: {id: article.id}, dependency: {id: '*->starred'}}))
     .then((array: string[]) => {
+        debugger;
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();

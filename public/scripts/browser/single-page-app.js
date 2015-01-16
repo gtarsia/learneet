@@ -2,6 +2,7 @@ var url = require("./../common/url");
 
 var IndexGui = require("./index-gui");
 var ArticleGui = require("./article-gui");
+var CreateArticleGui = require("./create-article-gui");
 var EditArticleGui = require("./edit-article-gui");
 var DependenciesGui = require("./dependencies-gui");
 var ChangeGui = require("./change-gui");
@@ -14,6 +15,12 @@ function findSinglePageGui(urlToGo) {
                 return new IndexGui();
             },
             sel: '.index.partial' },
+        {
+            re: '/create_article',
+            gui: function () {
+                return new CreateArticleGui();
+            },
+            sel: '.create-article.partial' },
         {
             re: url.article.get('\\d+'),
             gui: function () {

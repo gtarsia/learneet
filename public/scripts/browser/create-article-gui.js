@@ -6,19 +6,23 @@
 };
 var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-var Gui = require("./gui");
+
+var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
+
+var base = '.partial.create-article ';
 
 var CreateArticleGui = (function (_super) {
     __extends(CreateArticleGui, _super);
     function CreateArticleGui() {
-        _super.call(this);
+        _super.call(this, base);
+        this.createBtn = this.propertize(base + "button.create");
         var _self = this;
         $(document).ready(function () {
             _self.previewArticle = new PreviewableArticle();
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
-            $("#create").click(function () {
+            _self.createBtn.jq.click(function () {
                 console.log('Trying to create: ');
                 var article = _self.previewArticle.article;
                 console.log(article);
@@ -36,9 +40,7 @@ var CreateArticleGui = (function (_super) {
         return 'How to write markdown';
     };
     return CreateArticleGui;
-})(Gui);
+})(SinglePageGui);
 
-if (guiName == 'CreateArticleGui') {
-    gui = new CreateArticleGui();
-}
+module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map
