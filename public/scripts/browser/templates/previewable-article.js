@@ -2,21 +2,16 @@ var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
 
+var render = require("./../utils/render");
+
 var PreviewableArticle = (function () {
-    function PreviewableArticle() {
-        this.input = new EditableArticle();
+    function PreviewableArticle(base) {
+        this.input = new EditableArticle(base);
         this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
     }
-    Object.defineProperty(PreviewableArticle.prototype, "article", {
-        get: function () {
-            return this.input.article;
-        },
-        enumerable: true,
-        configurable: true
-    });
     PreviewableArticle.prototype.bindScrolls = function () {
         var _self = this;
         function getPercent(el) {
@@ -42,49 +37,39 @@ var PreviewableArticle = (function () {
         });
     };
 
+    PreviewableArticle.prototype.updateTitle = function (s) {
+        if (s)
+            this.input.title = s;
+        else
+            s = this.input.title.val;
+        this.output.title.val = s;
+    };
+    PreviewableArticle.prototype.updateContent = function (s) {
+        if (s)
+            this.input.content = s;
+        else
+            s = this.input.content;
+        this.output.content.val = render.toMarkedKatex(s);
+    };
+    PreviewableArticle.prototype.getArticle = function () {
+        return {
+            article: { title: this.input.title, content: this.input.content }
+        };
+    };
     PreviewableArticle.prototype.bindTitlePreview = function () {
+        var _self = this;
         var inputTitle = this.input.title;
         var outputTitle = this.output.title;
         inputTitle.jq.keyup(function (e) {
-            var title = inputTitle.val;
-            outputTitle.val = title;
+            _self.updateTitle();
         });
-    };
-    PreviewableArticle.prototype.translateWithParsing = function (content) {
-        var output = '';
-        var occurenceIndex = 0;
-        var openKatex = false;
-        var startIndex = 0;
-        var length = content.length;
-        while (occurenceIndex != -1 && startIndex < length) {
-            occurenceIndex = content.indexOf('$$', startIndex);
-
-            var endIndex = (occurenceIndex == -1 ? length : occurenceIndex);
-
-            var section = content.substring(startIndex, endIndex);
-
-            if (openKatex)
-                section = katex.renderToString("\\displaystyle {" + section + "}");
-
-            output += section;
-
-            startIndex = endIndex + 2;
-
-            if (occurenceIndex != -1) {
-                openKatex = !openKatex;
-            }
-        }
-        return output;
     };
     PreviewableArticle.prototype.bindContentPreview = function () {
         var _self = this;
         var inputContent = this.input.content;
         var outputContent = this.output.content;
         inputContent.jq.keyup(function (e) {
-            var content = inputContent.val;
-            content = _self.translateWithParsing(content);
-
-            outputContent.val = marked(content);
+            _self.updateContent();
             window.onbeforeunload = function (x) {
                 return "Are you sure you want to leave?";
             };
@@ -98,10 +83,8 @@ var PreviewableArticle = (function () {
                 return;
             }
             var result = res.result;
-            _self.input.title.val = result.title;
-            _self.input.content.val = result.content;
-            _self.output.title.val = result.title;
-            _self.output.content.val = marked(result.content);
+            _self.updateTitle(result.title);
+            _self.updateContent(result.content);
             return null;
         });
     };

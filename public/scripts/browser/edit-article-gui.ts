@@ -8,6 +8,8 @@ import baseAjax = require("./../common/base-ajax");
 
 declare function marked(c: string);
 
+var base = '.partial.edit-article ';
+
 class EditArticleGui extends SinglePageGui {
     id: string = "-1";
     parent;
@@ -66,7 +68,7 @@ class EditArticleGui extends SinglePageGui {
             })
             setTimeout(api.qtip.bind(api, 'destroy'), 5000)
         }
-        var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
+        var article = baseAjax.article.WrapFieldWithId(this.article.getArticle(), this.id);
         ajax.article.update(article)
         .done(function(res) {
             if (!res.ok) console.log(res.why);
@@ -75,12 +77,12 @@ class EditArticleGui extends SinglePageGui {
         });
     }
     constructor(args: {id?: string}) {
-        super('.edit-article-partial');
+        super('.edit-article.partial');
         this.parseURL();
         var _self = this;
         $(document).ready(function() {
             _self.articleCrumb.transitionURL(url.article.get(_self.id))
-            _self.article = new PreviewableArticle();
+            _self.article = new PreviewableArticle(base);
             _self.dependencyFound.jq.selectize({
                 create: false,
                 valueField: 'id',
@@ -105,19 +107,8 @@ class EditArticleGui extends SinglePageGui {
                 }
             });
             $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            ajax.article.get({ article: { id: _self.id }})
-            .done(function(res) {
-                if (!res.ok) {
-                    console.log(res.why);
-                    return;
-                }
-                var result = res.result
-                _self.article.input.title.val = result.title;
-                _self.article.input.content.val = result.content;
-                _self.article.output.title.val = result.title;
-                _self.article.output.content.val = marked(result.content);
-            });
-            ajax.dependencies.getAll({ article: { id: _self.id}})
+            _self.article.fetchDBArticle({ id: _self.id })
+            /*ajax.dependencies.getAll({ article: { id: _self.id}})
             .done(res => {
                 var deps: any = res.result;
                 var length = deps.length;
@@ -134,12 +125,14 @@ class EditArticleGui extends SinglePageGui {
                     _self.removeDependency(myThis);
                 })
             })
+            */
             _self.saveBtn.jq.click(() => {
                 _self.saveArticle();
             });
             _self.cancelBtn.jq.click(() => {
                 _self.redirect(url.article.get(_self.id));
             });
+            /*
             _self.addDependencyBtn.jq.click(() => {
                 var id = _self.dependencyFound.jq.val();
                 if (id != "") {
@@ -152,6 +145,7 @@ class EditArticleGui extends SinglePageGui {
                     });
                 }
             });
+            */
         });
     }
 }

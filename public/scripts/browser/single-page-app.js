@@ -32,7 +32,7 @@ function findSinglePageGui(urlToGo) {
             gui: function () {
                 return new EditArticleGui({});
             },
-            sel: '.edit-article-partial' },
+            sel: '.edit-article.partial' },
         {
             re: url.change.get('\\d+', '\\d+'),
             gui: function () {

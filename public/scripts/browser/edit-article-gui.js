@@ -12,10 +12,12 @@ var SinglePageGui = require("./single-page-gui");
 var validate = require("./../common/validate");
 var baseAjax = require("./../common/base-ajax");
 
+var base = '.partial.edit-article ';
+
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
     function EditArticleGui(args) {
-        _super.call(this, '.edit-article-partial');
+        _super.call(this, '.edit-article.partial');
         this.id = "-1";
         this.saveBtn = { get jq() {
                 return $('button#save');
@@ -36,7 +38,7 @@ var EditArticleGui = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
-            _self.article = new PreviewableArticle();
+            _self.article = new PreviewableArticle(base);
             _self.dependencyFound.jq.selectize({
                 create: false,
                 valueField: 'id',
@@ -56,48 +58,13 @@ var EditArticleGui = (function (_super) {
                 }
             });
             $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
-                if (!res.ok) {
-                    console.log(res.why);
-                    return;
-                }
-                var result = res.result;
-                _self.article.input.title.val = result.title;
-                _self.article.input.content.val = result.content;
-                _self.article.output.title.val = result.title;
-                _self.article.output.content.val = marked(result.content);
-            });
-            ajax.dependencies.getAll({ article: { id: _self.id } }).done(function (res) {
-                var deps = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, { deps: deps });
-                _self.dependenciesTemplate.jq.after(rendered);
-                _self.removeDependencyBtns.jq.on("click", function () {
-                    var myThis = eval("this");
-                    _self.removeDependency(myThis);
-                });
-            });
+            _self.article.fetchDBArticle({ id: _self.id });
+
             _self.saveBtn.jq.click(function () {
                 _self.saveArticle();
             });
             _self.cancelBtn.jq.click(function () {
                 _self.redirect(url.article.get(_self.id));
-            });
-            _self.addDependencyBtn.jq.click(function () {
-                var id = _self.dependencyFound.jq.val();
-                if (id != "") {
-                    ajax.dependencies.add({
-                        dependent: { id: _self.id },
-                        dependency: { id: id }
-                    }).then(function (res) {
-                        console.log(res);
-                    });
-                }
             });
         });
     }
@@ -144,7 +111,7 @@ var EditArticleGui = (function (_super) {
             });
             setTimeout(api.qtip.bind(api, 'destroy'), 5000);
         }
-        var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
+        var article = baseAjax.article.WrapFieldWithId(this.article.getArticle(), this.id);
         ajax.article.update(article).done(function (res) {
             if (!res.ok)
                 console.log(res.why);

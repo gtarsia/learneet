@@ -505,12 +505,12 @@ var CreateArticleGui = (function (_super) {
         this.createBtn = this.propertize(base + "button.create");
         var _self = this;
         $(document).ready(function () {
-            _self.previewArticle = new PreviewableArticle();
+            _self.previewArticle = new PreviewableArticle(base);
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             _self.createBtn.jq.click(function () {
                 console.log('Trying to create: ');
-                var article = _self.previewArticle.article;
+                var article = _self.previewArticle.getArticle();
                 console.log(article);
                 clientAjax.article.create(article).done(function (res) {
                     var id = res.result.id;
@@ -677,10 +677,12 @@ var SinglePageGui = require("./single-page-gui");
 var validate = require("./../common/validate");
 var baseAjax = require("./../common/base-ajax");
 
+var base = '.partial.edit-article ';
+
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
     function EditArticleGui(args) {
-        _super.call(this, '.edit-article-partial');
+        _super.call(this, '.edit-article.partial');
         this.id = "-1";
         this.saveBtn = { get jq() {
                 return $('button#save');
@@ -701,7 +703,7 @@ var EditArticleGui = (function (_super) {
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
-            _self.article = new PreviewableArticle();
+            _self.article = new PreviewableArticle(base);
             _self.dependencyFound.jq.selectize({
                 create: false,
                 valueField: 'id',
@@ -721,48 +723,13 @@ var EditArticleGui = (function (_super) {
                 }
             });
             $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
-                if (!res.ok) {
-                    console.log(res.why);
-                    return;
-                }
-                var result = res.result;
-                _self.article.input.title.val = result.title;
-                _self.article.input.content.val = result.content;
-                _self.article.output.title.val = result.title;
-                _self.article.output.content.val = marked(result.content);
-            });
-            ajax.dependencies.getAll({ article: { id: _self.id } }).done(function (res) {
-                var deps = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, { deps: deps });
-                _self.dependenciesTemplate.jq.after(rendered);
-                _self.removeDependencyBtns.jq.on("click", function () {
-                    var myThis = eval("this");
-                    _self.removeDependency(myThis);
-                });
-            });
+            _self.article.fetchDBArticle({ id: _self.id });
+
             _self.saveBtn.jq.click(function () {
                 _self.saveArticle();
             });
             _self.cancelBtn.jq.click(function () {
                 _self.redirect(url.article.get(_self.id));
-            });
-            _self.addDependencyBtn.jq.click(function () {
-                var id = _self.dependencyFound.jq.val();
-                if (id != "") {
-                    ajax.dependencies.add({
-                        dependent: { id: _self.id },
-                        dependency: { id: id }
-                    }).then(function (res) {
-                        console.log(res);
-                    });
-                }
             });
         });
     }
@@ -809,7 +776,7 @@ var EditArticleGui = (function (_super) {
             });
             setTimeout(api.qtip.bind(api, 'destroy'), 5000);
         }
-        var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
+        var article = baseAjax.article.WrapFieldWithId(this.article.getArticle(), this.id);
         ajax.article.update(article).done(function (res) {
             if (!res.ok)
                 console.log(res.why);
@@ -1244,7 +1211,7 @@ function findSinglePageGui(urlToGo) {
             gui: function () {
                 return new EditArticleGui({});
             },
-            sel: '.edit-article-partial' },
+            sel: '.edit-article.partial' },
         {
             re: url.change.get('\\d+', '\\d+'),
             gui: function () {
@@ -1386,65 +1353,43 @@ module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
 },{"./../../common/url":29,"./../client-ajax":6,"./../gui":10}],22:[function(require,module,exports){
-var EditableArticle = (function () {
-    function EditableArticle() {
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Gui = require('./../gui');
+
+var EditableArticle = (function (_super) {
+    __extends(EditableArticle, _super);
+    function EditableArticle(base) {
+        _super.call(this);
         var _self = this;
-        this.content = {
-            get jq() {
-                return $("textarea.article-content");
-            },
-            get val() {
-                return _self.content.jq.val();
-            },
-            set val(val) {
-                _self.content.jq.val(val);
-            }
-        };
-        this.title = {
-            get jq() {
-                return $("input.article-title");
-            },
-            get val() {
-                return _self.title.jq.val();
-            },
-            set val(val) {
-                _self.title.jq.val(val);
-            }
-        };
+        this.content = this.propertize(base + 'textarea.article-content', 'val');
+        this.title = this.propertize(base + 'input.article-title', 'val');
     }
-    Object.defineProperty(EditableArticle.prototype, "article", {
-        get: function () {
-            return { article: { title: this.title.val, content: this.content.val } };
-        },
-        enumerable: true,
-        configurable: true
-    });
     return EditableArticle;
-})();
+})(Gui);
 
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{}],23:[function(require,module,exports){
+},{"./../gui":10}],23:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
 
+var render = require("./../utils/render");
+
 var PreviewableArticle = (function () {
-    function PreviewableArticle() {
-        this.input = new EditableArticle();
+    function PreviewableArticle(base) {
+        this.input = new EditableArticle(base);
         this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
     }
-    Object.defineProperty(PreviewableArticle.prototype, "article", {
-        get: function () {
-            return this.input.article;
-        },
-        enumerable: true,
-        configurable: true
-    });
     PreviewableArticle.prototype.bindScrolls = function () {
         var _self = this;
         function getPercent(el) {
@@ -1470,49 +1415,39 @@ var PreviewableArticle = (function () {
         });
     };
 
+    PreviewableArticle.prototype.updateTitle = function (s) {
+        if (s)
+            this.input.title = s;
+        else
+            s = this.input.title.val;
+        this.output.title.val = s;
+    };
+    PreviewableArticle.prototype.updateContent = function (s) {
+        if (s)
+            this.input.content = s;
+        else
+            s = this.input.content;
+        this.output.content.val = render.toMarkedKatex(s);
+    };
+    PreviewableArticle.prototype.getArticle = function () {
+        return {
+            article: { title: this.input.title, content: this.input.content }
+        };
+    };
     PreviewableArticle.prototype.bindTitlePreview = function () {
+        var _self = this;
         var inputTitle = this.input.title;
         var outputTitle = this.output.title;
         inputTitle.jq.keyup(function (e) {
-            var title = inputTitle.val;
-            outputTitle.val = title;
+            _self.updateTitle();
         });
-    };
-    PreviewableArticle.prototype.translateWithParsing = function (content) {
-        var output = '';
-        var occurenceIndex = 0;
-        var openKatex = false;
-        var startIndex = 0;
-        var length = content.length;
-        while (occurenceIndex != -1 && startIndex < length) {
-            occurenceIndex = content.indexOf('$$', startIndex);
-
-            var endIndex = (occurenceIndex == -1 ? length : occurenceIndex);
-
-            var section = content.substring(startIndex, endIndex);
-
-            if (openKatex)
-                section = katex.renderToString("\\displaystyle {" + section + "}");
-
-            output += section;
-
-            startIndex = endIndex + 2;
-
-            if (occurenceIndex != -1) {
-                openKatex = !openKatex;
-            }
-        }
-        return output;
     };
     PreviewableArticle.prototype.bindContentPreview = function () {
         var _self = this;
         var inputContent = this.input.content;
         var outputContent = this.output.content;
         inputContent.jq.keyup(function (e) {
-            var content = inputContent.val;
-            content = _self.translateWithParsing(content);
-
-            outputContent.val = marked(content);
+            _self.updateContent();
             window.onbeforeunload = function (x) {
                 return "Are you sure you want to leave?";
             };
@@ -1526,10 +1461,8 @@ var PreviewableArticle = (function () {
                 return;
             }
             var result = res.result;
-            _self.input.title.val = result.title;
-            _self.input.content.val = result.content;
-            _self.output.title.val = result.title;
-            _self.output.content.val = marked(result.content);
+            _self.updateTitle(result.title);
+            _self.updateContent(result.content);
             return null;
         });
     };
@@ -1539,7 +1472,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":6,"./editable-article":22,"./rendered-article":24}],24:[function(require,module,exports){
+},{".././client-ajax":6,"./../utils/render":26,"./editable-article":22,"./rendered-article":24}],24:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

@@ -77,6 +77,7 @@ function update(args) {
 exports.update = update;
 
 function get(args) {
+    debugger;
     var article = args.article;
     return db.hgetall(keys.article(args)).then(function (result) {
         var ok = result != null;

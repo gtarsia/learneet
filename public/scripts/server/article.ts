@@ -79,6 +79,7 @@ export function update(args: update.Params) : Promise<update.Return> {
 }
 
 export function get(args: get.Params) : Promise<get.Return> {
+	debugger;
 	var article = args.article;
 	return db.hgetall(keys.article(args))
 	.then<get.Return>((result: any) => {

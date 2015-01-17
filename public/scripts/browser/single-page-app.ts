@@ -28,7 +28,7 @@ export function findSinglePageGui(urlToGo: string) {
 
         {re: url.article.edit('\\d+'), 
         gui: function() { return new EditArticleGui({})},
-        sel: '.edit-article-partial'},
+        sel: '.edit-article.partial'},
 
         {re: url.change.get('\\d+', '\\d+'), 
         gui: function() { return new ChangeGui()},
