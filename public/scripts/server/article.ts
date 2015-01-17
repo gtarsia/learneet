@@ -40,7 +40,9 @@ export function create(args: create.Params) : Promise<create.Return> {
 	return db.incr(keys.articlesIdCounter())
 	.then((_id: string) => {
 		id = _id;
-		return db.hmset(keys.article({article: {id: id}}), baseArticle.WrapFieldWithId(args, id));
+		var _args = baseArticle.WrapFieldWithId(args, id);
+		return db.hmset(keys.article({article: {id: id}}), 
+			_args.article);
 	})
 	.then((result) => {
 		if (result != 'OK') return notOkObj('Could\'t create object');

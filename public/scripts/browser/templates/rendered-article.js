@@ -5,6 +5,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./../gui');
+var render = require('./../utils/render');
 
 var RenderedArticle = (function (_super) {
     __extends(RenderedArticle, _super);
@@ -28,7 +29,7 @@ var RenderedArticle = (function (_super) {
         this.title.val = title;
     };
     RenderedArticle.prototype.setContent = function (content) {
-        this.content.val = marked(content);
+        this.content.val = render.toMarkedKatex(content);
     };
     return RenderedArticle;
 })(Gui);

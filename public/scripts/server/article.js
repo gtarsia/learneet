@@ -40,7 +40,8 @@ function create(args) {
     }
     return db.incr(keys.articlesIdCounter()).then(function (_id) {
         id = _id;
-        return db.hmset(keys.article({ article: { id: id } }), baseArticle.WrapFieldWithId(args, id));
+        var _args = baseArticle.WrapFieldWithId(args, id);
+        return db.hmset(keys.article({ article: { id: id } }), _args.article);
     }).then(function (result) {
         if (result != 'OK')
             return exports.notOkObj('Could\'t create object');

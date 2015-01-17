@@ -51,8 +51,8 @@ class ArticleGui extends SinglePageGui {
                     return;
                 }
                 var result = res.result
-                _self.article.rendered.title.val = result.title;
-                _self.article.rendered.content.val = marked(result.content);
+                _self.article.rendered.setTitle(result.title);
+                _self.article.rendered.setContent(result.content);
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id))
