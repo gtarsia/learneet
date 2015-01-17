@@ -58,6 +58,12 @@ function findSinglePageGui(urlToGo) {
 exports.findSinglePageGui = findSinglePageGui;
 
 function viewTransition(urlToGo, isBack) {
+    if (window.onbeforeunload) {
+        var w = window;
+        if (!confirm(w.onbeforeunload()))
+            return;
+        window.onbeforeunload = null;
+    }
     var before = performance.now();
     $(".partial.active *").unbind();
     $('.partial.active').removeClass('active');

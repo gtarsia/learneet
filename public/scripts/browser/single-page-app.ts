@@ -49,6 +49,11 @@ export function findSinglePageGui(urlToGo: string) {
 }
 
 export function viewTransition(urlToGo: string, isBack?: boolean) {
+    if (window.onbeforeunload) {
+        var w: any = window;
+        if (!confirm(w.onbeforeunload())) return;
+        window.onbeforeunload = null;
+    }
     var before = performance.now();
     $(".partial.active *").unbind();
     $('.partial.active').removeClass('active');

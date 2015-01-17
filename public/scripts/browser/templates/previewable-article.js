@@ -85,6 +85,9 @@ var PreviewableArticle = (function () {
             content = _self.translateWithParsing(content);
 
             outputContent.val = marked(content);
+            window.onbeforeunload = function (x) {
+                return "Are you sure you want to leave?";
+            };
         });
     };
     PreviewableArticle.prototype.fetchDBArticle = function (args) {

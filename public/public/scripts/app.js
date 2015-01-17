@@ -1265,6 +1265,12 @@ function findSinglePageGui(urlToGo) {
 exports.findSinglePageGui = findSinglePageGui;
 
 function viewTransition(urlToGo, isBack) {
+    if (window.onbeforeunload) {
+        var w = window;
+        if (!confirm(w.onbeforeunload()))
+            return;
+        window.onbeforeunload = null;
+    }
     var before = performance.now();
     $(".partial.active *").unbind();
     $('.partial.active').removeClass('active');
@@ -1502,6 +1508,9 @@ var PreviewableArticle = (function () {
             content = _self.translateWithParsing(content);
 
             outputContent.val = marked(content);
+            window.onbeforeunload = function (x) {
+                return "Are you sure you want to leave?";
+            };
         });
     };
     PreviewableArticle.prototype.fetchDBArticle = function (args) {

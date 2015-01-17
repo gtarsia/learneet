@@ -78,6 +78,7 @@ class PreviewableArticle {
             content = _self.translateWithParsing(content);
             //content = katex.renderToString("\\displaystyle {" + content + "}");
             outputContent.val = marked(content);
+            window.onbeforeunload = x => {return "Are you sure you want to leave?"};
         });
     }
     fetchDBArticle(args: {id: string}): JQueryPromise<baseAjax.article.get.Return> {
