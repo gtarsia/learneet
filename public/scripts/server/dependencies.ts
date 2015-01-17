@@ -53,6 +53,15 @@ export function upScore(args: {dependent: Id; dependency: Id})
     })
 }
 
+export function removeScore(args: {dependent: Id; dependency: Id})
+: Promise<string> {
+    var user = '1';
+    return db.del(
+        keys.dependencyScoreUserSet(args),
+        keys.dependency(args)
+    )
+}
+
 export function getAll(args: baseGetAll.Params)
 : Promise<baseGetAll.Return> {
     var deps : TitleWithId[] = [];
@@ -107,7 +116,10 @@ export function remove(args: baseRemove.Params)
 : Promise<baseRemove.Return> {
     var dependent = args.dependent;
     var dependency = args.dependency;
-    return db.srem(keys.dependency(args))
+    return db.srem(keys.dependenciesIdSet(args), dependency.id)
+    .then(res => {
+        return removeScore(args);
+    })
     .then(res => {
         return okObj(res == '1');
     })

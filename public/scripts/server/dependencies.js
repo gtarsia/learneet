@@ -45,6 +45,12 @@ function upScore(args) {
 }
 exports.upScore = upScore;
 
+function removeScore(args) {
+    var user = '1';
+    return db.del(keys.dependencyScoreUserSet(args), keys.dependency(args));
+}
+exports.removeScore = removeScore;
+
 function getAll(args) {
     var deps = [];
     var dependent = args.dependent;
@@ -93,7 +99,9 @@ exports.unstar = unstar;
 function remove(args) {
     var dependent = args.dependent;
     var dependency = args.dependency;
-    return db.srem(keys.dependency(args)).then(function (res) {
+    return db.srem(keys.dependenciesIdSet(args), dependency.id).then(function (res) {
+        return exports.removeScore(args);
+    }).then(function (res) {
         return exports.okObj(res == '1');
     });
 }

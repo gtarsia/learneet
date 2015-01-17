@@ -95,6 +95,10 @@ export function promisedRedis(fn, args: string[]) : Promise<any> {
 	});
 }
 
+export function del(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.del.bind(client), args]);
+}
+
 export function multi(): any {
 	return client.multi();
 }

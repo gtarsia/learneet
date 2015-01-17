@@ -21,10 +21,13 @@ var DependenciesGui = (function (_super) {
         this.articlesLinks = this.propertize(base + '.dependency a.article');
         this.dependencySelect = this.propertize(base + 'select.dependency');
         this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        this.dependenciesIds = this.propertize(".dependency-id");
+        this.dependency = this.propertize(base + ".dependency");
+        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
-        var dependenciesCb = ajax.dependencies.getAll({ user: { id: '1' }, article: { id: _self.id } });
+        var dependenciesCb = ajax.dependencies.getAll({ dependent: { id: _self.id } });
         $(document).ready(function () {
             _self.setBreadcrumb();
             _self.dependencies.jq.empty();
@@ -57,6 +60,10 @@ var DependenciesGui = (function (_super) {
                 _self.dependencies.jq.html(rendered);
                 _self.dependenciesLinks.transitionURL('');
                 _self.articlesLinks.transitionURL('');
+                _self.removeDependencyBtns.jq.on("click", function () {
+                    var myThis = eval("this");
+                    _self.removeDependency(myThis);
+                });
             });
             var selectizeOpts = {
                 create: false,
@@ -102,6 +109,18 @@ var DependenciesGui = (function (_super) {
     };
     DependenciesGui.prototype.setBreadcrumb = function () {
         this.articleCrumb.transitionURL(url.article.get(this.id));
+    };
+    DependenciesGui.prototype.removeDependency = function (jq) {
+        var _this = this;
+        var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        ajax.dependencies.remove({
+            dependent: { id: this.id },
+            dependency: { id: id }
+        }).then(function (res) {
+            if (res.result == true) {
+                $(jq).parent(_this.dependency.jq).remove();
+            }
+        });
     };
     return DependenciesGui;
 })(SinglePageGui);
