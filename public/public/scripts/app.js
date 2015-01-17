@@ -682,7 +682,7 @@ var base = '.partial.edit-article ';
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
     function EditArticleGui(args) {
-        _super.call(this, '.edit-article.partial');
+        _super.call(this, base);
         this.id = "-1";
         this.saveBtn = { get jq() {
                 return $('button#save');
@@ -1417,16 +1417,16 @@ var PreviewableArticle = (function () {
 
     PreviewableArticle.prototype.updateTitle = function (s) {
         if (s)
-            this.input.title = s;
+            this.input.title.val = s;
         else
             s = this.input.title.val;
         this.output.title.val = s;
     };
     PreviewableArticle.prototype.updateContent = function (s) {
         if (s)
-            this.input.content = s;
+            this.input.content.val = s;
         else
-            s = this.input.content;
+            s = this.input.content.val;
         this.output.content.val = render.toMarkedKatex(s);
     };
     PreviewableArticle.prototype.getArticle = function () {

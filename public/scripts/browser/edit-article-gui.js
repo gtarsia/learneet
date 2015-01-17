@@ -17,7 +17,7 @@ var base = '.partial.edit-article ';
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
     function EditArticleGui(args) {
-        _super.call(this, '.edit-article.partial');
+        _super.call(this, base);
         this.id = "-1";
         this.saveBtn = { get jq() {
                 return $('button#save');

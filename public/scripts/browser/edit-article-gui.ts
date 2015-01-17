@@ -77,7 +77,7 @@ class EditArticleGui extends SinglePageGui {
         });
     }
     constructor(args: {id?: string}) {
-        super('.edit-article.partial');
+        super(base);
         this.parseURL();
         var _self = this;
         $(document).ready(function() {

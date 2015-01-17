@@ -39,16 +39,16 @@ var PreviewableArticle = (function () {
 
     PreviewableArticle.prototype.updateTitle = function (s) {
         if (s)
-            this.input.title = s;
+            this.input.title.val = s;
         else
             s = this.input.title.val;
         this.output.title.val = s;
     };
     PreviewableArticle.prototype.updateContent = function (s) {
         if (s)
-            this.input.content = s;
+            this.input.content.val = s;
         else
-            s = this.input.content;
+            s = this.input.content.val;
         this.output.content.val = render.toMarkedKatex(s);
     };
     PreviewableArticle.prototype.getArticle = function () {

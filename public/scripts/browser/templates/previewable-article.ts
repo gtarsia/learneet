@@ -34,13 +34,13 @@ class PreviewableArticle {
     ignoreScroll: boolean;
     //If s is specified, it also sets the input, otherwise it uses the input
     updateTitle(s?: string) {
-        if (s) this.input.title = s;
+        if (s) this.input.title.val = s;
         else s = this.input.title.val;
         this.output.title.val = s;  
     }
     updateContent(s?: string) {
-        if (s) this.input.content = s;
-        else s = this.input.content;
+        if (s) this.input.content.val = s;
+        else s = this.input.content.val;
         this.output.content.val = render.toMarkedKatex(s);
     }
     getArticle() {
