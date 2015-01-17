@@ -674,7 +674,7 @@ var PreviewableArticle = require("./templates/previewable-article");
 
 var url = require("./../common/url");
 var SinglePageGui = require("./single-page-gui");
-var validate = require("./../common/validate");
+
 var baseAjax = require("./../common/base-ajax");
 
 var base = '.partial.edit-article ';
@@ -684,52 +684,16 @@ var EditArticleGui = (function (_super) {
     function EditArticleGui(args) {
         _super.call(this, base);
         this.id = "-1";
-        this.saveBtn = { get jq() {
-                return $('button#save');
-            } };
-        this.cancelBtn = { get jq() {
-                return $('button#cancel');
-            } };
-        this.articleCrumb = this.propertize(".edit-article-partial #article-crumb");
-        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
-        this.dependency = this.propertize(".dependency");
-        this.dependencyFound = this.propertize("select#dependencyFound", 'val');
-        this.addDependencyBtn = this.propertize("button#add");
-        this.dependenciesTemplate = this.propertize("#dependencies-template");
-        this.removeDependencyBtns = this.propertize(".removeDependency");
-        this.dependencyIds = this.propertize(".dependencyId");
-        this.changesDescription = this.propertize("#changesDescription", "val");
+        this.saveBtn = this.propertize(base + 'button.save');
+        this.articleCrumb = this.propertize(base + ".article-crumb");
         this.parseURL();
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
             _self.article = new PreviewableArticle(base);
-            _self.dependencyFound.jq.selectize({
-                create: false,
-                valueField: 'id',
-                labelField: 'title',
-                searchField: 'title',
-                load: function (query, callback) {
-                    if (!query.length)
-                        return callback();
-                    ajax.article.query({ query: query }).then(function (res) {
-                        callback(res.result);
-                    });
-                },
-                render: {
-                    option: function (item, escape) {
-                        return '<div>' + '<span class="dependency">' + '<span class="dependency-title">' + item.title + '</span>' + '<span class="dependency-by"></span>' + '</span>' + '</div>';
-                    }
-                }
-            });
-            $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
             _self.article.fetchDBArticle({ id: _self.id });
-
             _self.saveBtn.jq.click(function () {
                 _self.saveArticle();
-            });
-            _self.cancelBtn.jq.click(function () {
-                _self.redirect(url.article.get(_self.id));
             });
         });
     }
@@ -743,46 +707,23 @@ var EditArticleGui = (function (_super) {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     };
-    EditArticleGui.prototype.query = function (s) {
-    };
     EditArticleGui.prototype.parseURL = function () {
         var re = url.article.edit('(\\d+)');
         var regex = new RegExp(re);
         var matches = regex.exec(location.pathname);
         this.id = matches[1];
     };
-    EditArticleGui.prototype.removeDependency = function (jq) {
-        var _this = this;
-        var id = $(jq).siblings(this.dependencyIds.jq).val();
-        ajax.dependencies.remove({
-            dependent: { id: this.id },
-            dependency: { id: id }
-        }).then(function (res) {
-            if (res.result == true) {
-                $(jq).parent(_this.dependency.jq).remove();
-            }
-        });
-    };
 
     EditArticleGui.prototype.saveArticle = function () {
-        var description = this.changesDescription.val;
-        var its = validate.version.changesDescription(description);
-        if (!its.ok) {
-            var api = this.changesDescription.jq.qtip({
-                content: { text: its.because },
-                show: { when: false, ready: true },
-                position: { my: 'top left', at: 'bottom center' },
-                hide: false
-            });
-            setTimeout(api.qtip.bind(api, 'destroy'), 5000);
-        }
+        var _self = this;
         var article = baseAjax.article.WrapFieldWithId(this.article.getArticle(), this.id);
         ajax.article.update(article).done(function (res) {
             if (!res.ok)
                 console.log(res.why);
             else
                 console.log('Se actualizo el articulo');
-            this.redirect(url.article.get(this.id));
+            window.onbeforeunload = null;
+            singlePageApp.viewTransition(url.article.get(_self.id));
         });
     };
     return EditArticleGui;
@@ -791,7 +732,7 @@ var EditArticleGui = (function (_super) {
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":28,"./../common/url":29,"./../common/validate":30,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":23}],10:[function(require,module,exports){
+},{"./../common/base-ajax":28,"./../common/url":29,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":23}],10:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
@@ -1431,7 +1372,9 @@ var PreviewableArticle = (function () {
     };
     PreviewableArticle.prototype.getArticle = function () {
         return {
-            article: { title: this.input.title, content: this.input.content }
+            article: {
+                title: this.input.title.val,
+                content: this.input.content.val }
         };
     };
     PreviewableArticle.prototype.bindTitlePreview = function () {

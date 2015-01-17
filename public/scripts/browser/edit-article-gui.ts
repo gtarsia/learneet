@@ -9,6 +9,7 @@ import baseAjax = require("./../common/base-ajax");
 declare function marked(c: string);
 
 var base = '.partial.edit-article ';
+declare var singlePageApp;
 
 class EditArticleGui extends SinglePageGui {
     id: string = "-1";
@@ -23,57 +24,24 @@ class EditArticleGui extends SinglePageGui {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     }
-    query(s: string) {
-        
-    }
     parseURL() {
         var re = url.article.edit('(\\d+)')
         var regex = new RegExp(re);
         var matches = regex.exec(location.pathname);
         this.id = matches[1];
     }
-    removeDependency(jq) {
-        var id = $(jq).siblings(this.dependencyIds.jq).val();
-        ajax.dependencies.remove({
-            dependent: { id: this.id},
-            dependency: { id: id}
-        })
-        .then(res => {
-            if (res.result == true) {
-                $(jq).parent(this.dependency.jq).remove();
-            }
-        });
-    }
-    saveBtn = { get jq() { return $('button#save') } };
-    cancelBtn = { get jq() { return $('button#cancel') } };
-    articleCrumb = this.propertize(".edit-article-partial #article-crumb");
-    articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
-    dependency: any = this.propertize(".dependency");
-    dependencyFound: any = this.propertize("select#dependencyFound", 'val');
-    addDependencyBtn = this.propertize("button#add");
-    dependenciesTemplate = this.propertize("#dependencies-template");
-    removeDependencyBtns = this.propertize(".removeDependency");
-    dependencyIds: any = this.propertize(".dependencyId");
-    changesDescription = this.propertize("#changesDescription", "val")
+    saveBtn = this.propertize(base + 'button.save');
+    articleCrumb = this.propertize(base + ".article-crumb");
     article: PreviewableArticle;
     saveArticle() {
-        var description = this.changesDescription.val;
-        var its = validate.version.changesDescription(description);
-        if (!its.ok) {
-            var api = this.changesDescription.jq.qtip({ // Grab some elements to apply the tooltip to
-                content: { text: its.because },
-                show: { when: false, ready: true },
-                position: { my: 'top left', at: 'bottom center' },
-                hide: false
-            })
-            setTimeout(api.qtip.bind(api, 'destroy'), 5000)
-        }
+        var _self = this;
         var article = baseAjax.article.WrapFieldWithId(this.article.getArticle(), this.id);
         ajax.article.update(article)
         .done(function(res) {
             if (!res.ok) console.log(res.why);
             else console.log('Se actualizo el articulo');
-            this.redirect(url.article.get(this.id)); 
+            window.onbeforeunload = null;
+            singlePageApp.viewTransition(url.article.get(_self.id))
         });
     }
     constructor(args: {id?: string}) {
@@ -83,69 +51,10 @@ class EditArticleGui extends SinglePageGui {
         $(document).ready(function() {
             _self.articleCrumb.transitionURL(url.article.get(_self.id))
             _self.article = new PreviewableArticle(base);
-            _self.dependencyFound.jq.selectize({
-                create: false,
-                valueField: 'id',
-                labelField: 'title',
-                searchField: 'title',
-                load: function(query, callback) {
-                    if (!query.length) return callback();
-                    ajax.article.query({query: query})
-                    .then(res => {
-                        callback(res.result);
-                    })
-                },
-                render: {
-                    option: function(item, escape) {
-                        return '<div>' +
-                            '<span class="dependency">' +
-                                '<span class="dependency-title">' + item.title + '</span>' +
-                                '<span class="dependency-by"></span>' +
-                            '</span>' +
-                        '</div>';
-                    }
-                }
-            });
-            $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
             _self.article.fetchDBArticle({ id: _self.id })
-            /*ajax.dependencies.getAll({ article: { id: _self.id}})
-            .done(res => {
-                var deps: any = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);   // optional, speeds up future uses
-                var rendered = Mustache.render(template, 
-                    { deps: deps});
-                _self.dependenciesTemplate.jq.after(rendered);
-                _self.removeDependencyBtns.jq.on("click", () => {
-                    var myThis = eval("this");
-                    _self.removeDependency(myThis);
-                })
-            })
-            */
             _self.saveBtn.jq.click(() => {
                 _self.saveArticle();
             });
-            _self.cancelBtn.jq.click(() => {
-                _self.redirect(url.article.get(_self.id));
-            });
-            /*
-            _self.addDependencyBtn.jq.click(() => {
-                var id = _self.dependencyFound.jq.val();
-                if (id != "") {
-                    ajax.dependencies.add({
-                        dependent: {id: _self.id},
-                        dependency: {id: id}
-                    })
-                    .then(res => {
-                        console.log(res);
-                    });
-                }
-            });
-            */
         });
     }
 }

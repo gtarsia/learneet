@@ -45,7 +45,8 @@ class PreviewableArticle {
     }
     getArticle() {
         return { 
-            article: {title: this.input.title, content: this.input.content}
+            article: {title: this.input.title.val, 
+                content: this.input.content.val}
         }
     }
     bindTitlePreview() {
