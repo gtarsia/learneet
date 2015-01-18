@@ -14,6 +14,7 @@ function propertize(selector: string, valFnName?: string):
                 //I would get the full URL, which doesn't work for REGEX
                 else _url = el.pathname;
                 $(el).click(e => {
+                    if (e.button != 0) return;
                     singlePageApp.viewTransition(_url);    
                     e.preventDefault();
                 })

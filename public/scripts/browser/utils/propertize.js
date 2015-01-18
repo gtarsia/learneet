@@ -14,6 +14,8 @@ function propertize(selector, valFnName) {
                 else
                     _url = el.pathname;
                 $(el).click(function (e) {
+                    if (e.button != 0)
+                        return;
                     singlePageApp.viewTransition(_url);
                     e.preventDefault();
                 });
