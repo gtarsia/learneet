@@ -5,6 +5,7 @@ import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url")
 
 var base = '.partial.create-article ';
+declare var singlePageApp;
 
 class CreateArticleGui extends SinglePageGui {
     createBtn = this.propertize(base + "button.create")
@@ -29,7 +30,7 @@ class CreateArticleGui extends SinglePageGui {
                 clientAjax.article.create(article)
                 .done(function(res) {
                     var id = res.result.id;
-                    _self.redirect(url.article.get(id));
+                    singlePageApp.viewTransition(url.article.get(id))
                 });
             });
         })
