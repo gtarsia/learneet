@@ -28,14 +28,13 @@ class DependenciesGui extends SinglePageGui {
     }
     removeDependency(jq) {
         var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        var _self = this;
         ajax.dependencies.remove({
             dependent: { id: this.id},
             dependency: { id: id}
         })
         .then(res => {
-            if (res.result == true) {
-                $(jq).parent(this.dependency.jq).remove();
-            }
+            _self.refreshDependencies();
         });
     }
     constructor() {
@@ -43,7 +42,7 @@ class DependenciesGui extends SinglePageGui {
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({article: {id: _self.id}});
-        var dependenciesCb = ajax.dependencies.getAll({dependent: {id: _self.id}});
+        this.refreshDependencies();
         $(document).ready(function() {
             _self.setBreadcrumb();
             _self.dependencies.jq.empty();
@@ -51,34 +50,6 @@ class DependenciesGui extends SinglePageGui {
                 var article = res.result;
                 _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
             })
-            dependenciesCb.done(res => {
-                var deps: any = res.result;
-                var none = 'display: none;';
-                deps.forEach(dep => {
-                    dep.dependencyId = dep.id;
-                    dep.dependencyUrl = url.dependencies.get(dep.id);
-                    dep.articleUrl = url.article.get(dep.id);
-                    if (dep.starred == 'true')
-                    { dep.starStyle = ''; dep.emptyStarStyle = none; }
-                    else 
-                    { dep.starStyle = none; dep.emptyStarStyle = ''; }
-                    
-                    dep.arrowUpStyle = none;
-                    dep.emptyArrowUpStyle = '';
-                })
-                console.log(deps);
-                var template = _self.dependenciesTemplate.val;
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, {dependencies: deps});
-                _self.dependencies.jq.html(rendered);
-                _self.dependenciesLinks.transitionURL('');
-                _self.articlesLinks.transitionURL('');
-                _self.removeDependencyBtns.jq.on("click", () => {
-                    if (!confirm('Are you sure you want to remove this dependency?')) return;
-                    var myThis:any = eval("this");
-                    _self.removeDependency(myThis);
-                })
-            });
             var selectizeOpts = {
                 create: false,
                 valueField: 'id',
@@ -114,8 +85,43 @@ class DependenciesGui extends SinglePageGui {
                     })
                     .then(res => {
                         console.log(res);
+                        _self.refreshDependencies();
                     });
                 }
+            });
+        });
+    }
+    refreshDependencies() {
+        var _self = this;
+        var dependenciesCb = ajax.dependencies.getAll({dependent: {id: _self.id}});
+        $(document).ready(function() {
+            dependenciesCb.done(res => {
+                var deps: any = res.result;
+                var none = 'display: none;';
+                deps.forEach(dep => {
+                    dep.dependencyId = dep.id;
+                    dep.dependencyUrl = url.dependencies.get(dep.id);
+                    dep.articleUrl = url.article.get(dep.id);
+                    if (dep.starred == 'true')
+                    { dep.starStyle = ''; dep.emptyStarStyle = none; }
+                    else 
+                    { dep.starStyle = none; dep.emptyStarStyle = ''; }
+                    
+                    dep.arrowUpStyle = none;
+                    dep.emptyArrowUpStyle = '';
+                })
+                console.log(deps);
+                var template = _self.dependenciesTemplate.val;
+                Mustache.parse(template);
+                var rendered = Mustache.render(template, {dependencies: deps});
+                _self.dependencies.jq.html(rendered);
+                _self.dependenciesLinks.transitionURL('');
+                _self.articlesLinks.transitionURL('');
+                _self.removeDependencyBtns.jq.on("click", () => {
+                    if (!confirm('Are you sure you want to remove this dependency?')) return;
+                    var myThis:any = eval("this");
+                    _self.removeDependency(myThis);
+                })
             });
         });
     }

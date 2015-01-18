@@ -1,7 +1,7 @@
 script.template(type="x-tmpl-mustache")
   li
     | {{#dependencies}}
-    .dependency.template
+    .dependency
       input.dependency-id(type='hidden' value='{{dependencyId}}')
       span.mega-octicon.octicon-star(style='{{starStyle}}')
       span.mega-octicon.octicon-star.empty(style='{{emptyStarStyle}}')
