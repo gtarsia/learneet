@@ -74,6 +74,7 @@ class DependenciesGui extends SinglePageGui {
                 _self.dependenciesLinks.transitionURL('');
                 _self.articlesLinks.transitionURL('');
                 _self.removeDependencyBtns.jq.on("click", () => {
+                    if (!confirm('Are you sure you want to remove this dependency?')) return;
                     var myThis:any = eval("this");
                     _self.removeDependency(myThis);
                 })
