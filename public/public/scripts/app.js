@@ -516,6 +516,7 @@ var CreateArticleGui = (function (_super) {
                 console.log(article);
                 clientAjax.article.create(article).done(function (res) {
                     var id = res.result.id;
+                    window.onbeforeunload = null;
                     singlePageApp.viewTransition(url.article.get(id));
                 });
             });

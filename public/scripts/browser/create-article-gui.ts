@@ -32,7 +32,8 @@ class CreateArticleGui extends SinglePageGui {
                 clientAjax.article.create(article)
                 .done(function(res) {
                     var id = res.result.id;
-                    singlePageApp.viewTransition(url.article.get(id))
+                    window.onbeforeunload = null;
+                    singlePageApp.viewTransition(url.article.get(id));
                 });
             });
         })
