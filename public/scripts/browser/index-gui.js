@@ -21,6 +21,7 @@ var IndexGui = (function (_super) {
         this.articleThumbs = this.propertize(base + '.article-thumbs');
         this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
         this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
+        this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {

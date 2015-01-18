@@ -22,6 +22,7 @@ class IndexGui extends SinglePageGui {
     }
     constructor() {
         super(base);
+        this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function() {

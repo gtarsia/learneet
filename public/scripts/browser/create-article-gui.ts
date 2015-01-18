@@ -19,6 +19,8 @@ class CreateArticleGui extends SinglePageGui {
     constructor() {
         super(base);
         var _self = this;
+        _self.titleDeferred.resolve(
+                    'Create article - Learneet')
         $(document).ready(function () {
             _self.previewArticle = new PreviewableArticle(base);
             _self.previewArticle.input.content.val = _self.contentPreviewExample();

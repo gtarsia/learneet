@@ -18,6 +18,7 @@ var CreateArticleGui = (function (_super) {
         _super.call(this, base);
         this.createBtn = this.propertize(base + "button.create");
         var _self = this;
+        _self.titleDeferred.resolve('Create article - Learneet');
         $(document).ready(function () {
             _self.previewArticle = new PreviewableArticle(base);
             _self.previewArticle.input.content.val = _self.contentPreviewExample();

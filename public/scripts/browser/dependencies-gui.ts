@@ -49,6 +49,8 @@ class DependenciesGui extends SinglePageGui {
             titleCb.done(res => {
                 var article = res.result;
                 _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
+                _self.titleDeferred.resolve(
+                    'Dependencies(' + article.title + ') - Learneet')
             })
             var selectizeOpts = {
                 create: false,

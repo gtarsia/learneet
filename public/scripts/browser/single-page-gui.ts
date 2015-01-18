@@ -3,8 +3,13 @@ import Gui = require('./gui')
 class SinglePageGui extends Gui {
     main;
     base;
+    titleDeferred;
     constructor(componentSel: string) {
         super();
+        this.titleDeferred = jQuery.Deferred();
+        this.titleDeferred.done(title => {
+            document.title = title;
+        });
         this.base = componentSel;
         this.main = this.propertize(componentSel);
         var _self = this;

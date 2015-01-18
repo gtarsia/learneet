@@ -48,6 +48,8 @@ class EditArticleGui extends SinglePageGui {
         super(base);
         this.parseURL();
         var _self = this;
+        _self.titleDeferred.resolve(
+                    'Edit article - Learneet')
         $(document).ready(function() {
             _self.articleCrumb.transitionURL(url.article.get(_self.id))
             _self.article = new PreviewableArticle(base);

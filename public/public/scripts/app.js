@@ -102,6 +102,7 @@ var ArticleGui = (function (_super) {
                 var result = res.result;
                 _self.article.rendered.setTitle(result.title);
                 _self.article.rendered.setContent(result.content);
+                _self.titleDeferred.resolve(result.title + ' - Learneet');
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));
@@ -504,6 +505,7 @@ var CreateArticleGui = (function (_super) {
         _super.call(this, base);
         this.createBtn = this.propertize(base + "button.create");
         var _self = this;
+        _self.titleDeferred.resolve('Create article - Learneet');
         $(document).ready(function () {
             _self.previewArticle = new PreviewableArticle(base);
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
@@ -568,6 +570,7 @@ var DependenciesGui = (function (_super) {
             titleCb.done(function (res) {
                 var article = res.result;
                 _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
+                _self.titleDeferred.resolve('Dependencies(' + article.title + ') - Learneet');
             });
             var selectizeOpts = {
                 create: false,
@@ -696,6 +699,7 @@ var EditArticleGui = (function (_super) {
         this.articleCrumb = this.propertize(base + ".article-crumb");
         this.parseURL();
         var _self = this;
+        _self.titleDeferred.resolve('Edit article - Learneet');
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
             _self.article = new PreviewableArticle(base);
@@ -786,6 +790,7 @@ var IndexGui = (function (_super) {
         this.articleThumbs = this.propertize(base + '.article-thumbs');
         this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
         this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
+        this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {
@@ -1235,6 +1240,10 @@ var SinglePageGui = (function (_super) {
     __extends(SinglePageGui, _super);
     function SinglePageGui(componentSel) {
         _super.call(this);
+        this.titleDeferred = jQuery.Deferred();
+        this.titleDeferred.done(function (title) {
+            document.title = title;
+        });
         this.base = componentSel;
         this.main = this.propertize(componentSel);
         var _self = this;

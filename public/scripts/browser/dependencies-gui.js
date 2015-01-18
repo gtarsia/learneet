@@ -34,6 +34,7 @@ var DependenciesGui = (function (_super) {
             titleCb.done(function (res) {
                 var article = res.result;
                 _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
+                _self.titleDeferred.resolve('Dependencies(' + article.title + ') - Learneet');
             });
             var selectizeOpts = {
                 create: false,
