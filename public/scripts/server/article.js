@@ -133,7 +133,8 @@ exports.getAll = getAll;
         var words = oldTitle.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
-            multi = multi.srem(["search_words:" + words[i], id], redis.print);
+            var word = words[i].toLowerCase();
+            multi = multi.srem(["search_words:" + word, id], redis.print);
         }
         return multi;
     }
@@ -143,7 +144,8 @@ exports.getAll = getAll;
         var words = newTitle.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
-            multi = multi.sadd(["search_words:" + words[i], id], redis.print);
+            var word = words[i].toLowerCase();
+            multi = multi.sadd(["search_words:" + word, id], redis.print);
         }
         return multi;
     }
@@ -161,7 +163,7 @@ exports.getAll = getAll;
         var words = args.query.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
-            words[i] = "search_words:".concat(words[i]);
+            words[i] = "search_words:".concat(words[i].toLowerCase());
         }
         return db.sinter.apply(db, words).then(function (ids) {
             if (ids == null)
