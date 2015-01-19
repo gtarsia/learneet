@@ -1,57 +1,34 @@
-import ajax = require("./client-ajax");
-import url = require("./../common/url");
-import SinglePageGui = require("./single-page-gui");
+import ajax = require('./../client-ajax');
+import url = require("./../../common/url");
+import Gui = require('./../gui');
 
-declare function marked(c: string);
-var base = '.partial.dependencies ';
-
-class DependenciesGui extends SinglePageGui {
+class Dependencies extends Gui {
     id;
-    articleCrumb = this.propertize(base + '.article.crumb');
-    dependencies = this.propertize(base + '.dependency.list');
-    dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
-    dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
-    articlesLinks = this.propertize(base + '.dependency a.article');
-    dependencySelect:any = this.propertize(base + 'select.dependency');
-    addDependencyBtn = this.propertize(base + '.add-dependency');
-    dependenciesIds: any = this.propertize(".dependency-id");
-    dependency: any = this.propertize(base + ".dependency");
-    removeDependencyBtns = this.propertize(base + ".removeDependency");
-    parseURL() {
-        var re = url.dependencies.get('(\\d+)')
-        var regex = new RegExp(re);
-        var matches = regex.exec(location.pathname);
-        this.id = matches[1];
-    }
-    setBreadcrumb() {
-        this.articleCrumb.transitionURL(url.article.get(this.id));
-    }
-    removeDependency(jq) {
-        var id = $(jq).siblings(this.dependenciesIds.jq).val();
-        var _self = this;
-        ajax.dependencies.remove({
-            dependent: { id: this.id},
-            dependency: { id: id}
-        })
-        .then(res => {
-            _self.refreshDependencies();
-        });
-    }
-    constructor() {
-        super(base);
-        this.parseURL();
-        var _self = this;
-        var titleCb = ajax.article.getTitleWithId({article: {id: _self.id}});
+    removeDependencyBtns;
+    dependenciesTemplate;
+    dependencySelect : any;
+    addDependencyBtn;
+    dependenciesIds : any;
+    dependency: any;
+    dependencies;
+    dependenciesLinks;
+    articlesLinks;
+    constructor(base: string, id: string) {
+        super();
+        this.id = id;
+        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
+        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
+        this.dependencySelect = this.propertize(base + 'select.dependency');
+        this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        this.dependenciesIds = this.propertize(".dependency-id");
+        this.dependency = this.propertize(base + ".dependency");
+        this.dependencies = this.propertize(base + '.dependency.list');
+        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
+        this.articlesLinks = this.propertize(base + '.dependency a.article');
         this.refreshDependencies();
+        var _self = this;
         $(document).ready(function() {
-            _self.setBreadcrumb();
             _self.dependencies.jq.empty();
-            titleCb.done(res => {
-                var article = res.result;
-                _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
-                _self.titleDeferred.resolve(
-                    'Dependencies(' + article.title + ') - Learneet')
-            })
             var selectizeOpts = {
                 create: false,
                 valueField: 'id',
@@ -93,6 +70,17 @@ class DependenciesGui extends SinglePageGui {
             });
         });
     }
+    removeDependency(jq) {
+        var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        var _self = this;
+        ajax.dependencies.remove({
+            dependent: { id: this.id},
+            dependency: { id: id}
+        })
+        .then(res => {
+            _self.refreshDependencies();
+        });
+    }
     refreshDependencies() {
         var _self = this;
         var dependenciesCb = ajax.dependencies.getAll({dependent: {id: _self.id}});
@@ -116,6 +104,7 @@ class DependenciesGui extends SinglePageGui {
                 var template = _self.dependenciesTemplate.val;
                 Mustache.parse(template);
                 var rendered = Mustache.render(template, {dependencies: deps});
+                _self.dependencies.jq.empty();
                 _self.dependencies.jq.html(rendered);
                 _self.dependenciesLinks.transitionURL('');
                 _self.articlesLinks.transitionURL('');
@@ -129,4 +118,4 @@ class DependenciesGui extends SinglePageGui {
     }
 }
 
-export = DependenciesGui
+export = Dependencies;

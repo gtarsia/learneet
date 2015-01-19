@@ -12,21 +12,22 @@ var ArticleChangePreviewTemplate = require('./templates/article-change-preview-t
 var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
+var Dependencies = require('./templates/dependencies');
 
 var base = '.partial.article ';
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
-        _super.call(this, '.article.partial');
+        _super.call(this, base);
         this.article = { id: null, rendered: null };
-        this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
         this.dependenciesLink = this.propertize(base + 'h1 a.dependencies');
         this.parseURL();
+        this.dependencies = new Dependencies(base, this.article.id);
         var _self = this;
         $(document).ready(function () {
             _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
@@ -45,20 +46,6 @@ var ArticleGui = (function (_super) {
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));
-            return;
-            ajax.dependencies.getAll({
-                article: _self.article
-            }).done(function (res) {
-                var deps = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, { deps: deps });
-                _self.dependenciesTemplate.jq.after(rendered);
-            });
         });
     }
     ArticleGui.prototype.getEditBtn = function () {

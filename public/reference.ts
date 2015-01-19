@@ -21,6 +21,7 @@
 /// <reference path="scripts/browser/single-page-app.ts" />
 /// <reference path="scripts/browser/single-page-gui.ts" />
 /// <reference path="scripts/browser/templates/article-change-preview-template.ts" />
+/// <reference path="scripts/browser/templates/dependencies.ts" />
 /// <reference path="scripts/browser/templates/editable-article.ts" />
 /// <reference path="scripts/browser/templates/previewable-article.ts" />
 /// <reference path="scripts/browser/templates/rendered-article.ts" />

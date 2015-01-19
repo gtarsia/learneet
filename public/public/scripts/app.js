@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":30,"./client-ajax":6,"./gui":10,"./templates/previewable-article":23}],2:[function(require,module,exports){
+},{"./../common/validate":31,"./client-ajax":6,"./gui":10,"./templates/previewable-article":24}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -73,21 +73,22 @@ var ArticleChangePreviewTemplate = require('./templates/article-change-preview-t
 var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
+var Dependencies = require('./templates/dependencies');
 
 var base = '.partial.article ';
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
-        _super.call(this, '.article.partial');
+        _super.call(this, base);
         this.article = { id: null, rendered: null };
-        this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
         this.dependenciesLink = this.propertize(base + 'h1 a.dependencies');
         this.parseURL();
+        this.dependencies = new Dependencies(base, this.article.id);
         var _self = this;
         $(document).ready(function () {
             _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
@@ -106,20 +107,6 @@ var ArticleGui = (function (_super) {
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));
-            return;
-            ajax.dependencies.getAll({
-                article: _self.article
-            }).done(function (res) {
-                var deps = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, { deps: deps });
-                _self.dependenciesTemplate.jq.after(rendered);
-            });
         });
     }
     ArticleGui.prototype.getEditBtn = function () {
@@ -141,7 +128,7 @@ var ArticleGui = (function (_super) {
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":29,"./client-ajax":6,"./single-page-gui":20,"./templates/article-change-preview-template":21,"./templates/rendered-article":24,"./utils/score-arrow":27}],3:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/article-change-preview-template":21,"./templates/dependencies":22,"./templates/rendered-article":25,"./utils/score-arrow":28}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -218,7 +205,7 @@ if (guiName == 'BaseArticleGui') {
 module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":29,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":10}],4:[function(require,module,exports){
+},{"./../common/url":30,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":10}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -302,7 +289,7 @@ var ChangeGui = (function (_super) {
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map
 
-},{"./../common/url":29,"./client-ajax":6,"./single-page-gui":20,"./templates/rendered-article":24,"./utils/score-arrow":27}],6:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/rendered-article":25,"./utils/score-arrow":28}],6:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
@@ -484,7 +471,7 @@ var changes = exports.changes;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":28}],7:[function(require,module,exports){
+},{"./../common/base-ajax":29}],7:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -534,7 +521,7 @@ var CreateArticleGui = (function (_super) {
 module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":29,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":23}],8:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],8:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -553,7 +540,7 @@ var DependenciesGui = (function (_super) {
         _super.call(this, base);
         this.articleCrumb = this.propertize(base + '.article.crumb');
         this.dependencies = this.propertize(base + '.dependency.list');
-        this.dependenciesTemplate = this.propertize(base + '.template', 'html');
+        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
         this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
         this.articlesLinks = this.propertize(base + '.dependency a.article');
         this.dependencySelect = this.propertize(base + 'select.dependency');
@@ -674,7 +661,7 @@ var DependenciesGui = (function (_super) {
 module.exports = DependenciesGui;
 //# sourceMappingURL=dependencies-gui.js.map
 
-},{"./../common/url":29,"./client-ajax":6,"./single-page-gui":20}],9:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20}],9:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -745,7 +732,7 @@ var EditArticleGui = (function (_super) {
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":28,"./../common/url":29,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":23}],10:[function(require,module,exports){
+},{"./../common/base-ajax":29,"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],10:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
@@ -767,7 +754,7 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{"./utils/propertize":25}],11:[function(require,module,exports){
+},{"./utils/propertize":26}],11:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -847,7 +834,7 @@ var IndexGui = (function (_super) {
 module.exports = IndexGui;
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":29,"./client-ajax":6,"./single-page-gui":20,"./utils/render":26}],12:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./utils/render":27}],12:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1077,7 +1064,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":29,"./client-ajax":6,"./gui":10}],18:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./gui":10}],18:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1228,7 +1215,7 @@ if (guiFound)
 singlePageApp.viewTransition = exports.viewTransition;
 //# sourceMappingURL=single-page-app.js.map
 
-},{"./../common/url":29,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){
+},{"./../common/url":30,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1311,7 +1298,128 @@ var ArticleChangePreviewTemplate = (function (_super) {
 module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
-},{"./../../common/url":29,"./../client-ajax":6,"./../gui":10}],22:[function(require,module,exports){
+},{"./../../common/url":30,"./../client-ajax":6,"./../gui":10}],22:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var ajax = require('./../client-ajax');
+var url = require("./../../common/url");
+var Gui = require('./../gui');
+
+var Dependencies = (function (_super) {
+    __extends(Dependencies, _super);
+    function Dependencies(base, id) {
+        _super.call(this);
+        this.id = id;
+        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
+        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
+        this.dependencySelect = this.propertize(base + 'select.dependency');
+        this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        this.dependenciesIds = this.propertize(".dependency-id");
+        this.dependency = this.propertize(base + ".dependency");
+        this.dependencies = this.propertize(base + '.dependency.list');
+        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
+        this.articlesLinks = this.propertize(base + '.dependency a.article');
+        this.refreshDependencies();
+        var _self = this;
+        $(document).ready(function () {
+            _self.dependencies.jq.empty();
+            var selectizeOpts = {
+                create: false,
+                valueField: 'id',
+                labelField: 'title',
+                searchField: 'title',
+                load: function (query, callback) {
+                    if (!query.length)
+                        return callback();
+                    ajax.article.query({ query: query }).then(function (res) {
+                        callback(res.result);
+                    });
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div>' + '<span class="dependency">' + '<span class="dependency-title">' + item.title + '</span>' + '<span class="dependency-by"></span>' + '</span>' + '</div>';
+                    }
+                }
+            };
+            var el = _self.dependencySelect.jq[0];
+            if (el)
+                if (el.selectize)
+                    el.selectize.destroy();
+            _self.dependencySelect.jq.selectize(selectizeOpts);
+            _self.addDependencyBtn.jq.click(function () {
+                var id = _self.dependencySelect.jq.val();
+                if (id != "") {
+                    ajax.dependencies.add({
+                        dependent: { id: _self.id },
+                        dependency: { id: id }
+                    }).then(function (res) {
+                        console.log(res);
+                        _self.refreshDependencies();
+                    });
+                }
+            });
+        });
+    }
+    Dependencies.prototype.removeDependency = function (jq) {
+        var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        var _self = this;
+        ajax.dependencies.remove({
+            dependent: { id: this.id },
+            dependency: { id: id }
+        }).then(function (res) {
+            _self.refreshDependencies();
+        });
+    };
+    Dependencies.prototype.refreshDependencies = function () {
+        var _self = this;
+        var dependenciesCb = ajax.dependencies.getAll({ dependent: { id: _self.id } });
+        $(document).ready(function () {
+            dependenciesCb.done(function (res) {
+                var deps = res.result;
+                var none = 'display: none;';
+                deps.forEach(function (dep) {
+                    dep.dependencyId = dep.id;
+                    dep.dependencyUrl = url.dependencies.get(dep.id);
+                    dep.articleUrl = url.article.get(dep.id);
+                    if (dep.starred == 'true') {
+                        dep.starStyle = '';
+                        dep.emptyStarStyle = none;
+                    } else {
+                        dep.starStyle = none;
+                        dep.emptyStarStyle = '';
+                    }
+
+                    dep.arrowUpStyle = none;
+                    dep.emptyArrowUpStyle = '';
+                });
+                console.log(deps);
+                var template = _self.dependenciesTemplate.val;
+                Mustache.parse(template);
+                var rendered = Mustache.render(template, { dependencies: deps });
+                _self.dependencies.jq.empty();
+                _self.dependencies.jq.html(rendered);
+                _self.dependenciesLinks.transitionURL('');
+                _self.articlesLinks.transitionURL('');
+                _self.removeDependencyBtns.jq.on("click", function () {
+                    if (!confirm('Are you sure you want to remove this dependency?'))
+                        return;
+                    var myThis = eval("this");
+                    _self.removeDependency(myThis);
+                });
+            });
+        });
+    };
+    return Dependencies;
+})(Gui);
+
+module.exports = Dependencies;
+//# sourceMappingURL=dependencies.js.map
+
+},{"./../../common/url":30,"./../client-ajax":6,"./../gui":10}],23:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1334,7 +1442,7 @@ var EditableArticle = (function (_super) {
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{"./../gui":10}],23:[function(require,module,exports){
+},{"./../gui":10}],24:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
@@ -1433,7 +1541,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":6,"./../utils/render":26,"./editable-article":22,"./rendered-article":24}],24:[function(require,module,exports){
+},{".././client-ajax":6,"./../utils/render":27,"./editable-article":23,"./rendered-article":25}],25:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1473,7 +1581,7 @@ var RenderedArticle = (function (_super) {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{"./../gui":10,"./../utils/render":26}],25:[function(require,module,exports){
+},{"./../gui":10,"./../utils/render":27}],26:[function(require,module,exports){
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -1513,7 +1621,7 @@ function propertize(selector, valFnName) {
 module.exports = propertize;
 //# sourceMappingURL=propertize.js.map
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 function toKatex(s) {
     var output = '';
     var occurenceIndex = 0;
@@ -1553,7 +1661,7 @@ function toMarkedKatex(s) {
 exports.toMarkedKatex = toMarkedKatex;
 //# sourceMappingURL=render.js.map
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1842,7 +1950,7 @@ var ChangeScore = (function (_super) {
 exports.ChangeScore = ChangeScore;
 //# sourceMappingURL=score-arrow.js.map
 
-},{"./../client-ajax":6,"./../gui":10}],28:[function(require,module,exports){
+},{"./../client-ajax":6,"./../gui":10}],29:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -2298,7 +2406,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -2358,7 +2466,7 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2398,7 +2506,7 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validate.js.map
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2438,4 +2546,4 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,28,29,30,31]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,29,30,31,32]);

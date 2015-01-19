@@ -6,6 +6,7 @@ import Gui = require("./gui");
 import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
+import Dependencies = require('./templates/dependencies');
 declare function marked(s);
 
 var base = '.partial.article '
@@ -13,7 +14,6 @@ var base = '.partial.article '
 class ArticleGui extends SinglePageGui { 
     article: {id: string; rendered: RenderedArticle} = {id: null, rendered: null};
     main: string;
-    dependenciesTemplate = this.propertize("#dependencies-template");
     getEditBtn() {
         return $("#editBtn");
     }
@@ -22,7 +22,8 @@ class ArticleGui extends SinglePageGui {
     viewProposalsBtn = this.propertize("button#viewProposals");
     articleCrumb = this.propertize("#article-crumb");
     articleChanges: ArticleChangePreviewTemplate;
-    dependenciesLink = this.propertize(base + 'h1 a.dependencies')
+    dependenciesLink = this.propertize(base + 'h1 a.dependencies');
+    dependencies;
     articleScore;
     setCrumb() {
         this.articleCrumb.transitionURL(location.pathname)
@@ -34,8 +35,9 @@ class ArticleGui extends SinglePageGui {
         this.article.id = matches[1];
     }
     constructor(args: {id?: string}) {
-        super('.article.partial');
+        super(base);
         this.parseURL();
+        this.dependencies = new Dependencies(base, this.article.id);
         var _self = this;
         $(document).ready(() => {
             _self.articleChanges = new ArticleChangePreviewTemplate({id: _self.article.id});
@@ -57,22 +59,6 @@ class ArticleGui extends SinglePageGui {
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id))
-            return;
-            ajax.dependencies.getAll({
-                article: _self.article
-            })
-            .done(function(res) {
-                var deps: any = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);   // optional, speeds up future uses
-                var rendered = Mustache.render(template, 
-                    { deps: deps});
-                _self.dependenciesTemplate.jq.after(rendered);
-            });
         });
     }
 } 
