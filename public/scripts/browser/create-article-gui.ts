@@ -5,6 +5,7 @@ import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url")
 
 var base = '.partial.create-article ';
+declare var singlePageApp;
 
 class CreateArticleGui extends SinglePageGui {
     createBtn = this.propertize(base + "button.create")
@@ -18,18 +19,21 @@ class CreateArticleGui extends SinglePageGui {
     constructor() {
         super(base);
         var _self = this;
+        _self.titleDeferred.resolve(
+                    'Create article - Learneet')
         $(document).ready(function () {
-            _self.previewArticle = new PreviewableArticle();
+            _self.previewArticle = new PreviewableArticle(base);
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             _self.createBtn.jq.click(() => {
                 console.log('Trying to create: ');
-                var article = _self.previewArticle.article;
+                var article = _self.previewArticle.getArticle();
                 console.log(article);
                 clientAjax.article.create(article)
                 .done(function(res) {
                     var id = res.result.id;
-                    _self.redirect(url.article.get(id));
+                    window.onbeforeunload = null;
+                    singlePageApp.viewTransition(url.article.get(id));
                 });
             });
         })

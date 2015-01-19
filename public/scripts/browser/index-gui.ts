@@ -4,6 +4,7 @@ import baseArticle = baseAjax.article;
 import url = require("./../common/url");
 import SinglePageGui = require("./single-page-gui");
 import Gui = require("./gui");
+import render = require('./utils/render');
 
 //$.template('<div><img src="${url}" />${name}</div>');
 var base = '.index.partial ';
@@ -21,6 +22,7 @@ class IndexGui extends SinglePageGui {
     }
     constructor() {
         super(base);
+        this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function() {
@@ -36,10 +38,11 @@ class IndexGui extends SinglePageGui {
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
                     var article = articles[i];
-                    if (!article) {articles.splice(i, 1); continue;}
-                    if (!article.content) {articles.splice(i, 1); continue;}
+                    if (!article) {articles.splice(i, 1); i--; continue;}
+                    if (!article.content) {articles.splice(i, 1); i--; continue;}
                     article.url = url.article.get(article.id);
-                    article.content = article.content.substr(0, 130) + '...';
+                    var s = article.content.substr(0, 150) + '...';
+                    article.content = render.toKatex(s);
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);   // optional, speeds up future uses

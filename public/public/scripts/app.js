@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":29,"./client-ajax":6,"./gui":10,"./templates/previewable-article":23}],2:[function(require,module,exports){
+},{"./../common/validate":31,"./client-ajax":6,"./gui":10,"./templates/previewable-article":24}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -73,26 +73,28 @@ var ArticleChangePreviewTemplate = require('./templates/article-change-preview-t
 var SinglePageGui = require("./single-page-gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
+var Dependencies = require('./templates/dependencies');
 
 var base = '.partial.article ';
 
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
-        _super.call(this, '.article.partial');
+        _super.call(this, base);
         this.article = { id: null, rendered: null };
-        this.dependenciesTemplate = this.propertize("#dependencies-template");
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
         this.dependenciesLink = this.propertize(base + 'h1 a.dependencies');
         this.parseURL();
+        this.dependencies = new Dependencies(base, this.article.id);
         var _self = this;
         $(document).ready(function () {
             _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
             _self.setCrumb();
             _self.article.rendered = new RenderedArticle();
+            _self.article.rendered.clear();
             _self.articleScore = new Arrows.ArticleScore(_self.article);
             ajax.article.get({ article: { id: _self.article.id } }).done(function (res) {
                 if (!res.ok) {
@@ -100,25 +102,12 @@ var ArticleGui = (function (_super) {
                     return;
                 }
                 var result = res.result;
-                _self.article.rendered.title.val = result.title;
-                _self.article.rendered.content.val = marked(result.content);
+                _self.article.rendered.setTitle(result.title);
+                _self.article.rendered.setContent(result.content);
+                _self.titleDeferred.resolve(result.title + ' - Learneet');
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));
-            return;
-            ajax.dependencies.getAll({
-                article: _self.article
-            }).done(function (res) {
-                var deps = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, { deps: deps });
-                _self.dependenciesTemplate.jq.after(rendered);
-            });
         });
     }
     ArticleGui.prototype.getEditBtn = function () {
@@ -140,7 +129,7 @@ var ArticleGui = (function (_super) {
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":28,"./client-ajax":6,"./single-page-gui":20,"./templates/article-change-preview-template":21,"./templates/rendered-article":24,"./utils/score-arrow":26}],3:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/article-change-preview-template":21,"./templates/dependencies":22,"./templates/rendered-article":25,"./utils/score-arrow":28}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -217,7 +206,7 @@ if (guiName == 'BaseArticleGui') {
 module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":28,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":10}],4:[function(require,module,exports){
+},{"./../common/url":30,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":10}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -301,7 +290,7 @@ var ChangeGui = (function (_super) {
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map
 
-},{"./../common/url":28,"./client-ajax":6,"./single-page-gui":20,"./templates/rendered-article":24,"./utils/score-arrow":26}],6:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/rendered-article":25,"./utils/score-arrow":28}],6:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
@@ -483,7 +472,7 @@ var changes = exports.changes;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":27}],7:[function(require,module,exports){
+},{"./../common/base-ajax":29}],7:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -504,17 +493,19 @@ var CreateArticleGui = (function (_super) {
         _super.call(this, base);
         this.createBtn = this.propertize(base + "button.create");
         var _self = this;
+        _self.titleDeferred.resolve('Create article - Learneet');
         $(document).ready(function () {
-            _self.previewArticle = new PreviewableArticle();
+            _self.previewArticle = new PreviewableArticle(base);
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             _self.createBtn.jq.click(function () {
                 console.log('Trying to create: ');
-                var article = _self.previewArticle.article;
+                var article = _self.previewArticle.getArticle();
                 console.log(article);
                 clientAjax.article.create(article).done(function (res) {
                     var id = res.result.id;
-                    _self.redirect(url.article.get(id));
+                    window.onbeforeunload = null;
+                    singlePageApp.viewTransition(url.article.get(id));
                 });
             });
         });
@@ -531,7 +522,7 @@ var CreateArticleGui = (function (_super) {
 module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":28,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":23}],8:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],8:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -550,47 +541,25 @@ var DependenciesGui = (function (_super) {
         _super.call(this, base);
         this.articleCrumb = this.propertize(base + '.article.crumb');
         this.dependencies = this.propertize(base + '.dependency.list');
-        this.dependenciesTemplate = this.propertize(base + '.template', 'html');
+        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
         this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
         this.articlesLinks = this.propertize(base + '.dependency a.article');
         this.dependencySelect = this.propertize(base + 'select.dependency');
         this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        this.dependenciesIds = this.propertize(".dependency-id");
+        this.dependency = this.propertize(base + ".dependency");
+        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
-        var dependenciesCb = ajax.dependencies.getAll({ user: { id: '1' }, article: { id: _self.id } });
+        this.refreshDependencies();
         $(document).ready(function () {
             _self.setBreadcrumb();
             _self.dependencies.jq.empty();
             titleCb.done(function (res) {
                 var article = res.result;
                 _self.articleCrumb.jq.html('Back to Article(' + article.title + ')');
-            });
-            dependenciesCb.done(function (res) {
-                var deps = res.result;
-                var none = 'display: none;';
-                deps.forEach(function (dep) {
-                    dep.dependencyId = dep.id;
-                    dep.dependencyUrl = url.dependencies.get(dep.id);
-                    dep.articleUrl = url.article.get(dep.id);
-                    if (dep.starred == 'true') {
-                        dep.starStyle = '';
-                        dep.emptyStarStyle = none;
-                    } else {
-                        dep.starStyle = none;
-                        dep.emptyStarStyle = '';
-                    }
-
-                    dep.arrowUpStyle = none;
-                    dep.emptyArrowUpStyle = '';
-                });
-                console.log(deps);
-                var template = _self.dependenciesTemplate.val;
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, { dependencies: deps });
-                _self.dependencies.jq.html(rendered);
-                _self.dependenciesLinks.transitionURL('');
-                _self.articlesLinks.transitionURL('');
+                _self.titleDeferred.resolve('Dependencies(' + article.title + ') - Learneet');
             });
             var selectizeOpts = {
                 create: false,
@@ -623,6 +592,7 @@ var DependenciesGui = (function (_super) {
                         dependency: { id: id }
                     }).then(function (res) {
                         console.log(res);
+                        _self.refreshDependencies();
                     });
                 }
             });
@@ -637,13 +607,62 @@ var DependenciesGui = (function (_super) {
     DependenciesGui.prototype.setBreadcrumb = function () {
         this.articleCrumb.transitionURL(url.article.get(this.id));
     };
+    DependenciesGui.prototype.removeDependency = function (jq) {
+        var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        var _self = this;
+        ajax.dependencies.remove({
+            dependent: { id: this.id },
+            dependency: { id: id }
+        }).then(function (res) {
+            _self.refreshDependencies();
+        });
+    };
+
+    DependenciesGui.prototype.refreshDependencies = function () {
+        var _self = this;
+        var dependenciesCb = ajax.dependencies.getAll({ dependent: { id: _self.id } });
+        $(document).ready(function () {
+            dependenciesCb.done(function (res) {
+                var deps = res.result;
+                var none = 'display: none;';
+                deps.forEach(function (dep) {
+                    dep.dependencyId = dep.id;
+                    dep.dependencyUrl = url.dependencies.get(dep.id);
+                    dep.articleUrl = url.article.get(dep.id);
+                    if (dep.starred == 'true') {
+                        dep.starStyle = '';
+                        dep.emptyStarStyle = none;
+                    } else {
+                        dep.starStyle = none;
+                        dep.emptyStarStyle = '';
+                    }
+
+                    dep.arrowUpStyle = none;
+                    dep.emptyArrowUpStyle = '';
+                });
+                console.log(deps);
+                var template = _self.dependenciesTemplate.val;
+                Mustache.parse(template);
+                var rendered = Mustache.render(template, { dependencies: deps });
+                _self.dependencies.jq.html(rendered);
+                _self.dependenciesLinks.transitionURL('');
+                _self.articlesLinks.transitionURL('');
+                _self.removeDependencyBtns.jq.on("click", function () {
+                    if (!confirm('Are you sure you want to remove this dependency?'))
+                        return;
+                    var myThis = eval("this");
+                    _self.removeDependency(myThis);
+                });
+            });
+        });
+    };
     return DependenciesGui;
 })(SinglePageGui);
 
 module.exports = DependenciesGui;
 //# sourceMappingURL=dependencies-gui.js.map
 
-},{"./../common/url":28,"./client-ajax":6,"./single-page-gui":20}],9:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20}],9:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -655,95 +674,27 @@ var PreviewableArticle = require("./templates/previewable-article");
 
 var url = require("./../common/url");
 var SinglePageGui = require("./single-page-gui");
-var validate = require("./../common/validate");
+
 var baseAjax = require("./../common/base-ajax");
+
+var base = '.partial.edit-article ';
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
     function EditArticleGui(args) {
-        _super.call(this, '.edit-article-partial');
+        _super.call(this, base);
         this.id = "-1";
-        this.saveBtn = { get jq() {
-                return $('button#save');
-            } };
-        this.cancelBtn = { get jq() {
-                return $('button#cancel');
-            } };
-        this.articleCrumb = this.propertize(".edit-article-partial #article-crumb");
-        this.articleHiddenId = this.propertize("[type=hidden]#article-id", "val");
-        this.dependency = this.propertize(".dependency");
-        this.dependencyFound = this.propertize("select#dependencyFound", 'val');
-        this.addDependencyBtn = this.propertize("button#add");
-        this.dependenciesTemplate = this.propertize("#dependencies-template");
-        this.removeDependencyBtns = this.propertize(".removeDependency");
-        this.dependencyIds = this.propertize(".dependencyId");
-        this.changesDescription = this.propertize("#changesDescription", "val");
+        this.saveBtn = this.propertize(base + 'button.save');
+        this.articleCrumb = this.propertize(base + ".article-crumb");
         this.parseURL();
         var _self = this;
+        _self.titleDeferred.resolve('Edit article - Learneet');
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
-            _self.article = new PreviewableArticle();
-            _self.dependencyFound.jq.selectize({
-                create: false,
-                valueField: 'id',
-                labelField: 'title',
-                searchField: 'title',
-                load: function (query, callback) {
-                    if (!query.length)
-                        return callback();
-                    ajax.article.query({ query: query }).then(function (res) {
-                        callback(res.result);
-                    });
-                },
-                render: {
-                    option: function (item, escape) {
-                        return '<div>' + '<span class="dependency">' + '<span class="dependency-title">' + item.title + '</span>' + '<span class="dependency-by"></span>' + '</span>' + '</div>';
-                    }
-                }
-            });
-            $(".selectize-control").attr("placeholder", "Type words contained in the article's title");
-            ajax.article.get({ article: { id: _self.id } }).done(function (res) {
-                if (!res.ok) {
-                    console.log(res.why);
-                    return;
-                }
-                var result = res.result;
-                _self.article.input.title.val = result.title;
-                _self.article.input.content.val = result.content;
-                _self.article.output.title.val = result.title;
-                _self.article.output.content.val = marked(result.content);
-            });
-            ajax.dependencies.getAll({ article: { id: _self.id } }).done(function (res) {
-                var deps = res.result;
-                var length = deps.length;
-                for (var i = 0; i < length; i++) {
-                    deps[i].url = url.article.get(deps[i].id);
-                }
-                var template = _self.dependenciesTemplate.jq.html();
-                Mustache.parse(template);
-                var rendered = Mustache.render(template, { deps: deps });
-                _self.dependenciesTemplate.jq.after(rendered);
-                _self.removeDependencyBtns.jq.on("click", function () {
-                    var myThis = eval("this");
-                    _self.removeDependency(myThis);
-                });
-            });
+            _self.article = new PreviewableArticle(base);
+            _self.article.fetchDBArticle({ id: _self.id });
             _self.saveBtn.jq.click(function () {
                 _self.saveArticle();
-            });
-            _self.cancelBtn.jq.click(function () {
-                _self.redirect(url.article.get(_self.id));
-            });
-            _self.addDependencyBtn.jq.click(function () {
-                var id = _self.dependencyFound.jq.val();
-                if (id != "") {
-                    ajax.dependencies.add({
-                        dependent: { id: _self.id },
-                        dependency: { id: id }
-                    }).then(function (res) {
-                        console.log(res);
-                    });
-                }
             });
         });
     }
@@ -757,46 +708,23 @@ var EditArticleGui = (function (_super) {
         $("input.article-title").val(title);
         $("h1.article-title").html(title);
     };
-    EditArticleGui.prototype.query = function (s) {
-    };
     EditArticleGui.prototype.parseURL = function () {
         var re = url.article.edit('(\\d+)');
         var regex = new RegExp(re);
         var matches = regex.exec(location.pathname);
         this.id = matches[1];
     };
-    EditArticleGui.prototype.removeDependency = function (jq) {
-        var _this = this;
-        var id = $(jq).siblings(this.dependencyIds.jq).val();
-        ajax.dependencies.remove({
-            dependent: { id: this.id },
-            dependency: { id: id }
-        }).then(function (res) {
-            if (res.result == true) {
-                $(jq).parent(_this.dependency.jq).remove();
-            }
-        });
-    };
 
     EditArticleGui.prototype.saveArticle = function () {
-        var description = this.changesDescription.val;
-        var its = validate.version.changesDescription(description);
-        if (!its.ok) {
-            var api = this.changesDescription.jq.qtip({
-                content: { text: its.because },
-                show: { when: false, ready: true },
-                position: { my: 'top left', at: 'bottom center' },
-                hide: false
-            });
-            setTimeout(api.qtip.bind(api, 'destroy'), 5000);
-        }
-        var article = baseAjax.article.WrapFieldWithId(this.article.article, this.id);
+        var _self = this;
+        var article = baseAjax.article.WrapFieldWithId(this.article.getArticle(), this.id);
         ajax.article.update(article).done(function (res) {
             if (!res.ok)
                 console.log(res.why);
             else
                 console.log('Se actualizo el articulo');
-            this.redirect(url.article.get(this.id));
+            window.onbeforeunload = null;
+            singlePageApp.viewTransition(url.article.get(_self.id));
         });
     };
     return EditArticleGui;
@@ -805,7 +733,7 @@ var EditArticleGui = (function (_super) {
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":27,"./../common/url":28,"./../common/validate":29,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":23}],10:[function(require,module,exports){
+},{"./../common/base-ajax":29,"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],10:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
@@ -827,7 +755,7 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{"./utils/propertize":25}],11:[function(require,module,exports){
+},{"./utils/propertize":26}],11:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -839,6 +767,8 @@ var clientAjax = require("./client-ajax");
 var url = require("./../common/url");
 var SinglePageGui = require("./single-page-gui");
 
+var render = require('./utils/render');
+
 var base = '.index.partial ';
 
 var IndexGui = (function (_super) {
@@ -849,6 +779,7 @@ var IndexGui = (function (_super) {
         this.articleThumbs = this.propertize(base + '.article-thumbs');
         this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
         this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
+        this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {
@@ -865,14 +796,17 @@ var IndexGui = (function (_super) {
                     var article = articles[i];
                     if (!article) {
                         articles.splice(i, 1);
+                        i--;
                         continue;
                     }
                     if (!article.content) {
                         articles.splice(i, 1);
+                        i--;
                         continue;
                     }
                     article.url = url.article.get(article.id);
-                    article.content = article.content.substr(0, 130) + '...';
+                    var s = article.content.substr(0, 150) + '...';
+                    article.content = render.toKatex(s);
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);
@@ -901,7 +835,7 @@ var IndexGui = (function (_super) {
 module.exports = IndexGui;
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":28,"./client-ajax":6,"./single-page-gui":20}],12:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./utils/render":27}],12:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1131,7 +1065,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":28,"./client-ajax":6,"./gui":10}],18:[function(require,module,exports){
+},{"./../common/url":30,"./client-ajax":6,"./gui":10}],18:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1220,7 +1154,7 @@ function findSinglePageGui(urlToGo) {
             gui: function () {
                 return new EditArticleGui({});
             },
-            sel: '.edit-article-partial' },
+            sel: '.edit-article.partial' },
         {
             re: url.change.get('\\d+', '\\d+'),
             gui: function () {
@@ -1246,6 +1180,12 @@ function findSinglePageGui(urlToGo) {
 exports.findSinglePageGui = findSinglePageGui;
 
 function viewTransition(urlToGo, isBack) {
+    if (window.onbeforeunload) {
+        var w = window;
+        if (!confirm(w.onbeforeunload()))
+            return;
+        window.onbeforeunload = null;
+    }
     var before = performance.now();
     $(".partial.active *").unbind();
     $('.partial.active').removeClass('active');
@@ -1276,7 +1216,7 @@ if (guiFound)
 singlePageApp.viewTransition = exports.viewTransition;
 //# sourceMappingURL=single-page-app.js.map
 
-},{"./../common/url":28,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){
+},{"./../common/url":30,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1289,6 +1229,10 @@ var SinglePageGui = (function (_super) {
     __extends(SinglePageGui, _super);
     function SinglePageGui(componentSel) {
         _super.call(this);
+        this.titleDeferred = jQuery.Deferred();
+        this.titleDeferred.done(function (title) {
+            document.title = title;
+        });
         this.base = componentSel;
         this.main = this.propertize(componentSel);
         var _self = this;
@@ -1355,66 +1299,165 @@ var ArticleChangePreviewTemplate = (function (_super) {
 module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
-},{"./../../common/url":28,"./../client-ajax":6,"./../gui":10}],22:[function(require,module,exports){
-var EditableArticle = (function () {
-    function EditableArticle() {
+},{"./../../common/url":30,"./../client-ajax":6,"./../gui":10}],22:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var ajax = require('./../client-ajax');
+var url = require("./../../common/url");
+var Gui = require('./../gui');
+
+var Dependencies = (function (_super) {
+    __extends(Dependencies, _super);
+    function Dependencies(base, id) {
+        _super.call(this);
+        this.id = id;
+        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
+        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
+        this.dependencySelect = this.propertize(base + 'select.dependency');
+        this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        this.dependenciesIds = this.propertize(".dependency-id");
+        this.dependency = this.propertize(base + ".dependency");
+        this.dependencies = this.propertize(base + '.dependency.list');
+        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
+        this.articlesLinks = this.propertize(base + '.dependency a.article');
+        this.refreshDependencies();
         var _self = this;
-        this.content = {
-            get jq() {
-                return $("textarea.article-content");
-            },
-            get val() {
-                return _self.content.jq.val();
-            },
-            set val(val) {
-                _self.content.jq.val(val);
-            }
-        };
-        this.title = {
-            get jq() {
-                return $("input.article-title");
-            },
-            get val() {
-                return _self.title.jq.val();
-            },
-            set val(val) {
-                _self.title.jq.val(val);
-            }
-        };
+        $(document).ready(function () {
+            _self.dependencies.jq.empty();
+            var selectizeOpts = {
+                create: false,
+                valueField: 'id',
+                labelField: 'title',
+                searchField: 'title',
+                load: function (query, callback) {
+                    if (!query.length)
+                        return callback();
+                    ajax.article.query({ query: query }).then(function (res) {
+                        callback(res.result);
+                    });
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div>' + '<span class="dependency">' + '<span class="dependency-title">' + item.title + '</span>' + '<span class="dependency-by"></span>' + '</span>' + '</div>';
+                    }
+                }
+            };
+            var el = _self.dependencySelect.jq[0];
+            if (el)
+                if (el.selectize)
+                    el.selectize.destroy();
+            _self.dependencySelect.jq.selectize(selectizeOpts);
+            _self.addDependencyBtn.jq.click(function () {
+                var id = _self.dependencySelect.jq.val();
+                if (id != "") {
+                    ajax.dependencies.add({
+                        dependent: { id: _self.id },
+                        dependency: { id: id }
+                    }).then(function (res) {
+                        console.log(res);
+                        _self.refreshDependencies();
+                    });
+                }
+            });
+        });
     }
-    Object.defineProperty(EditableArticle.prototype, "article", {
-        get: function () {
-            return { article: { title: this.title.val, content: this.content.val } };
-        },
-        enumerable: true,
-        configurable: true
-    });
+    Dependencies.prototype.removeDependency = function (jq) {
+        var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        var _self = this;
+        ajax.dependencies.remove({
+            dependent: { id: this.id },
+            dependency: { id: id }
+        }).then(function (res) {
+            _self.refreshDependencies();
+        });
+    };
+    Dependencies.prototype.refreshDependencies = function () {
+        var _self = this;
+        var dependenciesCb = ajax.dependencies.getAll({ dependent: { id: _self.id } });
+        $(document).ready(function () {
+            dependenciesCb.done(function (res) {
+                var deps = res.result;
+                var none = 'display: none;';
+                deps.forEach(function (dep) {
+                    dep.dependencyId = dep.id;
+                    dep.dependencyUrl = url.dependencies.get(dep.id);
+                    dep.articleUrl = url.article.get(dep.id);
+                    if (dep.starred == 'true') {
+                        dep.starStyle = '';
+                        dep.emptyStarStyle = none;
+                    } else {
+                        dep.starStyle = none;
+                        dep.emptyStarStyle = '';
+                    }
+
+                    dep.arrowUpStyle = none;
+                    dep.emptyArrowUpStyle = '';
+                });
+                console.log(deps);
+                var template = _self.dependenciesTemplate.val;
+                Mustache.parse(template);
+                var rendered = Mustache.render(template, { dependencies: deps });
+                _self.dependencies.jq.empty();
+                _self.dependencies.jq.html(rendered);
+                _self.dependenciesLinks.transitionURL('');
+                _self.articlesLinks.transitionURL('');
+                _self.removeDependencyBtns.jq.on("click", function () {
+                    if (!confirm('Are you sure you want to remove this dependency?'))
+                        return;
+                    var myThis = eval("this");
+                    _self.removeDependency(myThis);
+                });
+            });
+        });
+    };
+    return Dependencies;
+})(Gui);
+
+module.exports = Dependencies;
+//# sourceMappingURL=dependencies.js.map
+
+},{"./../../common/url":30,"./../client-ajax":6,"./../gui":10}],23:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Gui = require('./../gui');
+
+var EditableArticle = (function (_super) {
+    __extends(EditableArticle, _super);
+    function EditableArticle(base) {
+        _super.call(this);
+        var _self = this;
+        this.content = this.propertize(base + 'textarea.article-content', 'val');
+        this.title = this.propertize(base + 'input.article-title', 'val');
+    }
     return EditableArticle;
-})();
+})(Gui);
 
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{}],23:[function(require,module,exports){
+},{"./../gui":10}],24:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
 
+var render = require("./../utils/render");
+
 var PreviewableArticle = (function () {
-    function PreviewableArticle() {
-        this.input = new EditableArticle();
+    function PreviewableArticle(base) {
+        this.input = new EditableArticle(base);
         this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
     }
-    Object.defineProperty(PreviewableArticle.prototype, "article", {
-        get: function () {
-            return this.input.article;
-        },
-        enumerable: true,
-        configurable: true
-    });
     PreviewableArticle.prototype.bindScrolls = function () {
         var _self = this;
         function getPercent(el) {
@@ -1440,49 +1483,44 @@ var PreviewableArticle = (function () {
         });
     };
 
+    PreviewableArticle.prototype.updateTitle = function (s) {
+        if (s)
+            this.input.title.val = s;
+        else
+            s = this.input.title.val;
+        this.output.title.val = s;
+    };
+    PreviewableArticle.prototype.updateContent = function (s) {
+        if (s)
+            this.input.content.val = s;
+        else
+            s = this.input.content.val;
+        this.output.content.val = render.toMarkedKatex(s);
+    };
+    PreviewableArticle.prototype.getArticle = function () {
+        return {
+            article: {
+                title: this.input.title.val,
+                content: this.input.content.val }
+        };
+    };
     PreviewableArticle.prototype.bindTitlePreview = function () {
+        var _self = this;
         var inputTitle = this.input.title;
         var outputTitle = this.output.title;
         inputTitle.jq.keyup(function (e) {
-            var title = inputTitle.val;
-            outputTitle.val = title;
+            _self.updateTitle();
         });
-    };
-    PreviewableArticle.prototype.translateWithParsing = function (content) {
-        var output = '';
-        var occurenceIndex = 0;
-        var openKatex = false;
-        var startIndex = 0;
-        var length = content.length;
-        while (occurenceIndex != -1 && startIndex < length) {
-            occurenceIndex = content.indexOf('$$', startIndex);
-
-            var endIndex = (occurenceIndex == -1 ? length : occurenceIndex);
-
-            var section = content.substring(startIndex, endIndex);
-
-            if (openKatex)
-                section = katex.renderToString("\\displaystyle {" + section + "}");
-
-            output += section;
-
-            startIndex = endIndex + 2;
-
-            if (occurenceIndex != -1) {
-                openKatex = !openKatex;
-            }
-        }
-        return output;
     };
     PreviewableArticle.prototype.bindContentPreview = function () {
         var _self = this;
         var inputContent = this.input.content;
         var outputContent = this.output.content;
         inputContent.jq.keyup(function (e) {
-            var content = inputContent.val;
-            content = _self.translateWithParsing(content);
-
-            outputContent.val = marked(content);
+            _self.updateContent();
+            window.onbeforeunload = function (x) {
+                return "Are you sure you want to leave?";
+            };
         });
     };
     PreviewableArticle.prototype.fetchDBArticle = function (args) {
@@ -1493,10 +1531,8 @@ var PreviewableArticle = (function () {
                 return;
             }
             var result = res.result;
-            _self.input.title.val = result.title;
-            _self.input.content.val = result.content;
-            _self.output.title.val = result.title;
-            _self.output.content.val = marked(result.content);
+            _self.updateTitle(result.title);
+            _self.updateContent(result.content);
             return null;
         });
     };
@@ -1506,7 +1542,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":6,"./editable-article":22,"./rendered-article":24}],24:[function(require,module,exports){
+},{".././client-ajax":6,"./../utils/render":27,"./editable-article":23,"./rendered-article":25}],25:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1514,6 +1550,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./../gui');
+var render = require('./../utils/render');
 
 var RenderedArticle = (function (_super) {
     __extends(RenderedArticle, _super);
@@ -1533,11 +1570,19 @@ var RenderedArticle = (function (_super) {
             this.content.jq.scrollTop((this.content.jq.scrollTop() - this.content.jq.offset().top) + outputLine.offset().top - this.content.jq.height() / 2);
         }
     };
+    RenderedArticle.prototype.clear = function () {
+        this.title.val = '';
+        this.content.val = '';
+    };
     RenderedArticle.prototype.setTitle = function (title) {
+        this.title.jq.velocity({ opacity: 0 }, { duration: 0 });
         this.title.val = title;
+        this.title.jq.velocity({ opacity: 1 }, { duration: 180 });
     };
     RenderedArticle.prototype.setContent = function (content) {
-        this.content.val = marked(content);
+        this.content.jq.velocity({ opacity: 0 }, { duration: 0 });
+        this.content.val = render.toMarkedKatex(content);
+        this.content.jq.velocity({ opacity: 1 }, { duration: 180 });
     };
     return RenderedArticle;
 })(Gui);
@@ -1545,7 +1590,7 @@ var RenderedArticle = (function (_super) {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{"./../gui":10}],25:[function(require,module,exports){
+},{"./../gui":10,"./../utils/render":27}],26:[function(require,module,exports){
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -1562,6 +1607,8 @@ function propertize(selector, valFnName) {
                 else
                     _url = el.pathname;
                 $(el).click(function (e) {
+                    if (e.button != 0)
+                        return;
                     singlePageApp.viewTransition(_url);
                     e.preventDefault();
                 });
@@ -1583,7 +1630,47 @@ function propertize(selector, valFnName) {
 module.exports = propertize;
 //# sourceMappingURL=propertize.js.map
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
+function toKatex(s) {
+    var output = '';
+    var occurenceIndex = 0;
+    var openKatex = false;
+    var startIndex = 0;
+    var length = s.length;
+    while (occurenceIndex != -1 && startIndex < length) {
+        occurenceIndex = s.indexOf('$$', startIndex);
+
+        var endIndex = (occurenceIndex == -1 ? length : occurenceIndex);
+
+        var section = s.substring(startIndex, endIndex);
+
+        if (openKatex)
+            section = katex.renderToString("\\displaystyle {" + section + "}");
+
+        output += section;
+
+        startIndex = endIndex + 2;
+
+        if (occurenceIndex != -1) {
+            openKatex = !openKatex;
+        }
+    }
+    return output;
+}
+exports.toKatex = toKatex;
+
+function toMarked(s) {
+    return marked(s);
+}
+exports.toMarked = toMarked;
+
+function toMarkedKatex(s) {
+    return exports.toMarked(exports.toKatex(s));
+}
+exports.toMarkedKatex = toMarkedKatex;
+//# sourceMappingURL=render.js.map
+
+},{}],28:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1872,7 +1959,7 @@ var ChangeScore = (function (_super) {
 exports.ChangeScore = ChangeScore;
 //# sourceMappingURL=score-arrow.js.map
 
-},{"./../client-ajax":6,"./../gui":10}],27:[function(require,module,exports){
+},{"./../client-ajax":6,"./../gui":10}],29:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -2328,7 +2415,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -2388,7 +2475,7 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2428,7 +2515,7 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validate.js.map
 
-},{}],30:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2468,4 +2555,4 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,27,28,29,30]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,29,30,31,32]);

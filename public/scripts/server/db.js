@@ -83,6 +83,15 @@ function promisedRedis(fn, args) {
 }
 exports.promisedRedis = promisedRedis;
 
+function del() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.del.bind(exports.client), args]);
+}
+exports.del = del;
+
 function multi() {
     return exports.client.multi();
 }

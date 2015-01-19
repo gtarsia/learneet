@@ -1,21 +1,16 @@
+import Gui = require('./../gui')
 
-class EditableArticle {
+
+
+class EditableArticle extends Gui {
     content;
     title;
-    constructor() {
+    constructor(base: string) {
+        super();
         var _self = this;
-        this.content = { 
-            get jq() { return $("textarea.article-content"); },
-            get val() { return _self.content.jq.val(); },
-            set val(val) { _self.content.jq.val(val); }
-        };
-        this.title = {
-            get jq() { return $("input.article-title"); },
-            get val() { return _self.title.jq.val(); },
-            set val(val) { _self.title.jq.val(val); } 
-        }
+        this.content = this.propertize(base + 'textarea.article-content', 'val');
+        this.title = this.propertize(base + 'input.article-title', 'val');
     }
-    get article() { return { article: { title: this.title.val, content: this.content.val} } }
 }
 
 export = EditableArticle;

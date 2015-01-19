@@ -40,7 +40,8 @@ function create(args) {
     }
     return db.incr(keys.articlesIdCounter()).then(function (_id) {
         id = _id;
-        return db.hmset(keys.article({ article: { id: id } }), baseArticle.WrapFieldWithId(args, id));
+        var _args = baseArticle.WrapFieldWithId(args, id);
+        return db.hmset(keys.article({ article: { id: id } }), _args.article);
     }).then(function (result) {
         if (result != 'OK')
             return exports.notOkObj('Could\'t create object');
@@ -76,6 +77,7 @@ function update(args) {
 exports.update = update;
 
 function get(args) {
+    debugger;
     var article = args.article;
     return db.hgetall(keys.article(args)).then(function (result) {
         var ok = result != null;
@@ -131,7 +133,8 @@ exports.getAll = getAll;
         var words = oldTitle.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
-            multi = multi.srem(["search_words:" + words[i], id], redis.print);
+            var word = words[i].toLowerCase();
+            multi = multi.srem(["search_words:" + word, id], redis.print);
         }
         return multi;
     }
@@ -141,7 +144,8 @@ exports.getAll = getAll;
         var words = newTitle.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
-            multi = multi.sadd(["search_words:" + words[i], id], redis.print);
+            var word = words[i].toLowerCase();
+            multi = multi.sadd(["search_words:" + word, id], redis.print);
         }
         return multi;
     }
@@ -159,7 +163,7 @@ exports.getAll = getAll;
         var words = args.query.split(' ');
         var length = words.length;
         for (var i = 0; i < length; i++) {
-            words[i] = "search_words:".concat(words[i]);
+            words[i] = "search_words:".concat(words[i].toLowerCase());
         }
         return db.sinter.apply(db, words).then(function (ids) {
             if (ids == null)

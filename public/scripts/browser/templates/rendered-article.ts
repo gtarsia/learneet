@@ -1,4 +1,5 @@
 import Gui = require('./../gui')
+import render = require('./../utils/render');
 
 declare function marked(s);
 
@@ -22,11 +23,19 @@ class RenderedArticle extends Gui {
                 + outputLine.offset().top - this.content.jq.height()/2);
         }
     }
+    clear() {
+        this.title.val = '';
+        this.content.val = '';
+    }
     setTitle(title) {
-        this.title.val = title
+        this.title.jq.velocity({opacity: 0}, {duration: 0});
+        this.title.val = title;
+        this.title.jq.velocity({opacity: 1}, {duration: 180});
     }
     setContent(content) {
-        this.content.val = marked(content);
+        this.content.jq.velocity({opacity: 0}, {duration: 0});
+        this.content.val = render.toMarkedKatex(content);
+        this.content.jq.velocity({opacity: 1}, {duration: 180});
     }
 }
  

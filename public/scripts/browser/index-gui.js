@@ -9,6 +9,8 @@ var clientAjax = require("./client-ajax");
 var url = require("./../common/url");
 var SinglePageGui = require("./single-page-gui");
 
+var render = require('./utils/render');
+
 var base = '.index.partial ';
 
 var IndexGui = (function (_super) {
@@ -19,6 +21,7 @@ var IndexGui = (function (_super) {
         this.articleThumbs = this.propertize(base + '.article-thumbs');
         this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
         this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
+        this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {
@@ -35,14 +38,17 @@ var IndexGui = (function (_super) {
                     var article = articles[i];
                     if (!article) {
                         articles.splice(i, 1);
+                        i--;
                         continue;
                     }
                     if (!article.content) {
                         articles.splice(i, 1);
+                        i--;
                         continue;
                     }
                     article.url = url.article.get(article.id);
-                    article.content = article.content.substr(0, 130) + '...';
+                    var s = article.content.substr(0, 150) + '...';
+                    article.content = render.toKatex(s);
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);

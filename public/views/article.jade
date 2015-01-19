@@ -8,11 +8,15 @@
     include templates/viewable-article
     a#editArticle(href= edit_url) Edit
     .rectangular-frame
-      h1 Information
+      h1
+        a.dependencies Dependencies
+      select.dependency(type="text" placeholder="Type words included in the title of the article you want to depend on...")
+      button.add-dependency Add
+      ul.dependency.list
+      include templates/dependencies
     .changes.rectangular-frame
       h1.title Proposed changes
       .list
       include templates/article-change-preview-template
     .rectangular-frame
-      h1
-        a.dependencies Dependencies
+      h1 Information

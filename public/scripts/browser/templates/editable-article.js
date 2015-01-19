@@ -1,38 +1,21 @@
-var EditableArticle = (function () {
-    function EditableArticle() {
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Gui = require('./../gui');
+
+var EditableArticle = (function (_super) {
+    __extends(EditableArticle, _super);
+    function EditableArticle(base) {
+        _super.call(this);
         var _self = this;
-        this.content = {
-            get jq() {
-                return $("textarea.article-content");
-            },
-            get val() {
-                return _self.content.jq.val();
-            },
-            set val(val) {
-                _self.content.jq.val(val);
-            }
-        };
-        this.title = {
-            get jq() {
-                return $("input.article-title");
-            },
-            get val() {
-                return _self.title.jq.val();
-            },
-            set val(val) {
-                _self.title.jq.val(val);
-            }
-        };
+        this.content = this.propertize(base + 'textarea.article-content', 'val');
+        this.title = this.propertize(base + 'input.article-title', 'val');
     }
-    Object.defineProperty(EditableArticle.prototype, "article", {
-        get: function () {
-            return { article: { title: this.title.val, content: this.content.val } };
-        },
-        enumerable: true,
-        configurable: true
-    });
     return EditableArticle;
-})();
+})(Gui);
 
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map

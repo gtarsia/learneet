@@ -4,11 +4,11 @@ import RenderedArticle = require('./rendered-article');
 import EditableArticle = require("./editable-article");
 import clientAjax = require(".././client-ajax");
 import baseAjax = require("../.././common/base-ajax");
+import render = require("./../utils/render");
 
 class PreviewableArticle {
     output: RenderedArticle;
     input: EditableArticle;
-    get article() { return this.input.article; }
     bindScrolls() {
         var _self = this;
         function getPercent(el) { return 100 * el.scrollTop() / (el[0].scrollHeight - el.height()); }
@@ -32,41 +32,30 @@ class PreviewableArticle {
         //bindScroll(this.output.content.jq, this.input.content.jq);
     }
     ignoreScroll: boolean;
+    //If s is specified, it also sets the input, otherwise it uses the input
+    updateTitle(s?: string) {
+        if (s) this.input.title.val = s;
+        else s = this.input.title.val;
+        this.output.title.val = s;  
+    }
+    updateContent(s?: string) {
+        if (s) this.input.content.val = s;
+        else s = this.input.content.val;
+        this.output.content.val = render.toMarkedKatex(s);
+    }
+    getArticle() {
+        return { 
+            article: {title: this.input.title.val, 
+                content: this.input.content.val}
+        }
+    }
     bindTitlePreview() {
+        var _self = this;
         var inputTitle = this.input.title;
         var outputTitle = this.output.title;
         inputTitle.jq.keyup(function(e) {
-            var title: any = inputTitle.val;
-            outputTitle.val = title;  
+            _self.updateTitle();
         });
-    }
-    translateWithParsing(content) {
-        var output = '';
-        var occurenceIndex = 0;
-        var openKatex = false;
-        var startIndex = 0;
-        var length = content.length;
-        while(occurenceIndex != -1 && startIndex < length) {
-            // find next occurence of $$
-            occurenceIndex = content.indexOf('$$', startIndex);
-            // the end index should be the end of string if no symbol was found
-            var endIndex = (occurenceIndex == -1 ? length : occurenceIndex);
-            // get section to be added
-            var section = content.substring(startIndex, endIndex);
-            // if it's a katex block, parse it as such
-            if (openKatex)
-                section = katex.renderToString("\\displaystyle {" + section + "}");
-            // add that section
-            output += section;
-            // point startIndex to endIndex so we reference the next section in the next iteration
-            // we also skip the two characters of the symbol
-            startIndex = endIndex + 2;
-            // if an occurence has been found
-            if (occurenceIndex != -1) {
-                openKatex = !openKatex;
-            }
-        }
-        return output;
     }
     bindContentPreview() {
         var _self = this;
@@ -74,10 +63,8 @@ class PreviewableArticle {
         var outputContent = this.output.content;
         inputContent.jq.keyup(function(e) {
             //translateWithParsing();
-            var content = inputContent.val;
-            content = _self.translateWithParsing(content);
-            //content = katex.renderToString("\\displaystyle {" + content + "}");
-            outputContent.val = marked(content);
+            _self.updateContent();
+            window.onbeforeunload = x => {return "Are you sure you want to leave?"};
         });
     }
     fetchDBArticle(args: {id: string}): JQueryPromise<baseAjax.article.get.Return> {
@@ -89,15 +76,13 @@ class PreviewableArticle {
                 return;
             }
             var result = res.result
-            _self.input.title.val = result.title;
-            _self.input.content.val = result.content;
-            _self.output.title.val = result.title;
-            _self.output.content.val = marked(result.content);
+            _self.updateTitle(result.title);
+            _self.updateContent(result.content);
             return null;
         });
     }
-    constructor() {
-        this.input = new EditableArticle();
+    constructor(base: string) {
+        this.input = new EditableArticle(base);
         this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();

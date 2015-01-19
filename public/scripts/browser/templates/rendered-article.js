@@ -5,6 +5,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./../gui');
+var render = require('./../utils/render');
 
 var RenderedArticle = (function (_super) {
     __extends(RenderedArticle, _super);
@@ -24,11 +25,19 @@ var RenderedArticle = (function (_super) {
             this.content.jq.scrollTop((this.content.jq.scrollTop() - this.content.jq.offset().top) + outputLine.offset().top - this.content.jq.height() / 2);
         }
     };
+    RenderedArticle.prototype.clear = function () {
+        this.title.val = '';
+        this.content.val = '';
+    };
     RenderedArticle.prototype.setTitle = function (title) {
+        this.title.jq.velocity({ opacity: 0 }, { duration: 0 });
         this.title.val = title;
+        this.title.jq.velocity({ opacity: 1 }, { duration: 180 });
     };
     RenderedArticle.prototype.setContent = function (content) {
-        this.content.val = marked(content);
+        this.content.jq.velocity({ opacity: 0 }, { duration: 0 });
+        this.content.val = render.toMarkedKatex(content);
+        this.content.jq.velocity({ opacity: 1 }, { duration: 180 });
     };
     return RenderedArticle;
 })(Gui);

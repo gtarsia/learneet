@@ -28,7 +28,7 @@ export function findSinglePageGui(urlToGo: string) {
 
         {re: url.article.edit('\\d+'), 
         gui: function() { return new EditArticleGui({})},
-        sel: '.edit-article-partial'},
+        sel: '.edit-article.partial'},
 
         {re: url.change.get('\\d+', '\\d+'), 
         gui: function() { return new ChangeGui()},
@@ -49,6 +49,11 @@ export function findSinglePageGui(urlToGo: string) {
 }
 
 export function viewTransition(urlToGo: string, isBack?: boolean) {
+    if (window.onbeforeunload) {
+        var w: any = window;
+        if (!confirm(w.onbeforeunload())) return;
+        window.onbeforeunload = null;
+    }
     var before = performance.now();
     $(".partial.active *").unbind();
     $('.partial.active').removeClass('active');

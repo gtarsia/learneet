@@ -10,6 +10,10 @@ var SinglePageGui = (function (_super) {
     __extends(SinglePageGui, _super);
     function SinglePageGui(componentSel) {
         _super.call(this);
+        this.titleDeferred = jQuery.Deferred();
+        this.titleDeferred.done(function (title) {
+            document.title = title;
+        });
         this.base = componentSel;
         this.main = this.propertize(componentSel);
         var _self = this;

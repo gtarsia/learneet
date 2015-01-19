@@ -40,7 +40,9 @@ export function create(args: create.Params) : Promise<create.Return> {
 	return db.incr(keys.articlesIdCounter())
 	.then((_id: string) => {
 		id = _id;
-		return db.hmset(keys.article({article: {id: id}}), baseArticle.WrapFieldWithId(args, id));
+		var _args = baseArticle.WrapFieldWithId(args, id);
+		return db.hmset(keys.article({article: {id: id}}), 
+			_args.article);
 	})
 	.then((result) => {
 		if (result != 'OK') return notOkObj('Could\'t create object');
@@ -77,6 +79,7 @@ export function update(args: update.Params) : Promise<update.Return> {
 }
 
 export function get(args: get.Params) : Promise<get.Return> {
+	debugger;
 	var article = args.article;
 	return db.hgetall(keys.article(args))
 	.then<get.Return>((result: any) => {
@@ -132,7 +135,8 @@ export module TitleSearch {
 		var words = oldTitle.split(' ');
 		var length = words.length;
 		for (var i = 0; i < length; i++) {
-			multi = multi.srem(["search_words:" + words[i], id], redis.print);
+			var word = words[i].toLowerCase();
+			multi = multi.srem(["search_words:" + word, id], redis.print);
 		}
 		return multi;
 	}
@@ -141,7 +145,8 @@ export module TitleSearch {
 		var words = newTitle.split(' ');
 		var length = words.length;
 		for (var i = 0; i < length; i++) {
-			multi = multi.sadd(["search_words:" + words[i], id], redis.print);
+			var word = words[i].toLowerCase();
+			multi = multi.sadd(["search_words:" + word, id], redis.print);
 		}
 		return multi;
 	}
@@ -157,7 +162,7 @@ export module TitleSearch {
 		var words = args.query.split(' ');
 		var length = words.length;
 		for (var i = 0; i < length; i++) {
-			words[i] = "search_words:".concat(words[i]);
+			words[i] = "search_words:".concat(words[i].toLowerCase());
 		}
 		return db.sinter.apply(db, words)
 		.then((ids: any) => {
