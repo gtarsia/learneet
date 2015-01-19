@@ -35,19 +35,21 @@ class IndexGui extends SinglePageGui {
                     return;
                 }
                 var articles: any = res.result;
+                var _articles = [];
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
                     var article = articles[i];
-                    if (!article) {articles.splice(i, 1); i--; continue;}
-                    if (!article.content) {articles.splice(i, 1); i--; continue;}
+                    if (!article) continue;
+                    if (!article.content)  continue;
                     article.url = url.article.get(article.id);
                     var s = article.content.substr(0, 150) + '...';
                     article.content = render.toKatex(s);
+                    _articles.push(article);
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);   // optional, speeds up future uses
                 var rendered = Mustache.render(template, 
-                    { articles: articles});
+                    { articles: _articles});
                 _self.articleThumbs.jq.html(rendered);
                 _self.articleThumbsLinks.transitionURL('');
                 $('.article-thumb').velocity({opacity: 0}, {duration: 0});
