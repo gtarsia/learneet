@@ -43,6 +43,7 @@ class ArticleGui extends SinglePageGui {
             _self.articleChanges = new ArticleChangePreviewTemplate({id: _self.article.id});
             _self.setCrumb();
             _self.article.rendered = new RenderedArticle();
+            _self.article.rendered.clear();
             _self.articleScore = new Arrows.ArticleScore(
                _self.article
             );
