@@ -13,7 +13,8 @@ var LayoutGui = (function (_super) {
         this.logo = this.propertize('#logo');
         var _self = this;
         $(document).ready(function () {
-            _self.logo.transitionURL('/');
+            if (singlePageApp.guiFound)
+                _self.logo.transitionURL('/');
         });
     }
     return LayoutGui;

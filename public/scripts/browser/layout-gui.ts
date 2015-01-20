@@ -9,6 +9,7 @@ import Arrows = require('./utils/score-arrow');
 declare function marked(s);
 
 declare var layoutGui;
+declare var singlePageApp;
 
 class LayoutGui extends Gui {
     logo = this.propertize('#logo');
@@ -16,7 +17,8 @@ class LayoutGui extends Gui {
         super();
         var _self = this;
         $(document).ready(() => {
-            _self.logo.transitionURL('/');
+            if (singlePageApp.guiFound)
+                _self.logo.transitionURL('/');
         });
     }
 } 

@@ -847,7 +847,8 @@ var LayoutGui = (function (_super) {
         this.logo = this.propertize('#logo');
         var _self = this;
         $(document).ready(function () {
-            _self.logo.transitionURL('/');
+            if (singlePageApp.guiFound)
+                _self.logo.transitionURL('/');
         });
     }
     return LayoutGui;
@@ -1210,6 +1211,7 @@ if (guiFound)
     exports.startSingleApp(guiFound);
 
 singlePageApp.viewTransition = exports.viewTransition;
+singlePageApp.guiFound = guiFound;
 //# sourceMappingURL=single-page-app.js.map
 
 },{"./../common/url":30,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){

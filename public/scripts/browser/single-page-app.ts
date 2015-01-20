@@ -78,6 +78,7 @@ var guiFound = findSinglePageGui(location.pathname);
 if (guiFound) startSingleApp(guiFound);
 
 singlePageApp.viewTransition = viewTransition;
+singlePageApp.guiFound = guiFound;
 
 /*
 export function findGuiBuilderFromUrl() {

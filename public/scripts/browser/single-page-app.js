@@ -92,4 +92,5 @@ if (guiFound)
     exports.startSingleApp(guiFound);
 
 singlePageApp.viewTransition = exports.viewTransition;
+singlePageApp.guiFound = guiFound;
 //# sourceMappingURL=single-page-app.js.map
