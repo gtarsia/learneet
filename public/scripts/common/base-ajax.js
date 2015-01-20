@@ -320,6 +320,7 @@ var dependencies = exports.dependencies;
             return Ajax;
         })();
         getAll.Ajax = Ajax;
+        ;
     })(changes.getAll || (changes.getAll = {}));
     var getAll = changes.getAll;
 
@@ -336,6 +337,7 @@ var dependencies = exports.dependencies;
             return Ajax;
         })();
         get.Ajax = Ajax;
+        ;
     })(changes.get || (changes.get = {}));
     var get = changes.get;
 
@@ -352,6 +354,8 @@ var dependencies = exports.dependencies;
             return Ajax;
         })();
         getScore.Ajax = Ajax;
+        ;
+        ;
     })(changes.getScore || (changes.getScore = {}));
     var getScore = changes.getScore;
 
@@ -427,22 +431,14 @@ var changes = exports.changes;
             function Ajax() {
             }
             Ajax.prototype.url = function () {
-                return '/api/gettitleandid';
+                return '/api/auth';
             };
             Ajax.prototype.type = function () {
-                return exports.AjaxType.GET;
+                return exports.AjaxType.POST;
             };
             return Ajax;
         })();
         auth.Ajax = Ajax;
-        function url() {
-            return '/api/auth';
-        }
-        auth.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        auth.type = type;
         ;
     })(user.auth || (user.auth = {}));
     var auth = user.auth;

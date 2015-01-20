@@ -44,6 +44,7 @@ export function auth(params: baseAuth.Params): Promise<baseAuth.Return> {
     var user;
     return db.hgetall("user:" + params.username)
     .then((_user) => {
+        debugger;
         user = _user;
         return bcrypt.compare(params.password, user.hash);
     })

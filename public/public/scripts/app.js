@@ -911,7 +911,6 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var Gui = require('./gui');
-var clientAjax = require('./client-ajax');
 
 var LogInGui = (function (_super) {
     __extends(LogInGui, _super);
@@ -924,16 +923,6 @@ var LogInGui = (function (_super) {
         _self.form = _self.propertize('form.form-inner');
         $(document).ready(function () {
             _self.username.jq.focus();
-            _self.form.jq.submit(function (event) {
-                event.preventDefault();
-                var user = _self.getUser();
-                clientAjax.user.auth(user).done(function (res) {
-                    console.log('Logged in');
-                    _self.redirect('/');
-                }).fail(function (res) {
-                    console.log('Couldn\'t log');
-                });
-            });
         });
     }
     LogInGui.prototype.getUser = function () {
@@ -950,7 +939,7 @@ if (guiName == 'LogInGui') {
 }
 //# sourceMappingURL=login-gui.js.map
 
-},{"./client-ajax":6,"./gui":10}],15:[function(require,module,exports){
+},{"./gui":10}],15:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -2280,6 +2269,7 @@ var dependencies = exports.dependencies;
             return Ajax;
         })();
         getAll.Ajax = Ajax;
+        ;
     })(changes.getAll || (changes.getAll = {}));
     var getAll = changes.getAll;
 
@@ -2296,6 +2286,7 @@ var dependencies = exports.dependencies;
             return Ajax;
         })();
         get.Ajax = Ajax;
+        ;
     })(changes.get || (changes.get = {}));
     var get = changes.get;
 
@@ -2312,6 +2303,8 @@ var dependencies = exports.dependencies;
             return Ajax;
         })();
         getScore.Ajax = Ajax;
+        ;
+        ;
     })(changes.getScore || (changes.getScore = {}));
     var getScore = changes.getScore;
 
@@ -2387,22 +2380,14 @@ var changes = exports.changes;
             function Ajax() {
             }
             Ajax.prototype.url = function () {
-                return '/api/gettitleandid';
+                return '/api/auth';
             };
             Ajax.prototype.type = function () {
-                return exports.AjaxType.GET;
+                return exports.AjaxType.POST;
             };
             return Ajax;
         })();
         auth.Ajax = Ajax;
-        function url() {
-            return '/api/auth';
-        }
-        auth.url = url;
-        function type() {
-            return exports.AjaxType.POST;
-        }
-        auth.type = type;
         ;
     })(user.auth || (user.auth = {}));
     var auth = user.auth;

@@ -38,6 +38,7 @@ exports.get = get;
 function auth(params) {
     var user;
     return db.hgetall("user:" + params.username).then(function (_user) {
+        debugger;
         user = _user;
         return bcrypt.compare(params.password, user.hash);
     }).then(function (result) {

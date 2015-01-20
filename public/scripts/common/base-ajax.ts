@@ -234,7 +234,7 @@ export module changes {
             url(): string { return '/api/getallchanges' }
             type(): string { return AjaxType.GET }
         }
-        export interface Params { article: Id }
+        export interface Params { article: Id };
         export interface Return extends JsonReturn<ChangeFields[]> {}
     }
 
@@ -243,7 +243,7 @@ export module changes {
             url(): string { return '/api/getchange' }
             type(): string { return AjaxType.GET }
         }
-        export interface Params { article: Id; change: Id; }
+        export interface Params { article: Id; change: Id; };
         export interface Return extends JsonReturn<{change: ChangeFields; article: Fields}> {}
     }
 
@@ -252,8 +252,8 @@ export module changes {
             url(): string { return '/api/getchangescore' }
             type(): string { return AjaxType.GET }
         }
-        export interface Params { article: Id; change: Id; }
-        export interface Return extends JsonReturn<ChangeScore> {}
+        export interface Params { article: Id; change: Id; };
+        export interface Return extends JsonReturn<ChangeScore> {};
     }
 
     export module getScoreByUser {
@@ -309,11 +309,9 @@ export module user {
     }
     export module auth {
         export class Ajax implements IAjax{
-            url(): string { return '/api/gettitleandid' }
-            type(): string { return AjaxType.GET }
+            url(): string { return '/api/auth' }
+            type(): string { return AjaxType.POST }
         }
-        export function url(): string { return '/api/auth'}
-        export function type(): string { return AjaxType.POST }
         export interface Params extends AuthFields {};
         export interface Return extends JsonReturn<{username: string; id: string;}> {} 
     }

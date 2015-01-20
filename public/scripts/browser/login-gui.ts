@@ -25,10 +25,11 @@ class LogInGui extends Gui {
         _self.form = _self.propertize('form.form-inner');
         $(document).ready(() => {
             _self.username.jq.focus();
+            /*
             _self.form.jq.submit((event) => {
                 event.preventDefault();
                 var user = _self.getUser();
-                clientAjax.user.auth(user)
+                $.post('/api/auth', user)
                 .done((res) => {
                     console.log('Logged in');
                     _self.redirect('/');
@@ -37,6 +38,7 @@ class LogInGui extends Gui {
                     console.log('Couldn\'t log');
                 })
             });
+*/
         });
     }
 }

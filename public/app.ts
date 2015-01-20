@@ -69,7 +69,7 @@ app.get('*', function(req, res, next) {
 app.post('/api/auth', 
   passport.authenticate('local', {  }),
   function(req, res) {
-    res.send({ ok: true, why: '' });
+    res.redirect('/');
   }
 );
 app.get('/logout', function(req, res){

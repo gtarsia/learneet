@@ -36,6 +36,7 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         score.removeDown(),
         score.getByUser(),
         user.register()
+        //user.auth()
     ];
 }
 
@@ -202,4 +203,10 @@ export module user {
     export function register() {
         return restCbAjax(new _register.Ajax(), dbUser.register);
     }
+/*
+    import _auth = baseAjax.user.auth;
+    export function auth() {
+        return restCbAjax(new _auth.Ajax(), dbUser.auth);
+    }
+    */
 }

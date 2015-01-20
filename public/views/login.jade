@@ -10,9 +10,9 @@ prepend scripts
 
 block main
   .rectangular-frame
-    form.form-inner
-      input.form-input#username(type="text" placeholder="username")
-      input.form-input#password(type="password" placeholder="password")
+    form.form-inner(action="/api/auth" method="POST")
+      input.form-input#username(type="text" placeholder="username" name="username")
+      input.form-input#password(type="password" placeholder="password" name="password")
       .buttons
         input#login(type="submit" value="Log in")
         button#cancel Cancel
