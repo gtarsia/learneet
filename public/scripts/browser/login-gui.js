@@ -17,6 +17,16 @@ var LogInGui = (function (_super) {
         _self.form = _self.propertize('form.form-inner');
         $(document).ready(function () {
             _self.username.jq.focus();
+            _self.form.jq.submit(function (event) {
+                event.preventDefault();
+                var user = _self.getUser();
+                $.post('/api/auth', user).done(function (res) {
+                    console.log('Logged in');
+                    _self.redirect('/');
+                }).fail(function (res) {
+                    console.log('Couldn\'t log');
+                });
+            });
         });
     }
     LogInGui.prototype.getUser = function () {

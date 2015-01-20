@@ -25,7 +25,6 @@ class LogInGui extends Gui {
         _self.form = _self.propertize('form.form-inner');
         $(document).ready(() => {
             _self.username.jq.focus();
-            /*
             _self.form.jq.submit((event) => {
                 event.preventDefault();
                 var user = _self.getUser();
@@ -38,7 +37,6 @@ class LogInGui extends Gui {
                     console.log('Couldn\'t log');
                 })
             });
-*/
         });
     }
 }
