@@ -34,6 +34,9 @@ module url {
         }
     }
     export module user {
+        export function get(id?: string) {
+            return (id != null ? "/users/" + id : "/users/:id");
+        }
         export function register() { return "/register"; }
     }
 }

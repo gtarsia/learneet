@@ -46,6 +46,10 @@ var url;
     })(url.proposals || (url.proposals = {}));
     var proposals = url.proposals;
     (function (user) {
+        function get(id) {
+            return (id != null ? "/users/" + id : "/users/:id");
+        }
+        user.get = get;
         function register() {
             return "/register";
         }

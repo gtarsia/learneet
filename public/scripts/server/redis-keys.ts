@@ -1,6 +1,9 @@
 export interface Id {
     id: string;
 }
+export interface Username {
+    username: string;
+}
 export interface ArticleWithId {
     article: {id: string};
 }
@@ -70,6 +73,21 @@ export function dependenciesIdSet(args: {dependent: Id}) {
     return j([baseDependencies(args), "idSet"]);
 }
 
+export function usersBase() {
+    return "users";
+}
+export function user(args: {user: Id}) {
+    return j([usersBase(), args.user.id])
+}
+export function usersIdSet() {
+    return j([usersBase(), 'idSet']);
+}
+export function usersIdCounter() {
+    return j([usersBase(), 'idCounter']);
+}
+export function usernamesSets(args: {user: Username}) {
+    return j(['usernames', args.user.username]);
+}
 
 
 //Version

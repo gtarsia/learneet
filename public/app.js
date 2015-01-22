@@ -45,7 +45,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (username, done) {
-    dbUser.get(username).then(function (res) {
+    dbUser.get({ user: { username: username } }).then(function (res) {
         done(null, res);
     }).catch(function (e) {
         done(e, null);

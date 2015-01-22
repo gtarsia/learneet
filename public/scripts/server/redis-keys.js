@@ -78,4 +78,25 @@ function dependenciesIdSet(args) {
     return exports.j([exports.baseDependencies(args), "idSet"]);
 }
 exports.dependenciesIdSet = dependenciesIdSet;
+
+function usersBase() {
+    return "users";
+}
+exports.usersBase = usersBase;
+function user(args) {
+    return exports.j([exports.usersBase(), args.user.id]);
+}
+exports.user = user;
+function usersIdSet() {
+    return exports.j([exports.usersBase(), 'idSet']);
+}
+exports.usersIdSet = usersIdSet;
+function usersIdCounter() {
+    return exports.j([exports.usersBase(), 'idCounter']);
+}
+exports.usersIdCounter = usersIdCounter;
+function usernamesSets(args) {
+    return exports.j(['usernames', args.user.username]);
+}
+exports.usernamesSets = usernamesSets;
 //# sourceMappingURL=redis-keys.js.map

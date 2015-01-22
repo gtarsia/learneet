@@ -22,6 +22,7 @@ export function set(app) {
     app.get(url.change.get(), renderCb('single-page-app', ''));
     app.get(url.dependencies.get(), renderCb('single-page-app', ''));
     app.get(url.article.create(), renderCb('single-page-app', ''));
+    app.get(url.user.get(), renderCb('single-page-app', ''));
     app.get(url.proposals.add(), (req, res) => {
         var id = req.params.id;
         db.hget('article:' + id, 'title')

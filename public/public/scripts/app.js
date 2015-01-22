@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":31,"./client-ajax":6,"./gui":10,"./templates/previewable-article":24}],2:[function(require,module,exports){
+},{"./../common/validate":32,"./client-ajax":6,"./gui":10,"./templates/previewable-article":24}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -129,7 +129,7 @@ var ArticleGui = (function (_super) {
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/article-change-preview-template":21,"./templates/dependencies":22,"./templates/rendered-article":25,"./utils/score-arrow":28}],3:[function(require,module,exports){
+},{"./../common/url":31,"./client-ajax":6,"./single-page-gui":20,"./templates/article-change-preview-template":21,"./templates/dependencies":22,"./templates/rendered-article":25,"./utils/score-arrow":29}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -206,7 +206,7 @@ if (guiName == 'BaseArticleGui') {
 module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":30,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":10}],4:[function(require,module,exports){
+},{"./../common/url":31,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":10}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -290,7 +290,7 @@ var ChangeGui = (function (_super) {
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map
 
-},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/rendered-article":25,"./utils/score-arrow":28}],6:[function(require,module,exports){
+},{"./../common/url":31,"./client-ajax":6,"./single-page-gui":20,"./templates/rendered-article":25,"./utils/score-arrow":29}],6:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 var AjaxType = baseAjax.AjaxType;
 
@@ -472,7 +472,7 @@ var changes = exports.changes;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":29}],7:[function(require,module,exports){
+},{"./../common/base-ajax":30}],7:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -522,7 +522,7 @@ var CreateArticleGui = (function (_super) {
 module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],8:[function(require,module,exports){
+},{"./../common/url":31,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],8:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -662,7 +662,7 @@ var DependenciesGui = (function (_super) {
 module.exports = DependenciesGui;
 //# sourceMappingURL=dependencies-gui.js.map
 
-},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20}],9:[function(require,module,exports){
+},{"./../common/url":31,"./client-ajax":6,"./single-page-gui":20}],9:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -733,7 +733,7 @@ var EditArticleGui = (function (_super) {
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":29,"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],10:[function(require,module,exports){
+},{"./../common/base-ajax":30,"./../common/url":31,"./client-ajax":6,"./single-page-gui":20,"./templates/previewable-article":24}],10:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
@@ -755,7 +755,7 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{"./utils/propertize":26}],11:[function(require,module,exports){
+},{"./utils/propertize":27}],11:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -831,7 +831,7 @@ var IndexGui = (function (_super) {
 module.exports = IndexGui;
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":30,"./client-ajax":6,"./single-page-gui":20,"./utils/render":27}],12:[function(require,module,exports){
+},{"./../common/url":31,"./client-ajax":6,"./single-page-gui":20,"./utils/render":28}],12:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1061,7 +1061,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":30,"./client-ajax":6,"./gui":10}],18:[function(require,module,exports){
+},{"./../common/url":31,"./client-ajax":6,"./gui":10}],18:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1123,6 +1123,7 @@ var ArticleGui = require("./article-gui");
 var CreateArticleGui = require("./create-article-gui");
 var EditArticleGui = require("./edit-article-gui");
 var DependenciesGui = require("./dependencies-gui");
+var UserGui = require("./user-gui");
 var ChangeGui = require("./change-gui");
 
 function findSinglePageGui(urlToGo) {
@@ -1162,7 +1163,13 @@ function findSinglePageGui(urlToGo) {
             gui: function () {
                 return new DependenciesGui();
             },
-            sel: '.dependencies.partial' }
+            sel: '.dependencies.partial' },
+        {
+            re: url.user.get('\\d+'),
+            gui: function () {
+                return new UserGui();
+            },
+            sel: '.user.partial' }
     ];
     var _gui;
     partials.forEach(function (partial) {
@@ -1213,7 +1220,7 @@ singlePageApp.viewTransition = exports.viewTransition;
 singlePageApp.guiFound = guiFound;
 //# sourceMappingURL=single-page-app.js.map
 
-},{"./../common/url":30,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11}],20:[function(require,module,exports){
+},{"./../common/url":31,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./index-gui":11,"./user-gui":26}],20:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1296,7 +1303,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
 module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
-},{"./../../common/url":30,"./../client-ajax":6,"./../gui":10}],22:[function(require,module,exports){
+},{"./../../common/url":31,"./../client-ajax":6,"./../gui":10}],22:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1417,7 +1424,7 @@ var Dependencies = (function (_super) {
 module.exports = Dependencies;
 //# sourceMappingURL=dependencies.js.map
 
-},{"./../../common/url":30,"./../client-ajax":6,"./../gui":10}],23:[function(require,module,exports){
+},{"./../../common/url":31,"./../client-ajax":6,"./../gui":10}],23:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1539,7 +1546,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":6,"./../utils/render":27,"./editable-article":23,"./rendered-article":25}],25:[function(require,module,exports){
+},{".././client-ajax":6,"./../utils/render":28,"./editable-article":23,"./rendered-article":25}],25:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1587,7 +1594,42 @@ var RenderedArticle = (function (_super) {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{"./../gui":10,"./../utils/render":27}],26:[function(require,module,exports){
+},{"./../gui":10,"./../utils/render":28}],26:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var url = require("./../common/url");
+var SinglePageGui = require("./single-page-gui");
+
+var base = '.partial.user ';
+
+var UserGui = (function (_super) {
+    __extends(UserGui, _super);
+    function UserGui() {
+        _super.call(this, base);
+        this.id = "-1";
+        this.parseURL();
+        var _self = this;
+        _self.titleDeferred.resolve('User - Learneet');
+        $(document).ready(function () {
+        });
+    }
+    UserGui.prototype.parseURL = function () {
+        var re = url.user.get('(\\d+)');
+        var regex = new RegExp(re);
+        var matches = regex.exec(location.pathname);
+        this.id = matches[1];
+    };
+    return UserGui;
+})(SinglePageGui);
+
+module.exports = UserGui;
+//# sourceMappingURL=user-gui.js.map
+
+},{"./../common/url":31,"./single-page-gui":20}],27:[function(require,module,exports){
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -1627,7 +1669,7 @@ function propertize(selector, valFnName) {
 module.exports = propertize;
 //# sourceMappingURL=propertize.js.map
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 function toKatex(s) {
     var output = '';
     var occurenceIndex = 0;
@@ -1667,7 +1709,7 @@ function toMarkedKatex(s) {
 exports.toMarkedKatex = toMarkedKatex;
 //# sourceMappingURL=render.js.map
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1956,7 +1998,7 @@ var ChangeScore = (function (_super) {
 exports.ChangeScore = ChangeScore;
 //# sourceMappingURL=score-arrow.js.map
 
-},{"./../client-ajax":6,"./../gui":10}],29:[function(require,module,exports){
+},{"./../client-ajax":6,"./../gui":10}],30:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -2408,7 +2450,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -2457,6 +2499,10 @@ var url;
     })(url.proposals || (url.proposals = {}));
     var proposals = url.proposals;
     (function (user) {
+        function get(id) {
+            return (id != null ? "/users/" + id : "/users/:id");
+        }
+        user.get = get;
         function register() {
             return "/register";
         }
@@ -2467,46 +2513,6 @@ var url;
 
 module.exports = url;
 //# sourceMappingURL=url.js.map
-
-},{}],31:[function(require,module,exports){
-function notOkBase(base) {
-    return function (reason) {
-        return { ok: false, because: base + ' ' + reason };
-    };
-}
-exports.notOkBase = notOkBase;
-
-function ok() {
-    return { ok: true, because: '' };
-}
-exports.ok = ok;
-
-(function (version) {
-    function changesDescription(changesDescription) {
-        var notOk = exports.notOkBase('Changes description should');
-        if (typeof changesDescription != 'string')
-            return notOk('be of type string');
-        if (changesDescription.length <= 15)
-            return notOk('be longer than 15 characters');
-        return exports.ok();
-    }
-    version.changesDescription = changesDescription;
-})(exports.version || (exports.version = {}));
-var version = exports.version;
-
-(function (user) {
-    function isUsernameTaken(username) {
-    }
-    user.isUsernameTaken = isUsernameTaken;
-    function isPasswordSafeEnough(password) {
-    }
-    user.isPasswordSafeEnough = isPasswordSafeEnough;
-    function isEmailTaken() {
-    }
-    user.isEmailTaken = isEmailTaken;
-})(exports.user || (exports.user = {}));
-var user = exports.user;
-//# sourceMappingURL=validate.js.map
 
 },{}],32:[function(require,module,exports){
 function notOkBase(base) {
@@ -2546,6 +2552,46 @@ var version = exports.version;
     user.isEmailTaken = isEmailTaken;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
+//# sourceMappingURL=validate.js.map
+
+},{}],33:[function(require,module,exports){
+function notOkBase(base) {
+    return function (reason) {
+        return { ok: false, because: base + ' ' + reason };
+    };
+}
+exports.notOkBase = notOkBase;
+
+function ok() {
+    return { ok: true, because: '' };
+}
+exports.ok = ok;
+
+(function (version) {
+    function changesDescription(changesDescription) {
+        var notOk = exports.notOkBase('Changes description should');
+        if (typeof changesDescription != 'string')
+            return notOk('be of type string');
+        if (changesDescription.length <= 15)
+            return notOk('be longer than 15 characters');
+        return exports.ok();
+    }
+    version.changesDescription = changesDescription;
+})(exports.version || (exports.version = {}));
+var version = exports.version;
+
+(function (user) {
+    function isUsernameTaken(username) {
+    }
+    user.isUsernameTaken = isUsernameTaken;
+    function isPasswordSafeEnough(password) {
+    }
+    user.isPasswordSafeEnough = isPasswordSafeEnough;
+    function isEmailTaken() {
+    }
+    user.isEmailTaken = isEmailTaken;
+})(exports.user || (exports.user = {}));
+var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,29,30,31,32]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,26,30,31,32,33]);

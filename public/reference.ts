@@ -25,6 +25,7 @@
 /// <reference path="scripts/browser/templates/editable-article.ts" />
 /// <reference path="scripts/browser/templates/previewable-article.ts" />
 /// <reference path="scripts/browser/templates/rendered-article.ts" />
+/// <reference path="scripts/browser/user-gui.ts" />
 /// <reference path="scripts/browser/utils/propertize.ts" />
 /// <reference path="scripts/browser/utils/render.ts" />
 /// <reference path="scripts/browser/utils/score-arrow.ts" />

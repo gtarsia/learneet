@@ -22,7 +22,6 @@ exports.okObj = okObj;
 
 function getAll(args) {
     function arrayToChanges(array) {
-        debugger;
         var changes = [];
         var length = array.length;
         while (length > 0) {

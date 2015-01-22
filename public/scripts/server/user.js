@@ -1,6 +1,8 @@
 var db = require('./db');
 var bcrypt = require('./bcrypt');
 
+var keys = require('./redis-keys');
+
 function hash(password) {
     return bcrypt.genSalt(10).then(function (salt) {
         return bcrypt.hash(password, salt);
@@ -9,11 +11,20 @@ function hash(password) {
 exports.hash = hash;
 
 function register(params) {
+    var userwithid;
     var id;
     var hashed;
     return exports.hash(params.password).then(function (_hash) {
         hashed = _hash;
-        return db.hmset("user:" + params.username, {
+        return db.incr(keys.usersIdCounter());
+    }).then(function (_id) {
+        userwithid = { user: { id: _id } };
+        id = _id;
+        return db.sadd(keys.usersIdSet(), _id);
+    }).then(function (ok) {
+        return db.hmset(keys.usernamesSets({ user: params }), { id: id });
+    }).then(function (ok) {
+        return db.hmset(keys.user(userwithid), {
             username: params.username,
             hash: hashed,
             id: id,
@@ -30,15 +41,24 @@ function register(params) {
 }
 exports.register = register;
 
-function get(username) {
-    return db.hgetall("user:" + username);
+function get(params) {
+    var baseKey = keys.usersBase() + ':*->';
+    return db.sort(keys.usernamesSets(params), 'by', 'nosort', 'GET', baseKey + 'id', 'GET', baseKey + 'hash', 'GET', baseKey + 'username', 'GET', baseKey + 'email', 'GET', baseKey + 'activated').then(function (values) {
+        var user = {};
+        user.id = values.shift();
+        user.hash = values.shift();
+        user.username = values.shift();
+        user.email = values.shift();
+        user.activated = values.shift();
+        return user;
+    });
 }
 exports.get = get;
 
 function auth(params) {
     var user;
-    return db.hgetall("user:" + params.username).then(function (_user) {
-        debugger;
+    debugger;
+    return exports.get({ user: params }).then(function (_user) {
         user = _user;
         return bcrypt.compare(params.password, user.hash);
     }).then(function (result) {

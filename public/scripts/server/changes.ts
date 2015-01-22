@@ -30,7 +30,6 @@ export function okObj<T>(obj: T): any {
 
 export function getAll(args: getAll.Params) : Promise<getAll.Return> {
     function arrayToChanges(array: string[]) : ChangeFields[] {
-        debugger;
         var changes : ChangeFields[] = [];
         var length = array.length;
         while (length > 0) {

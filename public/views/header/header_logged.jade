@@ -3,7 +3,7 @@
     headerName = 'LoggedHeaderGui'
 
 span#rightHeader
-  img#avatar(src="/images/avatar.png")
-  | #{user.username}
+  input#avatar(type="image")
+  a #{user.username}
   input#options(type="image", src="/images/wrench.png")
   button(onclick="location.href = '/logout'") Log out

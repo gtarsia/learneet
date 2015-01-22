@@ -49,7 +49,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(username, done) {
-  dbUser.get(username)
+  dbUser.get({user: {username: username}})
   .then((res) => {
     done(null, res);
   })
