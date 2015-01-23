@@ -8,6 +8,7 @@ import CreateArticleGui = require("./create-article-gui");
 import EditArticleGui = require("./edit-article-gui");
 import DependenciesGui = require("./dependencies-gui");
 import UserGui = require("./user-gui");
+import EditUserGui = require("./edit-user-gui");
 import ChangeGui = require("./change-gui");
 
 declare var gui : SinglePageGui;
@@ -41,7 +42,11 @@ export function findSinglePageGui(urlToGo: string) {
 
         {re: url.user.get('\\d+'),
         gui: function() {return new UserGui()},
-        sel: '.user.partial'}
+        sel: '.user.partial'},
+
+        {re: url.user.edit('\\d+'),
+        gui: function() {return new EditUserGui()},
+        sel: '.edit-user.partial'}
     ];
     var _gui;
     partials.forEach(function(partial:any) {

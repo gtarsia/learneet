@@ -6,6 +6,7 @@ var CreateArticleGui = require("./create-article-gui");
 var EditArticleGui = require("./edit-article-gui");
 var DependenciesGui = require("./dependencies-gui");
 var UserGui = require("./user-gui");
+var EditUserGui = require("./edit-user-gui");
 var ChangeGui = require("./change-gui");
 
 function findSinglePageGui(urlToGo) {
@@ -51,7 +52,13 @@ function findSinglePageGui(urlToGo) {
             gui: function () {
                 return new UserGui();
             },
-            sel: '.user.partial' }
+            sel: '.user.partial' },
+        {
+            re: url.user.edit('\\d+'),
+            gui: function () {
+                return new EditUserGui();
+            },
+            sel: '.edit-user.partial' }
     ];
     var _gui;
     partials.forEach(function (partial) {

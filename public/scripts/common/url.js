@@ -50,6 +50,10 @@ var url;
             return (id != null ? "/users/" + id : "/users/:id");
         }
         user.get = get;
+        function edit(id) {
+            return (id != null ? "/edit-user/" + id : "/edit-user/:id");
+        }
+        user.edit = edit;
         function register() {
             return "/register";
         }

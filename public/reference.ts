@@ -9,6 +9,7 @@
 /// <reference path="scripts/browser/create-article-gui.ts" />
 /// <reference path="scripts/browser/dependencies-gui.ts" />
 /// <reference path="scripts/browser/edit-article-gui.ts" />
+/// <reference path="scripts/browser/edit-user-gui.ts" />
 /// <reference path="scripts/browser/gui.ts" />
 /// <reference path="scripts/browser/header/logged-header-gui.ts" />
 /// <reference path="scripts/browser/index-gui.ts" />
