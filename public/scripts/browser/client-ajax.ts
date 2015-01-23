@@ -1,17 +1,15 @@
-﻿import baseAjax = require('./../common/base-ajax');
+﻿    import baseAjax = require('./../common/base-ajax');
 import AjaxType = baseAjax.AjaxType;
 import IAjax = baseAjax.IAjax;
 
 
 export function buildAjax<ArgType, Return>
-(url: string, type: string, params: ArgType) : JQueryXHR<Return> {
-    var obj = {p: JSON.stringify(params)};
-    switch (type) {
-    case AjaxType.GET:
-        return $.get(url, obj); break;
-    case AjaxType.POST:
-        return $.post(url, obj); break;
-    }
+(url: string, type: string, data: ArgType, opts?: JQueryAjaxSettings) : JQueryXHR<Return> {
+    var _obj = {p: JSON.stringify(data)};
+    var _opts = opts || {};
+    _opts.type = type;
+    _opts.data = _obj;
+    return $.ajax(url, _opts);
 }
 
 export function buildIAjax<ArgType, Return>

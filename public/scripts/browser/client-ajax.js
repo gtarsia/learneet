@@ -1,16 +1,11 @@
 ﻿var baseAjax = require('./../common/base-ajax');
-var AjaxType = baseAjax.AjaxType;
 
-function buildAjax(url, type, params) {
-    var obj = { p: JSON.stringify(params) };
-    switch (type) {
-        case AjaxType.GET:
-            return $.get(url, obj);
-            break;
-        case AjaxType.POST:
-            return $.post(url, obj);
-            break;
-    }
+function buildAjax(url, type, data, opts) {
+    var _obj = { p: JSON.stringify(data) };
+    var _opts = opts || {};
+    _opts.type = type;
+    _opts.data = _obj;
+    return $.ajax(url, _opts);
 }
 exports.buildAjax = buildAjax;
 
