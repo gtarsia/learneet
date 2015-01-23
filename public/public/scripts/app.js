@@ -749,6 +749,17 @@ var EditUserGui = (function (_super) {
         var _self = this;
         _self.titleDeferred.resolve('Edit User - Learneet');
         $(document).ready(function () {
+            $('#uploadForm').submit(function (e) {
+                $(this).ajaxSubmit({
+                    error: function (xhr) {
+                        console.log('Error: ' + xhr.status);
+                    },
+                    success: function (response) {
+                        console.log(response);
+                    }
+                });
+                e.preventDefault();
+            });
         });
     }
     EditUserGui.prototype.parseURL = function () {

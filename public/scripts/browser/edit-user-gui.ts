@@ -26,6 +26,17 @@ class EditUserGui extends SinglePageGui {
         _self.titleDeferred.resolve(
                     'Edit User - Learneet')
         $(document).ready(function() {
+            $('#uploadForm').submit(function(e) {
+                $(this).ajaxSubmit({
+                    error: function(xhr) {
+                        console.log('Error: ' + xhr.status);
+                    },
+                    success: function(response) {
+                        console.log(response);
+                    }
+                });
+                e.preventDefault();
+            });
         });
     }
 }

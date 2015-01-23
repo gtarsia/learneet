@@ -5,6 +5,7 @@ var server_ajax = require('./scripts/server/server-ajax');
 
 var dbUser = require('./scripts/server/user');
 var passport = require('passport');
+var multer = require('multer');
 var session = require('express-session');
 var local = require('passport-local');
 var LocalStrategy = local.Strategy;
@@ -30,6 +31,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ resave: true, saveUninitialized: true, secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+var done = false;
+app.use(multer({
+    dest: './uploads/',
+    rename: function (fieldname, filename) {
+        return filename + Date.now();
+    },
+    onFileUploadStart: function (file) {
+        console.log(file.originalname + ' is starting ...');
+    },
+    onFileUploadComplete: function (file) {
+        console.log(file.fieldname + ' uploaded to  ' + file.path);
+        done = true;
+    }
+}));
 passport.use(new LocalStrategy(function (username, password, done) {
     dbUser.auth({ username: username, password: password }).then(function (res) {
         if (!res.ok)
@@ -65,6 +81,12 @@ app.post('/api/auth', passport.authenticate('local', {}), function (req, res) {
 app.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
+});
+app.post('/api/photo', function (req, res) {
+    if (done == true) {
+        console.log(req.files);
+        res.end("File uploaded.");
+    }
 });
 routes.set(app);
 
