@@ -170,6 +170,12 @@ var changes = exports.changes;
         return exports.buildIAjax(new _auth.Ajax(), params);
     }
     user.auth = auth;
+
+    var _get = baseAjax.user.get;
+    function get(params) {
+        return exports.buildIAjax(new _get.Ajax(), params);
+    }
+    user.get = get;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map

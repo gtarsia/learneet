@@ -7,6 +7,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "avatars.io": "^0.1.6",
     "bcryptjs": "^2.1.0",
     "bluebird": "^2.3.2",
     "body-parser": "^1.8.3",

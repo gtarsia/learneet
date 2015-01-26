@@ -12,7 +12,9 @@ declare var singlePageApp;
 
 class EditUserGui extends SinglePageGui {
     id: string = "-1";
+    avatar = this.propertize(base + '.avatar');
     parent;
+
     parseURL() {
         var re = url.user.edit('(\\d+)')
         var regex = new RegExp(re);
@@ -23,9 +25,15 @@ class EditUserGui extends SinglePageGui {
         super(base);
         this.parseURL();
         var _self = this;
+        var getCb = ajax.user.get({user: {id: this.id}});
         _self.titleDeferred.resolve(
                     'Edit User - Learneet')
         $(document).ready(function() {
+            getCb.done(res => {
+                if (res.ok)
+                _self.avatar.jq.attr('src', res.result.avatar_url);
+                else console.log(res.why);
+            })
             $('#uploadForm').submit(function(e) {
                 $(this).ajaxSubmit({
                     error: function(xhr) {

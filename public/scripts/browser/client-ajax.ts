@@ -190,5 +190,11 @@ export module user {
         return buildIAjax<_auth.Params, _auth.Return>
         (new _auth.Ajax(), params);
     }
+
+    import _get = baseAjax.user.get;
+    export function get(params) {
+        return buildIAjax<_get.Params, _get.Return>
+        (new _get.Ajax(), params);
+    }
 }
 

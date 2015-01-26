@@ -307,6 +307,13 @@ export module user {
     export interface AuthFields {
         username: string; password: string;
     }
+    export interface UserData {
+        username: string;
+        id: string;
+        email: string;
+        activated: string;
+        avatar_url: string;
+    }
     export module auth {
         export class Ajax implements IAjax{
             url(): string { return '/api/auth' }
@@ -314,6 +321,15 @@ export module user {
         }
         export interface Params extends AuthFields {};
         export interface Return extends JsonReturn<{username: string; id: string;}> {} 
+    }
+
+    export module get {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/get_user' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params {};
+        export interface Return extends JsonReturn<UserData> {} 
     }
 }
 

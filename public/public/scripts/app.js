@@ -463,6 +463,12 @@ var changes = exports.changes;
         return exports.buildIAjax(new _auth.Ajax(), params);
     }
     user.auth = auth;
+
+    var _get = baseAjax.user.get;
+    function get(params) {
+        return exports.buildIAjax(new _get.Ajax(), params);
+    }
+    user.get = get;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
@@ -735,6 +741,8 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var ajax = require("./client-ajax");
+
 var url = require("./../common/url");
 var SinglePageGui = require("./single-page-gui");
 
@@ -745,10 +753,18 @@ var EditUserGui = (function (_super) {
     function EditUserGui() {
         _super.call(this, base);
         this.id = "-1";
+        this.avatar = this.propertize(base + '.avatar');
         this.parseURL();
         var _self = this;
+        var getCb = ajax.user.get({ user: { id: this.id } });
         _self.titleDeferred.resolve('Edit User - Learneet');
         $(document).ready(function () {
+            getCb.done(function (res) {
+                if (res.ok)
+                    _self.avatar.jq.attr('src', res.result.avatar_url);
+                else
+                    console.log(res.why);
+            });
             $('#uploadForm').submit(function (e) {
                 $(this).ajaxSubmit({
                     error: function (xhr) {
@@ -774,7 +790,7 @@ var EditUserGui = (function (_super) {
 module.exports = EditUserGui;
 //# sourceMappingURL=edit-user-gui.js.map
 
-},{"./../common/url":32,"./single-page-gui":21}],11:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./single-page-gui":21}],11:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
@@ -2491,6 +2507,23 @@ var changes = exports.changes;
         ;
     })(user.auth || (user.auth = {}));
     var auth = user.auth;
+
+    (function (get) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get_user';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        get.Ajax = Ajax;
+        ;
+    })(user.get || (user.get = {}));
+    var get = user.get;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 

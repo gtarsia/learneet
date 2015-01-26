@@ -6,6 +6,7 @@ var dbDependencies = require('./dependencies');
 var dbChanges = require('./changes');
 var dbScore = require('./score');
 var dbUser = require('./user');
+var Promise = require('bluebird');
 
 function getServerAjaxList() {
     return [
@@ -33,7 +34,8 @@ function getServerAjaxList() {
         score.down(),
         score.removeDown(),
         score.getByUser(),
-        user.register()
+        user.register(),
+        user.get()
     ];
 }
 exports.getServerAjaxList = getServerAjaxList;
@@ -46,7 +48,7 @@ function restCb(url, type, fn) {
                 params = JSON.parse(req.query.p);
             else if (type == AjaxType.POST)
                 params = JSON.parse(req.body.p);
-            fn(params).then(function (result) {
+            fn(params, req).then(function (result) {
                 res.send(result);
             });
         };
@@ -227,12 +229,35 @@ var changes = exports.changes;
 })(exports.dependencies || (exports.dependencies = {}));
 var dependencies = exports.dependencies;
 
+function userGet(params, req) {
+    debugger;
+    return new Promise(function (resolve, reject) {
+        if (!req.isAuthenticated())
+            resolve({
+                ok: false, why: 'Not authenticated',
+                result: null
+            });
+        return dbUser.get({ user: { username: req.user.username } }).then(function (res) {
+            debugger;
+            resolve({
+                ok: true, why: '',
+                result: res });
+        });
+    });
+}
+
 (function (user) {
     var _register = baseAjax.user.register;
     function register() {
         return exports.restCbAjax(new _register.Ajax(), dbUser.register);
     }
     user.register = register;
+
+    var _get = baseAjax.user.get;
+    function get() {
+        return exports.restCbAjax(new _get.Ajax(), userGet);
+    }
+    user.get = get;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 //# sourceMappingURL=server-ajax.js.map

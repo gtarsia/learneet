@@ -7,6 +7,7 @@ import dbDependencies = require('./dependencies');
 import dbChanges = require('./changes');
 import dbScore = require('./score');
 import dbUser = require('./user');
+import Promise = require('bluebird');
 
 //FUNCION DEFINITIVA
 export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => void}[] {
@@ -35,7 +36,8 @@ export function getServerAjaxList(): {setExpressAjax: (app:express.Express) => v
         score.down(),
         score.removeDown(),
         score.getByUser(),
-        user.register()
+        user.register(),
+        user.get()
         //user.auth()
     ];
 }
@@ -48,7 +50,7 @@ export function restCb(url: string, type: string, fn: any) {
                 params = JSON.parse(req.query.p);
             else if (type == AjaxType.POST)
                 params = JSON.parse(req.body.p);
-            fn(params).
+            fn(params, req).
             then(result => {
                 res.send(result);
             })
@@ -198,10 +200,33 @@ export module dependencies {
     }
 }
 
+function userGet(params, req): any {
+    debugger;
+    return new Promise<string>(
+    function(resolve, reject): any {
+        if (!req.isAuthenticated())
+            resolve({
+                ok: false, why: 'Not authenticated',
+                result: null
+            });
+        return dbUser.get({user: {username: req.user.username}})
+        .then(res => {
+            debugger;
+            resolve({ok: true, why: '',
+            result: res});
+        })
+    });
+}
+
 export module user {
     import _register = baseAjax.user.register;
     export function register() {
         return restCbAjax(new _register.Ajax(), dbUser.register);
+    }
+
+    import _get = baseAjax.user.get;
+    export function get() {
+        return restCbAjax(new _get.Ajax(), userGet);
     }
 /*
     import _auth = baseAjax.user.auth;

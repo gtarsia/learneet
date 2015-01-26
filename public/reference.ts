@@ -34,6 +34,7 @@
 /// <reference path="scripts/common/url.ts" />
 /// <reference path="scripts/common/validate.ts" />
 /// <reference path="scripts/server/article.ts" />
+/// <reference path="scripts/server/avatar.ts" />
 /// <reference path="scripts/server/bcrypt.ts" />
 /// <reference path="scripts/server/changes.ts" />
 /// <reference path="scripts/server/db.ts" />

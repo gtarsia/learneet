@@ -442,6 +442,23 @@ var changes = exports.changes;
         ;
     })(user.auth || (user.auth = {}));
     var auth = user.auth;
+
+    (function (get) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get_user';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        get.Ajax = Ajax;
+        ;
+    })(user.get || (user.get = {}));
+    var get = user.get;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 

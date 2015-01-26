@@ -6,6 +6,7 @@ var server_ajax = require('./scripts/server/server-ajax');
 var dbUser = require('./scripts/server/user');
 var passport = require('passport');
 var multer = require('multer');
+var user = require('./scripts/server/user');
 var session = require('express-session');
 var local = require('passport-local');
 var LocalStrategy = local.Strategy;
@@ -31,21 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ resave: true, saveUninitialized: true, secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-var done = false;
-app.use(multer({
-    dest: './uploads/',
-    rename: function (fieldname, filename) {
-        return filename + Date.now();
-    },
-    onFileUploadStart: function (file) {
-        console.log(file.originalname + ' is starting ...');
-    },
-    onFileUploadComplete: function (file) {
-        console.log(file.fieldname + ' uploaded to  ' + file.path);
-        done = true;
-    }
-}));
 passport.use(new LocalStrategy(function (username, password, done) {
     dbUser.auth({ username: username, password: password }).then(function (res) {
         if (!res.ok)
@@ -66,6 +52,32 @@ passport.deserializeUser(function (username, done) {
     }).catch(function (e) {
         done(e, null);
     });
+});
+
+var done = false;
+var last_image = '';
+var multerHandler = multer({
+    dest: './uploads/',
+    rename: function (fieldname, filename) {
+        return filename + Date.now();
+    },
+    onFileUploadStart: function (file) {
+        console.log(file.originalname + ' is starting ...');
+    },
+    onFileUploadComplete: function (file) {
+        console.log(file.fieldname + ' uploaded to  ' + file.path);
+        last_image = file.path;
+        done = true;
+    },
+    onParseEnd: function (req, next) {
+        user.uploadAvatar({ user: req.user, image: { path: last_image } });
+        next();
+    }
+});
+app.use(function (req, res, next) {
+    if (!req.isAuthenticated())
+        return next();
+    multerHandler(req, res, next);
 });
 
 if ('development' == app.get('env')) {

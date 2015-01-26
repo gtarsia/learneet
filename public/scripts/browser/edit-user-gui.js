@@ -4,6 +4,8 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var ajax = require("./client-ajax");
+
 var url = require("./../common/url");
 var SinglePageGui = require("./single-page-gui");
 
@@ -14,10 +16,18 @@ var EditUserGui = (function (_super) {
     function EditUserGui() {
         _super.call(this, base);
         this.id = "-1";
+        this.avatar = this.propertize(base + '.avatar');
         this.parseURL();
         var _self = this;
+        var getCb = ajax.user.get({ user: { id: this.id } });
         _self.titleDeferred.resolve('Edit User - Learneet');
         $(document).ready(function () {
+            getCb.done(function (res) {
+                if (res.ok)
+                    _self.avatar.jq.attr('src', res.result.avatar_url);
+                else
+                    console.log(res.why);
+            });
             $('#uploadForm').submit(function (e) {
                 $(this).ajaxSubmit({
                     error: function (xhr) {

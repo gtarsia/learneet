@@ -6,6 +6,24 @@ import baseUser = baseAjax.user;
 import register = baseUser.register;
 import baseAuth = baseUser.auth;
 import UserFields = baseUser.UserFields;
+import avatar = require('./avatar');
+
+function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
+
+export function notOkObj(reason: string): any {
+    return {
+        ok: false,
+        why: reason
+    }
+}
+
+export function okObj<T>(obj: T): any {
+    return {
+        ok: true,
+        why: '',
+        result: obj
+    }
+}
 
 export function hash(password: string) : Promise<string> {
     return bcrypt.genSalt(10)
@@ -54,34 +72,53 @@ export function get(params: {user: {username: string}}): Promise<baseUser.UserFi
     var baseKey = keys.usersBase() + ':*->';
     return db.sort(keys.usernamesSets(params), 'by', 'nosort', 
         'GET', baseKey + 'id',
-        'GET', baseKey + 'hash',
         'GET', baseKey + 'username',
         'GET', baseKey + 'email', 
-        'GET', baseKey + 'activated')
+        'GET', baseKey + 'activated',
+        'GET', baseKey + 'avatar_url')
     .then(values => {
         var user: any = {};
         user.id = values.shift();
-        user.hash = values.shift();
         user.username = values.shift();
         user.email = values.shift();
         user.activated = values.shift();
+        user.avatar_url = values.shift();
         return user;
+    })
+}
+
+export function getHash(params: {user: {username: string}}): Promise<baseUser.UserFields> {
+    var baseKey = keys.usersBase() + ':*->';
+    return db.sort(keys.usernamesSets(params), 'by', 'nosort', 
+        'GET', baseKey + 'hash')
+    .then(values => {
+        var user: any = {};
+        user.hash = values.shift();
+        return user;
+    })
+}
+
+export function uploadAvatar(args: {user: {id: string}; image: {path: string}}) {
+    return avatar.upload(args.image.path)
+    .then(url => {
+        return db.hmset(keys.user(args), {avatar_url: url})
     })
 }
 
 export function auth(params: baseAuth.Params): Promise<baseAuth.Return> {
     var user;
-    debugger;
-    return get({user: params})
+    var equals;
+    return getHash({user: params})
     .then((_user) => {
         user = _user;
         return bcrypt.compare(params.password, user.hash);
     })
-    .then((result: boolean) => {
-        return {
-            why: (result ? '' : 'Invalid authentication'),
-            ok: result,
-            result: user
-        }
+    .then((equals: boolean) => {
+        if (equals)
+            return get({user: params})
+            .then(res => {
+                return okObj(res);
+            })
+        else return notOkObj('Invalid authentication');
     })
 }

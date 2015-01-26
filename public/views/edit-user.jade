@@ -1,6 +1,7 @@
 .partial.edit-user(style='display:none')
   .main-left &nbsp; a
   .main-center
+    input.avatar(type='image')
     form#uploadForm(enctype='multipart/form-data', action='/api/photo', method='post')
       input(type='file', name='userPhoto')
       input(type='submit', value='Upload Image', name='submit')
