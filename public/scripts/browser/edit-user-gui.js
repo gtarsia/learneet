@@ -24,7 +24,7 @@ var EditUserGui = (function (_super) {
         $(document).ready(function () {
             getCb.done(function (res) {
                 if (res.ok)
-                    _self.avatar.jq.attr('src', res.result.avatar_url);
+                    _self.avatar.jq.attr('src', res.result.avatar_url + '?size=medium');
                 else
                     console.log(res.why);
             });

@@ -6,16 +6,21 @@ import Gui = require("./gui");
 import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
+import LoggedHeaderGui = require('./header/logged-header-gui');
 declare function marked(s);
 
 declare var layoutGui;
 declare var singlePageApp;
+declare var userId;
+declare var header;
 
 class LayoutGui extends Gui {
     logo = this.propertize('#logo');
     constructor() {
         super();
         var _self = this;
+        if (userId)
+            header = new LoggedHeaderGui();
         $(document).ready(() => {
             if (singlePageApp.guiFound)
                 _self.logo.transitionURL('/');

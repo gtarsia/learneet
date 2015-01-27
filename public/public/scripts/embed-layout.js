@@ -1,7 +1,8 @@
 var gui;
 var layoutGui;
 var singlePageApp = {};
-
+var header;
+var userId;
 
 /*
 var exports = {};

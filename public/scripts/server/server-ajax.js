@@ -230,7 +230,6 @@ var changes = exports.changes;
 var dependencies = exports.dependencies;
 
 function userGet(params, req) {
-    debugger;
     return new Promise(function (resolve, reject) {
         if (!req.isAuthenticated())
             resolve({
@@ -238,7 +237,6 @@ function userGet(params, req) {
                 result: null
             });
         return dbUser.get({ user: { username: req.user.username } }).then(function (res) {
-            debugger;
             resolve({
                 ok: true, why: '',
                 result: res });

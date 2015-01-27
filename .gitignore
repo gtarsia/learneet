@@ -9,3 +9,8 @@ node_modules
 Thumbs.db
 
 *.txt
+
+*.png
+*.gif
+*.jpg
+*.jpeg

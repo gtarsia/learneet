@@ -201,7 +201,6 @@ export module dependencies {
 }
 
 function userGet(params, req): any {
-    debugger;
     return new Promise<string>(
     function(resolve, reject): any {
         if (!req.isAuthenticated())
@@ -211,7 +210,6 @@ function userGet(params, req): any {
             });
         return dbUser.get({user: {username: req.user.username}})
         .then(res => {
-            debugger;
             resolve({ok: true, why: '',
             result: res});
         })

@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":33,"./client-ajax":6,"./gui":11,"./templates/previewable-article":25}],2:[function(require,module,exports){
+},{"./../common/validate":34,"./client-ajax":6,"./gui":11,"./templates/previewable-article":26}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -129,7 +129,7 @@ var ArticleGui = (function (_super) {
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":32,"./client-ajax":6,"./single-page-gui":21,"./templates/article-change-preview-template":22,"./templates/dependencies":23,"./templates/rendered-article":26,"./utils/score-arrow":30}],3:[function(require,module,exports){
+},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/article-change-preview-template":23,"./templates/dependencies":24,"./templates/rendered-article":27,"./utils/score-arrow":31}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -206,7 +206,7 @@ if (guiName == 'BaseArticleGui') {
 module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":32,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":11}],4:[function(require,module,exports){
+},{"./../common/url":33,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":11}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -290,7 +290,7 @@ var ChangeGui = (function (_super) {
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map
 
-},{"./../common/url":32,"./client-ajax":6,"./single-page-gui":21,"./templates/rendered-article":26,"./utils/score-arrow":30}],6:[function(require,module,exports){
+},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/rendered-article":27,"./utils/score-arrow":31}],6:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 
 function buildAjax(url, type, data, opts) {
@@ -473,7 +473,7 @@ var changes = exports.changes;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":31}],7:[function(require,module,exports){
+},{"./../common/base-ajax":32}],7:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -523,7 +523,7 @@ var CreateArticleGui = (function (_super) {
 module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":32,"./client-ajax":6,"./single-page-gui":21,"./templates/previewable-article":25}],8:[function(require,module,exports){
+},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/previewable-article":26}],8:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -663,7 +663,7 @@ var DependenciesGui = (function (_super) {
 module.exports = DependenciesGui;
 //# sourceMappingURL=dependencies-gui.js.map
 
-},{"./../common/url":32,"./client-ajax":6,"./single-page-gui":21}],9:[function(require,module,exports){
+},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22}],9:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -734,7 +734,7 @@ var EditArticleGui = (function (_super) {
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":31,"./../common/url":32,"./client-ajax":6,"./single-page-gui":21,"./templates/previewable-article":25}],10:[function(require,module,exports){
+},{"./../common/base-ajax":32,"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/previewable-article":26}],10:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -761,7 +761,7 @@ var EditUserGui = (function (_super) {
         $(document).ready(function () {
             getCb.done(function (res) {
                 if (res.ok)
-                    _self.avatar.jq.attr('src', res.result.avatar_url);
+                    _self.avatar.jq.attr('src', res.result.avatar_url + '?size=medium');
                 else
                     console.log(res.why);
             });
@@ -790,7 +790,7 @@ var EditUserGui = (function (_super) {
 module.exports = EditUserGui;
 //# sourceMappingURL=edit-user-gui.js.map
 
-},{"./../common/url":32,"./client-ajax":6,"./single-page-gui":21}],11:[function(require,module,exports){
+},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22}],11:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
@@ -812,7 +812,36 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{"./utils/propertize":28}],12:[function(require,module,exports){
+},{"./utils/propertize":29}],12:[function(require,module,exports){
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Gui = require("./../gui");
+var url = require('./../../common/url');
+
+var base = '#rightHeader ';
+
+var LoggedHeaderGui = (function (_super) {
+    __extends(LoggedHeaderGui, _super);
+    function LoggedHeaderGui() {
+        _super.call(this);
+        this.avatar = this.propertize(base + '#avatar');
+        this.avatarImg = this.propertize(base + '#avatar img');
+        var _self = this;
+        $(document).ready(function () {
+            _self.avatar.transitionURL(url.user.edit(userId));
+        });
+    }
+    return LoggedHeaderGui;
+})(Gui);
+
+module.exports = LoggedHeaderGui;
+//# sourceMappingURL=logged-header-gui.js.map
+
+},{"./../../common/url":33,"./../gui":11}],13:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -888,7 +917,7 @@ var IndexGui = (function (_super) {
 module.exports = IndexGui;
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":32,"./client-ajax":6,"./single-page-gui":21,"./utils/render":29}],13:[function(require,module,exports){
+},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./utils/render":30}],14:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -897,12 +926,16 @@ var __extends = this.__extends || function (d, b) {
 };
 var Gui = require("./gui");
 
+var LoggedHeaderGui = require('./header/logged-header-gui');
+
 var LayoutGui = (function (_super) {
     __extends(LayoutGui, _super);
     function LayoutGui() {
         _super.call(this);
         this.logo = this.propertize('#logo');
         var _self = this;
+        if (userId)
+            header = new LoggedHeaderGui();
         $(document).ready(function () {
             if (singlePageApp.guiFound)
                 _self.logo.transitionURL('/');
@@ -916,7 +949,7 @@ layoutGui = new LayoutGui();
 module.exports = LayoutGui;
 //# sourceMappingURL=layout-gui.js.map
 
-},{"./gui":11}],14:[function(require,module,exports){
+},{"./gui":11,"./header/logged-header-gui":12}],15:[function(require,module,exports){
 var parser = require("./parser");
 
 exports.previousNumberOfLines = 0;
@@ -960,7 +993,7 @@ function bind(sourceId, targetId) {
 exports.bind = bind;
 //# sourceMappingURL=live-parser.js.map
 
-},{"./parser":16}],15:[function(require,module,exports){
+},{"./parser":17}],16:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1006,7 +1039,7 @@ if (guiName == 'LogInGui') {
 }
 //# sourceMappingURL=login-gui.js.map
 
-},{"./gui":11}],16:[function(require,module,exports){
+},{"./gui":11}],17:[function(require,module,exports){
 function writeLineDiv(html, number, targetId) {
     var div = $('#line' + number);
     if (!(div.length)) {
@@ -1035,7 +1068,7 @@ function parseToDiv(line, lineNumber, targetId) {
 exports.parseToDiv = parseToDiv;
 //# sourceMappingURL=parser.js.map
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1063,7 +1096,7 @@ var Partial = (function (_super) {
 module.exports = Partial;
 //# sourceMappingURL=partial.js.map
 
-},{"./gui":11}],18:[function(require,module,exports){
+},{"./gui":11}],19:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1118,7 +1151,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":32,"./client-ajax":6,"./gui":11}],19:[function(require,module,exports){
+},{"./../common/url":33,"./client-ajax":6,"./gui":11}],20:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1172,7 +1205,7 @@ if (guiName == 'RegisterGui') {
 }
 //# sourceMappingURL=register-gui.js.map
 
-},{"./client-ajax":6,"./gui":11}],20:[function(require,module,exports){
+},{"./client-ajax":6,"./gui":11}],21:[function(require,module,exports){
 var url = require("./../common/url");
 
 var IndexGui = require("./index-gui");
@@ -1284,7 +1317,7 @@ singlePageApp.viewTransition = exports.viewTransition;
 singlePageApp.guiFound = guiFound;
 //# sourceMappingURL=single-page-app.js.map
 
-},{"./../common/url":32,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./edit-user-gui":10,"./index-gui":12,"./user-gui":27}],21:[function(require,module,exports){
+},{"./../common/url":33,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./edit-user-gui":10,"./index-gui":13,"./user-gui":28}],22:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1316,7 +1349,7 @@ var SinglePageGui = (function (_super) {
 module.exports = SinglePageGui;
 //# sourceMappingURL=single-page-gui.js.map
 
-},{"./gui":11}],22:[function(require,module,exports){
+},{"./gui":11}],23:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1367,7 +1400,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
 module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
-},{"./../../common/url":32,"./../client-ajax":6,"./../gui":11}],23:[function(require,module,exports){
+},{"./../../common/url":33,"./../client-ajax":6,"./../gui":11}],24:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1488,7 +1521,7 @@ var Dependencies = (function (_super) {
 module.exports = Dependencies;
 //# sourceMappingURL=dependencies.js.map
 
-},{"./../../common/url":32,"./../client-ajax":6,"./../gui":11}],24:[function(require,module,exports){
+},{"./../../common/url":33,"./../client-ajax":6,"./../gui":11}],25:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1511,7 +1544,7 @@ var EditableArticle = (function (_super) {
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{"./../gui":11}],25:[function(require,module,exports){
+},{"./../gui":11}],26:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
@@ -1610,7 +1643,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":6,"./../utils/render":29,"./editable-article":24,"./rendered-article":26}],26:[function(require,module,exports){
+},{".././client-ajax":6,"./../utils/render":30,"./editable-article":25,"./rendered-article":27}],27:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1658,7 +1691,7 @@ var RenderedArticle = (function (_super) {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{"./../gui":11,"./../utils/render":29}],27:[function(require,module,exports){
+},{"./../gui":11,"./../utils/render":30}],28:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1693,7 +1726,7 @@ var UserGui = (function (_super) {
 module.exports = UserGui;
 //# sourceMappingURL=user-gui.js.map
 
-},{"./../common/url":32,"./single-page-gui":21}],28:[function(require,module,exports){
+},{"./../common/url":33,"./single-page-gui":22}],29:[function(require,module,exports){
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -1733,7 +1766,7 @@ function propertize(selector, valFnName) {
 module.exports = propertize;
 //# sourceMappingURL=propertize.js.map
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 function toKatex(s) {
     var output = '';
     var occurenceIndex = 0;
@@ -1773,7 +1806,7 @@ function toMarkedKatex(s) {
 exports.toMarkedKatex = toMarkedKatex;
 //# sourceMappingURL=render.js.map
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -2062,7 +2095,7 @@ var ChangeScore = (function (_super) {
 exports.ChangeScore = ChangeScore;
 //# sourceMappingURL=score-arrow.js.map
 
-},{"./../client-ajax":6,"./../gui":11}],31:[function(require,module,exports){
+},{"./../client-ajax":6,"./../gui":11}],32:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -2531,7 +2564,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -2599,7 +2632,7 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2639,7 +2672,7 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validate.js.map
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2679,4 +2712,4 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,27,31,32,33,34]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,28,32,33,34,35]);

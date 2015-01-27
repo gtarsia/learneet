@@ -31,7 +31,6 @@ export function okObj<T>(obj: T): any {
 }
 export function add(args: baseAdd.Params)
 : Promise<baseAdd.Return> {
-    debugger;
     var dependent = args.dependent;
     var dependency = args.dependency;
     return db.sadd(keys.dependenciesIdSet(args), args.dependency.id)
@@ -72,7 +71,6 @@ export function getAll(args: baseGetAll.Params)
         'GET', keys.dependency({dependent: {id: dependent.id}, dependency: {id: '*->score'}}),
         'GET', keys.dependency({dependent: {id: dependent.id}, dependency: {id: '*->starred'}}))
     .then((array: string[]) => {
-        debugger;
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();

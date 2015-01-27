@@ -31,7 +31,7 @@ class EditUserGui extends SinglePageGui {
         $(document).ready(function() {
             getCb.done(res => {
                 if (res.ok)
-                _self.avatar.jq.attr('src', res.result.avatar_url);
+                _self.avatar.jq.attr('src', res.result.avatar_url + '?size=medium');
                 else console.log(res.why);
             })
             $('#uploadForm').submit(function(e) {

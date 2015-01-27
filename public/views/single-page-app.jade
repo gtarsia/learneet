@@ -3,6 +3,14 @@ extends layout
 append styles
   link(rel='stylesheet', href='/stylesheets/article.css')
 
+prepend scripts
+  if user
+    script.
+      userId= !{JSON.stringify(user.id)};
+  else
+    script.
+      userId= !{JSON.stringify(user.id)};
+
 block main
   include index
   include article

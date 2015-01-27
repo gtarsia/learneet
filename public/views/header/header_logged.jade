@@ -1,9 +1,6 @@
-﻿prepend scripts
-  script.
-    headerName = 'LoggedHeaderGui'
-
-span#rightHeader
-  input#avatar(type="image")
+﻿span#rightHeader
+  a#avatar(type="image")
+    img(src= user.avatar_url)
   a #{user.username}
   input#options(type="image", src="/images/wrench.png")
   button(onclick="location.href = '/logout'") Log out

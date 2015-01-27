@@ -6,12 +6,16 @@ var __extends = this.__extends || function (d, b) {
 };
 var Gui = require("./gui");
 
+var LoggedHeaderGui = require('./header/logged-header-gui');
+
 var LayoutGui = (function (_super) {
     __extends(LayoutGui, _super);
     function LayoutGui() {
         _super.call(this);
         this.logo = this.propertize('#logo');
         var _self = this;
+        if (userId)
+            header = new LoggedHeaderGui();
         $(document).ready(function () {
             if (singlePageApp.guiFound)
                 _self.logo.transitionURL('/');

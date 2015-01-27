@@ -14,12 +14,14 @@ var LoggedHeaderGui = (function (_super) {
     function LoggedHeaderGui() {
         _super.call(this);
         this.avatar = this.propertize(base + '#avatar');
+        this.avatarImg = this.propertize(base + '#avatar img');
         var _self = this;
         $(document).ready(function () {
-            _self.redirect('/');
-            _self.avatar.transitionURL(url.user.get());
+            _self.avatar.transitionURL(url.user.edit(userId));
         });
     }
     return LoggedHeaderGui;
 })(Gui);
+
+module.exports = LoggedHeaderGui;
 //# sourceMappingURL=logged-header-gui.js.map
