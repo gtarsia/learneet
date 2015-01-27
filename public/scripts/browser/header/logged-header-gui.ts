@@ -8,13 +8,15 @@ var base = '#rightHeader ';
 
 class LoggedHeaderGui extends Gui {
     avatar = this.propertize(base + '#avatar');
-    avatarImg = this.propertize(base + '#avatar img');
+    username = this.propertize(base + '.username');
+
     constructor() {
         super();
         var _self = this;
         $(document).ready(() => {
             //_self.redirect('/');
             _self.avatar.transitionURL(url.user.edit(userId));
+            _self.username.transitionURL(url.user.edit(userId));
         });
     }
 }

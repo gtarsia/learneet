@@ -829,10 +829,11 @@ var LoggedHeaderGui = (function (_super) {
     function LoggedHeaderGui() {
         _super.call(this);
         this.avatar = this.propertize(base + '#avatar');
-        this.avatarImg = this.propertize(base + '#avatar img');
+        this.username = this.propertize(base + '.username');
         var _self = this;
         $(document).ready(function () {
             _self.avatar.transitionURL(url.user.edit(userId));
+            _self.username.transitionURL(url.user.edit(userId));
         });
     }
     return LoggedHeaderGui;
