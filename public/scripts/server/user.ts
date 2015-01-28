@@ -99,10 +99,8 @@ export function getHash(params: {user: {username: string}}): Promise<baseUser.Us
 }
 
 export function uploadAvatar(args: {user: {id: string}; image: {path: string}}) {
-    debugger;
     return avatar.upload(args.image.path)
     .then(url => {
-        debugger;
         return db.hmset(keys.user(args), {avatar_url: url})
     })
 }

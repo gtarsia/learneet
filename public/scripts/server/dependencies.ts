@@ -1,4 +1,3 @@
-
 import baseAjax = require('./../common/base-ajax');
 import baseDependencies = baseAjax.dependencies;
 import baseAdd = baseDependencies.add;
@@ -9,9 +8,11 @@ import baseRemove = baseDependencies.remove;
 import baseGetCurrentUserScore = baseDependencies.getCurrentUserScore;
 import FieldsWithId = baseAjax.FieldsWithId;
 import TitleWithId = baseAjax.TitleWithId;
+import ArticleWithTitleId = baseAjax.ArticleWithTitleId;
 import db = require('./db');
 import keys = require('./redis-keys');
 import Promise = require('bluebird');
+import avatar = require('./avatar');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
 
@@ -63,22 +64,28 @@ export function removeScore(args: {dependent: Id; dependency: Id})
 
 export function getAll(args: baseGetAll.Params)
 : Promise<baseGetAll.Return> {
-    var deps : TitleWithId[] = [];
+    var deps : any[] = [];
     var dependent = args.dependent;
     return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 
         'GET', keys.article({article: {id: '*->id'}}),
         'GET', keys.article({article: {id: '*->title'}}), 
+        'GET', keys.article({article: {id: '*->author'}}),
         'GET', keys.dependency({dependent: {id: dependent.id}, dependency: {id: '*->score'}}),
         'GET', keys.dependency({dependent: {id: dependent.id}, dependency: {id: '*->starred'}}))
     .then((array: string[]) => {
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();
+            var author = array.shift();
             var score = array.shift();
             var starred = array.shift();
-            deps.push({ id: id, title: title, score: score, starred: starred});
+            deps.push({article: { id: id, title: title, score: score, 
+                starred: starred}, user: {id: author}});
         }
-        return okObj<TitleWithId[]>(deps);
+        return avatar.get({array: deps})
+    })
+    .then((res: any) => {
+        return okObj<TitleWithId[]>(res);
     });
 }
 

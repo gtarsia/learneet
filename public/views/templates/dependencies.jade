@@ -2,14 +2,14 @@ script.template.dependencies(type="x-tmpl-mustache")
   li
     | {{#dependencies}}
     .dependency
-      input.dependency-id(type='hidden' value='{{dependencyId}}')
+      input.dependency-id(type='hidden' value='{{article.id}}')
       span.mega-octicon.octicon-star(style='{{starStyle}}')
       span.mega-octicon.octicon-star.empty(style='{{emptyStarStyle}}')
       | {{score}}
       span.mega-octicon.octicon-arrow-up(style='{{arrowUpStyle}}')
       span.mega-octicon.octicon-arrow-up.empty(style='{{emptyArrowUpStyle}}')
-      img.avatar(src="/images/avatar.png")
-      a.article(href='{{articleUrl}}')  {{title}}
-      a.dependencies(href='{{dependencyUrl}}')  (deps)
+      img.avatar(src="{{user.avatar_url}}" href="{{user.id}}")
+      a.article(href='{{article.url}}')  {{article.title}}
+      a.dependencies(href='{{dependency.url}}')  (deps)
       input.removeDependency(type="image" src="/images/remove.png")
     | {{/dependencies}}

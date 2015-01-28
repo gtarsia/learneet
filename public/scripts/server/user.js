@@ -93,9 +93,7 @@ function getHash(params) {
 exports.getHash = getHash;
 
 function uploadAvatar(args) {
-    debugger;
     return avatar.upload(args.image.path).then(function (url) {
-        debugger;
         return db.hmset(keys.user(args), { avatar_url: url });
     });
 }

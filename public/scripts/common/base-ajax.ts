@@ -42,6 +42,7 @@ export interface UserScore {
 export interface Fields extends Title, Content {}
 export interface FieldsWithId extends Fields, Id {}
 export interface TitleWithId extends Title, Id {}
+export interface ArticleWithTitleId {article: TitleWithId}
 export module article {
     export function WrapFieldWithId(fields: {article: Fields}, id: string) : {article: FieldsWithId} {
         return { article: { 
@@ -330,6 +331,16 @@ export module user {
         }
         export interface Params {};
         export interface Return extends JsonReturn<UserData> {} 
+    }
+}
+
+export module avatar {
+    export module get {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/get_avatar' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params {array: {user: {id: string}}[] };
     }
 }
 

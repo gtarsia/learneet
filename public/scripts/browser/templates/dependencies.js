@@ -81,9 +81,9 @@ var Dependencies = (function (_super) {
                 var deps = res.result;
                 var none = 'display: none;';
                 deps.forEach(function (dep) {
-                    dep.dependencyId = dep.id;
-                    dep.dependencyUrl = url.dependencies.get(dep.id);
-                    dep.articleUrl = url.article.get(dep.id);
+                    dep.dependency = {};
+                    dep.dependency.url = url.dependencies.get(dep.article.id);
+                    dep.article.url = url.article.get(dep.article.id);
                     if (dep.starred == 'true') {
                         dep.starStyle = '';
                         dep.emptyStarStyle = none;
@@ -91,7 +91,6 @@ var Dependencies = (function (_super) {
                         dep.starStyle = none;
                         dep.emptyStarStyle = '';
                     }
-
                     dep.arrowUpStyle = none;
                     dep.emptyArrowUpStyle = '';
                 });

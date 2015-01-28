@@ -1485,9 +1485,9 @@ var Dependencies = (function (_super) {
                 var deps = res.result;
                 var none = 'display: none;';
                 deps.forEach(function (dep) {
-                    dep.dependencyId = dep.id;
-                    dep.dependencyUrl = url.dependencies.get(dep.id);
-                    dep.articleUrl = url.article.get(dep.id);
+                    dep.dependency = {};
+                    dep.dependency.url = url.dependencies.get(dep.article.id);
+                    dep.article.url = url.article.get(dep.article.id);
                     if (dep.starred == 'true') {
                         dep.starStyle = '';
                         dep.emptyStarStyle = none;
@@ -1495,7 +1495,6 @@ var Dependencies = (function (_super) {
                         dep.starStyle = none;
                         dep.emptyStarStyle = '';
                     }
-
                     dep.arrowUpStyle = none;
                     dep.emptyArrowUpStyle = '';
                 });
@@ -2560,6 +2559,26 @@ var changes = exports.changes;
     var get = user.get;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
+
+(function (avatar) {
+    (function (get) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get_avatar';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        get.Ajax = Ajax;
+        ;
+    })(avatar.get || (avatar.get = {}));
+    var get = avatar.get;
+})(exports.avatar || (exports.avatar = {}));
+var avatar = exports.avatar;
 
 if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;

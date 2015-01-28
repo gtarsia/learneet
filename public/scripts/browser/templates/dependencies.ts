@@ -89,14 +89,15 @@ class Dependencies extends Gui {
                 var deps: any = res.result;
                 var none = 'display: none;';
                 deps.forEach(dep => {
-                    dep.dependencyId = dep.id;
-                    dep.dependencyUrl = url.dependencies.get(dep.id);
-                    dep.articleUrl = url.article.get(dep.id);
+                    dep.dependency = {};
+                    dep.dependency.url = url.dependencies.get(dep.article.id);
+                    dep.article.url = url.article.get(dep.article.id);
                     if (dep.starred == 'true')
-                    { dep.starStyle = ''; dep.emptyStarStyle = none; }
+                    { dep.starStyle = ''; 
+                        dep.emptyStarStyle = none; }
                     else 
-                    { dep.starStyle = none; dep.emptyStarStyle = ''; }
-                    
+                    { dep.starStyle = none; 
+                        dep.emptyStarStyle = ''; }
                     dep.arrowUpStyle = none;
                     dep.emptyArrowUpStyle = '';
                 })

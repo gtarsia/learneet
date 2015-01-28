@@ -1,6 +1,8 @@
 var db = require('./db');
 var keys = require('./redis-keys');
 
+var avatar = require('./avatar');
+
 function isOk(err, reject) {
     if (err) {
         reject(err);
@@ -53,15 +55,20 @@ exports.removeScore = removeScore;
 function getAll(args) {
     var deps = [];
     var dependent = args.dependent;
-    return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 'GET', keys.article({ article: { id: '*->id' } }), 'GET', keys.article({ article: { id: '*->title' } }), 'GET', keys.dependency({ dependent: { id: dependent.id }, dependency: { id: '*->score' } }), 'GET', keys.dependency({ dependent: { id: dependent.id }, dependency: { id: '*->starred' } })).then(function (array) {
+    return db.sort(keys.dependenciesIdSet(args), 'by', 'nosort', 'GET', keys.article({ article: { id: '*->id' } }), 'GET', keys.article({ article: { id: '*->title' } }), 'GET', keys.article({ article: { id: '*->author' } }), 'GET', keys.dependency({ dependent: { id: dependent.id }, dependency: { id: '*->score' } }), 'GET', keys.dependency({ dependent: { id: dependent.id }, dependency: { id: '*->starred' } })).then(function (array) {
         while (array.length > 0) {
             var id = array.shift();
             var title = array.shift();
+            var author = array.shift();
             var score = array.shift();
             var starred = array.shift();
-            deps.push({ id: id, title: title, score: score, starred: starred });
+            deps.push({ article: {
+                    id: id, title: title, score: score,
+                    starred: starred }, user: { id: author } });
         }
-        return exports.okObj(deps);
+        return avatar.get({ array: deps });
+    }).then(function (res) {
+        return exports.okObj(res);
     });
 }
 exports.getAll = getAll;

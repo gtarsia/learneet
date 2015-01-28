@@ -462,6 +462,26 @@ var changes = exports.changes;
 })(exports.user || (exports.user = {}));
 var user = exports.user;
 
+(function (avatar) {
+    (function (get) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/get_avatar';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        get.Ajax = Ajax;
+        ;
+    })(avatar.get || (avatar.get = {}));
+    var get = avatar.get;
+})(exports.avatar || (exports.avatar = {}));
+var avatar = exports.avatar;
+
 if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
