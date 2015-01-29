@@ -129,7 +129,6 @@ exports.getAll = getAll;
 
 function getAllThumbs() {
     return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', keys.article({ article: { id: '*->id' } }), 'GET', keys.article({ article: { id: '*->title' } }), 'GET', keys.article({ article: { id: '*->content' } }), 'GET', keys.article({ article: { id: '*->author' } })).then(function (array) {
-        debugger;
         var articles = [];
         var length = array.length;
         while (length > 0) {

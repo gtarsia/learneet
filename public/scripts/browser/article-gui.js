@@ -32,7 +32,7 @@ var ArticleGui = (function (_super) {
         $(document).ready(function () {
             _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
             _self.setCrumb();
-            _self.article.rendered = new RenderedArticle();
+            _self.article.rendered = new RenderedArticle(base);
             _self.article.rendered.clear();
             _self.articleScore = new Arrows.ArticleScore(_self.article);
             ajax.article.get({ article: { id: _self.article.id } }).done(function (res) {
@@ -43,6 +43,7 @@ var ArticleGui = (function (_super) {
                 var result = res.result;
                 var rendered = _self.article.rendered;
                 rendered.avatar.jq.attr('src', result.user.avatar_url);
+                rendered.avatar.jq.attr('title', result.user.username);
                 rendered.setTitle(result.article.title);
                 rendered.setContent(result.article.content);
                 _self.titleDeferred.resolve(result.article.title + ' - Learneet');

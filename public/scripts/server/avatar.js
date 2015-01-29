@@ -19,18 +19,17 @@ function upload(path) {
 exports.upload = upload;
 
 function get(_array) {
-    debugger;
     var multi = db.multi();
     var array = _array;
     array.forEach(function (el) {
-        debugger;
-        multi.hmget([keys.user({ user: el.user }), "avatar_url"]);
+        multi.hmget([keys.user({ user: el.user }), "avatar_url", "username"]);
     });
     var promise = Promise.promisify(multi.exec, multi);
     return promise().then(function (res) {
-        debugger;
         array.forEach(function (el) {
-            el.user.avatar_url = res.shift();
+            var arr = res.shift();
+            el.user.avatar_url = arr.shift();
+            el.user.username = arr.shift();
         });
         return array;
     });

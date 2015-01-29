@@ -135,7 +135,6 @@ export function getAllThumbs() {
 	    'GET', keys.article({article: {id: '*->content'}}),
 	    'GET', keys.article({article: {id: '*->author'}}))
 	.then(array => {
-		debugger;
 		var articles = [];
 		var length = array.length;
 		while (length > 0) {

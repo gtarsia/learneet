@@ -16,7 +16,7 @@ var RenderedArticle = (function (_super) {
             parent = '';
         this.content = this.propertize(parent + ' div.article-content', 'html');
         this.title = this.propertize(parent + ' h1.article-title', 'html');
-        this.avatar = this.propertize(parent + ' img.avatar');
+        this.avatar = this.propertize(parent + ' .article-header img.avatar');
     }
     RenderedArticle.prototype.scroll = function (line) {
         var outputLine = $(".line" + line);

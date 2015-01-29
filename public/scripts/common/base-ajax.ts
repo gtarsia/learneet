@@ -15,40 +15,24 @@ export interface IAjax {
     type(): string;
 }
 
-export interface AvatarUrl {
-    avatar_url: string;
-}
-export interface Title {
-    title: string; 
-}
-export interface Content {
-    content: string;
-}
-export interface Id {
-    id: string;
-}
-export interface Score {
-    score: string;
-}
-export interface Desc {
-    changesDescription: string;
-}
-export interface ModContent {
-    modifiedContent: string;
-}
-export interface Starred {
-    starred : boolean;
-}
-export interface UserScore {
-    userScore: string;
-}
+export interface AvatarUrl { avatar_url: string; }
+export interface Title { title: string; }
+export interface Content { content: string; }
+export interface Id { id: string; }
+export interface Score { score: string; }
+export interface Desc { changesDescription: string; }
+export interface ModContent { modifiedContent: string; }
+export interface Starred { starred : boolean; }
+export interface UserScore { userScore: string; }
+export interface Username { username: string; }
+
 export interface Fields extends Title, Content {}
 export interface FieldsWithId extends Fields, Id {}
 export interface TitleWithId extends Title, Id {}
 export interface ArticleFieldsWithId {article: FieldsWithId;};
 export interface ArticleWithTitleId {article: TitleWithId;}
-export interface IdAvatarUrl extends Id, AvatarUrl {}
-export interface UserWithIdAvatar {user: IdAvatarUrl; }
+export interface IdAvatarUrlName extends Id, AvatarUrl, Username {}
+export interface UserWithIdAvatarUrlName {user: IdAvatarUrlName; }
 export interface UserWithId {user: Id}
 export module article {
     export function WrapFieldWithId(fields: {article: Fields}, id: string) : {article: FieldsWithId} {
@@ -66,7 +50,7 @@ export module article {
     }
 
     export module get {
-        export interface _getType extends ArticleFieldsWithId, UserWithIdAvatar {}
+        export interface _getType extends ArticleFieldsWithId, UserWithIdAvatarUrlName {}
         export class Ajax implements IAjax{
             url(): string { return '/api/get' }
             type(): string { return AjaxType.GET }

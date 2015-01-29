@@ -20,19 +20,18 @@ export function upload(path) : Promise<string> {
 }
 
 export function get(_array: baseGet.Params[]) {
-    debugger;
     var multi = db.multi();
     var array: any = _array;
     array.forEach(el => {
-        debugger;
-        multi.hmget([keys.user({user: el.user}), "avatar_url"]);
+        multi.hmget([keys.user({user: el.user}), "avatar_url", "username"]);
     })
     var promise: any = Promise.promisify(multi.exec, multi);
     return promise()
     .then(res => {
-        debugger;
         array.forEach(el => {
-            el.user.avatar_url = res.shift();
+            var arr = res.shift();
+            el.user.avatar_url = arr.shift();
+            el.user.username = arr.shift();
         })
         return array;
     })

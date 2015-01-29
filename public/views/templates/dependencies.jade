@@ -8,7 +8,7 @@ script.template.dependencies(type="x-tmpl-mustache")
       | {{score}}
       span.mega-octicon.octicon-arrow-up(style='{{arrowUpStyle}}')
       span.mega-octicon.octicon-arrow-up.empty(style='{{emptyArrowUpStyle}}')
-      img.avatar(src="{{user.avatar_url}}" href="{{user.id}}")
+      img.avatar(src="{{user.avatar_url}}" href="{{user.id}}" title="{{user.username}}")
       a.article(href='{{article.url}}')  {{article.title}}
       a.dependencies(href='{{dependency.url}}')  (deps)
       input.removeDependency(type="image" src="/images/remove.png")
