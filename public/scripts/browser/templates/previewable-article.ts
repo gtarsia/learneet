@@ -83,7 +83,7 @@ class PreviewableArticle {
     }
     constructor(base: string) {
         this.input = new EditableArticle(base);
-        this.output = new RenderedArticle();
+        this.output = new RenderedArticle(base);
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();

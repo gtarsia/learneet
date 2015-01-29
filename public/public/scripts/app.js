@@ -1560,7 +1560,7 @@ var render = require("./../utils/render");
 var PreviewableArticle = (function () {
     function PreviewableArticle(base) {
         this.input = new EditableArticle(base);
-        this.output = new RenderedArticle();
+        this.output = new RenderedArticle(base);
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
@@ -1661,14 +1661,12 @@ var render = require('./../utils/render');
 
 var RenderedArticle = (function (_super) {
     __extends(RenderedArticle, _super);
-    function RenderedArticle(parent) {
+    function RenderedArticle(base) {
         _super.call(this);
         var _self = this;
-        if (!parent)
-            parent = '';
-        this.content = this.propertize(parent + ' div.article-content', 'html');
-        this.title = this.propertize(parent + ' h1.article-title', 'html');
-        this.avatar = this.propertize(parent + ' .article-header img.avatar');
+        this.content = this.propertize(base + ' div.article-content', 'html');
+        this.title = this.propertize(base + ' h1.article-title', 'html');
+        this.avatar = this.propertize(base + ' .article-header img.avatar');
     }
     RenderedArticle.prototype.scroll = function (line) {
         var outputLine = $(".line" + line);
