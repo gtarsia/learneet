@@ -6,12 +6,14 @@ declare function marked(s);
 class RenderedArticle extends Gui {
     content;
     title;
+    avatar;
     constructor(parent?) {
         super();
         var _self = this;
         if (!parent) parent = '';
         this.content = this.propertize(parent + ' div.article-content', 'html');
         this.title = this.propertize(parent + ' h1.article-title', 'html')
+        this.avatar = this.propertize(parent + ' img.avatar');
     }
     scroll(line: number) {
         var outputLine = $(".line" + line);

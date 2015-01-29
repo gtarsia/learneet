@@ -102,9 +102,11 @@ var ArticleGui = (function (_super) {
                     return;
                 }
                 var result = res.result;
-                _self.article.rendered.setTitle(result.title);
-                _self.article.rendered.setContent(result.content);
-                _self.titleDeferred.resolve(result.title + ' - Learneet');
+                var rendered = _self.article.rendered;
+                rendered.avatar.jq.attr('src', result.user.avatar_url);
+                rendered.setTitle(result.article.title);
+                rendered.setContent(result.article.content);
+                _self.titleDeferred.resolve(result.article.title + ' - Learneet');
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));
@@ -1635,8 +1637,8 @@ var PreviewableArticle = (function () {
                 return;
             }
             var result = res.result;
-            _self.updateTitle(result.title);
-            _self.updateContent(result.content);
+            _self.updateTitle(result.article.title);
+            _self.updateContent(result.article.content);
             return null;
         });
     };
@@ -1665,6 +1667,7 @@ var RenderedArticle = (function (_super) {
             parent = '';
         this.content = this.propertize(parent + ' div.article-content', 'html');
         this.title = this.propertize(parent + ' h1.article-title', 'html');
+        this.avatar = this.propertize(parent + ' img.avatar');
     }
     RenderedArticle.prototype.scroll = function (line) {
         var outputLine = $(".line" + line);
@@ -2103,6 +2106,8 @@ exports.AjaxType = {
     GET: "GET",
     POST: "POST"
 };
+
+;
 
 (function (_article) {
     function WrapFieldWithId(fields, id) {

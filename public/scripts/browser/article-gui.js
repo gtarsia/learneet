@@ -41,9 +41,11 @@ var ArticleGui = (function (_super) {
                     return;
                 }
                 var result = res.result;
-                _self.article.rendered.setTitle(result.title);
-                _self.article.rendered.setContent(result.content);
-                _self.titleDeferred.resolve(result.title + ' - Learneet');
+                var rendered = _self.article.rendered;
+                rendered.avatar.jq.attr('src', result.user.avatar_url);
+                rendered.setTitle(result.article.title);
+                rendered.setContent(result.article.content);
+                _self.titleDeferred.resolve(result.article.title + ' - Learneet');
             });
             _self.editArticleBtn.transitionURL(url.article.edit(_self.article.id));
             _self.dependenciesLink.transitionURL(url.dependencies.get(_self.article.id));

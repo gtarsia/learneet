@@ -3,6 +3,8 @@
     POST: "POST"
 };
 
+;
+
 (function (_article) {
     function WrapFieldWithId(fields, id) {
         return { article: { title: fields.article.title, content: fields.article.content, id: id } };

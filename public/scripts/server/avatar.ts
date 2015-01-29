@@ -19,7 +19,7 @@ export function upload(path) : Promise<string> {
     });
 }
 
-export function get(_array: baseGet.Params) {
+export function get(_array: baseGet.Params[]) {
     debugger;
     var multi = db.multi();
     var array: any = _array;

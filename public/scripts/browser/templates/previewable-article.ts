@@ -76,8 +76,8 @@ class PreviewableArticle {
                 return;
             }
             var result = res.result
-            _self.updateTitle(result.title);
-            _self.updateContent(result.content);
+            _self.updateTitle(result.article.title);
+            _self.updateContent(result.article.content);
             return null;
         });
     }

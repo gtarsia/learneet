@@ -65,7 +65,7 @@ function update(args) {
             return exports.notOkObj('Can\'t upload article, because we couldn\'t find it');
         } else {
             var versionId;
-            oldTitle = res.result.title;
+            oldTitle = res.result.article.title;
             return db.hmset(keys.article(args), article).then(function (res) {
                 if (!res)
                     exports.notOkObj('Article update wasn\'t succesful');
@@ -79,15 +79,14 @@ exports.update = update;
 
 function get(args) {
     var article = args.article;
-    return db.hgetall(keys.article(args)).then(function (result) {
-        var ok = result != null;
-        var why = (result == null ? 'Article with id ' + article.id + ' not found' : '');
-        var r = {
-            ok: ok,
-            why: why,
-            result: result
-        };
-        return r;
+    return db.hgetall(keys.article(args)).then(function (res) {
+        var arr = [{ article: res, user: { id: res.author } }];
+        return avatar.get(arr);
+    }).then(function (res) {
+        if (!res)
+            return exports.notOkObj('Article with id ' + article.id + ' not found');
+        else
+            return exports.okObj(res[0]);
     });
 }
 exports.get = get;

@@ -68,7 +68,7 @@ export function update(args: update.Params) : Promise<update.Return> {
 		}
 		else {
 			var versionId;
-			oldTitle = res.result.title;
+			oldTitle = res.result.article.title;
 		    return db.hmset(keys.article(args), article)
 			.then((res: string) => {
 				if (!res) notOkObj('Article update wasn\'t succesful');
@@ -79,18 +79,16 @@ export function update(args: update.Params) : Promise<update.Return> {
 	})
 }
 
-export function get(args: get.Params) : Promise<get.Return> {
+export function get(args: get.Params) {
 	var article = args.article;
 	return db.hgetall(keys.article(args))
-	.then<get.Return>((result: any) => {
-		var ok = result != null;
-		var why = (result == null ? 'Article with id ' + article.id + ' not found' : '');
-		var r : get.Return = {
-			ok: ok,
-			why: why,
-			result: result
-		}
-		return r;
+	.then(res => {
+		var arr = [{article: res, user: {id: res.author}}];
+        return avatar.get(arr);
+	})
+	.then<any>(res => {
+		if (!res) return notOkObj('Article with id ' + article.id + ' not found');
+		else return okObj(res[0]);
 	})
 }
 
