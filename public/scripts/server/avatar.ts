@@ -19,10 +19,10 @@ export function upload(path) : Promise<string> {
     });
 }
 
-export function get(args: baseGet.Params) {
+export function get(_array: baseGet.Params) {
     debugger;
-    var array: any = args.array;
     var multi = db.multi();
+    var array: any = _array;
     array.forEach(el => {
         debugger;
         multi.hmget([keys.user({user: el.user}), "avatar_url"]);

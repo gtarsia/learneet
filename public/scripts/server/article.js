@@ -6,6 +6,7 @@ var redis = require("redis");
 
 var db = require('./db');
 var keys = require('./redis-keys');
+var avatar = require('./avatar');
 
 function isOk(err, reject) {
     if (err) {
@@ -126,6 +127,30 @@ function getAll() {
     });
 }
 exports.getAll = getAll;
+
+function getAllThumbs() {
+    return db.sort(keys.articlesIdSet(), 'by', 'nosort', 'GET', keys.article({ article: { id: '*->id' } }), 'GET', keys.article({ article: { id: '*->title' } }), 'GET', keys.article({ article: { id: '*->content' } }), 'GET', keys.article({ article: { id: '*->author' } })).then(function (array) {
+        debugger;
+        var articles = [];
+        var length = array.length;
+        while (length > 0) {
+            var id = array.shift();
+            var title = array.shift();
+            var content = array.shift();
+            if (content)
+                content = content.substr(0, 150) + '...';
+            var userId = array.shift();
+            length -= 4;
+            articles.push({
+                article: { id: id, title: title, content: content },
+                user: { id: userId } });
+        }
+        return avatar.get(articles);
+    }).then(function (res) {
+        return exports.okObj(res);
+    });
+}
+exports.getAllThumbs = getAllThumbs;
 
 (function (TitleSearch) {
     function remove(multi, id, oldTitle) {

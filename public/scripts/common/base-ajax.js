@@ -73,6 +73,22 @@
     })(_article.getAll || (_article.getAll = {}));
     var getAll = _article.getAll;
 
+    (function (getAllThumbs) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getallthumbs';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getAllThumbs.Ajax = Ajax;
+    })(_article.getAllThumbs || (_article.getAllThumbs = {}));
+    var getAllThumbs = _article.getAllThumbs;
+
     (function (update) {
         var Ajax = (function () {
             function Ajax() {

@@ -18,10 +18,10 @@ function upload(path) {
 }
 exports.upload = upload;
 
-function get(args) {
+function get(_array) {
     debugger;
-    var array = args.array;
     var multi = db.multi();
+    var array = _array;
     array.forEach(function (el) {
         debugger;
         multi.hmget([keys.user({ user: el.user }), "avatar_url"]);

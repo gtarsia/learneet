@@ -1,4 +1,4 @@
-﻿    import baseAjax = require('./../common/base-ajax');
+﻿import baseAjax = require('./../common/base-ajax');
 import AjaxType = baseAjax.AjaxType;
 import IAjax = baseAjax.IAjax;
 
@@ -34,6 +34,12 @@ export module article {
     export function getAll(params) {
         return buildIAjax<_getAll.Params, _getAll.Return>
         (new _getAll.Ajax(), params);
+    }
+
+    import _getAllThumbs = baseAjax.article.getAllThumbs;
+    export function getAllThumbs(params) {
+        return buildIAjax<_getAllThumbs.Params, _getAllThumbs.Return>
+        (new _getAllThumbs.Ajax(), params);
     }
 
     import _getTitleWithId = baseAjax.article.getTitleWithId;

@@ -33,6 +33,12 @@ exports.buildIAjax = buildIAjax;
     }
     article.getAll = getAll;
 
+    var _getAllThumbs = baseAjax.article.getAllThumbs;
+    function getAllThumbs(params) {
+        return exports.buildIAjax(new _getAllThumbs.Ajax(), params);
+    }
+    article.getAllThumbs = getAllThumbs;
+
     var _getTitleWithId = baseAjax.article.getTitleWithId;
     function getTitleWithId(params) {
         return exports.buildIAjax(new _getTitleWithId.Ajax(), params);

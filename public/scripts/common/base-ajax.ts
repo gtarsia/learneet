@@ -43,6 +43,7 @@ export interface Fields extends Title, Content {}
 export interface FieldsWithId extends Fields, Id {}
 export interface TitleWithId extends Title, Id {}
 export interface ArticleWithTitleId {article: TitleWithId}
+export interface UserWithId {user: Id}
 export module article {
     export function WrapFieldWithId(fields: {article: Fields}, id: string) : {article: FieldsWithId} {
         return { article: { 
@@ -83,6 +84,15 @@ export module article {
         }
         export interface Params {} 
         export interface Return extends JsonReturn<FieldsWithId[]> {}
+    }
+
+    export module getAllThumbs {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/getallthumbs' }
+            type(): string { return AjaxType.GET }
+        }
+        export interface Params {} 
+        export interface Return extends JsonReturn<any> {}
     }
 
     export module update {
@@ -340,7 +350,7 @@ export module avatar {
             url(): string { return '/api/get_avatar' }
             type(): string { return AjaxType.GET }
         }
-        export interface Params {array: {user: {id: string}}[] };
+        export interface Params extends Array<UserWithId> {}; 
     }
 }
 

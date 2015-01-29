@@ -26,7 +26,7 @@ var IndexGui = (function (_super) {
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {
             _self.createBtn.transitionURL(url.article.create());
-            clientAjax.article.getAll({}).done(function (res) {
+            clientAjax.article.getAllThumbs({}).done(function (res) {
                 _self.articleThumbs.jq.empty();
                 if (!res.ok) {
                     console.log(res.why);
@@ -36,15 +36,12 @@ var IndexGui = (function (_super) {
                 var _articles = [];
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
-                    var article = articles[i];
-                    if (!article)
+                    var el = articles[i];
+                    if (!el || !el.article || !el.article.content)
                         continue;
-                    if (!article.content)
-                        continue;
-                    article.url = url.article.get(article.id);
-                    var s = article.content.substr(0, 150) + '...';
-                    article.content = render.toKatex(s);
-                    _articles.push(article);
+                    el.article.url = url.article.get(el.article.id);
+                    el.article.content = render.toKatex(el.article.content);
+                    _articles.push(el);
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);

@@ -326,6 +326,12 @@ exports.buildIAjax = buildIAjax;
     }
     article.getAll = getAll;
 
+    var _getAllThumbs = baseAjax.article.getAllThumbs;
+    function getAllThumbs(params) {
+        return exports.buildIAjax(new _getAllThumbs.Ajax(), params);
+    }
+    article.getAllThumbs = getAllThumbs;
+
     var _getTitleWithId = baseAjax.article.getTitleWithId;
     function getTitleWithId(params) {
         return exports.buildIAjax(new _getTitleWithId.Ajax(), params);
@@ -871,7 +877,7 @@ var IndexGui = (function (_super) {
         _self.articleThumbs.jq.empty();
         $(document).ready(function () {
             _self.createBtn.transitionURL(url.article.create());
-            clientAjax.article.getAll({}).done(function (res) {
+            clientAjax.article.getAllThumbs({}).done(function (res) {
                 _self.articleThumbs.jq.empty();
                 if (!res.ok) {
                     console.log(res.why);
@@ -881,15 +887,12 @@ var IndexGui = (function (_super) {
                 var _articles = [];
                 var length = articles.length;
                 for (var i = 0; i < length; i++) {
-                    var article = articles[i];
-                    if (!article)
+                    var el = articles[i];
+                    if (!el || !el.article || !el.article.content)
                         continue;
-                    if (!article.content)
-                        continue;
-                    article.url = url.article.get(article.id);
-                    var s = article.content.substr(0, 150) + '...';
-                    article.content = render.toKatex(s);
-                    _articles.push(article);
+                    el.article.url = url.article.get(el.article.id);
+                    el.article.content = render.toKatex(el.article.content);
+                    _articles.push(el);
                 }
                 var template = $("#article-thumb-template").html();
                 Mustache.parse(template);
@@ -2170,6 +2173,22 @@ exports.AjaxType = {
         getAll.Ajax = Ajax;
     })(_article.getAll || (_article.getAll = {}));
     var getAll = _article.getAll;
+
+    (function (getAllThumbs) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/getallthumbs';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.GET;
+            };
+            return Ajax;
+        })();
+        getAllThumbs.Ajax = Ajax;
+    })(_article.getAllThumbs || (_article.getAllThumbs = {}));
+    var getAllThumbs = _article.getAllThumbs;
 
     (function (update) {
         var Ajax = (function () {

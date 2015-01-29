@@ -82,7 +82,7 @@ export function getAll(args: baseGetAll.Params)
             deps.push({article: { id: id, title: title, score: score, 
                 starred: starred}, user: {id: author}});
         }
-        return avatar.get({array: deps})
+        return avatar.get(deps)
     })
     .then((res: any) => {
         return okObj<TitleWithId[]>(res);

@@ -66,7 +66,7 @@ function getAll(args) {
                     id: id, title: title, score: score,
                     starred: starred }, user: { id: author } });
         }
-        return avatar.get({ array: deps });
+        return avatar.get(deps);
     }).then(function (res) {
         return exports.okObj(res);
     });

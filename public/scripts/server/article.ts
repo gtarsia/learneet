@@ -12,6 +12,7 @@ import redis = require("redis");
 import queryTitle = baseArticle.queryTitle;
 import db = require('./db');
 import keys = require('./redis-keys');
+import avatar = require('./avatar');
 //import version = require('./version');
 
 function isOk(err, reject) { if (err) { reject(err); return false;} else return true;}
@@ -126,6 +127,33 @@ export function getAll() : Promise<getAll.Return> {
 			result: arrayToArticles(result)
 		}
 		return r;
+	})
+}
+
+export function getAllThumbs() {
+	return db.sort(keys.articlesIdSet(), 'by', 'nosort', 
+		'GET', keys.article({article: {id: '*->id'}}),
+	    'GET', keys.article({article: {id: '*->title'}}), 
+	    'GET', keys.article({article: {id: '*->content'}}),
+	    'GET', keys.article({article: {id: '*->author'}}))
+	.then(array => {
+		debugger;
+		var articles = [];
+		var length = array.length;
+		while (length > 0) {
+			var id = array.shift();
+			var title = array.shift(); 
+			var content = array.shift();
+			if (content) content = content.substr(0, 150) + '...';
+			var userId = array.shift();
+			length -= 4;
+			articles.push({article: {id: id, title: title, content: content},
+				user: {id: userId}})
+		}
+		return avatar.get(articles)
+	})
+	.then(res => {
+		return okObj(res);
 	})
 }
 

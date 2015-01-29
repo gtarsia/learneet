@@ -13,6 +13,7 @@ function getServerAjaxList() {
         article.create(),
         article.get(),
         article.getAll(),
+        article.getAllThumbs(),
         article.getTitleWithId(),
         article.update(),
         article.query(),
@@ -91,6 +92,12 @@ exports.restCbAjax = restCbAjax;
         return exports.restCbAjax(new _getAll.Ajax(), dbArticle.getAll);
     }
     article.getAll = getAll;
+
+    var _getAllThumbs = baseAjax.article.getAllThumbs;
+    function getAllThumbs() {
+        return exports.restCbAjax(new _getAllThumbs.Ajax(), dbArticle.getAllThumbs);
+    }
+    article.getAllThumbs = getAllThumbs;
 
     var _getTitleWithId = baseAjax.article.getTitleWithId;
     function getTitleWithId() {
