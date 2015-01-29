@@ -1,7 +1,7 @@
 script#article-thumb-template(type="x-tmpl-mustache")
   | {{#articles}}
   .article-thumb
-    img.avatar(src="{{user.avatar_url}}" href="{{user.id}}")
+    img.avatar(src="{{user.avatar_url}}" href="{{user.id}}" title="{{user.username}}")
     a.title(href="{{article.url}}") {{article.title}}
     .content {{{article.content}}}
   | {{/articles}}
