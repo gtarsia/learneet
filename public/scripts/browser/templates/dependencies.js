@@ -10,18 +10,18 @@ var Gui = require('./../gui');
 
 var Dependencies = (function (_super) {
     __extends(Dependencies, _super);
-    function Dependencies(base, id) {
+    function Dependencies(id) {
         _super.call(this);
         this.id = id;
-        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
-        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
-        this.dependencySelect = this.propertize(base + 'select.dependency');
-        this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        this.removeDependencyBtns = this.propertize(".removeDependency");
+        this.dependenciesTemplate = this.propertize('.template.dependencies', 'html');
+        this.dependencySelect = this.propertize('select.dependency');
+        this.addDependencyBtn = this.propertize('.add-dependency');
         this.dependenciesIds = this.propertize(".dependency-id");
-        this.dependency = this.propertize(base + ".dependency");
-        this.dependencies = this.propertize(base + '.dependency.list');
-        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
-        this.articlesLinks = this.propertize(base + '.dependency a.article');
+        this.dependency = this.propertize(".dependency");
+        this.dependencies = this.propertize('.dependency.list');
+        this.dependenciesLinks = this.propertize('.dependency a.dependencies');
+        this.articlesLinks = this.propertize('.dependency a.article');
         this.refreshDependencies();
         var _self = this;
         $(document).ready(function () {

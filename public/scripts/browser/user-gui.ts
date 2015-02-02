@@ -1,7 +1,6 @@
 import ajax = require("./client-ajax");
 import Gui = require("./gui");
 import url = require("./../common/url");
-import SinglePageGui = require("./single-page-gui");
 import validate = require("./../common/validate");
 import baseAjax = require("./../common/base-ajax");
 
@@ -10,7 +9,7 @@ declare function marked(c: string);
 var base = '.partial.user ';
 declare var singlePageApp;
 
-class UserGui extends SinglePageGui {
+class UserGui extends Gui {
     id: string = "-1";
     parent;
     parseURL() {
@@ -20,7 +19,7 @@ class UserGui extends SinglePageGui {
         this.id = matches[1];
     }
     constructor() {
-        super(base);
+        super();
         this.parseURL();
         var _self = this;
         _self.titleDeferred.resolve(

@@ -2,16 +2,14 @@
 import PreviewableArticle = require("./templates/previewable-article");
 import Gui = require("./gui");
 import url = require("./../common/url");
-import SinglePageGui = require("./single-page-gui");
 import validate = require("./../common/validate");
 import baseAjax = require("./../common/base-ajax");
 
 declare function marked(c: string);
 
-var base = '.partial.edit-article ';
 declare var singlePageApp;
 
-class EditArticleGui extends SinglePageGui {
+class EditArticleGui extends Gui {
     id: string = "-1";
     parent;
     contentPreviewExample() {
@@ -30,8 +28,8 @@ class EditArticleGui extends SinglePageGui {
         var matches = regex.exec(location.pathname);
         this.id = matches[1];
     }
-    saveBtn = this.propertize(base + 'button.save');
-    articleCrumb = this.propertize(base + ".article-crumb");
+    saveBtn = this.propertize('button.save');
+    articleCrumb = this.propertize(".article-crumb");
     article: PreviewableArticle;
     saveArticle() {
         var _self = this;
@@ -45,14 +43,14 @@ class EditArticleGui extends SinglePageGui {
         });
     }
     constructor(args: {id?: string}) {
-        super(base);
+        super();
         this.parseURL();
         var _self = this;
         _self.titleDeferred.resolve(
                     'Edit article - Learneet')
         $(document).ready(function() {
             _self.articleCrumb.transitionURL(url.article.get(_self.id))
-            _self.article = new PreviewableArticle(base);
+            _self.article = new PreviewableArticle();
             _self.article.fetchDBArticle({ id: _self.id })
             _self.saveBtn.jq.click(() => {
                 _self.saveArticle();

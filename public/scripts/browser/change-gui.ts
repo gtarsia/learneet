@@ -3,22 +3,19 @@ import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
 import ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
 import Gui = require("./gui");
-import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 
 declare function marked(s);
 declare var JsDiff: any;
 
-var base = ".partial.change ";
-
-class ChangeGui extends SinglePageGui {
-    title = this.propertize(base + '.title', 'html');
-    description = this.propertize(base + '.description', 'html');
-    state = this.propertize(base + '.state.octicon');
-    date = this.propertize(base + '.date', 'html');
-    acceptBtn = this.propertize(base + 'button.accept');
-    articleCrumb = this.propertize(base + '.article-crumb');
+class ChangeGui extends Gui {
+    title = this.propertize('.title', 'html');
+    description = this.propertize('.description', 'html');
+    state = this.propertize('.state.octicon');
+    date = this.propertize('.date', 'html');
+    acceptBtn = this.propertize('button.accept');
+    articleCrumb = this.propertize('.article-crumb');
     renderedArticle: RenderedArticle;
     article: {id: string} = {id: "-1"};
     change: {id: string} = {id: "-1"};
@@ -37,10 +34,10 @@ class ChangeGui extends SinglePageGui {
         this.change.id = matches[2];
     }
     constructor() {
-        super(base);
+        super();
         this.parseURL();
         var changeCb = ajax.changes.get({article: this.article, change: this.change})
-        this.renderedArticle = new RenderedArticle(base);
+        this.renderedArticle = new RenderedArticle();
         var _self = this;
         $(document).ready(() => {
             _self.articleCrumb.transitionURL(url.article.get(this.article.id));

@@ -9,57 +9,69 @@ var UserGui = require("./user-gui");
 var EditUserGui = require("./edit-user-gui");
 var ChangeGui = require("./change-gui");
 
-function findSinglePageGui(urlToGo) {
-    var partials = [
-        {
-            re: '/',
-            gui: function () {
-                return new IndexGui();
-            },
-            sel: '.index.partial' },
-        {
-            re: '/create_article',
-            gui: function () {
-                return new CreateArticleGui();
-            },
-            sel: '.create-article.partial' },
-        {
-            re: url.article.get('\\d+'),
-            gui: function () {
-                return new ArticleGui({});
-            },
-            sel: '.article.partial' },
-        {
-            re: url.article.edit('\\d+'),
-            gui: function () {
-                return new EditArticleGui({});
-            },
-            sel: '.edit-article.partial' },
-        {
-            re: url.change.get('\\d+', '\\d+'),
-            gui: function () {
-                return new ChangeGui();
-            },
-            sel: '.change.partial' },
-        {
-            re: url.dependencies.get('\\d+'),
-            gui: function () {
-                return new DependenciesGui();
-            },
-            sel: '.dependencies.partial' },
-        {
-            re: url.user.get('\\d+'),
-            gui: function () {
-                return new UserGui();
-            },
-            sel: '.user.partial' },
-        {
-            re: url.user.edit('\\d+'),
-            gui: function () {
-                return new EditUserGui();
-            },
-            sel: '.edit-user.partial' }
-    ];
+var partials = [
+    {
+        re: '/',
+        gui: function () {
+            return new IndexGui();
+        },
+        sel: '.index.partial' },
+    {
+        re: '/create_article',
+        gui: function () {
+            return new CreateArticleGui();
+        },
+        sel: '.create-article.partial' },
+    {
+        re: url.article.get('\\d+'),
+        gui: function () {
+            return new ArticleGui({});
+        },
+        sel: '.article.partial' },
+    {
+        re: url.article.edit('\\d+'),
+        gui: function () {
+            return new EditArticleGui({});
+        },
+        sel: '.edit-article.partial' },
+    {
+        re: url.change.get('\\d+', '\\d+'),
+        gui: function () {
+            return new ChangeGui();
+        },
+        sel: '.change.partial' },
+    {
+        re: url.dependencies.get('\\d+'),
+        gui: function () {
+            return new DependenciesGui();
+        },
+        sel: '.dependencies.partial' },
+    {
+        re: url.user.get('\\d+'),
+        gui: function () {
+            return new UserGui();
+        },
+        sel: '.user.partial' },
+    {
+        re: url.user.edit('\\d+'),
+        gui: function () {
+            return new EditUserGui();
+        },
+        sel: '.edit-user.partial' }
+];
+
+function findPartial(urlToGo) {
+    var _partial;
+    partials.forEach(function (partial) {
+        var match = urlToGo.match('^' + partial.re + '$');
+        if (match && !_partial) {
+            _partial = partial;
+        }
+    });
+    return _partial;
+}
+
+function findGui(urlToGo) {
     var _gui;
     partials.forEach(function (partial) {
         var match = urlToGo.match('^' + partial.re + '$');
@@ -69,7 +81,7 @@ function findSinglePageGui(urlToGo) {
     });
     return _gui;
 }
-exports.findSinglePageGui = findSinglePageGui;
+exports.findGui = findGui;
 
 function viewTransition(urlToGo, isBack) {
     if (window.onbeforeunload) {
@@ -78,33 +90,43 @@ function viewTransition(urlToGo, isBack) {
             return;
         window.onbeforeunload = null;
     }
-    var before = performance.now();
-    $(".partial.active *").unbind();
-    $('.partial.active').removeClass('active');
-    console.log(performance.now() - before);
     if (!isBack)
         history.pushState({}, '', urlToGo);
-    $(".partial").hide();
-    gui = exports.findSinglePageGui(urlToGo)();
-    gui.main.jq.addClass('active');
+    var before = performance.now();
+    var partial = findPartial(urlToGo);
+    $(".active *").unbind();
+
+    $(".active").html(partial.html);
+    var child = $(".active").children().first();
+    child.show();
+    child.velocity({ opacity: 0 }, { duration: 0 });
+    child.velocity({ opacity: 1 }, { duration: 300 });
+    singlePageApp.gui = partial.gui();
+    console.log(performance.now() - before);
 }
 exports.viewTransition = viewTransition;
 
-function startSingleApp(gui) {
+function storePartials() {
+    partials.forEach(function (partial) {
+        partial.html = $(partial.sel);
+    });
+}
+
+function startSingleApp() {
+    singlePageApp.started = true;
     window.onpopstate = function () {
         console.log('pop state');
         exports.viewTransition(location.pathname, true);
     };
     $(document).ready(function () {
+        storePartials();
         exports.viewTransition(location.pathname);
     });
 }
 exports.startSingleApp = startSingleApp;
-
-var guiFound = exports.findSinglePageGui(location.pathname);
-if (guiFound)
-    exports.startSingleApp(guiFound);
-
 singlePageApp.viewTransition = exports.viewTransition;
-singlePageApp.guiFound = guiFound;
+var partial = findPartial(location.pathname);
+
+if (partial)
+    exports.startSingleApp();
 //# sourceMappingURL=single-page-app.js.map

@@ -6,24 +6,22 @@ var __extends = this.__extends || function (d, b) {
 };
 var ajax = require("./client-ajax");
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
-
-var base = '.partial.dependencies ';
+var Gui = require("./gui");
 
 var DependenciesGui = (function (_super) {
     __extends(DependenciesGui, _super);
     function DependenciesGui() {
-        _super.call(this, base);
-        this.articleCrumb = this.propertize(base + '.article.crumb');
-        this.dependencies = this.propertize(base + '.dependency.list');
-        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
-        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
-        this.articlesLinks = this.propertize(base + '.dependency a.article');
-        this.dependencySelect = this.propertize(base + 'select.dependency');
-        this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        _super.call(this);
+        this.articleCrumb = this.propertize('.article.crumb');
+        this.dependencies = this.propertize('.dependency.list');
+        this.dependenciesTemplate = this.propertize('.template.dependencies', 'html');
+        this.dependenciesLinks = this.propertize('.dependency a.dependencies');
+        this.articlesLinks = this.propertize('.dependency a.article');
+        this.dependencySelect = this.propertize('select.dependency');
+        this.addDependencyBtn = this.propertize('.add-dependency');
         this.dependenciesIds = this.propertize(".dependency-id");
-        this.dependency = this.propertize(base + ".dependency");
-        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
+        this.dependency = this.propertize(".dependency");
+        this.removeDependencyBtns = this.propertize(".removeDependency");
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
@@ -132,7 +130,7 @@ var DependenciesGui = (function (_super) {
         });
     };
     return DependenciesGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = DependenciesGui;
 //# sourceMappingURL=dependencies-gui.js.map

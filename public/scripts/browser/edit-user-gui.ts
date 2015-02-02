@@ -1,18 +1,16 @@
 import ajax = require("./client-ajax");
 import Gui = require("./gui");
 import url = require("./../common/url");
-import SinglePageGui = require("./single-page-gui");
 import validate = require("./../common/validate");
 import baseAjax = require("./../common/base-ajax");
 
 declare function marked(c: string);
 
-var base = '.partial.edit-user ';
 declare var singlePageApp;
 
-class EditUserGui extends SinglePageGui {
+class EditUserGui extends Gui {
     id: string = "-1";
-    avatar = this.propertize(base + '.avatar');
+    avatar = this.propertize('.avatar');
     parent;
 
     parseURL() {
@@ -22,7 +20,7 @@ class EditUserGui extends SinglePageGui {
         this.id = matches[1];
     }
     constructor() {
-        super(base);
+        super();
         this.parseURL();
         var _self = this;
         var getCb = ajax.user.get({user: {id: this.id}});

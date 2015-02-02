@@ -3,7 +3,6 @@ import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
 import ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
 import Gui = require("./gui");
-import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 import LoggedHeaderGui = require('./header/logged-header-gui');
@@ -22,7 +21,7 @@ class LayoutGui extends Gui {
         if (userId)
             header = new LoggedHeaderGui();
         $(document).ready(() => {
-            if (singlePageApp.guiFound)
+            if (singlePageApp.started)
                 _self.logo.transitionURL('/');
         });
     }

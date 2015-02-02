@@ -5,11 +5,11 @@ import Gui = require('./../gui')
 class EditableArticle extends Gui {
     content;
     title;
-    constructor(base: string) {
+    constructor() {
         super();
         var _self = this;
-        this.content = this.propertize(base + 'textarea.article-content', 'val');
-        this.title = this.propertize(base + 'input.article-title', 'val');
+        this.content = this.propertize('textarea.article-content', 'val');
+        this.title = this.propertize('input.article-title', 'val');
     }
 }
 

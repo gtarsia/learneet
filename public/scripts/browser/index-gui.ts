@@ -2,18 +2,15 @@ import clientAjax = require("./client-ajax");
 import baseAjax = require('./../common/base-ajax');
 import baseArticle = baseAjax.article;
 import url = require("./../common/url");
-import SinglePageGui = require("./single-page-gui");
 import Gui = require("./gui");
 import render = require('./utils/render');
 
 //$.template('<div><img src="${url}" />${name}</div>');
-var base = '.index.partial ';
-
-class IndexGui extends SinglePageGui {
-    createBtn = this.propertize(base + "button.create");
-    articleThumbs = this.propertize(base + '.article-thumbs');
-    articleThumbTemplate = this.propertize(base + '#article-thumb-template')
-    articleThumbsLinks = this.propertize(base + '.article-thumb a');
+class IndexGui extends Gui {
+    createBtn = this.propertize('button.create');
+    articleThumbs = this.propertize('.article-thumbs');
+    articleThumbTemplate = this.propertize('#article-thumb-template')
+    articleThumbsLinks = this.propertize('.article-thumb a');
     setThumbs(html: string) {
         //$(".childContainer").append(html);
     }
@@ -21,7 +18,7 @@ class IndexGui extends SinglePageGui {
         return articles.toString();
     }
     constructor() {
-        super(base);
+        super();
         this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();

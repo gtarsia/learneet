@@ -58,7 +58,7 @@ if (guiName == 'AddProposalGui') {
 }
 //# sourceMappingURL=add-proposal-gui.js.map
 
-},{"./../common/validate":34,"./client-ajax":6,"./gui":11,"./templates/previewable-article":26}],2:[function(require,module,exports){
+},{"./../common/validate":33,"./client-ajax":6,"./gui":11,"./templates/previewable-article":25}],2:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -69,31 +69,28 @@ var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 var ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
-
-var SinglePageGui = require("./single-page-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
 var Dependencies = require('./templates/dependencies');
 
-var base = '.partial.article ';
-
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
-        _super.call(this, base);
+        _super.call(this);
         this.article = { id: null, rendered: null };
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
-        this.dependenciesLink = this.propertize(base + 'h1 a.dependencies');
+        this.dependenciesLink = this.propertize('h1 a.dependencies');
         this.parseURL();
-        this.dependencies = new Dependencies(base, this.article.id);
+        this.dependencies = new Dependencies(this.article.id);
         var _self = this;
         $(document).ready(function () {
             _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
             _self.setCrumb();
-            _self.article.rendered = new RenderedArticle(base);
+            _self.article.rendered = new RenderedArticle();
             _self.article.rendered.clear();
             _self.articleScore = new Arrows.ArticleScore(_self.article);
             ajax.article.get({ article: { id: _self.article.id } }).done(function (res) {
@@ -127,12 +124,12 @@ var ArticleGui = (function (_super) {
         this.article.id = matches[1];
     };
     return ArticleGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
 
-},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/article-change-preview-template":23,"./templates/dependencies":24,"./templates/rendered-article":27,"./utils/score-arrow":31}],3:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./gui":11,"./templates/article-change-preview-template":22,"./templates/dependencies":23,"./templates/rendered-article":26,"./utils/score-arrow":30}],3:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -209,7 +206,7 @@ if (guiName == 'BaseArticleGui') {
 module.exports = BaseArticleGui;
 //# sourceMappingURL=base-article-gui.js.map
 
-},{"./../common/url":33,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":11}],4:[function(require,module,exports){
+},{"./../common/url":32,"./article-gui":2,"./change-gui":5,"./edit-article-gui":9,"./gui":11}],4:[function(require,module,exports){
 //# sourceMappingURL=browse-gui.js.map
 
 },{}],5:[function(require,module,exports){
@@ -223,28 +220,26 @@ var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 
-var SinglePageGui = require("./single-page-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
-
-var base = ".partial.change ";
 
 var ChangeGui = (function (_super) {
     __extends(ChangeGui, _super);
     function ChangeGui() {
         var _this = this;
-        _super.call(this, base);
-        this.title = this.propertize(base + '.title', 'html');
-        this.description = this.propertize(base + '.description', 'html');
-        this.state = this.propertize(base + '.state.octicon');
-        this.date = this.propertize(base + '.date', 'html');
-        this.acceptBtn = this.propertize(base + 'button.accept');
-        this.articleCrumb = this.propertize(base + '.article-crumb');
+        _super.call(this);
+        this.title = this.propertize('.title', 'html');
+        this.description = this.propertize('.description', 'html');
+        this.state = this.propertize('.state.octicon');
+        this.date = this.propertize('.date', 'html');
+        this.acceptBtn = this.propertize('button.accept');
+        this.articleCrumb = this.propertize('.article-crumb');
         this.article = { id: "-1" };
         this.change = { id: "-1" };
         this.parseURL();
         var changeCb = ajax.changes.get({ article: this.article, change: this.change });
-        this.renderedArticle = new RenderedArticle(base);
+        this.renderedArticle = new RenderedArticle();
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_this.article.id));
@@ -288,12 +283,12 @@ var ChangeGui = (function (_super) {
         this.change.id = matches[2];
     };
     return ChangeGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map
 
-},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/rendered-article":27,"./utils/score-arrow":31}],6:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./gui":11,"./templates/rendered-article":26,"./utils/score-arrow":30}],6:[function(require,module,exports){
 var baseAjax = require('./../common/base-ajax');
 
 function buildAjax(url, type, data, opts) {
@@ -482,7 +477,7 @@ var changes = exports.changes;
 var user = exports.user;
 //# sourceMappingURL=client-ajax.js.map
 
-},{"./../common/base-ajax":32}],7:[function(require,module,exports){
+},{"./../common/base-ajax":31}],7:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -491,21 +486,18 @@ var __extends = this.__extends || function (d, b) {
 };
 var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-
-var SinglePageGui = require("./single-page-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
-
-var base = '.partial.create-article ';
 
 var CreateArticleGui = (function (_super) {
     __extends(CreateArticleGui, _super);
     function CreateArticleGui() {
-        _super.call(this, base);
-        this.createBtn = this.propertize(base + "button.create");
+        _super.call(this);
+        this.createBtn = this.propertize("button.create");
         var _self = this;
         _self.titleDeferred.resolve('Create article - Learneet');
         $(document).ready(function () {
-            _self.previewArticle = new PreviewableArticle(base);
+            _self.previewArticle = new PreviewableArticle();
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             _self.createBtn.jq.click(function () {
@@ -527,12 +519,12 @@ var CreateArticleGui = (function (_super) {
         return 'How to write markdown';
     };
     return CreateArticleGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map
 
-},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/previewable-article":26}],8:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./gui":11,"./templates/previewable-article":25}],8:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -541,24 +533,22 @@ var __extends = this.__extends || function (d, b) {
 };
 var ajax = require("./client-ajax");
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
-
-var base = '.partial.dependencies ';
+var Gui = require("./gui");
 
 var DependenciesGui = (function (_super) {
     __extends(DependenciesGui, _super);
     function DependenciesGui() {
-        _super.call(this, base);
-        this.articleCrumb = this.propertize(base + '.article.crumb');
-        this.dependencies = this.propertize(base + '.dependency.list');
-        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
-        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
-        this.articlesLinks = this.propertize(base + '.dependency a.article');
-        this.dependencySelect = this.propertize(base + 'select.dependency');
-        this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        _super.call(this);
+        this.articleCrumb = this.propertize('.article.crumb');
+        this.dependencies = this.propertize('.dependency.list');
+        this.dependenciesTemplate = this.propertize('.template.dependencies', 'html');
+        this.dependenciesLinks = this.propertize('.dependency a.dependencies');
+        this.articlesLinks = this.propertize('.dependency a.article');
+        this.dependencySelect = this.propertize('select.dependency');
+        this.addDependencyBtn = this.propertize('.add-dependency');
         this.dependenciesIds = this.propertize(".dependency-id");
-        this.dependency = this.propertize(base + ".dependency");
-        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
+        this.dependency = this.propertize(".dependency");
+        this.removeDependencyBtns = this.propertize(".removeDependency");
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({ article: { id: _self.id } });
@@ -667,12 +657,12 @@ var DependenciesGui = (function (_super) {
         });
     };
     return DependenciesGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = DependenciesGui;
 //# sourceMappingURL=dependencies-gui.js.map
 
-},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22}],9:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./gui":11}],9:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -681,27 +671,24 @@ var __extends = this.__extends || function (d, b) {
 };
 var ajax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-
+var Gui = require("./gui");
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
 
 var baseAjax = require("./../common/base-ajax");
-
-var base = '.partial.edit-article ';
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
     function EditArticleGui(args) {
-        _super.call(this, base);
+        _super.call(this);
         this.id = "-1";
-        this.saveBtn = this.propertize(base + 'button.save');
-        this.articleCrumb = this.propertize(base + ".article-crumb");
+        this.saveBtn = this.propertize('button.save');
+        this.articleCrumb = this.propertize(".article-crumb");
         this.parseURL();
         var _self = this;
         _self.titleDeferred.resolve('Edit article - Learneet');
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
-            _self.article = new PreviewableArticle(base);
+            _self.article = new PreviewableArticle();
             _self.article.fetchDBArticle({ id: _self.id });
             _self.saveBtn.jq.click(function () {
                 _self.saveArticle();
@@ -738,12 +725,12 @@ var EditArticleGui = (function (_super) {
         });
     };
     return EditArticleGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map
 
-},{"./../common/base-ajax":32,"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./templates/previewable-article":26}],10:[function(require,module,exports){
+},{"./../common/base-ajax":31,"./../common/url":32,"./client-ajax":6,"./gui":11,"./templates/previewable-article":25}],10:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -751,18 +738,15 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var ajax = require("./client-ajax");
-
+var Gui = require("./gui");
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
-
-var base = '.partial.edit-user ';
 
 var EditUserGui = (function (_super) {
     __extends(EditUserGui, _super);
     function EditUserGui() {
-        _super.call(this, base);
+        _super.call(this);
         this.id = "-1";
-        this.avatar = this.propertize(base + '.avatar');
+        this.avatar = this.propertize('.avatar');
         this.parseURL();
         var _self = this;
         var getCb = ajax.user.get({ user: { id: this.id } });
@@ -794,16 +778,20 @@ var EditUserGui = (function (_super) {
         this.id = matches[1];
     };
     return EditUserGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = EditUserGui;
 //# sourceMappingURL=edit-user-gui.js.map
 
-},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22}],11:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./gui":11}],11:[function(require,module,exports){
 var _propertize = require('./utils/propertize');
 
 var Gui = (function () {
     function Gui() {
+        this.titleDeferred = jQuery.Deferred();
+        this.titleDeferred.done(function (title) {
+            document.title = title;
+        });
         $(document).ready(function () {
             $('#main').find('button').velocity({ opacity: 0 }, { duration: 0 });
             $('#main').find('button').velocity({ opacity: 1 }, { duration: 500 });
@@ -821,7 +809,7 @@ var Gui = (function () {
 module.exports = Gui;
 //# sourceMappingURL=gui.js.map
 
-},{"./utils/propertize":29}],12:[function(require,module,exports){
+},{"./utils/propertize":28}],12:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -851,7 +839,7 @@ var LoggedHeaderGui = (function (_super) {
 module.exports = LoggedHeaderGui;
 //# sourceMappingURL=logged-header-gui.js.map
 
-},{"./../../common/url":33,"./../gui":11}],13:[function(require,module,exports){
+},{"./../../common/url":32,"./../gui":11}],13:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -861,20 +849,17 @@ var __extends = this.__extends || function (d, b) {
 var clientAjax = require("./client-ajax");
 
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
-
+var Gui = require("./gui");
 var render = require('./utils/render');
-
-var base = '.index.partial ';
 
 var IndexGui = (function (_super) {
     __extends(IndexGui, _super);
     function IndexGui() {
-        _super.call(this, base);
-        this.createBtn = this.propertize(base + "button.create");
-        this.articleThumbs = this.propertize(base + '.article-thumbs');
-        this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
-        this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
+        _super.call(this);
+        this.createBtn = this.propertize('button.create');
+        this.articleThumbs = this.propertize('.article-thumbs');
+        this.articleThumbTemplate = this.propertize('#article-thumb-template');
+        this.articleThumbsLinks = this.propertize('.article-thumb a');
         this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
@@ -919,12 +904,12 @@ var IndexGui = (function (_super) {
         return articles.toString();
     };
     return IndexGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = IndexGui;
 //# sourceMappingURL=index-gui.js.map
 
-},{"./../common/url":33,"./client-ajax":6,"./single-page-gui":22,"./utils/render":30}],14:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./gui":11,"./utils/render":29}],14:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -944,7 +929,7 @@ var LayoutGui = (function (_super) {
         if (userId)
             header = new LoggedHeaderGui();
         $(document).ready(function () {
-            if (singlePageApp.guiFound)
+            if (singlePageApp.started)
                 _self.logo.transitionURL('/');
         });
     }
@@ -1158,7 +1143,7 @@ if (guiName == 'ProposalsGui') {
 }
 //# sourceMappingURL=proposals-gui.js.map
 
-},{"./../common/url":33,"./client-ajax":6,"./gui":11}],20:[function(require,module,exports){
+},{"./../common/url":32,"./client-ajax":6,"./gui":11}],20:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1224,57 +1209,69 @@ var UserGui = require("./user-gui");
 var EditUserGui = require("./edit-user-gui");
 var ChangeGui = require("./change-gui");
 
-function findSinglePageGui(urlToGo) {
-    var partials = [
-        {
-            re: '/',
-            gui: function () {
-                return new IndexGui();
-            },
-            sel: '.index.partial' },
-        {
-            re: '/create_article',
-            gui: function () {
-                return new CreateArticleGui();
-            },
-            sel: '.create-article.partial' },
-        {
-            re: url.article.get('\\d+'),
-            gui: function () {
-                return new ArticleGui({});
-            },
-            sel: '.article.partial' },
-        {
-            re: url.article.edit('\\d+'),
-            gui: function () {
-                return new EditArticleGui({});
-            },
-            sel: '.edit-article.partial' },
-        {
-            re: url.change.get('\\d+', '\\d+'),
-            gui: function () {
-                return new ChangeGui();
-            },
-            sel: '.change.partial' },
-        {
-            re: url.dependencies.get('\\d+'),
-            gui: function () {
-                return new DependenciesGui();
-            },
-            sel: '.dependencies.partial' },
-        {
-            re: url.user.get('\\d+'),
-            gui: function () {
-                return new UserGui();
-            },
-            sel: '.user.partial' },
-        {
-            re: url.user.edit('\\d+'),
-            gui: function () {
-                return new EditUserGui();
-            },
-            sel: '.edit-user.partial' }
-    ];
+var partials = [
+    {
+        re: '/',
+        gui: function () {
+            return new IndexGui();
+        },
+        sel: '.index.partial' },
+    {
+        re: '/create_article',
+        gui: function () {
+            return new CreateArticleGui();
+        },
+        sel: '.create-article.partial' },
+    {
+        re: url.article.get('\\d+'),
+        gui: function () {
+            return new ArticleGui({});
+        },
+        sel: '.article.partial' },
+    {
+        re: url.article.edit('\\d+'),
+        gui: function () {
+            return new EditArticleGui({});
+        },
+        sel: '.edit-article.partial' },
+    {
+        re: url.change.get('\\d+', '\\d+'),
+        gui: function () {
+            return new ChangeGui();
+        },
+        sel: '.change.partial' },
+    {
+        re: url.dependencies.get('\\d+'),
+        gui: function () {
+            return new DependenciesGui();
+        },
+        sel: '.dependencies.partial' },
+    {
+        re: url.user.get('\\d+'),
+        gui: function () {
+            return new UserGui();
+        },
+        sel: '.user.partial' },
+    {
+        re: url.user.edit('\\d+'),
+        gui: function () {
+            return new EditUserGui();
+        },
+        sel: '.edit-user.partial' }
+];
+
+function findPartial(urlToGo) {
+    var _partial;
+    partials.forEach(function (partial) {
+        var match = urlToGo.match('^' + partial.re + '$');
+        if (match && !_partial) {
+            _partial = partial;
+        }
+    });
+    return _partial;
+}
+
+function findGui(urlToGo) {
     var _gui;
     partials.forEach(function (partial) {
         var match = urlToGo.match('^' + partial.re + '$');
@@ -1284,7 +1281,7 @@ function findSinglePageGui(urlToGo) {
     });
     return _gui;
 }
-exports.findSinglePageGui = findSinglePageGui;
+exports.findGui = findGui;
 
 function viewTransition(urlToGo, isBack) {
     if (window.onbeforeunload) {
@@ -1293,70 +1290,48 @@ function viewTransition(urlToGo, isBack) {
             return;
         window.onbeforeunload = null;
     }
-    var before = performance.now();
-    $(".partial.active *").unbind();
-    $('.partial.active').removeClass('active');
-    console.log(performance.now() - before);
     if (!isBack)
         history.pushState({}, '', urlToGo);
-    $(".partial").hide();
-    gui = exports.findSinglePageGui(urlToGo)();
-    gui.main.jq.addClass('active');
+    var before = performance.now();
+    var partial = findPartial(urlToGo);
+    $(".active *").unbind();
+
+    $(".active").html(partial.html);
+    var child = $(".active").children().first();
+    child.show();
+    child.velocity({ opacity: 0 }, { duration: 0 });
+    child.velocity({ opacity: 1 }, { duration: 300 });
+    singlePageApp.gui = partial.gui();
+    console.log(performance.now() - before);
 }
 exports.viewTransition = viewTransition;
 
-function startSingleApp(gui) {
+function storePartials() {
+    partials.forEach(function (partial) {
+        partial.html = $(partial.sel);
+    });
+}
+
+function startSingleApp() {
+    singlePageApp.started = true;
     window.onpopstate = function () {
         console.log('pop state');
         exports.viewTransition(location.pathname, true);
     };
     $(document).ready(function () {
+        storePartials();
         exports.viewTransition(location.pathname);
     });
 }
 exports.startSingleApp = startSingleApp;
-
-var guiFound = exports.findSinglePageGui(location.pathname);
-if (guiFound)
-    exports.startSingleApp(guiFound);
-
 singlePageApp.viewTransition = exports.viewTransition;
-singlePageApp.guiFound = guiFound;
+var partial = findPartial(location.pathname);
+
+if (partial)
+    exports.startSingleApp();
 //# sourceMappingURL=single-page-app.js.map
 
-},{"./../common/url":33,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./edit-user-gui":10,"./index-gui":13,"./user-gui":28}],22:[function(require,module,exports){
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var Gui = require('./gui');
-
-var SinglePageGui = (function (_super) {
-    __extends(SinglePageGui, _super);
-    function SinglePageGui(componentSel) {
-        _super.call(this);
-        this.titleDeferred = jQuery.Deferred();
-        this.titleDeferred.done(function (title) {
-            document.title = title;
-        });
-        this.base = componentSel;
-        this.main = this.propertize(componentSel);
-        var _self = this;
-        $(document).ready(function () {
-            _self.main.jq.show();
-            _self.main.jq.velocity({ opacity: 0 }, { duration: 0 });
-            _self.main.jq.velocity({ opacity: 1 }, { duration: 300 });
-        });
-    }
-    return SinglePageGui;
-})(Gui);
-
-module.exports = SinglePageGui;
-//# sourceMappingURL=single-page-gui.js.map
-
-},{"./gui":11}],23:[function(require,module,exports){
+},{"./../common/url":32,"./article-gui":2,"./change-gui":5,"./create-article-gui":7,"./dependencies-gui":8,"./edit-article-gui":9,"./edit-user-gui":10,"./index-gui":13,"./user-gui":27}],22:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1407,7 +1382,7 @@ var ArticleChangePreviewTemplate = (function (_super) {
 module.exports = ArticleChangePreviewTemplate;
 //# sourceMappingURL=article-change-preview-template.js.map
 
-},{"./../../common/url":33,"./../client-ajax":6,"./../gui":11}],24:[function(require,module,exports){
+},{"./../../common/url":32,"./../client-ajax":6,"./../gui":11}],23:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1420,18 +1395,18 @@ var Gui = require('./../gui');
 
 var Dependencies = (function (_super) {
     __extends(Dependencies, _super);
-    function Dependencies(base, id) {
+    function Dependencies(id) {
         _super.call(this);
         this.id = id;
-        this.removeDependencyBtns = this.propertize(base + ".removeDependency");
-        this.dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
-        this.dependencySelect = this.propertize(base + 'select.dependency');
-        this.addDependencyBtn = this.propertize(base + '.add-dependency');
+        this.removeDependencyBtns = this.propertize(".removeDependency");
+        this.dependenciesTemplate = this.propertize('.template.dependencies', 'html');
+        this.dependencySelect = this.propertize('select.dependency');
+        this.addDependencyBtn = this.propertize('.add-dependency');
         this.dependenciesIds = this.propertize(".dependency-id");
-        this.dependency = this.propertize(base + ".dependency");
-        this.dependencies = this.propertize(base + '.dependency.list');
-        this.dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
-        this.articlesLinks = this.propertize(base + '.dependency a.article');
+        this.dependency = this.propertize(".dependency");
+        this.dependencies = this.propertize('.dependency.list');
+        this.dependenciesLinks = this.propertize('.dependency a.dependencies');
+        this.articlesLinks = this.propertize('.dependency a.article');
         this.refreshDependencies();
         var _self = this;
         $(document).ready(function () {
@@ -1527,7 +1502,7 @@ var Dependencies = (function (_super) {
 module.exports = Dependencies;
 //# sourceMappingURL=dependencies.js.map
 
-},{"./../../common/url":33,"./../client-ajax":6,"./../gui":11}],25:[function(require,module,exports){
+},{"./../../common/url":32,"./../client-ajax":6,"./../gui":11}],24:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1538,11 +1513,11 @@ var Gui = require('./../gui');
 
 var EditableArticle = (function (_super) {
     __extends(EditableArticle, _super);
-    function EditableArticle(base) {
+    function EditableArticle() {
         _super.call(this);
         var _self = this;
-        this.content = this.propertize(base + 'textarea.article-content', 'val');
-        this.title = this.propertize(base + 'input.article-title', 'val');
+        this.content = this.propertize('textarea.article-content', 'val');
+        this.title = this.propertize('input.article-title', 'val');
     }
     return EditableArticle;
 })(Gui);
@@ -1550,7 +1525,7 @@ var EditableArticle = (function (_super) {
 module.exports = EditableArticle;
 //# sourceMappingURL=editable-article.js.map
 
-},{"./../gui":11}],26:[function(require,module,exports){
+},{"./../gui":11}],25:[function(require,module,exports){
 var RenderedArticle = require('./rendered-article');
 var EditableArticle = require("./editable-article");
 var clientAjax = require(".././client-ajax");
@@ -1558,9 +1533,9 @@ var clientAjax = require(".././client-ajax");
 var render = require("./../utils/render");
 
 var PreviewableArticle = (function () {
-    function PreviewableArticle(base) {
-        this.input = new EditableArticle(base);
-        this.output = new RenderedArticle(base);
+    function PreviewableArticle() {
+        this.input = new EditableArticle();
+        this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();
@@ -1649,7 +1624,7 @@ var PreviewableArticle = (function () {
 module.exports = PreviewableArticle;
 //# sourceMappingURL=previewable-article.js.map
 
-},{".././client-ajax":6,"./../utils/render":30,"./editable-article":25,"./rendered-article":27}],27:[function(require,module,exports){
+},{".././client-ajax":6,"./../utils/render":29,"./editable-article":24,"./rendered-article":26}],26:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1661,12 +1636,12 @@ var render = require('./../utils/render');
 
 var RenderedArticle = (function (_super) {
     __extends(RenderedArticle, _super);
-    function RenderedArticle(base) {
+    function RenderedArticle() {
         _super.call(this);
         var _self = this;
-        this.content = this.propertize(base + ' div.article-content', 'html');
-        this.title = this.propertize(base + ' h1.article-title', 'html');
-        this.avatar = this.propertize(base + ' .article-header img.avatar');
+        this.content = this.propertize('div.article-content', 'html');
+        this.title = this.propertize('h1.article-title', 'html');
+        this.avatar = this.propertize('.article-header img.avatar');
     }
     RenderedArticle.prototype.scroll = function (line) {
         var outputLine = $(".line" + line);
@@ -1696,22 +1671,22 @@ var RenderedArticle = (function (_super) {
 module.exports = RenderedArticle;
 //# sourceMappingURL=rendered-article.js.map
 
-},{"./../gui":11,"./../utils/render":30}],28:[function(require,module,exports){
+},{"./../gui":11,"./../utils/render":29}],27:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var Gui = require("./gui");
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
 
 var base = '.partial.user ';
 
 var UserGui = (function (_super) {
     __extends(UserGui, _super);
     function UserGui() {
-        _super.call(this, base);
+        _super.call(this);
         this.id = "-1";
         this.parseURL();
         var _self = this;
@@ -1726,12 +1701,12 @@ var UserGui = (function (_super) {
         this.id = matches[1];
     };
     return UserGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = UserGui;
 //# sourceMappingURL=user-gui.js.map
 
-},{"./../common/url":33,"./single-page-gui":22}],29:[function(require,module,exports){
+},{"./../common/url":32,"./gui":11}],28:[function(require,module,exports){
 function propertize(selector, valFnName) {
     var obj = {
         get jq() {
@@ -1750,8 +1725,8 @@ function propertize(selector, valFnName) {
                 $(el).click(function (e) {
                     if (e.button != 0)
                         return;
-                    singlePageApp.viewTransition(_url);
                     e.preventDefault();
+                    singlePageApp.viewTransition(_url);
                 });
             });
         }
@@ -1771,7 +1746,7 @@ function propertize(selector, valFnName) {
 module.exports = propertize;
 //# sourceMappingURL=propertize.js.map
 
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 function toKatex(s) {
     var output = '';
     var occurenceIndex = 0;
@@ -1811,7 +1786,7 @@ function toMarkedKatex(s) {
 exports.toMarkedKatex = toMarkedKatex;
 //# sourceMappingURL=render.js.map
 
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -2100,7 +2075,7 @@ var ChangeScore = (function (_super) {
 exports.ChangeScore = ChangeScore;
 //# sourceMappingURL=score-arrow.js.map
 
-},{"./../client-ajax":6,"./../gui":11}],32:[function(require,module,exports){
+},{"./../client-ajax":6,"./../gui":11}],31:[function(require,module,exports){
 exports.AjaxType = {
     GET: "GET",
     POST: "POST"
@@ -2607,7 +2582,7 @@ if (typeof customExports != 'undefined')
     customExports[getScriptName()] = exports;
 //# sourceMappingURL=base-ajax.js.map
 
-},{}],33:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var url;
 (function (url) {
     (function (article) {
@@ -2675,7 +2650,7 @@ var url;
 module.exports = url;
 //# sourceMappingURL=url.js.map
 
-},{}],34:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2715,7 +2690,7 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validate.js.map
 
-},{}],35:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 function notOkBase(base) {
     return function (reason) {
         return { ok: false, because: base + ' ' + reason };
@@ -2755,4 +2730,4 @@ var version = exports.version;
 var user = exports.user;
 //# sourceMappingURL=validation.js.map
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,28,32,33,34,35]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,27,31,32,33,34]);

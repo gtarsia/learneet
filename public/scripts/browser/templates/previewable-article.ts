@@ -81,9 +81,9 @@ class PreviewableArticle {
             return null;
         });
     }
-    constructor(base: string) {
-        this.input = new EditableArticle(base);
-        this.output = new RenderedArticle(base);
+    constructor() {
+        this.input = new EditableArticle();
+        this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();

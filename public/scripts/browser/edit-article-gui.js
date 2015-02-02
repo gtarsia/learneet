@@ -6,27 +6,24 @@
 };
 var ajax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-
+var Gui = require("./gui");
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
 
 var baseAjax = require("./../common/base-ajax");
-
-var base = '.partial.edit-article ';
 
 var EditArticleGui = (function (_super) {
     __extends(EditArticleGui, _super);
     function EditArticleGui(args) {
-        _super.call(this, base);
+        _super.call(this);
         this.id = "-1";
-        this.saveBtn = this.propertize(base + 'button.save');
-        this.articleCrumb = this.propertize(base + ".article-crumb");
+        this.saveBtn = this.propertize('button.save');
+        this.articleCrumb = this.propertize(".article-crumb");
         this.parseURL();
         var _self = this;
         _self.titleDeferred.resolve('Edit article - Learneet');
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_self.id));
-            _self.article = new PreviewableArticle(base);
+            _self.article = new PreviewableArticle();
             _self.article.fetchDBArticle({ id: _self.id });
             _self.saveBtn.jq.click(function () {
                 _self.saveArticle();
@@ -63,7 +60,7 @@ var EditArticleGui = (function (_super) {
         });
     };
     return EditArticleGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = EditArticleGui;
 //# sourceMappingURL=edit-article-gui.js.map

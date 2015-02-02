@@ -15,8 +15,8 @@ function propertize(selector: string, valFnName?: string):
                 else _url = el.pathname;
                 $(el).click(e => {
                     if (e.button != 0) return;
-                    singlePageApp.viewTransition(_url);    
                     e.preventDefault();
+                    singlePageApp.viewTransition(_url);    
                 })
             })
         }

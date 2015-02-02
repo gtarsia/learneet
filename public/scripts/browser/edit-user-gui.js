@@ -5,18 +5,15 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var ajax = require("./client-ajax");
-
+var Gui = require("./gui");
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
-
-var base = '.partial.edit-user ';
 
 var EditUserGui = (function (_super) {
     __extends(EditUserGui, _super);
     function EditUserGui() {
-        _super.call(this, base);
+        _super.call(this);
         this.id = "-1";
-        this.avatar = this.propertize(base + '.avatar');
+        this.avatar = this.propertize('.avatar');
         this.parseURL();
         var _self = this;
         var getCb = ajax.user.get({ user: { id: this.id } });
@@ -48,7 +45,7 @@ var EditUserGui = (function (_super) {
         this.id = matches[1];
     };
     return EditUserGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = EditUserGui;
 //# sourceMappingURL=edit-user-gui.js.map

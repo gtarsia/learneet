@@ -3,15 +3,12 @@ import parser = require('./parser');
 import RenderedArticle = require('./templates/rendered-article');
 import ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
 import Gui = require("./gui");
-import SinglePageGui = require("./single-page-gui");
 import url = require("./../common/url");
 import Arrows = require('./utils/score-arrow');
 import Dependencies = require('./templates/dependencies');
 declare function marked(s);
 
-var base = '.partial.article '
-
-class ArticleGui extends SinglePageGui { 
+class ArticleGui extends Gui { 
     article: {id: string; rendered: RenderedArticle} = {id: null, rendered: null};
     main: string;
     getEditBtn() {
@@ -22,7 +19,7 @@ class ArticleGui extends SinglePageGui {
     viewProposalsBtn = this.propertize("button#viewProposals");
     articleCrumb = this.propertize("#article-crumb");
     articleChanges: ArticleChangePreviewTemplate;
-    dependenciesLink = this.propertize(base + 'h1 a.dependencies');
+    dependenciesLink = this.propertize('h1 a.dependencies');
     dependencies;
     articleScore;
     setCrumb() {
@@ -35,14 +32,14 @@ class ArticleGui extends SinglePageGui {
         this.article.id = matches[1];
     }
     constructor(args: {id?: string}) {
-        super(base);
+        super();
         this.parseURL();
-        this.dependencies = new Dependencies(base, this.article.id);
+        this.dependencies = new Dependencies(this.article.id);
         var _self = this;
         $(document).ready(() => {
             _self.articleChanges = new ArticleChangePreviewTemplate({id: _self.article.id});
             _self.setCrumb();
-            _self.article.rendered = new RenderedArticle(base);
+            _self.article.rendered = new RenderedArticle();
             _self.article.rendered.clear();
             _self.articleScore = new Arrows.ArticleScore(
                _self.article

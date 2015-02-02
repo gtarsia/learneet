@@ -1,22 +1,21 @@
 import ajax = require("./client-ajax");
 import url = require("./../common/url");
-import SinglePageGui = require("./single-page-gui");
+import Gui = require("./gui");
 
 declare function marked(c: string);
-var base = '.partial.dependencies ';
 
-class DependenciesGui extends SinglePageGui {
+class DependenciesGui extends Gui {
     id;
-    articleCrumb = this.propertize(base + '.article.crumb');
-    dependencies = this.propertize(base + '.dependency.list');
-    dependenciesTemplate = this.propertize(base + '.template.dependencies', 'html');
-    dependenciesLinks = this.propertize(base + '.dependency a.dependencies');
-    articlesLinks = this.propertize(base + '.dependency a.article');
-    dependencySelect:any = this.propertize(base + 'select.dependency');
-    addDependencyBtn = this.propertize(base + '.add-dependency');
+    articleCrumb = this.propertize('.article.crumb');
+    dependencies = this.propertize('.dependency.list');
+    dependenciesTemplate = this.propertize('.template.dependencies', 'html');
+    dependenciesLinks = this.propertize('.dependency a.dependencies');
+    articlesLinks = this.propertize('.dependency a.article');
+    dependencySelect:any = this.propertize('select.dependency');
+    addDependencyBtn = this.propertize('.add-dependency');
     dependenciesIds: any = this.propertize(".dependency-id");
-    dependency: any = this.propertize(base + ".dependency");
-    removeDependencyBtns = this.propertize(base + ".removeDependency");
+    dependency: any = this.propertize(".dependency");
+    removeDependencyBtns = this.propertize(".removeDependency");
     parseURL() {
         var re = url.dependencies.get('(\\d+)')
         var regex = new RegExp(re);
@@ -38,7 +37,7 @@ class DependenciesGui extends SinglePageGui {
         });
     }
     constructor() {
-        super(base);
+        super();
         this.parseURL();
         var _self = this;
         var titleCb = ajax.article.getTitleWithId({article: {id: _self.id}});

@@ -16,8 +16,8 @@ function propertize(selector, valFnName) {
                 $(el).click(function (e) {
                     if (e.button != 0)
                         return;
-                    singlePageApp.viewTransition(_url);
                     e.preventDefault();
+                    singlePageApp.viewTransition(_url);
                 });
             });
         }

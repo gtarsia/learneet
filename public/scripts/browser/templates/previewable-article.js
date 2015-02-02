@@ -5,9 +5,9 @@ var clientAjax = require(".././client-ajax");
 var render = require("./../utils/render");
 
 var PreviewableArticle = (function () {
-    function PreviewableArticle(base) {
-        this.input = new EditableArticle(base);
-        this.output = new RenderedArticle(base);
+    function PreviewableArticle() {
+        this.input = new EditableArticle();
+        this.output = new RenderedArticle();
         this.ignoreScroll = false;
         this.bindTitlePreview();
         this.bindContentPreview();

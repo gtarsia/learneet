@@ -9,12 +9,12 @@ var render = require('./../utils/render');
 
 var RenderedArticle = (function (_super) {
     __extends(RenderedArticle, _super);
-    function RenderedArticle(base) {
+    function RenderedArticle() {
         _super.call(this);
         var _self = this;
-        this.content = this.propertize(base + ' div.article-content', 'html');
-        this.title = this.propertize(base + ' h1.article-title', 'html');
-        this.avatar = this.propertize(base + ' .article-header img.avatar');
+        this.content = this.propertize('div.article-content', 'html');
+        this.title = this.propertize('h1.article-title', 'html');
+        this.avatar = this.propertize('.article-header img.avatar');
     }
     RenderedArticle.prototype.scroll = function (line) {
         var outputLine = $(".line" + line);

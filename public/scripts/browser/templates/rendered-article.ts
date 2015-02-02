@@ -7,12 +7,12 @@ class RenderedArticle extends Gui {
     content;
     title;
     avatar;
-    constructor(base: string) {
+    constructor() {
         super();
         var _self = this;
-        this.content = this.propertize(base + ' div.article-content', 'html');
-        this.title = this.propertize(base + ' h1.article-title', 'html')
-        this.avatar = this.propertize(base + ' .article-header img.avatar');
+        this.content = this.propertize('div.article-content', 'html');
+        this.title = this.propertize('h1.article-title', 'html')
+        this.avatar = this.propertize('.article-header img.avatar');
     }
     scroll(line: number) {
         var outputLine = $(".line" + line);

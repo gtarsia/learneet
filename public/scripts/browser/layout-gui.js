@@ -17,7 +17,7 @@ var LayoutGui = (function (_super) {
         if (userId)
             header = new LoggedHeaderGui();
         $(document).ready(function () {
-            if (singlePageApp.guiFound)
+            if (singlePageApp.started)
                 _self.logo.transitionURL('/');
         });
     }

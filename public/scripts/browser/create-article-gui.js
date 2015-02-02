@@ -6,21 +6,18 @@
 };
 var clientAjax = require("./client-ajax");
 var PreviewableArticle = require("./templates/previewable-article");
-
-var SinglePageGui = require("./single-page-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
-
-var base = '.partial.create-article ';
 
 var CreateArticleGui = (function (_super) {
     __extends(CreateArticleGui, _super);
     function CreateArticleGui() {
-        _super.call(this, base);
-        this.createBtn = this.propertize(base + "button.create");
+        _super.call(this);
+        this.createBtn = this.propertize("button.create");
         var _self = this;
         _self.titleDeferred.resolve('Create article - Learneet');
         $(document).ready(function () {
-            _self.previewArticle = new PreviewableArticle(base);
+            _self.previewArticle = new PreviewableArticle();
             _self.previewArticle.input.content.val = _self.contentPreviewExample();
             _self.previewArticle.input.title.val = _self.titlePreviewExample();
             _self.createBtn.jq.click(function () {
@@ -42,7 +39,7 @@ var CreateArticleGui = (function (_super) {
         return 'How to write markdown';
     };
     return CreateArticleGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = CreateArticleGui;
 //# sourceMappingURL=create-article-gui.js.map

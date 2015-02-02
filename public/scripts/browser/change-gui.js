@@ -8,28 +8,26 @@ var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 
-var SinglePageGui = require("./single-page-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
-
-var base = ".partial.change ";
 
 var ChangeGui = (function (_super) {
     __extends(ChangeGui, _super);
     function ChangeGui() {
         var _this = this;
-        _super.call(this, base);
-        this.title = this.propertize(base + '.title', 'html');
-        this.description = this.propertize(base + '.description', 'html');
-        this.state = this.propertize(base + '.state.octicon');
-        this.date = this.propertize(base + '.date', 'html');
-        this.acceptBtn = this.propertize(base + 'button.accept');
-        this.articleCrumb = this.propertize(base + '.article-crumb');
+        _super.call(this);
+        this.title = this.propertize('.title', 'html');
+        this.description = this.propertize('.description', 'html');
+        this.state = this.propertize('.state.octicon');
+        this.date = this.propertize('.date', 'html');
+        this.acceptBtn = this.propertize('button.accept');
+        this.articleCrumb = this.propertize('.article-crumb');
         this.article = { id: "-1" };
         this.change = { id: "-1" };
         this.parseURL();
         var changeCb = ajax.changes.get({ article: this.article, change: this.change });
-        this.renderedArticle = new RenderedArticle(base);
+        this.renderedArticle = new RenderedArticle();
         var _self = this;
         $(document).ready(function () {
             _self.articleCrumb.transitionURL(url.article.get(_this.article.id));
@@ -73,7 +71,7 @@ var ChangeGui = (function (_super) {
         this.change.id = matches[2];
     };
     return ChangeGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = ChangeGui;
 //# sourceMappingURL=change-gui.js.map

@@ -7,20 +7,17 @@ var __extends = this.__extends || function (d, b) {
 var clientAjax = require("./client-ajax");
 
 var url = require("./../common/url");
-var SinglePageGui = require("./single-page-gui");
-
+var Gui = require("./gui");
 var render = require('./utils/render');
-
-var base = '.index.partial ';
 
 var IndexGui = (function (_super) {
     __extends(IndexGui, _super);
     function IndexGui() {
-        _super.call(this, base);
-        this.createBtn = this.propertize(base + "button.create");
-        this.articleThumbs = this.propertize(base + '.article-thumbs');
-        this.articleThumbTemplate = this.propertize(base + '#article-thumb-template');
-        this.articleThumbsLinks = this.propertize(base + '.article-thumb a');
+        _super.call(this);
+        this.createBtn = this.propertize('button.create');
+        this.articleThumbs = this.propertize('.article-thumbs');
+        this.articleThumbTemplate = this.propertize('#article-thumb-template');
+        this.articleThumbsLinks = this.propertize('.article-thumb a');
         this.titleDeferred.resolve('Learneet');
         var _self = this;
         _self.articleThumbs.jq.empty();
@@ -65,7 +62,7 @@ var IndexGui = (function (_super) {
         return articles.toString();
     };
     return IndexGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = IndexGui;
 //# sourceMappingURL=index-gui.js.map

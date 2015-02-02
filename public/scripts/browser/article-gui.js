@@ -8,31 +8,28 @@ var ajax = require("./client-ajax");
 
 var RenderedArticle = require('./templates/rendered-article');
 var ArticleChangePreviewTemplate = require('./templates/article-change-preview-template');
-
-var SinglePageGui = require("./single-page-gui");
+var Gui = require("./gui");
 var url = require("./../common/url");
 var Arrows = require('./utils/score-arrow');
 var Dependencies = require('./templates/dependencies');
 
-var base = '.partial.article ';
-
 var ArticleGui = (function (_super) {
     __extends(ArticleGui, _super);
     function ArticleGui(args) {
-        _super.call(this, base);
+        _super.call(this);
         this.article = { id: null, rendered: null };
         this.editArticleBtn = this.propertize("a#editArticle");
         this.addProposalBtn = this.propertize("button#addProposal");
         this.viewProposalsBtn = this.propertize("button#viewProposals");
         this.articleCrumb = this.propertize("#article-crumb");
-        this.dependenciesLink = this.propertize(base + 'h1 a.dependencies');
+        this.dependenciesLink = this.propertize('h1 a.dependencies');
         this.parseURL();
-        this.dependencies = new Dependencies(base, this.article.id);
+        this.dependencies = new Dependencies(this.article.id);
         var _self = this;
         $(document).ready(function () {
             _self.articleChanges = new ArticleChangePreviewTemplate({ id: _self.article.id });
             _self.setCrumb();
-            _self.article.rendered = new RenderedArticle(base);
+            _self.article.rendered = new RenderedArticle();
             _self.article.rendered.clear();
             _self.articleScore = new Arrows.ArticleScore(_self.article);
             ajax.article.get({ article: { id: _self.article.id } }).done(function (res) {
@@ -66,7 +63,7 @@ var ArticleGui = (function (_super) {
         this.article.id = matches[1];
     };
     return ArticleGui;
-})(SinglePageGui);
+})(Gui);
 
 module.exports = ArticleGui;
 //# sourceMappingURL=article-gui.js.map
