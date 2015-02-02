@@ -77,10 +77,10 @@ export function viewTransition(urlToGo: string, isBack?: boolean) {
     if (!isBack) history.pushState({}, '', urlToGo);
     var before = performance.now();
     var partial = findPartial(urlToGo);
-    $(".active *").unbind();
+    $("#main *").unbind();
 
-    $(".active").html(partial.html);
-    var child = $(".active").children().first();
+    $("#main").html(partial.html);
+    var child = $("#main").children().first();
     child.show();
     child.velocity({opacity: 0}, {duration: 0});
     child.velocity({opacity: 1}, {duration: 300});
@@ -91,6 +91,7 @@ export function viewTransition(urlToGo: string, isBack?: boolean) {
 function storePartials() {
     partials.forEach(function(partial:any) {
         partial.html = $(partial.sel);
+        $(partial.sel).remove();
     });
 }
 

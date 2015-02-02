@@ -9,12 +9,12 @@ prepend scripts
       userId= !{JSON.stringify(user.id)};
 
 block main
-  .active
-  include index
-  include article
-  include create_article
-  include edit_article
-  include change
-  include dependencies
-  include user
-  include edit-user
+  .partials
+    include index
+    include article
+    include create_article
+    include edit_article
+    include change
+    include dependencies
+    include user
+    include edit-user
