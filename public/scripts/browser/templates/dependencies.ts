@@ -4,27 +4,20 @@ import Gui = require('./../gui');
 
 class Dependencies extends Gui {
     id;
-    removeDependencyBtns;
-    dependenciesTemplate;
-    dependencySelect : any;
-    addDependencyBtn;
-    dependenciesIds : any;
-    dependency: any;
-    dependencies;
-    dependenciesLinks;
-    articlesLinks;
-    constructor(id: string) {
+    removeDependencyBtns = this.propertize(".removeDependency");
+    dependenciesTemplate = this.propertize('.template.dependencies', 'html');
+    dependencySelect = this.propertize('select.dependency');
+    addDependencyBtn = this.propertize('.add-dependency');
+    dependenciesIds = this.propertize(".dependency-id");
+    dependency = this.propertize(".dependency");
+    dependencies = this.propertize('.dependency.list');
+    dependenciesLinks = this.propertize('.dependency a.dependencies');
+    articlesLinks = this.propertize('.dependency a.article');
+    fullUpScoreArrow = this.propertize('span.octicon-arrow-up.full');
+    emptyUpScoreArrow = this.propertize('span.octicon-arrow-up.empty');
+    constructor(id: string) {  
         super();
         this.id = id;
-        this.removeDependencyBtns = this.propertize(".removeDependency");
-        this.dependenciesTemplate = this.propertize('.template.dependencies', 'html');
-        this.dependencySelect = this.propertize('select.dependency');
-        this.addDependencyBtn = this.propertize('.add-dependency');
-        this.dependenciesIds = this.propertize(".dependency-id");
-        this.dependency = this.propertize(".dependency");
-        this.dependencies = this.propertize('.dependency.list');
-        this.dependenciesLinks = this.propertize('.dependency a.dependencies');
-        this.articlesLinks = this.propertize('.dependency a.article');
         this.refreshDependencies();
         var _self = this;
         $(document).ready(function() {
@@ -52,7 +45,7 @@ class Dependencies extends Gui {
                     }
                 }
             };
-            var el = _self.dependencySelect.jq[0];
+            var el: any = _self.dependencySelect.jq[0];
             if (el) if (el.selectize) el.selectize.destroy();
             _self.dependencySelect.jq.selectize(selectizeOpts);
             _self.addDependencyBtn.jq.click(() => {
@@ -71,7 +64,7 @@ class Dependencies extends Gui {
         });
     }
     removeDependency(jq) {
-        var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        var id = $(jq).siblings(this.dependenciesIds.selector).val();
         var _self = this;
         ajax.dependencies.remove({
             dependent: { id: this.id},
@@ -79,6 +72,30 @@ class Dependencies extends Gui {
         })
         .then(res => {
             _self.refreshDependencies();
+        });
+    }
+    upScore(jq) {
+        var id = $(jq).siblings(this.dependenciesIds.selector).val();
+        var _self = this;
+        ajax.dependencies.upScore({
+            dependent: { id: this.id},
+            dependency: { id: id}
+        })
+        .then(res => {
+            $(jq).siblings(this.emptyUpScoreArrow.selector).hide();
+            $(jq).siblings(this.fullUpScoreArrow.selector).show();
+        });
+    }
+    removeUpScore(jq: any) {
+        var id = $(jq).siblings(this.dependenciesIds.selector).val();
+        var _self = this;
+        ajax.dependencies.removeUpScore({
+            dependent: { id: this.id},
+            dependency: { id: id}
+        })
+        .then(res => {
+            $(jq).siblings(this.fullUpScoreArrow.selector).hide();
+            $(jq).siblings(this.emptyUpScoreArrow.selector).show();
         });
     }
     refreshDependencies() {
@@ -93,13 +110,17 @@ class Dependencies extends Gui {
                     dep.dependency.url = url.dependencies.get(dep.article.id);
                     dep.article.url = url.article.get(dep.article.id);
                     if (dep.starred == 'true')
-                    { dep.starStyle = ''; 
+                    { dep.starStyle = '';    
                         dep.emptyStarStyle = none; }
                     else 
                     { dep.starStyle = none; 
                         dep.emptyStarStyle = ''; }
-                    dep.arrowUpStyle = none;
-                    dep.emptyArrowUpStyle = '';
+                    if (dep.article.upScore) 
+                    {   dep.fullArrowUpStyle = '';
+                        dep.emptyArrowUpStyle = none; }
+                    else 
+                    {   dep.emptyArrowUpStyle = '';
+                        dep.fullArrowUpStyle = none; }
                 })
                 console.log(deps);
                 var template = _self.dependenciesTemplate.val;
@@ -111,8 +132,14 @@ class Dependencies extends Gui {
                 _self.articlesLinks.transitionURL('');
                 _self.removeDependencyBtns.jq.on("click", () => {
                     if (!confirm('Are you sure you want to remove this dependency?')) return;
-                    var myThis:any = eval("this");
+                    var myThis:any = 
                     _self.removeDependency(myThis);
+                })
+                _self.fullUpScoreArrow.jq.click(() => {
+                    _self.removeUpScore(eval("this"));
+                })
+                _self.emptyUpScoreArrow.jq.click(() => {
+                    _self.upScore(eval("this"));
                 })
             });
         });

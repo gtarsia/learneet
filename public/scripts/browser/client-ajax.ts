@@ -130,6 +130,18 @@ export module dependencies {
         return buildIAjax<_remove.Params, _remove.Return>
         (new _remove.Ajax(), params);
     }
+
+    import _upScore = baseAjax.dependencies.upScore;
+    export function upScore(params) {
+        return buildIAjax<_upScore.Params, _upScore.Return>
+        (new _upScore.Ajax(), params);
+    }
+
+    import _removeUpScore = baseAjax.dependencies.removeUpScore;
+    export function removeUpScore(params) {
+        return buildIAjax<_removeUpScore.Params, _removeUpScore.Return>
+        (new _removeUpScore.Ajax(), params);
+    }
 }
 
 export module changes {

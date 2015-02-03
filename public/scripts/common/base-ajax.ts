@@ -188,6 +188,24 @@ export module dependencies {
         export interface Return extends JsonReturn<Score> {}
     }
 
+    export module upScore {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/upscoredependency' }
+            type(): string { return AjaxType.POST }
+        }
+        export interface Params { dependent: Id; dependency: Id }
+        export interface Return extends JsonReturn<boolean> {}
+    }
+
+    export module removeUpScore {
+        export class Ajax implements IAjax{
+            url(): string { return '/api/removeupscoredependency' }
+            type(): string { return AjaxType.POST }
+        }
+        export interface Params { dependent: Id; dependency: Id }
+        export interface Return extends JsonReturn<boolean> {};
+    }
+
     export module star {
         export class Ajax implements IAjax{
             url(): string { return '/api/stardependency' }

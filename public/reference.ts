@@ -62,6 +62,7 @@
 /// <reference path="typings/passport/passport.d.ts" />
 /// <reference path="typings/pg/pg.d.ts" />
 /// <reference path="typings/redis/redis.d.ts" />
+/// <reference path="typings/selectize/selectize.d.ts" />
 /// <reference path="typings/should/should.d.ts" />
 /// <reference path="typings/stylus/stylus.d.ts" />
 //grunt-end

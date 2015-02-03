@@ -122,6 +122,18 @@ var score = exports.score;
         return exports.buildIAjax(new _remove.Ajax(), params);
     }
     dependencies.remove = remove;
+
+    var _upScore = baseAjax.dependencies.upScore;
+    function upScore(params) {
+        return exports.buildIAjax(new _upScore.Ajax(), params);
+    }
+    dependencies.upScore = upScore;
+
+    var _removeUpScore = baseAjax.dependencies.removeUpScore;
+    function removeUpScore(params) {
+        return exports.buildIAjax(new _removeUpScore.Ajax(), params);
+    }
+    dependencies.removeUpScore = removeUpScore;
 })(exports.dependencies || (exports.dependencies = {}));
 var dependencies = exports.dependencies;
 

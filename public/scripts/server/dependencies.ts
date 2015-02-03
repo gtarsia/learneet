@@ -2,6 +2,8 @@ import baseAjax = require('./../common/base-ajax');
 import baseDependencies = baseAjax.dependencies;
 import baseAdd = baseDependencies.add;
 import baseGetAll = baseDependencies.getAll;
+import baseUpScore = baseDependencies.upScore;
+import baseRemoveUpScore = baseDependencies.removeUpScore;
 import baseStar = baseDependencies.star;
 import baseUnstar = baseDependencies.unstar;
 import baseRemove = baseDependencies.remove;
@@ -30,13 +32,25 @@ export function okObj<T>(obj: T): any {
         result: obj
     }
 }
-export function add(args: baseAdd.Params)
+
+function auth(req) {
+    return req.isAuthenticated();
+}
+
+function notAuthObj(): any {
+    return new Promise(resolve => {
+        resolve(notOkObj('Can\'t run this method without authentication'));
+    });
+}
+
+export function add(args: baseAdd.Params, req)
 : Promise<baseAdd.Return> {
+    if (!auth(req)) return notAuthObj();7
     var dependent = args.dependent;
     var dependency = args.dependency;
     return db.sadd(keys.dependenciesIdSet(args), args.dependency.id)
     .then(res => {
-        return upScore(args);
+        return upScore(args, req);
     })
     .then(res => {
         return okObj(true);
@@ -44,12 +58,36 @@ export function add(args: baseAdd.Params)
 }
 
 export interface Id { id: string; }
-export function upScore(args: {dependent: Id; dependency: Id})
-: Promise<string> {
-    var user = '1';
-    return db.sadd(keys.dependencyScoreUserSet(args), user)
+
+export function upScore(args: baseUpScore.Params, req) : 
+Promise<baseUpScore.Return> {
+    debugger;
+    if (!auth(req)) return notAuthObj();
+    return db.sadd(keys.dependencyScoreUserSet(args), req.user.id)
     .then(res => {
-        return db.hmset(keys.dependency(args), {score: '1', starred: 'false'});
+        debugger;
+        if (res == 0) return notOkObj('Could\'t up score the dependency');
+        return db.hincrby(keys.dependency(args), 'score', '1')
+        .then(res => {
+            debugger;
+            return okObj(true);
+        })
+    })
+}
+
+export function removeUpScore(args: baseRemoveUpScore.Params, req) :
+Promise<baseRemoveUpScore.Return> {
+    debugger;
+    if (!auth(req)) return notAuthObj();
+    return db.srem(keys.dependencyScoreUserSet(args), req.user.id)
+    .then(res => {
+        debugger;
+        if (res == 0) return notOkObj('Could\'t remove up score from dependency');
+        return db.hincrby(keys.dependency(args), 'score', '-1')
+        .then(res => {
+            debugger;
+            return okObj(true);
+        })
     })
 }
 
@@ -62,7 +100,7 @@ export function removeScore(args: {dependent: Id; dependency: Id})
     )
 }
 
-export function getAll(args: baseGetAll.Params)
+export function getAll(args: baseGetAll.Params, req)
 : Promise<baseGetAll.Return> {
     var deps : any[] = [];
     var dependent = args.dependent;
@@ -84,14 +122,38 @@ export function getAll(args: baseGetAll.Params)
         }
         return avatar.get(deps)
     })
-    .then((res: any) => {
-        return okObj<TitleWithId[]>(res);
+    .then(deps => {
+        if (!auth(req)) return deps;
+        return hasUserUpScored(args.dependent, deps, req);
+    })
+    .then((deps: any) => {
+        return okObj<TitleWithId[]>(deps);
     });
 }
 
-export function getCurrentUserScore(args: baseGetCurrentUserScore.Params)
+export function hasUserUpScored(dependent: Id, dependencies: {article: Id}[], req) {
+    if (!auth(req)) return notAuthObj();
+    var multi = db.multi();
+    dependencies.forEach(dependency => {
+        debugger;
+        multi.sismember([keys.dependencyScoreUserSet
+            ({dependent: dependent, dependency: dependency.article}), req.user.id]);
+    })
+    var promise: any = Promise.promisify(multi.exec, multi);
+    return promise()
+    .then(res => {
+        debugger;
+        dependencies.forEach((dep: any) => {
+            dep.article.upScore = Boolean(res.shift());
+        })
+        return dependencies;
+    })
+}
+
+export function getCurrentUserScore(args: baseGetCurrentUserScore.Params, req)
 : Promise<baseGetCurrentUserScore.Return> {
-    return db.sismember(keys.dependencyScoreUserSet(args), "1")
+    if (!auth(req)) return notAuthObj();
+    return db.sismember(keys.dependencyScoreUserSet(args), req.user.id)
     .then(isMember => {
         var found = ((isMember) ? true : false);
         return okObj({score: found});

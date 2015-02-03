@@ -17,8 +17,7 @@ class Gui {
     redirect(view: string) {
         window.location.href = view;
     }
-    propertize(selector: string, valFnName?: string): 
-    {jq: JQuery; val?: string; transitionURL: (url: string) => void} {
+    propertize(selector: string, valFnName?: string) {
         return _propertize(selector, valFnName);
     }
 }

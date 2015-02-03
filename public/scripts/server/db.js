@@ -124,6 +124,15 @@ function hmget() {
 }
 exports.hmget = hmget;
 
+function hincrby() {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return exports.promisedRedis.apply(this, [exports.client.hincrby.bind(exports.client), args]);
+}
+exports.hincrby = hincrby;
+
 function sadd() {
     var args = [];
     for (var _i = 0; _i < (arguments.length - 0); _i++) {

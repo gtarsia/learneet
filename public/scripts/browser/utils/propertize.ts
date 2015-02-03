@@ -2,7 +2,7 @@
 declare var singlePageApp;
 
 function propertize(selector: string, valFnName?: string): 
-    {jq: JQuery; val?: string; transitionURL: (url: string) => void} {
+    {jq: JQuery; selector: string; val?: string; transitionURL: (url: string) => void} {
     var obj = {
         get jq() { return $(selector); },
         get selector() { return selector; },

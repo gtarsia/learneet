@@ -22,6 +22,8 @@ function getServerAjaxList() {
         dependencies.getCurrentUserScore(),
         dependencies.star(),
         dependencies.unstar(),
+        dependencies.upScore(),
+        dependencies.removeUpScore(),
         dependencies.remove(),
         changes.getAll(),
         changes.get(),
@@ -215,6 +217,18 @@ var changes = exports.changes;
         return exports.restCbAjax(new _getCurrentUserScore.Ajax(), dbDependencies.getCurrentUserScore);
     }
     dependencies.getCurrentUserScore = getCurrentUserScore;
+
+    var _upScore = baseAjax.dependencies.upScore;
+    function upScore() {
+        return exports.restCbAjax(new _upScore.Ajax(), dbDependencies.upScore);
+    }
+    dependencies.upScore = upScore;
+
+    var _removeUpScore = baseAjax.dependencies.removeUpScore;
+    function removeUpScore() {
+        return exports.restCbAjax(new _removeUpScore.Ajax(), dbDependencies.removeUpScore);
+    }
+    dependencies.removeUpScore = removeUpScore;
 
     var _star = baseAjax.dependencies.star;
     function star() {

@@ -270,6 +270,40 @@ var score = exports.score;
     })(dependencies.getCurrentUserScore || (dependencies.getCurrentUserScore = {}));
     var getCurrentUserScore = dependencies.getCurrentUserScore;
 
+    (function (upScore) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/upscoredependency';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        upScore.Ajax = Ajax;
+    })(dependencies.upScore || (dependencies.upScore = {}));
+    var upScore = dependencies.upScore;
+
+    (function (removeUpScore) {
+        var Ajax = (function () {
+            function Ajax() {
+            }
+            Ajax.prototype.url = function () {
+                return '/api/removeupscoredependency';
+            };
+            Ajax.prototype.type = function () {
+                return exports.AjaxType.POST;
+            };
+            return Ajax;
+        })();
+        removeUpScore.Ajax = Ajax;
+
+        ;
+    })(dependencies.removeUpScore || (dependencies.removeUpScore = {}));
+    var removeUpScore = dependencies.removeUpScore;
+
     (function (star) {
         var Ajax = (function () {
             function Ajax() {

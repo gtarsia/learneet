@@ -115,6 +115,10 @@ export function hmget(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.hmget.bind(client), args]);
 }
 
+export function hincrby(...args: string[]) : Promise<any> {
+	return promisedRedis.apply(this, [client.hincrby.bind(client), args]);
+}
+
 export function sadd(...args: string[]) : Promise<any> {
 	return promisedRedis.apply(this, [client.sadd.bind(client), args]);
 }

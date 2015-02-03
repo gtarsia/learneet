@@ -12,7 +12,6 @@ var Dependencies = (function (_super) {
     __extends(Dependencies, _super);
     function Dependencies(id) {
         _super.call(this);
-        this.id = id;
         this.removeDependencyBtns = this.propertize(".removeDependency");
         this.dependenciesTemplate = this.propertize('.template.dependencies', 'html');
         this.dependencySelect = this.propertize('select.dependency');
@@ -22,6 +21,9 @@ var Dependencies = (function (_super) {
         this.dependencies = this.propertize('.dependency.list');
         this.dependenciesLinks = this.propertize('.dependency a.dependencies');
         this.articlesLinks = this.propertize('.dependency a.article');
+        this.fullUpScoreArrow = this.propertize('span.octicon-arrow-up.full');
+        this.emptyUpScoreArrow = this.propertize('span.octicon-arrow-up.empty');
+        this.id = id;
         this.refreshDependencies();
         var _self = this;
         $(document).ready(function () {
@@ -64,13 +66,37 @@ var Dependencies = (function (_super) {
         });
     }
     Dependencies.prototype.removeDependency = function (jq) {
-        var id = $(jq).siblings(this.dependenciesIds.jq).val();
+        var id = $(jq).siblings(this.dependenciesIds.selector).val();
         var _self = this;
         ajax.dependencies.remove({
             dependent: { id: this.id },
             dependency: { id: id }
         }).then(function (res) {
             _self.refreshDependencies();
+        });
+    };
+    Dependencies.prototype.upScore = function (jq) {
+        var _this = this;
+        var id = $(jq).siblings(this.dependenciesIds.selector).val();
+        var _self = this;
+        ajax.dependencies.upScore({
+            dependent: { id: this.id },
+            dependency: { id: id }
+        }).then(function (res) {
+            $(jq).siblings(_this.emptyUpScoreArrow.selector).hide();
+            $(jq).siblings(_this.fullUpScoreArrow.selector).show();
+        });
+    };
+    Dependencies.prototype.removeUpScore = function (jq) {
+        var _this = this;
+        var id = $(jq).siblings(this.dependenciesIds.selector).val();
+        var _self = this;
+        ajax.dependencies.removeUpScore({
+            dependent: { id: this.id },
+            dependency: { id: id }
+        }).then(function (res) {
+            $(jq).siblings(_this.fullUpScoreArrow.selector).hide();
+            $(jq).siblings(_this.emptyUpScoreArrow.selector).show();
         });
     };
     Dependencies.prototype.refreshDependencies = function () {
@@ -91,8 +117,13 @@ var Dependencies = (function (_super) {
                         dep.starStyle = none;
                         dep.emptyStarStyle = '';
                     }
-                    dep.arrowUpStyle = none;
-                    dep.emptyArrowUpStyle = '';
+                    if (dep.article.upScore) {
+                        dep.fullArrowUpStyle = '';
+                        dep.emptyArrowUpStyle = none;
+                    } else {
+                        dep.emptyArrowUpStyle = '';
+                        dep.fullArrowUpStyle = none;
+                    }
                 });
                 console.log(deps);
                 var template = _self.dependenciesTemplate.val;
@@ -105,8 +136,13 @@ var Dependencies = (function (_super) {
                 _self.removeDependencyBtns.jq.on("click", function () {
                     if (!confirm('Are you sure you want to remove this dependency?'))
                         return;
-                    var myThis = eval("this");
-                    _self.removeDependency(myThis);
+                    var myThis = _self.removeDependency(myThis);
+                });
+                _self.fullUpScoreArrow.jq.click(function () {
+                    _self.removeUpScore(eval("this"));
+                });
+                _self.emptyUpScoreArrow.jq.click(function () {
+                    _self.upScore(eval("this"));
                 });
             });
         });
