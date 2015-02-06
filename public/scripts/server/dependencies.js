@@ -59,7 +59,7 @@ function upScore(args, req) {
     return db.sadd(keys.dependencyScoreUserSet(args), req.user.id).then(function (res) {
         debugger;
         if (res == 0)
-            return exports.notOkObj('Could\'t up score the dependency');
+            return exports.notOkObj('Coulnd\'t up score the dependency');
         return db.hincrby(keys.dependency(args), 'score', '1').then(function (res) {
             debugger;
             return exports.okObj(true);
@@ -75,7 +75,7 @@ function removeUpScore(args, req) {
     return db.srem(keys.dependencyScoreUserSet(args), req.user.id).then(function (res) {
         debugger;
         if (res == 0)
-            return exports.notOkObj('Could\'t remove up score from dependency');
+            return exports.notOkObj('Couldn\'t remove up score from dependency');
         return db.hincrby(keys.dependency(args), 'score', '-1').then(function (res) {
             debugger;
             return exports.okObj(true);

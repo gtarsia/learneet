@@ -66,7 +66,7 @@ Promise<baseUpScore.Return> {
     return db.sadd(keys.dependencyScoreUserSet(args), req.user.id)
     .then(res => {
         debugger;
-        if (res == 0) return notOkObj('Could\'t up score the dependency');
+        if (res == 0) return notOkObj('Coulnd\'t up score the dependency');
         return db.hincrby(keys.dependency(args), 'score', '1')
         .then(res => {
             debugger;
@@ -82,7 +82,7 @@ Promise<baseRemoveUpScore.Return> {
     return db.srem(keys.dependencyScoreUserSet(args), req.user.id)
     .then(res => {
         debugger;
-        if (res == 0) return notOkObj('Could\'t remove up score from dependency');
+        if (res == 0) return notOkObj('Couldn\'t remove up score from dependency');
         return db.hincrby(keys.dependency(args), 'score', '-1')
         .then(res => {
             debugger;

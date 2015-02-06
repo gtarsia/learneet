@@ -133,11 +133,7 @@ var Dependencies = (function (_super) {
                 _self.dependencies.jq.html(rendered);
                 _self.dependenciesLinks.transitionURL('');
                 _self.articlesLinks.transitionURL('');
-                _self.removeDependencyBtns.jq.on("click", function () {
-                    if (!confirm('Are you sure you want to remove this dependency?'))
-                        return;
-                    var myThis = _self.removeDependency(myThis);
-                });
+
                 _self.fullUpScoreArrow.jq.click(function () {
                     _self.removeUpScore(eval("this"));
                 });

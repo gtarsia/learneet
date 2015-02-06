@@ -130,11 +130,13 @@ class Dependencies extends Gui {
                 _self.dependencies.jq.html(rendered);
                 _self.dependenciesLinks.transitionURL('');
                 _self.articlesLinks.transitionURL('');
+                /*
                 _self.removeDependencyBtns.jq.on("click", () => {
                     if (!confirm('Are you sure you want to remove this dependency?')) return;
                     var myThis:any = 
                     _self.removeDependency(myThis);
                 })
+                */
                 _self.fullUpScoreArrow.jq.click(() => {
                     _self.removeUpScore(eval("this"));
                 })
