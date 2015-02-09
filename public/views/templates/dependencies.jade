@@ -1,14 +1,13 @@
 script.template.dependencies(type="x-tmpl-mustache")
-  li
-    | {{#dependencies}}
-    .dependency
-      input.dependency-id(type='hidden' value='{{article.id}}')
-      span.mega-octicon.octicon-star(style='{{starStyle}}')
-      span.mega-octicon.octicon-star.empty(style='{{emptyStarStyle}}')
-      | {{score}}
-      span.mega-octicon.octicon-arrow-up.full(style='{{fullArrowUpStyle}}')
-      span.mega-octicon.octicon-arrow-up.empty(style='{{emptyArrowUpStyle}}')
-      img.avatar(src="{{user.avatar_url}}" href="{{user.id}}" title="{{user.username}}")
-      a.article(href='{{article.url}}')  {{article.title}}
-      a.dependencies(href='{{dependency.url}}')  (deps)
-    | {{/dependencies}}
+  | {{#dependencies}}
+  .dependency
+    span.score {{article.score}}
+    input.dependency-id(type='hidden' value='{{article.id}}')
+    span.mega-octicon.octicon-arrow-up.full(style='{{fullArrowUpStyle}}')
+    span.mega-octicon.octicon-arrow-up.empty(style='{{emptyArrowUpStyle}}')
+    span.mega-octicon.octicon-star(style='{{starStyle}}')
+    span.mega-octicon.octicon-star.empty(style='{{emptyStarStyle}}')
+    img.avatar(src="{{user.avatar_url}}" href="{{user.id}}" title="{{user.username}}")
+    a.article(href='{{article.url}}')  {{article.title}}
+    a.dependencies(href='{{dependency.url}}')  (deps)
+  | {{/dependencies}}
