@@ -61,32 +61,27 @@ export interface Id { id: string; }
 
 export function upScore(args: baseUpScore.Params, req) : 
 Promise<baseUpScore.Return> {
-    debugger;
     if (!auth(req)) return notAuthObj();
     return db.sadd(keys.dependencyScoreUserSet(args), req.user.id)
     .then(res => {
-        debugger;
         if (res == 0) return notOkObj('Coulnd\'t up score the dependency');
         return db.hincrby(keys.dependency(args), 'score', '1')
         .then(res => {
-            debugger;
-            return okObj(true);
+            return okObj({dependency: {score: res}});
         })
     })
 }
 
 export function removeUpScore(args: baseRemoveUpScore.Params, req) :
 Promise<baseRemoveUpScore.Return> {
-    debugger;
     if (!auth(req)) return notAuthObj();
     return db.srem(keys.dependencyScoreUserSet(args), req.user.id)
     .then(res => {
-        debugger;
         if (res == 0) return notOkObj('Couldn\'t remove up score from dependency');
         return db.hincrby(keys.dependency(args), 'score', '-1')
         .then(res => {
-            debugger;
-            return okObj(true);
+            if (parseInt(res) <= 0) remove(args);
+            return okObj({dependency: {score: res}});
         })
     })
 }
@@ -135,14 +130,12 @@ export function hasUserUpScored(dependent: Id, dependencies: {article: Id}[], re
     if (!auth(req)) return notAuthObj();
     var multi = db.multi();
     dependencies.forEach(dependency => {
-        debugger;
         multi.sismember([keys.dependencyScoreUserSet
             ({dependent: dependent, dependency: dependency.article}), req.user.id]);
     })
     var promise: any = Promise.promisify(multi.exec, multi);
     return promise()
     .then(res => {
-        debugger;
         dependencies.forEach((dep: any) => {
             dep.article.upScore = Boolean(res.shift());
         })

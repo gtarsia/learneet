@@ -47,7 +47,7 @@ export function register(params: register.Params) : Promise<register.Return> {
         return db.sadd(keys.usersIdSet(), _id)
     })
     .then(ok => {
-        return db.hmset(keys.usernamesSets({user: params}), {id: id})
+        return db.sadd(keys.usernamesSets({user: params}), id)
     })
     .then(ok => {
         return db.hmset(keys.user(userwithid), {
@@ -89,9 +89,11 @@ export function get(params: {user: {username: string}}): Promise<baseUser.UserFi
 
 export function getHash(params: {user: {username: string}}): Promise<baseUser.UserFields> {
     var baseKey = keys.usersBase() + ':*->';
+    debugger;
     return db.sort(keys.usernamesSets(params), 'by', 'nosort', 
         'GET', baseKey + 'hash')
     .then(values => {
+        debugger;
         var user: any = {};
         user.hash = values.shift();
         return user;

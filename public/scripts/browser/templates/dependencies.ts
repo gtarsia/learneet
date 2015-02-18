@@ -12,6 +12,7 @@ class Dependencies extends Gui {
     dependency = this.propertize(".dependency");
     dependencies = this.propertize('.dependency.list');
     dependenciesLinks = this.propertize('.dependency a.dependencies');
+    score = this.propertize('.score');
     articlesLinks = this.propertize('.dependency a.article');
     fullUpScoreArrow = this.propertize('span.octicon-arrow-up.full');
     emptyUpScoreArrow = this.propertize('span.octicon-arrow-up.empty');
@@ -82,7 +83,9 @@ class Dependencies extends Gui {
             dependency: { id: id}
         })
         .then(res => {
-            $(jq).siblings(this.emptyUpScoreArrow.selector).hide();
+            if (!res.ok) return;
+            $(jq).siblings(this.score.selector).html(res.result.dependency.score);
+            $(jq).hide();
             $(jq).siblings(this.fullUpScoreArrow.selector).show();
         });
     }
@@ -94,7 +97,12 @@ class Dependencies extends Gui {
             dependency: { id: id}
         })
         .then(res => {
-            $(jq).siblings(this.fullUpScoreArrow.selector).hide();
+            if (!res.ok) return;
+            $(jq).siblings(this.score.selector).html(res.result.dependency.score);
+            if (parseInt(res.result.dependency.score) <= 0) {
+                _self.removeDependency(jq); return;
+            }
+            $(jq).hide();
             $(jq).siblings(this.emptyUpScoreArrow.selector).show();
         });
     }

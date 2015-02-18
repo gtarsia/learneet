@@ -53,32 +53,28 @@ function add(args, req) {
 exports.add = add;
 
 function upScore(args, req) {
-    debugger;
     if (!auth(req))
         return notAuthObj();
     return db.sadd(keys.dependencyScoreUserSet(args), req.user.id).then(function (res) {
-        debugger;
         if (res == 0)
             return exports.notOkObj('Coulnd\'t up score the dependency');
         return db.hincrby(keys.dependency(args), 'score', '1').then(function (res) {
-            debugger;
-            return exports.okObj(true);
+            return exports.okObj({ dependency: { score: res } });
         });
     });
 }
 exports.upScore = upScore;
 
 function removeUpScore(args, req) {
-    debugger;
     if (!auth(req))
         return notAuthObj();
     return db.srem(keys.dependencyScoreUserSet(args), req.user.id).then(function (res) {
-        debugger;
         if (res == 0)
             return exports.notOkObj('Couldn\'t remove up score from dependency');
         return db.hincrby(keys.dependency(args), 'score', '-1').then(function (res) {
-            debugger;
-            return exports.okObj(true);
+            if (parseInt(res) <= 0)
+                exports.remove(args);
+            return exports.okObj({ dependency: { score: res } });
         });
     });
 }
@@ -120,12 +116,10 @@ function hasUserUpScored(dependent, dependencies, req) {
         return notAuthObj();
     var multi = db.multi();
     dependencies.forEach(function (dependency) {
-        debugger;
         multi.sismember([keys.dependencyScoreUserSet({ dependent: dependent, dependency: dependency.article }), req.user.id]);
     });
     var promise = Promise.promisify(multi.exec, multi);
     return promise().then(function (res) {
-        debugger;
         dependencies.forEach(function (dep) {
             dep.article.upScore = Boolean(res.shift());
         });

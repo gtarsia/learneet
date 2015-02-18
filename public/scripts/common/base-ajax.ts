@@ -194,7 +194,7 @@ export module dependencies {
             type(): string { return AjaxType.POST }
         }
         export interface Params { dependent: Id; dependency: Id }
-        export interface Return extends JsonReturn<boolean> {}
+        export interface Return extends JsonReturn<{dependency: {score: string}}> {}
     }
 
     export module removeUpScore {
@@ -203,7 +203,7 @@ export module dependencies {
             type(): string { return AjaxType.POST }
         }
         export interface Params { dependent: Id; dependency: Id }
-        export interface Return extends JsonReturn<boolean> {};
+        export interface Return extends JsonReturn<{dependency: {score: string}}> {};
     }
 
     export module star {

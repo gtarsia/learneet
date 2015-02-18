@@ -1418,6 +1418,7 @@ var Dependencies = (function (_super) {
         this.dependency = this.propertize(".dependency");
         this.dependencies = this.propertize('.dependency.list');
         this.dependenciesLinks = this.propertize('.dependency a.dependencies');
+        this.score = this.propertize('.score');
         this.articlesLinks = this.propertize('.dependency a.article');
         this.fullUpScoreArrow = this.propertize('span.octicon-arrow-up.full');
         this.emptyUpScoreArrow = this.propertize('span.octicon-arrow-up.empty');
@@ -1481,7 +1482,10 @@ var Dependencies = (function (_super) {
             dependent: { id: this.id },
             dependency: { id: id }
         }).then(function (res) {
-            $(jq).siblings(_this.emptyUpScoreArrow.selector).hide();
+            if (!res.ok)
+                return;
+            $(jq).siblings(_this.score.selector).html(res.result.dependency.score);
+            $(jq).hide();
             $(jq).siblings(_this.fullUpScoreArrow.selector).show();
         });
     };
@@ -1493,7 +1497,14 @@ var Dependencies = (function (_super) {
             dependent: { id: this.id },
             dependency: { id: id }
         }).then(function (res) {
-            $(jq).siblings(_this.fullUpScoreArrow.selector).hide();
+            if (!res.ok)
+                return;
+            $(jq).siblings(_this.score.selector).html(res.result.dependency.score);
+            if (parseInt(res.result.dependency.score) <= 0) {
+                _self.removeDependency(jq);
+                return;
+            }
+            $(jq).hide();
             $(jq).siblings(_this.emptyUpScoreArrow.selector).show();
         });
     };

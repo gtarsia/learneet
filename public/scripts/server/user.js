@@ -49,7 +49,7 @@ function register(params) {
         id = _id;
         return db.sadd(keys.usersIdSet(), _id);
     }).then(function (ok) {
-        return db.hmset(keys.usernamesSets({ user: params }), { id: id });
+        return db.sadd(keys.usernamesSets({ user: params }), id);
     }).then(function (ok) {
         return db.hmset(keys.user(userwithid), {
             username: params.username,
@@ -84,7 +84,9 @@ exports.get = get;
 
 function getHash(params) {
     var baseKey = keys.usersBase() + ':*->';
+    debugger;
     return db.sort(keys.usernamesSets(params), 'by', 'nosort', 'GET', baseKey + 'hash').then(function (values) {
+        debugger;
         var user = {};
         user.hash = values.shift();
         return user;
