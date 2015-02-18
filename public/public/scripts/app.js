@@ -1022,7 +1022,7 @@ var LogInGui = (function (_super) {
                 var user = _self.getUser();
                 $.post('/api/auth', user).done(function (res) {
                     console.log('Logged in');
-                    _self.redirect('/');
+                    _self.redirect(document.referrer);
                 }).fail(function (res) {
                     console.log('Couldn\'t log');
                 });

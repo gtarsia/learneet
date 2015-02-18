@@ -31,7 +31,7 @@ class LogInGui extends Gui {
                 $.post('/api/auth', user)
                 .done((res) => {
                     console.log('Logged in');
-                    _self.redirect('/');
+                    _self.redirect(document.referrer);
                 })
                 .fail((res) => {
                     console.log('Couldn\'t log');
