@@ -41,6 +41,7 @@ export function set(app) {
     app.get('/login', renderCb('login', 'Login'));
     app.get(url.user.register(), renderCb('register', 'Register'));
     app.get('/register_finished', renderCb('register_finished', 'Register Finished'));
+    app.get('/what-is-this', renderCb('what-is-this', 'What is this? - Learneet'));
 }
 
 /*export function index(req: express.Request, res: express.Response) {
