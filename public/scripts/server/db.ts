@@ -3,10 +3,13 @@ import redis = require("redis");
 
 var fakeredis : any = require("fakeredis");
 
-//var client = fakeredis.createClient();
-export var client = redis.createClient(3476, 
-	'50.30.35.9');
-client.auth('9e227f8f82d63dfbb4a6b72b16985f51', err => {
+var redisIp = process.env.REDIS_IP;
+var redisPassword = process.env.REDIS_PASSWORD;
+var redisPort = process.env.REDIS_PORT;
+
+//var client = fakeredis.createClient();	
+export var client = redis.createClient(redisPort, redisIp);
+client.auth(redisPassword, err => {
 	if (err) throw err;
 })
 
