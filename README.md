@@ -4,7 +4,7 @@
 
 ## What is this?
 
-[learneet.herokuapp.com](learneet.herokuapp.com)  
+[learneet.herokuapp.com](https://learneet.herokuapp.com/)  
 learneet is a collaborative editor of a scientific explanations tree (wut?). In other words, a site with academic articles.
 
 The objective of learneet is to soften the learning curve of scientific concepts.
