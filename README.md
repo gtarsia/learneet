@@ -1,4 +1,6 @@
 ## Sections
+
+[![Join the chat at https://gitter.im/erandros/learneet](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/erandros/learneet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 1. [What is this?](#what-is-this-)
 2. [How to contribute](#how-to-contribute)
 
