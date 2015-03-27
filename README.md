@@ -4,6 +4,7 @@
 
 ## What is this?
 
+[![Join the chat at https://gitter.im/erandros/learneet](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/erandros/learneet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
 [learneet.herokuapp.com](https://learneet.herokuapp.com/)  
 learneet is a collaborative editor of a scientific explanations tree (wut?). In other words, a site with academic articles.
 
